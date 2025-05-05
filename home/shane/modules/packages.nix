@@ -12,8 +12,6 @@
     pkgs.lsd
     pkgs.libnotify
     pkgs.bambu-studio
-    pkgs.overskride
-    pkgs.btop
     pkgs.pavucontrol
     pkgs.blueman
     pkgs.hyprshot

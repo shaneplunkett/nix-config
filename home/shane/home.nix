@@ -11,6 +11,8 @@
     ./modules/fish.nix
     ./modules/rofi.nix
     ./modules/dunst.nix
+    ./modules/ghostty.nix
+    ./modules/btop.nix
   ];
 
   home.username = "shane";
