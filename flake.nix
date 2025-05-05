@@ -45,10 +45,7 @@
         nvf.nixosModules.default
         home-manager.nixosModules.home-manager
         {
-          home-manager.users.shane = import ./home/shane/home.nix {
-            pkgs = pkgs;
-            config = config;
-          };
+          home-manager.users.shane = import ./home/shane/home.nix;
         }
       ];
     };
