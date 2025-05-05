@@ -15,5 +15,7 @@
     pkgs.pavucontrol
     pkgs.blueman
     pkgs.hyprshot
+    pkgs.hyprpaper
+    pkgs.obsidian
   ];
 }

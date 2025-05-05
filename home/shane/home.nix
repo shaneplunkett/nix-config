@@ -13,6 +13,7 @@
     ./modules/dunst.nix
     ./modules/ghostty.nix
     ./modules/btop.nix
+    ./modules/hyprpaper.nix
   ];
 
   home.username = "shane";
