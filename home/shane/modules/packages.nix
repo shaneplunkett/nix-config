@@ -17,6 +17,5 @@
     pkgs.pavucontrol
     pkgs.blueman
     pkgs.hyprshot
-    pkgs.ghostty
   ];
 }
