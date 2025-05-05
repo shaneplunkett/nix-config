@@ -3,6 +3,7 @@
   pkgs,
   ...
 }: {
+  nixpkgs.config.allowUnfree = true;
   imports = [
     ./modules/hyprland.nix
     ./modules/waybar.nix
