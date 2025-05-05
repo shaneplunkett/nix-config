@@ -1,7 +1,9 @@
 {...}: {
   programs.btop = {
     enable = true;
-    color_theme = "catppuccin";
+    settings = {
+      color_theme = "catppuccin";
+    };
   };
 
   home.file.".config/btop/themes/catppuccin.theme".text = ''
