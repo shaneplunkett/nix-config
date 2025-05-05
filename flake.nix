@@ -45,6 +45,7 @@
         nvf.nixosModules.default
         home-manager.nixosModules.home-manager
         {
+          nixpkgs.config.allowUnfree = true;
           home-manager.users.shane = import ./home/shane/home.nix;
         }
       ];
