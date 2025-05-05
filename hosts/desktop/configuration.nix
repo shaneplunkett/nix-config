@@ -18,7 +18,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "desktop"; # Define your hostname.
-  networking.wireless.enable = true; # Enables wireless support via wpa_supplicant.
+  #networking.wireless.enable = true; # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true;
 
   hardware.bluetooth.enable = true;
