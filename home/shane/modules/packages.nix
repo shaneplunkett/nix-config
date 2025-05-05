@@ -1,21 +1,28 @@
 {pkgs, ...}: {
-  home.packages = [
-    pkgs.signal-desktop
-    pkgs.plex-desktop
-    pkgs.ferdium
-    pkgs.vesktop
-    pkgs.mangohud
-    pkgs.protonup
-    pkgs.starship
-    pkgs.jq
-    pkgs.bat
-    pkgs.lsd
-    pkgs.libnotify
-    pkgs.bambu-studio
-    pkgs.pavucontrol
-    pkgs.blueman
-    pkgs.hyprshot
-    pkgs.hyprpaper
-    pkgs.obsidian
+  home.packages = with pkgs; [
+    signal-desktop
+    plex-desktop
+    ferdium
+    vesktop
+    mangohud
+    protonup
+    starship
+    jq
+    bat
+    lsd
+    libnotify
+    bambu-studio
+    pavucontrol
+    blueman
+    hyprshot
+    hyprpaper
+    obsidian
+    libsForQt5.qt5.qtwayland
+    papirus-icon-theme
+    gtk3
+    glib
+    xcur2png
+    rubyPackages.glib2
+    libcanberra-gtk3
   ];
 }
