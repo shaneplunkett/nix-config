@@ -102,14 +102,13 @@
     jq
     gh
     hyprpolkitagent
-    catppuccin-sddm.override
-    {
-      flavor = "mocha";
-      font = "Noto Sans";
-      fontSize = "9";
-      loginBackground = false;
-    }
-
+    (catppuccin-sddm.override
+      {
+        flavor = "mocha";
+        font = "Noto Sans";
+        fontSize = "9";
+        loginBackground = false;
+      })
     inputs.nvf.packages.${system}.default
     inputs.zen-browser.packages."${system}".twilight-official
   ];
