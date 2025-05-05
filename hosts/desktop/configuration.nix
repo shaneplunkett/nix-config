@@ -53,7 +53,7 @@
     ];
   };
 
-  programs.regreet.enable = true;
+  services.displayManager.sddm.enable = true;
   programs.hyprland.enable = true;
   programs.hyprland.package = inputs.hyprland.packages."${pkgs.system}".hyprland;
 
