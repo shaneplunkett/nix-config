@@ -53,7 +53,11 @@
     ];
   };
 
-  services.displayManager.sddm.enable = true;
+  services.displayManager.sddm = {
+    enable = true;
+    theme = "catppuccin-mocha";
+    package = pkgs.kdePackages.sddm;
+  };
   services.displayManager.sddm.wayland.enable = true;
   programs.hyprland.enable = true;
   programs.hyprland.package = inputs.hyprland.packages."${pkgs.system}".hyprland;
@@ -98,6 +102,14 @@
     jq
     gh
     hyprpolkitagent
+    catppuccin-sddm.override
+    {
+      flavor = "mocha";
+      font = "Noto Sans";
+      fontSize = "9";
+      loginBackground = false;
+    }
+
     inputs.nvf.packages.${system}.default
     inputs.zen-browser.packages."${system}".twilight-official
   ];
