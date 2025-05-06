@@ -16,6 +16,7 @@
     ./modules/hyprpaper.nix
     ./modules/catppuccin.nix
     ./modules/cava.nix
+    ./modules/theme.nix
   ];
 
   home.username = "shane";

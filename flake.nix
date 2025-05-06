@@ -36,7 +36,7 @@
     packages."x86_64-linux".default =
       (nvf.lib.neovimConfiguration {
         pkgs = nixpkgs.legacyPackages."x86_64-linux";
-        modules = [./nvf-configuration.nix];
+        modules = [./hosts/desktop/nvf-configuration.nix];
       }).neovim;
 
     nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
@@ -53,6 +53,17 @@
           ];
         }
       ];
+    };
+
+    homeConfigurations.shane = home-manager.lib.homeManagerConfiguration {
+      pkgs = nixpkgs.legacyPackages.x86_64-linux;
+      modules = [
+        ./home/shane/home.nix
+        catppuccin.homeModules.catppuccin
+      ];
+      extraSpecialArgs = {
+        inherit inputs;
+      };
     };
   };
 }
