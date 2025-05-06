@@ -49,7 +49,7 @@
         {
           home-manager.sharedModules = [
             ./home/shane/home.nix
-            catppuccin.homeManagerModules.catppuccin
+            catppuccin.homeModules.catppuccin
           ];
         }
       ];
