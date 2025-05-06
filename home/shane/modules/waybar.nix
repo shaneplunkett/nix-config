@@ -134,7 +134,7 @@
           padding: 2px;
           border-radius: 8px;
           font-size: 16;
-          font-family: "JetBrainsMono Nerd Font" ;
+          font-family: "Mononoki Nerd Font" ;
           min-height: 20px;
       }
 
