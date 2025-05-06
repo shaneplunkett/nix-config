@@ -46,9 +46,11 @@
         ./hosts/desktop/configuration.nix
         nvf.nixosModules.default
         home-manager.nixosModules.home-manager
-        catppuccin.homeManagerModules.catppuccin
         {
-          home-manager.users.shane = import ./home/shane/home.nix;
+          home-manager.sharedModules = [
+            ./home/shane/home.nix
+            catppuccin.homeManagerModules.catppuccin
+          ];
         }
       ];
     };
