@@ -14,6 +14,8 @@
     ./modules/ghostty.nix
     ./modules/btop.nix
     ./modules/hyprpaper.nix
+    ./modules/catppuccin.nix
+    ./modules/cava.nix
   ];
 
   home.username = "shane";
