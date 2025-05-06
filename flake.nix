@@ -21,6 +21,7 @@
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
+      catppuccin.url = "github:catppuccin/nix";
     };
   };
 
@@ -29,6 +30,7 @@
     nixpkgs,
     nvf,
     home-manager,
+    catppuccin,
     ...
   } @ inputs: {
     packages."x86_64-linux".default =
@@ -44,6 +46,7 @@
         ./hosts/desktop/configuration.nix
         nvf.nixosModules.default
         home-manager.nixosModules.home-manager
+        catppuccin.homeManagerModules.catppuccin
         {
           home-manager.users.shane = import ./home/shane/home.nix;
         }
