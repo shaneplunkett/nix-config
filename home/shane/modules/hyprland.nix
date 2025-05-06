@@ -8,6 +8,7 @@
         "dunst"
         "systemctl --user start hyprpolkitagent"
         "waybar"
+        "hyprpaper"
       ];
 
       bind = [
