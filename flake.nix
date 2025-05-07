@@ -1,5 +1,5 @@
 {
-  description = "Shane's Nix Setup";
+  description = "Shane's NixOS setup";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -24,13 +24,13 @@
   };
 
   outputs =
-    inputs@{
+    {
       self,
       nixpkgs,
       home-manager,
       catppuccin,
       ...
-    }:
+    }@inputs:
     {
       nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -51,19 +51,6 @@
             };
           }
         ];
-      };
-
-      homeConfigurations.macbookpro = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.aarch64-darwin;
-        modules = [
-          ./home/shane/home.nix
-          catppuccin.homeModules.catppuccin
-        ];
-        extraSpecialArgs = {
-          system = "aarch64-darwin";
-          username = "shane";
-          inherit inputs;
-        };
       };
     };
 }
