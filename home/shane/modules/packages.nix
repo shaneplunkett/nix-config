@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
     signal-desktop
     plex-desktop
@@ -17,5 +18,6 @@
     hyprshot
     hyprpaper
     obsidian
+    lazygit
   ];
 }
