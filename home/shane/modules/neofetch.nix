@@ -1,6 +1,0 @@
-{ ... }:
-{
-  programs.neofetch = {
-    enable = true;
-  };
-}

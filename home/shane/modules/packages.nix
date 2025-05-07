@@ -19,5 +19,6 @@
     obsidian
     lazygit
     starship
+    neofetch
   ];
 }

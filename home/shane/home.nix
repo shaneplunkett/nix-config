@@ -19,7 +19,6 @@
     ./modules/theme.nix
     ./modules/neovim.nix
     ./modules/direnv.nix
-    ./modules/neofetch.nix
   ];
 
   home.username = "shane";
