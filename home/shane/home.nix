@@ -4,7 +4,6 @@
   ...
 }:
 {
-  nixpkgs.config.allowUnfree = true;
   imports = [
     ./modules/hyprland.nix
     ./modules/waybar.nix
@@ -20,6 +19,7 @@
     ./modules/theme.nix
     ./modules/neovim.nix
     ./modules/direnv.nix
+    ./modules/neofetch.nix
   ];
 
   home.username = "shane";

@@ -7,7 +7,6 @@
     vesktop
     mangohud
     protonup
-    starship
     jq
     bat
     lsd
@@ -19,5 +18,6 @@
     hyprpaper
     obsidian
     lazygit
+    starship
   ];
 }

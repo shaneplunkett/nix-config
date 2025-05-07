@@ -99,6 +99,7 @@
     gh
     hyprpolkitagent
     gcc
+    wl-clipboard
     (catppuccin-sddm.override {
       flavor = "mocha";
       font = "Mononoki Nerd Font";
