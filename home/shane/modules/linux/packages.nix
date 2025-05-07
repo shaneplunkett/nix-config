@@ -7,9 +7,6 @@
     vesktop
     mangohud
     protonup
-    jq
-    bat
-    lsd
     libnotify
     bambu-studio
     pavucontrol
@@ -17,8 +14,5 @@
     hyprshot
     hyprpaper
     obsidian
-    lazygit
-    starship
-    neofetch
   ];
 }
