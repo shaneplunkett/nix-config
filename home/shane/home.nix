@@ -19,6 +19,7 @@
     ./modules/cava.nix
     ./modules/theme.nix
     ./modules/neovim.nix
+    ./modules/direnv.nix
   ];
 
   home.username = "shane";
