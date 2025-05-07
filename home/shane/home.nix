@@ -17,6 +17,7 @@
     ./modules/catppuccin.nix
     ./modules/cava.nix
     ./modules/theme.nix
+./modules/neovim.nix
   ];
 
   home.username = "shane";

@@ -98,7 +98,6 @@
         fontSize = "14";
         loginBackground = false;
       })
-    inputs.nvf.packages.${system}.default
     inputs.zen-browser.packages."${system}".twilight-official
   ];
 

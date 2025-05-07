@@ -9,10 +9,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nvf.url = "github:notashelf/nvf";
-
     hyprland.url = "github:hyprwm/Hyprland";
-
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
@@ -28,23 +25,15 @@
   outputs = {
     self,
     nixpkgs,
-    nvf,
     home-manager,
     catppuccin,
     ...
   } @ inputs: {
-    packages."x86_64-linux".default =
-      (nvf.lib.neovimConfiguration {
-        pkgs = nixpkgs.legacyPackages."x86_64-linux";
-        modules = [./hosts/desktop/nvf-configuration.nix];
-      }).neovim;
-
     nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {inherit inputs;};
       modules = [
         ./hosts/desktop/configuration.nix
-        nvf.nixosModules.default
         home-manager.nixosModules.home-manager
         {
           home-manager.sharedModules = [
