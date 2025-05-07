@@ -1,44 +1,45 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
 
-programs.neovim = {
-enable = true;
-defaultEditor = true;
-viAlias  = true;
-vimAlias = true;
-vimdiffAlias = true;
-coc.enable = true;
-withNodeJs = true;
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
+    viAlias = true;
+    vimAlias = true;
+    vimdiffAlias = true;
+    coc.enable = true;
+    withNodeJs = true;
 
-extraLuaPackages = ps: [
-ps.lua
-ps.luarocks-nix
-ps.magick
+    extraLuaPackages = ps: [
+      ps.lua
+      ps.luarocks-nix
+      ps.magick
 
-];
+    ];
 
-extraPackages = with pkgs; [
+    extraPackages = with pkgs; [
 
-ripgrep
-fd
-lazygit
-fzf
+      ripgrep
+      fd
+      lazygit
+      fzf
 
-lua-language-server
-nixd
-nil
+      lua-language-server
+      nixd
+      nil
 
-nixfmt-rfc-style
-shfmt
-black
-sylua
+      nixfmt-rfc-style
+      shfmt
+      black
+      stylua
 
-];
+    ];
 
-};
+  };
 
-home.file "./.config/nvim/" {
-source = ./nvim;
-recursive = true;
+  home.file."./.config/nvim/" = {
+    source = ./nvim;
+    recursive = true;
 
-};
+  };
 }

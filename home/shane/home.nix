@@ -2,7 +2,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   nixpkgs.config.allowUnfree = true;
   imports = [
     ./modules/hyprland.nix
@@ -17,7 +18,7 @@
     ./modules/catppuccin.nix
     ./modules/cava.nix
     ./modules/theme.nix
-./modules/neovim.nix
+    ./modules/neovim.nix
   ];
 
   home.username = "shane";

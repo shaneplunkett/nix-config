@@ -3,7 +3,8 @@
   pkgs,
   inputs,
   ...
-}: {
+}:
+{
   imports = [
     ./hardware-configuration.nix
     inputs.home-manager.nixosModules.default
@@ -18,7 +19,10 @@
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
 
-  nix.settings.experimental-features = ["nix-command" "flakes"];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   time.timeZone = "Australia/Melbourne";
   i18n.defaultLocale = "en_AU.UTF-8";
@@ -65,8 +69,11 @@
   users.users.shane = {
     isNormalUser = true;
     description = "Shane Plunkett";
-    extraGroups = ["networkmanager" "wheel"];
-    packages = with pkgs; [];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+    ];
+    packages = with pkgs; [ ];
   };
 
   programs.steam.enable = true;
@@ -91,13 +98,13 @@
     mangohud
     gh
     hyprpolkitagent
-    (catppuccin-sddm.override
-      {
-        flavor = "mocha";
-        font = "Mononoki Nerd Font";
-        fontSize = "14";
-        loginBackground = false;
-      })
+    gcc
+    (catppuccin-sddm.override {
+      flavor = "mocha";
+      font = "Mononoki Nerd Font";
+      fontSize = "14";
+      loginBackground = false;
+    })
     inputs.zen-browser.packages."${system}".twilight-official
   ];
 
