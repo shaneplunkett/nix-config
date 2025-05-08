@@ -19,6 +19,7 @@
     ./modules/common/neovim.nix
     ./modules/common/starship.nix
     ./modules/common/packages.nix
+    ./modules/common/tmux.nix
 
     ./modules/linux/dunst.nix
     ./modules/linux/hyprland.nix

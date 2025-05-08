@@ -1,4 +1,6 @@
-{...}: {
+{ ... }:
+{
+  home.sessionVariables.NIXOS_OZONE_WL = "1";
   wayland.windowManager.hyprland = {
     enable = true;
     settings = {
@@ -18,6 +20,23 @@
         "$mod, space, exec, rofi -show drun"
         "$mod_SHIFT, S, exec, hyprshot -m region --clipboard-only"
       ];
+      bindm = [
+        "$mod, mouse:272, movewindow"
+        "$mod, mouse:273, resizewindow"
+
+      ];
+      windowrulev2 = [
+        "opaque, title:Plex*"
+        #Thunar
+        "float, title:.*Thunar"
+        "size 1100 700, title:.*Thunar"
+        #Bluetooth
+        "float, title:.*Bluetooth Devices"
+        "size 1100 700, title:.*Bluetooth Devices"
+        #Volume Control
+        "float, title:.*Volume Control"
+        "size 1100 700, title:.*Volume Control"
+      ];
 
       monitor = [
         # Center primary monitor
@@ -31,6 +50,8 @@
       ];
       decoration = {
         rounding = 10;
+        active_opacity = 1.0;
+        inactive_opacity = 0.96;
       };
       general = {
         border_size = 2;
