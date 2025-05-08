@@ -14,5 +14,6 @@
     fish.enable = true;
     starship.enable = true;
     cursors.enable = true;
+    tmux.enable = false;
   };
 }
