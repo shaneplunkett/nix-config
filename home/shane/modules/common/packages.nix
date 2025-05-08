@@ -7,5 +7,6 @@
     lazygit
     starship
     neofetch
+    wezterm
   ];
 }
