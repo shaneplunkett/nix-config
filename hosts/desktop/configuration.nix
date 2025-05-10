@@ -75,6 +75,10 @@
     ];
     packages = with pkgs; [ ];
   };
+  hardware.graphics = {
+    enable = true;
+  };
+  services.xserver.videoDrivers = [ "amdgpu" ];
 
   programs.steam.enable = true;
   programs.steam.gamescopeSession.enable = true;
@@ -96,6 +100,7 @@
 
   environment.systemPackages = with pkgs; [
     vim
+    bitwarden-cli
     git
     wget
     home-manager
@@ -104,6 +109,11 @@
     hyprpolkitagent
     gcc
     wl-clipboard
+    zip
+    unzip
+    lutris
+    heroic
+    ffmpeg-full
     (catppuccin-sddm.override {
       flavor = "mocha";
       font = "Mononoki Nerd Font";

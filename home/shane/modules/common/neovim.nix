@@ -25,6 +25,8 @@
       fzf
 
       lua-language-server
+      nodePackages.jsonlint
+
       nixd
       nil
 
@@ -32,6 +34,7 @@
       shfmt
       black
       stylua
+      luajitPackages.luacheck
 
     ];
 
