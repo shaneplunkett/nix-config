@@ -40,6 +40,14 @@
         system = "aarch64-darwin";
         modules = [
           ./hosts/personalmac/configuration.nix
+          home-manager.darwinModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.shane = import ./home/shane/home.nix;
+            };
+          }
         ];
       };
 

@@ -3,11 +3,7 @@
   pkgs,
   ...
 }:
-
 {
-
-  home.username = "shane";
-  home.homeDirectory = "/home/shane";
 
   imports = [
     ./modules/common/btop.nix
@@ -31,6 +27,9 @@
     ./modules/linux/packages.nix
   ];
 
+  home.username = "shane";
+  home.homeDirectory = "/home/shane";
+
   home.stateVersion = "24.11";
   programs.home-manager.enable = true;
 
@@ -38,5 +37,4 @@
     EDITOR = "nvim";
     STEAM_EXTRA_COMPAT_TOOLS_PATHS = "\${HOME}/.steam/root/compatibilitytools.d";
   };
-
 }
