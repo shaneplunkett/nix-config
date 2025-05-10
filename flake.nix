@@ -45,7 +45,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              users.shane = import ./home/shane/home.nix;
+              users.shane = import ./home/shane/homemac.nix;
             };
           }
         ];
