@@ -6,6 +6,7 @@
       "zen"
       "ghostty"
       "figma"
+      "ferdium"
     ];
     onActivation.cleanup = "zap";
   };

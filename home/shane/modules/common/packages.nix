@@ -10,5 +10,6 @@
     wezterm
     vdhcoapp
     obsidian
+    vesktop
   ];
 }
