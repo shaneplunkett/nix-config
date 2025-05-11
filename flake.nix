@@ -24,6 +24,18 @@
     };
 
     catppuccin.url = "github:catppuccin/nix";
+
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+
+    # Optional: Declarative tap management
+    homebrew-core = {
+      url = "github:homebrew/homebrew-core";
+      flake = false;
+    };
+    homebrew-cask = {
+      url = "github:homebrew/homebrew-cask";
+      flake = false;
+    };
   };
 
   outputs =
@@ -33,6 +45,9 @@
       home-manager,
       catppuccin,
       nix-darwin,
+      nix-homebrew,
+      homebrew-core,
+      homebrew-cask,
       ...
     }@inputs:
     {
@@ -41,6 +56,19 @@
         modules = [
           ./hosts/personalmac/configuration.nix
           home-manager.darwinModules.home-manager
+          nix-homebrew.darwinModules.nix-homebrew
+          {
+            nix-homebrew = {
+              enable = true;
+              enableRosetta = true;
+              user = "shane";
+              taps = {
+                "homebrew/homebrew-core" = homebrew-core;
+                "homebrew/homebrew-cask" = homebrew-cask;
+              };
+              mutableTaps = false;
+            };
+          }
           {
             home-manager = {
               useGlobalPkgs = true;

@@ -7,11 +7,9 @@
 
   imports = [
     ./modules/common/btop.nix
-    ./modules/common/catppuccin.nix
     ./modules/common/cava.nix
     ./modules/common/direnv.nix
     ./modules/common/fish.nix
-    ./modules/common/ghostty.nix
     ./modules/common/neovim.nix
     ./modules/common/starship.nix
     ./modules/common/packages.nix
@@ -19,12 +17,14 @@
     ./modules/common/git.nix
 
     ./modules/linux/dunst.nix
+    ./modules/linux/ghostty.nix
     ./modules/linux/hyprland.nix
     ./modules/linux/hyprpaper.nix
     ./modules/linux/rofi.nix
     ./modules/linux/theme.nix
     ./modules/linux/waybar.nix
     ./modules/linux/packages.nix
+    ./modules/linux/catppuccin.nix
   ];
 
   home.username = "shane";

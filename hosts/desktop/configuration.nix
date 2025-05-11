@@ -54,7 +54,11 @@
     package = pkgs.kdePackages.sddm;
   };
   services.displayManager.sddm.wayland.enable = true;
-  programs.hyprland.enable = true;
+  programs.hyprland = {
+    enable = true;
+    portalPackage =
+      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+  };
   programs.hyprland.package = inputs.hyprland.packages."${pkgs.system}".hyprland;
 
   services.pulseaudio.enable = false;
@@ -64,6 +68,7 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    wireplumber.enable = true;
   };
 
   users.users.shane = {
@@ -79,6 +84,33 @@
     enable = true;
   };
   services.xserver.videoDrivers = [ "amdgpu" ];
+
+  fileSystems."home/shane/unraid/programs" = {
+    device = "//192.168.50.214/Programs";
+    fsType = "cifs";
+    options = [
+      "guest"
+      "uid=1000"
+      "gid=100" # Replace with your GID
+      "vers=3.0"
+      "x-systemd.automount"
+      "x-systemd.idle-timeout=600"
+      "nofail"
+    ];
+  };
+  fileSystems."home/shane/unraid/media" = {
+    device = "//192.168.50.214/media";
+    fsType = "cifs";
+    options = [
+      "guest"
+      "uid=1000"
+      "gid=100" # Replace with your GID
+      "vers=3.0"
+      "x-systemd.automount"
+      "x-systemd.idle-timeout=600"
+      "nofail"
+    ];
+  };
 
   programs.steam.enable = true;
   programs.steam.gamescopeSession.enable = true;
@@ -99,6 +131,12 @@
   };
 
   environment.systemPackages = with pkgs; [
+    ffmpeg
+    gst_all_1.gstreamer
+    gst_all_1.gst-plugins-base
+    gst_all_1.gst-plugins-bad
+    gst_all_1.gst-plugins-good
+    gst_all_1.gst-libav
     vim
     bitwarden-cli
     git
@@ -120,8 +158,14 @@
       fontSize = "14";
       loginBackground = false;
     })
-    inputs.zen-browser.packages."${system}".twilight-official
+    inputs.zen-browser.packages."${system}".default
   ];
+
+  environment.sessionVariables = {
+    NIXOS_OZONE_LAYER = "1";
+    MOZ_ENABLE_WAYLAND = "1";
+    WLR_RENDERER_ALLOW_SOFTWARE = "1";
+  };
 
   system.stateVersion = "24.11";
 }
