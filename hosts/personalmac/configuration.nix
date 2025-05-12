@@ -117,6 +117,7 @@
       "figma"
       "ferdium"
       "slack"
+      "postman"
     ];
     onActivation.cleanup = "zap";
 
