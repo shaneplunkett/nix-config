@@ -83,6 +83,38 @@
         ];
       };
 
+      darwinConfigurations."Shanes-Work-MacBook-Pro" = nix-darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        modules = [
+          ./hosts/workmac/configuration.nix
+          home-manager.darwinModules.home-manager
+          nix-homebrew.darwinModules.nix-homebrew
+          {
+            nix-homebrew = {
+              enable = true;
+              enableRosetta = true;
+              autoMigrate = true;
+              user = "shane";
+              taps = {
+                "homebrew/homebrew-core" = homebrew-core;
+                "homebrew/homebrew-cask" = homebrew-cask;
+              };
+              mutableTaps = true;
+            };
+          }
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.shane = import ./home/shane/homemac.nix;
+              sharedModules = [
+                catppuccin.homeModules.catppuccin
+              ];
+            };
+          }
+        ];
+      };
+
       nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
