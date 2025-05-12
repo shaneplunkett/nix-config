@@ -117,7 +117,6 @@
     casks = [
       "zen"
       "ghostty"
-      "figma"
       "ferdium"
       "postman"
       "duet"
