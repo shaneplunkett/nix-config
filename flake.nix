@@ -51,7 +51,7 @@
       ...
     }@inputs:
     {
-      darwinConfigurations."Shanes-Work-MacBook-Pro" = nix-darwin.lib.darwinSystem {
+      darwinConfigurations."Shanes-MacBook-Pro" = nix-darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
           ./hosts/personalmac/configuration.nix
@@ -75,6 +75,9 @@
               useGlobalPkgs = true;
               useUserPackages = true;
               users.shane = import ./home/shane/homemac.nix;
+              sharedModules = [
+                catppuccin.homeModules.catppuccin
+              ];
             };
           }
         ];

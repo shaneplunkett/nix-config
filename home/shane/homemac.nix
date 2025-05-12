@@ -17,15 +17,15 @@
     ./modules/common/git.nix
 
     ./modules/macos/packages.nix
+    ./modules/macos/catppuccin.nix
   ];
 
   home.username = "shane";
-	home.homeDirectory = "/Users/shane";
+  home.homeDirectory = "/Users/shane";
 
   home.stateVersion = "24.11";
 
   programs.home-manager.enable = true;
-  programs.fish.enable = true;
 
   home.sessionVariables = {
     EDITOR = "nvim";
