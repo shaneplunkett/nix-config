@@ -12,6 +12,7 @@
     pavucontrol
     blueman
     hyprshot
+    vdhcoapp
     hyprpaper
     obsidian
   ];

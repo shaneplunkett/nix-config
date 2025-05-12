@@ -51,7 +51,7 @@
       ...
     }@inputs:
     {
-      darwinConfigurations."Shanes-Personal-MacBook-Pro" = nix-darwin.lib.darwinSystem {
+      darwinConfigurations."Shanes-Work-MacBook-Pro" = nix-darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
           ./hosts/personalmac/configuration.nix
@@ -61,12 +61,13 @@
             nix-homebrew = {
               enable = true;
               enableRosetta = true;
+              autoMigrate = true;
               user = "shane";
               taps = {
                 "homebrew/homebrew-core" = homebrew-core;
                 "homebrew/homebrew-cask" = homebrew-cask;
               };
-              mutableTaps = false;
+              mutableTaps = true;
             };
           }
           {

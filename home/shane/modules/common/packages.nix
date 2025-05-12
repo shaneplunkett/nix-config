@@ -8,7 +8,6 @@
     starship
     neofetch
     wezterm
-    vdhcoapp
     obsidian
     vesktop
   ];

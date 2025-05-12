@@ -16,14 +16,16 @@
     ./modules/common/tmux.nix
     ./modules/common/git.nix
 
-    ./modules/macos/brew.nix
+    ./modules/macos/packages.nix
   ];
 
   home.username = "shane";
-  home.homeDirectory = "/Users/shane";
+	home.homeDirectory = "/Users/shane";
 
   home.stateVersion = "24.11";
+
   programs.home-manager.enable = true;
+  programs.fish.enable = true;
 
   home.sessionVariables = {
     EDITOR = "nvim";
