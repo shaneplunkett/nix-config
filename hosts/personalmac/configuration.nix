@@ -7,6 +7,8 @@
     mkalias
     alt-tab-macos
     home-manager
+    raycast
+    ytmdesktop
   ];
   users.users.shane.home = "/Users/shane";
 
@@ -118,6 +120,10 @@
       "ferdium"
       "slack"
       "postman"
+      "duet"
+      "elgato-camera-hub"
+      "tailscale"
+      "chatgpt"
     ];
     onActivation.cleanup = "zap";
 
