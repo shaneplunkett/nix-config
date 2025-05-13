@@ -10,5 +10,6 @@
     wezterm
     obsidian
     vesktop
+    google-chrome
   ];
 }

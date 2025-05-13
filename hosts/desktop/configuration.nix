@@ -86,7 +86,7 @@
   services.xserver.videoDrivers = [ "amdgpu" ];
 
   fileSystems."home/shane/unraid/programs" = {
-    device = "//192.168.50.214/Programs";
+    device = "//192.168.1.214/Programs";
     fsType = "cifs";
     options = [
       "guest"
@@ -99,7 +99,7 @@
     ];
   };
   fileSystems."home/shane/unraid/media" = {
-    device = "//192.168.50.214/media";
+    device = "//192.168.1.214/media";
     fsType = "cifs";
     options = [
       "guest"
