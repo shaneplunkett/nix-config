@@ -15,5 +15,6 @@
     vdhcoapp
     hyprpaper
     obsidian
+    orca-slicer
   ];
 }
