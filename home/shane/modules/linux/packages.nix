@@ -8,7 +8,6 @@
     mangohud
     protonup
     libnotify
-    bambu-studio
     pavucontrol
     blueman
     hyprshot
@@ -16,5 +15,10 @@
     hyprpaper
     obsidian
     orca-slicer
+    todoist-electron
+    vlc
+    vivaldi
+    vivaldi-ffmpeg-codecs
+
   ];
 }
