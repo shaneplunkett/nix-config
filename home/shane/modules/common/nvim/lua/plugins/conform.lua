@@ -33,6 +33,8 @@ return {
         jsonc = { 'prettier' },
         lua = { 'stylua' },
         nix = { 'nixfmt' },
+        mdx = { 'prettier' },
+        markdown = { 'prettier' },
         python = { 'black' },
         sh = { 'shfmt' },
         svelte = { 'prettier' },

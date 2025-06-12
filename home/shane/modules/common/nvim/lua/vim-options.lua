@@ -51,4 +51,9 @@ vim.keymap.set('n', '<c-k>', ':wincmd k<CR>', { desc = 'Move to the window above
 vim.keymap.set('n', '<c-j>', ':wincmd j<CR>', { desc = 'Move to the window below' })
 vim.keymap.set('n', '<c-h>', ':wincmd h<CR>', { desc = 'Move to the window on the left' })
 vim.keymap.set('n', '<c-l>', ':wincmd l<CR>', { desc = 'Move to the window on the right' })
+vim.filetype.add {
+  extension = {
+    mdx = 'mdx',
+  },
+}
 vim.opt_local.conceallevel = 2

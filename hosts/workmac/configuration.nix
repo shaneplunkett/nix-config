@@ -9,8 +9,13 @@
     home-manager
     raycast
     ytmdesktop
+    google-chrome
+    signal-desktop-bin
+    jetbrains.datagrip
+    gh
   ];
   users.users.shane.home = "/Users/shane";
+  system.primaryUser = "shane";
 
   home-manager.backupFileExtension = "backup";
 
@@ -22,7 +27,15 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # macOS system settings
+  fonts = {
+    packages = with pkgs; [
+      nerd-fonts.fira-code
+      nerd-fonts.jetbrains-mono
+      nerd-fonts.hack
+      nerd-fonts.mononoki
+    ];
+  };
+
   system = {
     keyboard = {
       enableKeyMapping = true;
@@ -50,8 +63,6 @@
       };
 
       controlcenter = {
-        AirDrop = true;
-        Bluetooth = true;
       };
 
       WindowManager = {
@@ -125,6 +136,8 @@
       "elgato-camera-hub"
       "tailscale"
       "chatgpt"
+      "plex"
+      "hiddenbar"
     ];
     masApps = {
       "Word" = 462054704;

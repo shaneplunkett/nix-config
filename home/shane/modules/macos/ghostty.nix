@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
 
-  home.file."./.config/ghostty/" = {
+  home.file.".config/ghostty" = {
     source = ./ghostty;
     recursive = true;
 
