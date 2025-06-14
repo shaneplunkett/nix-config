@@ -18,11 +18,6 @@
       inputs.hyprland.follows = "hyprland";
     };
 
-    zen-browser = {
-      url = "github:0xc000022070/zen-browser-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     catppuccin.url = "github:catppuccin/nix";
 
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
@@ -36,6 +31,7 @@
       url = "github:homebrew/homebrew-cask";
       flake = false;
     };
+
   };
 
   outputs =

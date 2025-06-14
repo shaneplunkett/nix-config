@@ -47,6 +47,9 @@
       nerd-fonts.mononoki
     ];
   };
+  services.teamviewer = {
+    enable = true;
+  };
 
   services.displayManager.sddm = {
     enable = true;
@@ -145,13 +148,13 @@
     unzip
     lutris
     heroic
+    teamviewer
     (catppuccin-sddm.override {
       flavor = "mocha";
       font = "Mononoki Nerd Font";
       fontSize = "14";
       loginBackground = false;
     })
-    inputs.zen-browser.packages."${system}".default
   ];
 
   environment.sessionVariables = {

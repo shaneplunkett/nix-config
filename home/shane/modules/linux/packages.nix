@@ -4,7 +4,6 @@
     signal-desktop
     plex-desktop
     ferdium
-    vesktop
     mangohud
     protonup
     libnotify

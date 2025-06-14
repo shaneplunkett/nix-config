@@ -5,6 +5,7 @@
     enable = true;
     settings = {
       "$mod" = "SUPER";
+      "$terminal" = "ghostty --gtk-single-instance=true";
 
       exec-once = [
         "dunst"
@@ -14,8 +15,9 @@
       ];
 
       bind = [
-        "$mod_SHIFT, F, exec, zen"
-        "$mod_SHIFT, Return, exec, ghostty"
+        "$mod_SHIFT, B, exec, vivaldi"
+        "$mod_SHIFT, E, exec, thunar"
+        "$mod_SHIFT, Return, exec, $terminal"
         "$mod_SHIFT, Q, killactive"
         "$mod, space, exec, rofi -show drun"
         "$mod_SHIFT, S, exec, hyprshot -m region --clipboard-only"
@@ -25,6 +27,23 @@
         "$mod, mouse:273, resizewindow"
 
       ];
+
+      animations = {
+        enabled = true;
+
+        bezier = [
+          "easeout, 0.25, 0.1, 0.25, 1"
+        ];
+
+        animation = [
+          "windows, 1, 3, easeout, gnomed"
+          "windowsOut, 1, 3, easeout, gnomed"
+          "fade, 1, 3, easeout"
+          "border, 1, 10, easeout"
+          "workspaces, 1, 2, easeout, slide"
+        ];
+      };
+
       windowrulev2 = [
         "opaque, title:Plex*"
         #Thunar
