@@ -11,5 +11,6 @@
     obsidian
     vesktop
     google-chrome
+    go
   ];
 }
