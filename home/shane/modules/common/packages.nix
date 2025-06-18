@@ -12,5 +12,6 @@
     vesktop
     google-chrome
     go
+    todoist
   ];
 }

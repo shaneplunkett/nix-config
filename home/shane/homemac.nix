@@ -16,7 +16,6 @@
     ./modules/common/tmux.nix
     ./modules/common/git.nix
     ./modules/macos/ghostty.nix
-    ./modules/macos/aerospace.nix
 
     ./modules/macos/packages.nix
     ./modules/macos/catppuccin.nix

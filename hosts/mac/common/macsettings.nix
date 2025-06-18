@@ -1,28 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  # System-wide packages
-  environment.systemPackages = with pkgs; [
-    vim
-    mkalias
-    alt-tab-macos
-    home-manager
-    raycast
-    ytmdesktop
-  ];
-  users.users.shane.home = "/Users/shane";
 
-  home-manager.backupFileExtension = "backup";
-
-  programs.fish.enable = true;
-
-  # Enable experimental Nix features
-  nix.settings.experimental-features = "nix-command flakes";
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
-  # macOS system settings
   system = {
     keyboard = {
       enableKeyMapping = true;
@@ -50,8 +29,13 @@
       };
 
       controlcenter = {
-        AirDrop = true;
-        Bluetooth = true;
+        AirDrop = false;
+        BatteryShowPercentage = false;
+        Bluetooth = false;
+        Display = false;
+        FocusModes = false;
+        NowPlaying = false;
+        Sound = false;
       };
 
       WindowManager = {
@@ -110,26 +94,4 @@
     touchIdAuth = true;
     watchIdAuth = true;
   };
-
-  #Homebrew
-  homebrew = {
-    enable = true;
-    casks = [
-      "zen"
-      "ghostty"
-      "ferdium"
-      "postman"
-      "duet"
-      "elgato-camera-hub"
-      "tailscale"
-      "chatgpt"
-    ];
-    onActivation.cleanup = "zap";
-    onActivation.autoUpdate = true;
-    onActivation.upgrade = true;
-
-  };
-
-  # State version for nix-darwin; leave as an integer
-  system.stateVersion = 6;
 }
