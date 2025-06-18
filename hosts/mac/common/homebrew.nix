@@ -15,7 +15,7 @@
       "plex"
       "hiddenbar"
     ];
-    onActivation.cleanup = "zap";
+    onActivation.cleanup = "uninstall";
     onActivation.autoUpdate = true;
     onActivation.upgrade = true;
 
