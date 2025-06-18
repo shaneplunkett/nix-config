@@ -10,7 +10,6 @@
     ytmdesktop
     google-chrome
     signal-desktop-bin
-    jetbrains.datagrip
     gh
   ];
 }

@@ -7,8 +7,6 @@
     casks = [
       "zen"
       "ghostty"
-      "figma"
-      "slack"
       "postman"
       "duet"
       "elgato-camera-hub"
@@ -17,10 +15,6 @@
       "plex"
       "hiddenbar"
     ];
-    masApps = {
-      "Word" = 462054704;
-      "Excel" = 462058435;
-    };
     onActivation.cleanup = "zap";
     onActivation.autoUpdate = true;
     onActivation.upgrade = true;

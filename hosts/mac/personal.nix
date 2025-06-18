@@ -8,6 +8,7 @@
     ./common/user.nix
     ./common/packages.nix
     ./common/homebrew.nix
+    ./common/fish.nix
   ];
 
   home-manager.backupFileExtension = "backup";

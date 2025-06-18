@@ -1,4 +1,9 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   imports = [
@@ -8,6 +13,21 @@
     ./common/user.nix
     ./common/packages.nix
     ./common/homebrew.nix
+    ./common/fish.nix
+  ];
+
+  homebrew.casks = lib.mkAfter [
+    "slack"
+    "figma"
+  ];
+
+  homebrew.masApps = {
+    "Word" = 462054704;
+    "Excel" = 462058435;
+  };
+
+  environment.systemPackages = lib.mkAfter [
+    pkgs.jetbrains.datagrip
   ];
 
   home-manager.backupFileExtension = "backup";
@@ -17,32 +37,6 @@
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-
-  #Homebrew
-  homebrew = {
-    enable = true;
-    casks = [
-      "zen"
-      "ghostty"
-      "figma"
-      "slack"
-      "postman"
-      "duet"
-      "elgato-camera-hub"
-      "tailscale"
-      "chatgpt"
-      "plex"
-      "hiddenbar"
-    ];
-    masApps = {
-      "Word" = 462054704;
-      "Excel" = 462058435;
-    };
-    onActivation.cleanup = "zap";
-    onActivation.autoUpdate = true;
-    onActivation.upgrade = true;
-
-  };
 
   # State version for nix-darwin; leave as an integer
   system.stateVersion = 6;
