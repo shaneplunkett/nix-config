@@ -5,6 +5,7 @@
     shellAliases = {
       cat = "bat";
       ls = "lsd";
+      drs = "sudo darwin-rebuild switch --flake ~/nix-config";
     };
     generateCompletions = true;
     interactiveShellInit = ''
