@@ -11,5 +11,6 @@
     google-chrome
     signal-desktop-bin
     gh
+    jankyborders
   ];
 }
