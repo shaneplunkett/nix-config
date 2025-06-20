@@ -15,6 +15,7 @@
       "plex"
       "hiddenbar"
       "ferdium"
+      "hammerspoon"
     ];
     onActivation.cleanup = "uninstall";
     onActivation.autoUpdate = true;

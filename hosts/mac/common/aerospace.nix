@@ -34,16 +34,24 @@
 
         # Workspace Config
         "alt-1" = "workspace 1";
+        "alt-a" = "workspace A";
         "alt-b" = "workspace B";
+        "alt-e" = "workspace E";
         "alt-t" = "workspace T";
         "alt-s" = "workspace S";
+        "alt-m" = "workspace M";
+        "alt-o" = "workspace O";
         "alt-p" = "workspace P";
 
         # Move Between Workspace
         "alt-shift-1" = "move-node-to-workspace 1";
+        "alt-shift-a" = "move-node-to-workspace A";
         "alt-shift-b" = "move-node-to-workspace B";
+        "alt-shift-e" = "move-node-to-workspace E";
         "alt-shift-t" = "move-node-to-workspace T";
         "alt-shift-s" = "move-node-to-workspace S";
+        "alt-shift-m" = "move-node-to-workspace M";
+        "alt-shift-o" = "move-node-to-workspace O";
         "alt-shift-p" = "move-node-to-workspace P";
       };
       # Join Windows
