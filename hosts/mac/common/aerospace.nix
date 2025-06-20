@@ -5,7 +5,7 @@
     enable = true;
     settings = {
       after-startup-command = [
-        "exec-and-forget borders active_color=0xffcba6f7 inactive_color=0xff585b70 width=5.0"
+        "exec-and-forget /run/current-system/sw/bin/borders active_color=0xffcba6f7 inactive_color=0xff45475a width=10.0"
       ];
       default-root-container-layout = "tiles";
       automatically-unhide-macos-hidden-apps = true;
@@ -33,12 +33,14 @@
         "alt-equal" = "resize smart +50";
 
         # Workspace Config
+        "alt-1" = "workspace 1";
         "alt-b" = "workspace B";
         "alt-t" = "workspace T";
         "alt-s" = "workspace S";
         "alt-p" = "workspace P";
 
         # Move Between Workspace
+        "alt-shift-1" = "move-node-to-workspace 1";
         "alt-shift-b" = "move-node-to-workspace B";
         "alt-shift-t" = "move-node-to-workspace T";
         "alt-shift-s" = "move-node-to-workspace S";

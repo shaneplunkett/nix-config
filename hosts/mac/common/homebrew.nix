@@ -14,6 +14,7 @@
       "chatgpt"
       "plex"
       "hiddenbar"
+      "ferdium"
     ];
     onActivation.cleanup = "uninstall";
     onActivation.autoUpdate = true;
