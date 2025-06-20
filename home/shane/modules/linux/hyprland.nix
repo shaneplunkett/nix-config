@@ -17,7 +17,7 @@
       bind = [
         "$mod_SHIFT, B, exec, vivaldi"
         "$mod_SHIFT, E, exec, thunar"
-        "$mod_SHIFT, Return, exec, $terminal"
+        "$mod_SHIFT, T, exec, $terminal"
         "$mod_SHIFT, Q, killactive"
         "$mod, space, exec, rofi -show drun"
         "$mod_SHIFT, S, exec, hyprshot -m region --clipboard-only"
@@ -59,13 +59,8 @@
 
       monitor = [
         # Center primary monitor
-        "DP-2,3840x2160@122,0x0,1"
+        "DP-2,3840x2160@240,0x0,1, cm, hdr, vrr, 1"
 
-        # Left portrait monitor
-        "HDMI-A-1,1920x2160@60,-1920x0,1"
-
-        # Right portrait monitor
-        "HDMI-A-2,1920x2160@60,3840x0,1"
       ];
       decoration = {
         rounding = 10;
