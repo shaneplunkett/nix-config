@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   programs.waybar = {
     enable = true;
 
@@ -9,26 +10,19 @@
         layer = "top";
         position = "top";
         height = 30;
-        modules-right = ["clock" "network" "bluetooth" "pulseaudio" "tray"];
-        modules-center = ["hyprland/workspaces"];
-        modules-left = ["cpu" "memory" "temperature"];
-
-        "hyprland/workspaces" = {
-          format = "{icon}";
-          format-icons = {
-            "1" = "";
-            "2" = "";
-            "3" = "";
-            "4" = "";
-            "5" = "";
-            "6" = "";
-            active = "";
-            default = "";
-          };
-          "persistent-workspaces"."*" = [1 2 3 4 5 6];
-        };
-
-        "hyprland/window".format = "";
+        modules-right = [
+          "clock"
+          "network"
+          "bluetooth"
+          "pulseaudio"
+          "tray"
+        ];
+        modules-center = [ ];
+        modules-left = [
+          "cpu"
+          "memory"
+          "temperature"
+        ];
 
         tray = {
           icon-size = 14;
@@ -54,7 +48,11 @@
 
         temperature = {
           format = "{temperatureC}°C {icon}";
-          format-icons = ["" "" "󰈸"];
+          format-icons = [
+            ""
+            ""
+            "󰈸"
+          ];
           tooltip = false;
           on-click = "foot btop";
           "critical-threshold" = 80;
@@ -62,7 +60,17 @@
 
         backlight = {
           format = "{percent}% {icon}";
-          format-icons = ["" "" "" "" "" "" "" "" ""];
+          format-icons = [
+            ""
+            ""
+            ""
+            ""
+            ""
+            ""
+            ""
+            ""
+            ""
+          ];
           tooltip = false;
         };
 
@@ -76,7 +84,13 @@
           format-charging = "{capacity}% 󰂄";
           format-plugged = "{capacity}% ";
           format-alt = "{time} {icon} ";
-          format-icons = ["" "" "" "" ""];
+          format-icons = [
+            ""
+            ""
+            ""
+            ""
+            ""
+          ];
         };
 
         "power-profiles-daemon" = {
@@ -122,7 +136,11 @@
             phone = "";
             portable = "";
             car = "";
-            default = ["" "" ""];
+            default = [
+              ""
+              ""
+              ""
+            ];
           };
           on-click = "pavucontrol";
         };

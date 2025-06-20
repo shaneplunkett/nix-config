@@ -15,13 +15,33 @@
       ];
 
       bind = [
-        "$mod_SHIFT, B, exec, vivaldi"
-        "$mod_SHIFT, E, exec, thunar"
-        "$mod_SHIFT, T, exec, $terminal"
         "$mod_SHIFT, Q, killactive"
         "$mod, space, exec, rofi -show drun"
         "$mod_SHIFT, S, exec, hyprshot -m region --clipboard-only"
+
+        # Semantic Workspace Access
+        "$mod,1,workspace,1" # Default 1
+        "$mod,A,workspace,2" # A for AI
+        "$mod,B,workspace,3" # B for Browser
+        "$mod,E,workspace,4" # E for Email or Editor
+        "$mod,T,workspace,5" # T for Terminal
+        "$mod,S,workspace,6" # S for Slack or Social
+        "$mod,M,workspace,7" # M for Music or Meetings
+        "$mod,O,workspace,8" # O for Obsidian or Organisation
+        "$mod,P,workspace,9" # P for Projects
+
+        # Move Focused Window to Mapped Workspace
+        "$mod_SHIFT,1,movetoworkspace,1"
+        "$mod_SHIFT,A,movetoworkspace,2"
+        "$mod_SHIFT,B,movetoworkspace,3"
+        "$mod_SHIFT,E,movetoworkspace,4"
+        "$mod_SHIFT,T,movetoworkspace,5"
+        "$mod_SHIFT,S,movetoworkspace,6"
+        "$mod_SHIFT,M,movetoworkspace,7"
+        "$mod_SHIFT,O,movetoworkspace,8"
+        "$mod_SHIFT,P,movetoworkspace,9"
       ];
+
       bindm = [
         "$mod, mouse:272, movewindow"
         "$mod, mouse:273, resizewindow"
@@ -59,7 +79,7 @@
 
       monitor = [
         # Center primary monitor
-        "DP-2,3840x2160@240,0x0,1, cm, hdr, vrr, 1"
+        "DP-2,3840x2160@240,0x0,1, cm, hdr, sdrbrightness, 1.2, sdrsaturation, 0.98, vrr, 1"
 
       ];
       decoration = {
