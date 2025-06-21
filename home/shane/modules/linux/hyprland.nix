@@ -30,7 +30,7 @@
         "$mod,M,workspace,7" # M for Music or Meetings
         "$mod,O,workspace,8" # O for Obsidian or Organisation
         "$mod,P,workspace,9" # P for Projects
-        "$mod,G,workspace,10" # P for Projects
+        "$mod,G,workspace,10" # G for Games
 
         # Move Focused Window to Mapped Workspace
         "$mod_SHIFT,1,movetoworkspace,1"
@@ -43,6 +43,18 @@
         "$mod_SHIFT,O,movetoworkspace,8"
         "$mod_SHIFT,P,movetoworkspace,9"
         "$mod_SHIFT,G,movetoworkspace,10"
+
+        # Move Window
+        "$mod_SHIFT,h,movewindow,l"
+        "$mod_SHIFT,l,movewindow,r"
+        "$mod_SHIFT,k,movewindow,u"
+        "$mod_SHIFT,j,movewindow,d"
+
+        # Change Focus Window
+        "$mod,h,movefocus,l"
+        "$mod,l,movefocus,r"
+        "$mod,k,movefocus,u"
+        "$mod,j,movefocus,d"
       ];
 
       bindm = [
@@ -87,6 +99,7 @@
       ];
       decoration = {
         rounding = 10;
+        dim_inactive = true;
         active_opacity = 1.0;
         inactive_opacity = 0.96;
       };
