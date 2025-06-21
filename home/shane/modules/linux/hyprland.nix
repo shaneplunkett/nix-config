@@ -18,6 +18,7 @@
         "$mod_SHIFT, Q, killactive"
         "$mod, space, exec, rofi -show drun"
         "$mod_SHIFT, S, exec, hyprshot -m region --clipboard-only"
+        "$mod_SHIFT,W,exec,hyprctl dispatch togglehidden"
 
         # Semantic Workspace Access
         "$mod,1,workspace,1" # Default 1
@@ -29,6 +30,7 @@
         "$mod,M,workspace,7" # M for Music or Meetings
         "$mod,O,workspace,8" # O for Obsidian or Organisation
         "$mod,P,workspace,9" # P for Projects
+        "$mod,G,workspace,10" # P for Projects
 
         # Move Focused Window to Mapped Workspace
         "$mod_SHIFT,1,movetoworkspace,1"
@@ -40,6 +42,7 @@
         "$mod_SHIFT,M,movetoworkspace,7"
         "$mod_SHIFT,O,movetoworkspace,8"
         "$mod_SHIFT,P,movetoworkspace,9"
+        "$mod_SHIFT,G,movetoworkspace,10"
       ];
 
       bindm = [
@@ -79,7 +82,7 @@
 
       monitor = [
         # Center primary monitor
-        "DP-2,3840x2160@240,0x0,1, cm, hdr, sdrbrightness, 1.2, sdrsaturation, 0.98, vrr, 1"
+        "DP-2,3840x2160@240,0x0,1,vrr, 2"
 
       ];
       decoration = {
