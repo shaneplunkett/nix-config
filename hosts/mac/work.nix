@@ -19,6 +19,7 @@
   homebrew.casks = lib.mkAfter [
     "slack"
     "figma"
+    "loom"
   ];
 
   homebrew.masApps = {

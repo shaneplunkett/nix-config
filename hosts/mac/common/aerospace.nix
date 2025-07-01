@@ -18,6 +18,10 @@
         inner.vertical = 20;
 
       };
+      workspace-to-monitor-force-assignment = {
+        "1" = "main";
+        "2" = "secondary";
+      };
       mode.main.binding = {
         "alt-h" = "focus left";
         "alt-j" = "focus down";
@@ -34,6 +38,7 @@
 
         # Workspace Config
         "alt-1" = "workspace 1";
+        "alt-2" = "workspace 2";
         "alt-a" = "workspace A";
         "alt-b" = "workspace B";
         "alt-e" = "workspace E";
@@ -45,6 +50,7 @@
 
         # Move Between Workspace
         "alt-shift-1" = "move-node-to-workspace 1";
+        "alt-shift-2" = "move-node-to-workspace 2";
         "alt-shift-a" = "move-node-to-workspace A";
         "alt-shift-b" = "move-node-to-workspace B";
         "alt-shift-e" = "move-node-to-workspace E";
