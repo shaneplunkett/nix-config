@@ -13,5 +13,6 @@
     google-chrome
     go
     todoist
+    lazydocker
   ];
 }

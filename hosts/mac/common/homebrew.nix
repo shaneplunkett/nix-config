@@ -16,6 +16,7 @@
       "hiddenbar"
       "ferdium"
       "hammerspoon"
+      "docker"
     ];
     onActivation.cleanup = "uninstall";
     onActivation.autoUpdate = true;

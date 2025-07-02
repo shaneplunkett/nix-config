@@ -42,6 +42,7 @@
         "alt-a" = "workspace A";
         "alt-b" = "workspace B";
         "alt-e" = "workspace E";
+        "alt-f" = "workspace F";
         "alt-t" = "workspace T";
         "alt-s" = "workspace S";
         "alt-m" = "workspace M";
@@ -54,6 +55,7 @@
         "alt-shift-a" = "move-node-to-workspace A";
         "alt-shift-b" = "move-node-to-workspace B";
         "alt-shift-e" = "move-node-to-workspace E";
+        "alt-shift-f" = "move-node-to-workspace F";
         "alt-shift-t" = "move-node-to-workspace T";
         "alt-shift-s" = "move-node-to-workspace S";
         "alt-shift-m" = "move-node-to-workspace M";
