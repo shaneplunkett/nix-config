@@ -17,6 +17,7 @@
       "ferdium"
       "hammerspoon"
       "docker"
+      "google-cloud-sdk"
     ];
     onActivation.cleanup = "uninstall";
     onActivation.autoUpdate = true;
