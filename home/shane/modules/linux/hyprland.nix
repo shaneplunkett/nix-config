@@ -10,15 +10,16 @@
       exec-once = [
         "dunst"
         "systemctl --user start hyprpolkitagent"
-        "waybar"
         "hyprpaper"
       ];
 
       bind = [
         "$mod_SHIFT, Q, killactive"
+        "$mod_SHIFT, RETURN, exec, $terminal"
         "$mod, space, exec, rofi -show drun"
-        "$mod_SHIFT, S, exec, hyprshot -m region --clipboard-only"
+        "$mod_SHIFT, 4, exec, hyprshot -m region --clipboard-only"
         "$mod_SHIFT,W,exec,hyprctl dispatch togglehidden"
+        "$mod_SHIFT,Z,exec,killall .waybar-wrapped || waybar"
 
         # Semantic Workspace Access
         "$mod,1,workspace,1" # Default 1
@@ -29,7 +30,6 @@
         "$mod,S,workspace,6" # S for Slack or Social
         "$mod,M,workspace,7" # M for Music or Meetings
         "$mod,O,workspace,8" # O for Obsidian or Organisation
-        "$mod,P,workspace,9" # P for Projects
         "$mod,G,workspace,10" # G for Games
 
         # Move Focused Window to Mapped Workspace
@@ -41,7 +41,6 @@
         "$mod_SHIFT,S,movetoworkspace,6"
         "$mod_SHIFT,M,movetoworkspace,7"
         "$mod_SHIFT,O,movetoworkspace,8"
-        "$mod_SHIFT,P,movetoworkspace,9"
         "$mod_SHIFT,G,movetoworkspace,10"
 
         # Move Window
@@ -99,9 +98,6 @@
       ];
       decoration = {
         rounding = 10;
-        dim_inactive = true;
-        active_opacity = 1.0;
-        inactive_opacity = 0.96;
       };
       general = {
         border_size = 2;

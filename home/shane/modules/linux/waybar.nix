@@ -10,7 +10,6 @@
         layer = "top";
         position = "top";
         height = 30;
-        start_hidden = true;
         modules-right = [
           "clock"
           "network"

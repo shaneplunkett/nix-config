@@ -149,6 +149,7 @@
     lutris
     heroic
     teamviewer
+    psmisc
     (catppuccin-sddm.override {
       flavor = "mocha";
       font = "Mononoki Nerd Font";
