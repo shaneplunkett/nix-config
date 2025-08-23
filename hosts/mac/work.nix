@@ -20,6 +20,7 @@
     "slack"
     "figma"
     "loom"
+    "android-studio"
   ];
 
   homebrew.masApps = {

@@ -4,6 +4,15 @@
   #Homebrew
   homebrew = {
     enable = true;
+
+    taps = [
+      "sst/tap"
+    ];
+
+    brews = [
+      "opencode"
+    ];
+
     casks = [
       "zen"
       "ghostty"
@@ -18,6 +27,7 @@
       "hammerspoon"
       "docker"
       "claude"
+      "cursor"
     ];
     onActivation.cleanup = "uninstall";
     onActivation.autoUpdate = true;
