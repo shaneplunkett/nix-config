@@ -10,6 +10,10 @@
     inputs.home-manager.nixosModules.default
   ];
 
+  nixpkgs.config.permittedInsecurePackages = [
+    "libsoup-2.74.3"
+  ];
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
@@ -114,7 +118,7 @@
       "nofail"
     ];
   };
-
+  services.hardware.openrgb.enable = true;
   programs.steam.enable = true;
   programs.steam.gamescopeSession.enable = true;
   programs.gamemode.enable = true;

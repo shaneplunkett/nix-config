@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   home.pointerCursor = {
     size = 40;
     gtk.enable = true;
@@ -19,6 +20,7 @@
     };
 
     theme = {
+      name = "Catppuccin";
     };
 
     iconTheme = {

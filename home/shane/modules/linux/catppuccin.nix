@@ -4,9 +4,6 @@
     enable = true;
     accent = "mauve";
     mako.enable = false;
-    gtk.enable = true;
-    gtk.size = "standard";
-    gtk.icon.enable = true;
     rofi.enable = true;
     hyprland.enable = true;
     bat.enable = true;
