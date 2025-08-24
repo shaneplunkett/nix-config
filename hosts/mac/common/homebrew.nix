@@ -20,7 +20,7 @@
       "docker"
       "claude"
     ];
-    onActivation.cleanup = "uninstall";
+    onActivation.cleanup = "none";
     onActivation.autoUpdate = true;
     onActivation.upgrade = true;
 
