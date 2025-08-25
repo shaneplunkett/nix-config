@@ -154,6 +154,8 @@
     heroic
     teamviewer
     psmisc
+    wooting-udev-rules
+    wootility
     (catppuccin-sddm.override {
       flavor = "mocha";
       font = "Mononoki Nerd Font";
