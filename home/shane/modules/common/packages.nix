@@ -14,5 +14,6 @@
     go
     todoist
     lazydocker
+    gearlever
   ];
 }

@@ -30,6 +30,5 @@
 
   home.sessionVariables = {
     EDITOR = "nvim";
-    NIXD_LOG = "error";
   };
 }

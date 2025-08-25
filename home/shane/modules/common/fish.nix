@@ -6,6 +6,8 @@
       cat = "bat";
       ls = "lsd";
       drs = "sudo darwin-rebuild switch --flake ~/nix-config";
+      nrs = "sudo nixos-rebuild switch --flake ~/nix-config#desktop";
+      ngc = "sudo nix-collect-garbage -d";
     };
     generateCompletions = true;
     interactiveShellInit = ''
