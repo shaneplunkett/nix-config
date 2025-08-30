@@ -14,12 +14,7 @@
     hyprpaper
     obsidian
     orca-slicer
-    todoist-electron
     vlc
-    vivaldi
-    vivaldi-ffmpeg-codecs
-    msty
-    msty-sidecar
 
   ];
 }

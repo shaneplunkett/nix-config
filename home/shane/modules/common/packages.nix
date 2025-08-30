@@ -7,13 +7,14 @@
     lazygit
     starship
     neofetch
-    wezterm
     obsidian
     vesktop
-    google-chrome
     go
-    todoist
     lazydocker
-    gearlever
   ];
+  programs.chromium = {
+
+    enable = true;
+    package = pkgs.ungoogled-chromium;
+  };
 }
