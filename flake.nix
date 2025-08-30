@@ -46,13 +46,18 @@
       homebrew-cask,
       ...
     }@inputs:
+    let
+      customPackagesOverlay = final: prev: import ./pkgs { pkgs = final; };
+    in
     {
       darwinConfigurations."Shanes-MacBook-Pro" = nix-darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
+          { nixpkgs.overlays = [ customPackagesOverlay ]; }
           ./hosts/mac/personal.nix
           home-manager.darwinModules.home-manager
           nix-homebrew.darwinModules.nix-homebrew
+
           {
             nix-homebrew = {
               enable = true;
@@ -85,6 +90,7 @@
           ./hosts/mac/work.nix
           home-manager.darwinModules.home-manager
           nix-homebrew.darwinModules.nix-homebrew
+          { nixpkgs.overlays = [ customPackagesOverlay ]; }
           {
             nix-homebrew = {
               enable = true;
@@ -117,6 +123,7 @@
         modules = [
           ./hosts/desktop/configuration.nix
           home-manager.nixosModules.home-manager
+          { nixpkgs.overlays = [ customPackagesOverlay ]; }
           {
             home-manager = {
               useGlobalPkgs = true;

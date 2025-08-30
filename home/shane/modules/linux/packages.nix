@@ -18,6 +18,8 @@
     vlc
     vivaldi
     vivaldi-ffmpeg-codecs
+    msty
+    msty-sidecar
 
   ];
 }
