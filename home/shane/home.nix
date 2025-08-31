@@ -24,7 +24,6 @@
     ./modules/linux/theme.nix
     ./modules/linux/waybar.nix
     ./modules/linux/packages.nix
-    ./modules/linux/catppuccin.nix
   ];
 
   home.username = "shane";
