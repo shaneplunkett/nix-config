@@ -12,9 +12,4 @@
     go
     lazydocker
   ];
-  programs.chromium = {
-
-    enable = true;
-    package = pkgs.ungoogled-chromium;
-  };
 }
