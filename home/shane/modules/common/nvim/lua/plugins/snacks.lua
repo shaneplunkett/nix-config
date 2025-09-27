@@ -11,6 +11,13 @@ return {
       tree = true,
       auto_close = true,
     },
+    picker = {
+      sources = {
+        explorer = {
+          layout = { layout = { position = 'right' } },
+        },
+      },
+    },
     indent = { enabled = true },
     input = { enabled = true },
     notifier = {
@@ -18,11 +25,6 @@ return {
       top_down = false,
       border = 'rounded',
     },
-    picker = { enabled = true, sources = {
-      explorer = {
-        layout = { layout = { position = 'right' } },
-      },
-    } },
     quickfile = { enabled = true },
     scope = { enabled = true },
     scroll = { enabled = true },
