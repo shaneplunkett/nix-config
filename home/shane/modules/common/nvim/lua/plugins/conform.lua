@@ -1,11 +1,11 @@
 return {
-  { -- Autoformat
+  {
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
     cmd = { 'ConformInfo' },
     keys = {
       {
-        '<leader>f',
+        '<leader>cf',
         function()
           require('conform').format { async = true, lsp_fallback = true }
         end,
@@ -14,21 +14,20 @@ return {
       },
     },
     opts = {
-      notify_on_error = false,
-      format_on_save = function(bufnr)
-        local disable_filetypes = { c = true, cpp = true }
-        return {
-          timeout_ms = 500,
-          lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
-        }
-      end,
+      default_format_opts = {
+        lsp_format = 'fallback',
+      },
+      format_on_save = {
+        lasp_format = 'fallback',
+        timeout_ms = 500,
+      },
       formatters_by_ft = {
         css = { 'biome' },
         html = { 'biome' },
         svg = { 'biome' },
-        elixir = { 'mix format' },
         fish = { 'fish_indent' },
         javascript = { 'prettier' },
+        javascriptreact = { 'prettier' },
         json = { 'prettier' },
         jsonc = { 'prettier' },
         lua = { 'stylua' },
@@ -40,10 +39,10 @@ return {
         svelte = { 'prettier' },
         typescript = { 'prettier' },
         rust = { 'rustfmt' },
-        go = { 'go fmt' },
+        go = { 'gofmt' },
         astro = { 'prettier' },
         ruby = { 'rufo' },
-        terraform = { 'terraform fmt' },
+        terraform = { 'terraform_fmt' },
         tf = { 'terraform_fmt' },
         sql = { 'sqlfluff' },
         pgsql = { 'sqlfluff' },

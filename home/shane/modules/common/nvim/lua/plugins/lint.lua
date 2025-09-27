@@ -1,6 +1,5 @@
 return {
-
-  { -- Linting
+  {
     'mfussenegger/nvim-lint',
     event = { 'BufReadPre', 'BufNewFile' },
     config = function()
@@ -15,6 +14,7 @@ return {
         typescriptreact = { 'eslint' },
         json = { 'jsonlint' },
         go = { 'golangcilint' },
+        nix = { 'nix' },
       }
 
       local lint_augroup = vim.api.nvim_create_augroup('lint', { clear = true })
