@@ -1,5 +1,6 @@
 return {
   cmd = { 'nixd' },
+  filetypes = { 'nix' },
   settings = {
     nixd = {
       nixpkgs = {
