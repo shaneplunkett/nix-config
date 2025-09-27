@@ -1,1 +1,4 @@
-globals = { 'vim' }
+globals = {
+  'vim',
+}
+read_globals = { 'vim' }
