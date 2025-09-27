@@ -6,7 +6,11 @@ return {
   opts = {
     animate = { enabled = false },
     bigfile = { enabled = true },
-    explorer = { enabled = true },
+    explorer = {
+      finder = 'explorer',
+      tree = true,
+      auto_close = true,
+    },
     indent = { enabled = true },
     input = { enabled = true },
     notifier = {
@@ -14,7 +18,11 @@ return {
       top_down = false,
       border = 'rounded',
     },
-    picker = { enabled = true },
+    picker = { enabled = true, sources = {
+      explorer = {
+        layout = { layout = { position = 'right' } },
+      },
+    } },
     quickfile = { enabled = true },
     scope = { enabled = true },
     scroll = { enabled = true },
