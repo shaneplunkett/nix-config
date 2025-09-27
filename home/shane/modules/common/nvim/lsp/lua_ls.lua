@@ -3,13 +3,13 @@ return {
 
   filetypes = { 'lua' },
 
-  root_markers = { { '.luarc.json', '.luarc.jsonc' }, '.git' },
+  root_markers = { { '.luarc.json', '.luarc.jsonc', '.luacheckrc' }, '.git' },
 
   settings = {
     Lua = {
       diagnostics = {
         globals = { 'vim' },
       },
-    }
-  }
+    },
+  },
 }
