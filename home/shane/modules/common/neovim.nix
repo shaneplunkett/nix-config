@@ -38,7 +38,7 @@
 
       nixfmt-rfc-style
       shfmt
-      black
+      ruff
       stylua
       luajitPackages.luacheck
 
