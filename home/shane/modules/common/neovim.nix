@@ -19,18 +19,25 @@
 
     extraPackages = with pkgs; [
 
+      # Packages
       ripgrep
       fd
       lazygit
       fzf
 
+      #LSP
+      basedpyright
+      typescript-language-server
+
       lua-language-server
       nodePackages.jsonlint
-
       nixd
       nil
 
+      #Formatters
+
       nixfmt-rfc-style
+      ruff
       shfmt
       black
       stylua
