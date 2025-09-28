@@ -18,7 +18,7 @@ return {
         lsp_format = 'fallback',
       },
       format_on_save = {
-        lasp_format = 'fallback',
+        lsp_format = 'fallback',
         timeout_ms = 500,
       },
       formatters_by_ft = {

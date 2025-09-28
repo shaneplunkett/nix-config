@@ -37,7 +37,6 @@
       #Formatters
 
       nixfmt-rfc-style
-      ruff
       shfmt
       black
       stylua
