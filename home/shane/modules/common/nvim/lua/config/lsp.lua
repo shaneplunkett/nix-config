@@ -93,5 +93,5 @@ vim.lsp.enable {
   'astro',
   'sqls',
   'html',
-  'basedpyright',
+  'pylsp',
 }
