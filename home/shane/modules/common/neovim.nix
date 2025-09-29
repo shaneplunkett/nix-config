@@ -31,7 +31,7 @@
       sqls
       terraform-ls
       vscode-langservers-extracted
-      markdown-lint
+      markdown-oxide
       tailwindcss-language-server
       yaml-language-server
 
