@@ -47,7 +47,7 @@ vim.lsp.config('nixd', {
 })
 
 vim.lsp.config('ts_ls', { capabilities = capabilities })
-vim.lsp.config('basedpyright', { capabilities = capabilities })
+vim.lsp.config('pylsp', { capabilities = capabilities })
 vim.lsp.config('terraformls', { capabilities = capabilities })
 vim.lsp.config('gopls', { capabilities = capabilities })
 vim.lsp.config('astro', { capabilities = capabilities })

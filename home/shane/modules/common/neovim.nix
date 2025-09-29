@@ -7,9 +7,8 @@
     viAlias = true;
     vimAlias = true;
     vimdiffAlias = true;
-    coc.enable = true;
+    coc.enable = false;
     withNodeJs = true;
-
     extraLuaPackages = ps: [
       ps.lua
       ps.luarocks-nix
@@ -26,8 +25,15 @@
       fzf
 
       #LSP
-      basedpyright
+      python313Packages.python-lsp-server
       typescript-language-server
+      gopls
+      sqls
+      terraform-ls
+      vscode-langservers-extracted
+      markdown-lint
+      tailwindcss-language-server
+      yaml-language-server
 
       lua-language-server
       nodePackages.jsonlint
@@ -36,11 +42,12 @@
 
       #Formatters
 
-      nixfmt-rfc-style
+      nixfmt
       shfmt
       ruff
       stylua
       luajitPackages.luacheck
+      prettier
 
     ];
 
