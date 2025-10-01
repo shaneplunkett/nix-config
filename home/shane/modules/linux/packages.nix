@@ -15,6 +15,7 @@
     obsidian
     orca-slicer
     vlc
+    samrewritten
 
   ];
   programs.chromium = {
