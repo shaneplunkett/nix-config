@@ -9,7 +9,6 @@
       "zen"
       "ghostty"
       "postman"
-      "duet"
       "elgato-camera-hub"
       "tailscale-app"
       "chatgpt"
@@ -20,7 +19,7 @@
       "docker-desktop"
       "claude"
     ];
-    onActivation.cleanup = "none";
+    onActivation.cleanup = "zep";
     onActivation.autoUpdate = true;
     onActivation.upgrade = true;
 
