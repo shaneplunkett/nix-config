@@ -19,7 +19,7 @@
       "docker-desktop"
       "claude"
     ];
-    onActivation.cleanup = "zep";
+    onActivation.cleanup = "zap";
     onActivation.autoUpdate = true;
     onActivation.upgrade = true;
 
