@@ -568,10 +568,10 @@
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
         "nixpkgs": "nixpkgs_3",
-        "sst-opencode": "sst-opencode"
+        "sst-tap-opencode": "sst-tap-opencode"
       }
     },
-    "sst-opencode": {
+    "sst-tap-opencode": {
       "flake": false,
       "locked": {
         "lastModified": 1759383238,
