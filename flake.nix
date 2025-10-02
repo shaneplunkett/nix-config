@@ -71,6 +71,12 @@
               mutableTaps = false;
             };
           }
+          (
+            { config, ... }:
+            {
+              homebrew.taps = builtins.attrNames config.nix-homebrew.taps;
+            }
+          )
           {
             home-manager = {
               useGlobalPkgs = true;
@@ -104,6 +110,12 @@
               mutableTaps = false;
             };
           }
+          (
+            { config, ... }:
+            {
+              homebrew.taps = builtins.attrNames config.nix-homebrew.taps;
+            }
+          )
           {
             home-manager = {
               useGlobalPkgs = true;
