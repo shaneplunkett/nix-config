@@ -11,13 +11,13 @@
       "postman"
       "duet"
       "elgato-camera-hub"
-      "tailscale"
+      "tailscale-app"
       "chatgpt"
       "plex"
       "hiddenbar"
       "ferdium"
       "hammerspoon"
-      "docker"
+      "docker-desktop"
       "claude"
     ];
     onActivation.cleanup = "none";

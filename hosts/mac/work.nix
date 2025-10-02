@@ -19,8 +19,6 @@
   homebrew.casks = lib.mkAfter [
     "slack"
     "figma"
-    "loom"
-    "android-studio"
   ];
 
   homebrew.masApps = {
