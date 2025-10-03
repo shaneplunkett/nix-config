@@ -31,8 +31,8 @@
       url = "github:homebrew/homebrew-cask";
       flake = false;
     };
-    sst-tap-opencode = {
-      url = "github:sst/opencode";
+    sst-tap = {
+      url = "github:sst/homebrew-tap";
       flake = false;
 
     };
@@ -49,7 +49,7 @@
       nix-homebrew,
       homebrew-core,
       homebrew-cask,
-      sst-tap-opencode,
+      sst-tap,
       ...
     }@inputs:
     let
@@ -72,7 +72,7 @@
               taps = {
                 "homebrew/homebrew-core" = homebrew-core;
                 "homebrew/homebrew-cask" = homebrew-cask;
-                "sst/opencode" = sst-tap-opencode;
+                "sst/tap" = sst-tap;
               };
               mutableTaps = false;
             };
