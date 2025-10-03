@@ -18,7 +18,6 @@
       "hammerspoon"
       "docker-desktop"
       "claude"
-      "opencode"
     ];
     onActivation.cleanup = "zap";
     onActivation.autoUpdate = true;

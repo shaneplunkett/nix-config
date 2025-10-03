@@ -32,7 +32,7 @@
       flake = false;
     };
     sst-tap-opencode = {
-      url = "github:sst/homebrew-tap";
+      url = "github:sst/opencode";
       flake = false;
 
     };
