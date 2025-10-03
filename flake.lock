@@ -574,16 +574,16 @@
     "sst-tap-opencode": {
       "flake": false,
       "locked": {
-        "lastModified": 1759383229,
-        "narHash": "sha256-6Tq/+/MS3IogaedtBEgF0Tqr4m7gQjH5LSWkJIGWknU=",
+        "lastModified": 1759445451,
+        "narHash": "sha256-fOTcFOSmLHhQL4fj4NLobanEecukMNVsWlaKyKvpKtg=",
         "owner": "sst",
-        "repo": "homebrew-tap",
-        "rev": "efdc9dca5afb55e483d0967a13345ec75bbceb1e",
+        "repo": "opencode",
+        "rev": "ea993976b00feb3cb74f861f0a67c218854be9a9",
         "type": "github"
       },
       "original": {
         "owner": "sst",
-        "repo": "homebrew-tap",
+        "repo": "opencode",
         "type": "github"
       }
     },

@@ -4,6 +4,7 @@
   #Homebrew
   homebrew = {
     enable = true;
+    brews = [ "sst/opencode/opencode" ];
 
     casks = [
       "zen"
