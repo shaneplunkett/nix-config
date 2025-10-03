@@ -568,22 +568,22 @@
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
         "nixpkgs": "nixpkgs_3",
-        "sst-tap-opencode": "sst-tap-opencode"
+        "sst-tap": "sst-tap"
       }
     },
-    "sst-tap-opencode": {
+    "sst-tap": {
       "flake": false,
       "locked": {
-        "lastModified": 1759445451,
-        "narHash": "sha256-fOTcFOSmLHhQL4fj4NLobanEecukMNVsWlaKyKvpKtg=",
+        "lastModified": 1759383229,
+        "narHash": "sha256-6Tq/+/MS3IogaedtBEgF0Tqr4m7gQjH5LSWkJIGWknU=",
         "owner": "sst",
-        "repo": "opencode",
-        "rev": "ea993976b00feb3cb74f861f0a67c218854be9a9",
+        "repo": "homebrew-tap",
+        "rev": "efdc9dca5afb55e483d0967a13345ec75bbceb1e",
         "type": "github"
       },
       "original": {
         "owner": "sst",
-        "repo": "opencode",
+        "repo": "homebrew-tap",
         "type": "github"
       }
     },
