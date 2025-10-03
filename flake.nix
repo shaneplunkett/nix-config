@@ -112,7 +112,7 @@
               taps = {
                 "homebrew/homebrew-core" = homebrew-core;
                 "homebrew/homebrew-cask" = homebrew-cask;
-                "sst/opencode" = sst-tap-opencode;
+                "sst/tap" = sst-tap;
               };
               mutableTaps = false;
             };
