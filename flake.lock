@@ -567,24 +567,7 @@
         "hyprland-plugins": "hyprland-plugins",
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
-        "nixpkgs": "nixpkgs_3",
-        "sst-tap": "sst-tap"
-      }
-    },
-    "sst-tap": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1759383229,
-        "narHash": "sha256-6Tq/+/MS3IogaedtBEgF0Tqr4m7gQjH5LSWkJIGWknU=",
-        "owner": "sst",
-        "repo": "homebrew-tap",
-        "rev": "efdc9dca5afb55e483d0967a13345ec75bbceb1e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "sst",
-        "repo": "homebrew-tap",
-        "type": "github"
+        "nixpkgs": "nixpkgs_3"
       }
     },
     "systems": {
