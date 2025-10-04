@@ -26,6 +26,7 @@ in
     tmux.enable = false;
     vesktop.enable = true;
     lsd.enable = true;
+    nvim.enable = false;
     chromium.enable = true;
     lazygit.enable = true;
     cava.enable = true;
