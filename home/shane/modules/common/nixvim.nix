@@ -6,7 +6,7 @@
     viAlias = true;
     vimAlias = true;
 
-    colorschemes.everforest.enable = true;
+    colorschemes.catppuccin.enable = true;
 
     globals = {
       have_nerd_font = true;
