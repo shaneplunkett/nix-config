@@ -75,7 +75,6 @@
       lazydev.enable = true;
       todo-comments.enable = true;
       neo-tree.enable = true;
-            nvim
       treesitter-context.enable = false;
       treesitter-textobjects = {
                 enable = true;
