@@ -34,7 +34,7 @@
     
     plugins = {
       # web-devicons.enable = true;
-      # lualine.enable = true;
+      lualine.enable = true;
       # tmux-navigator.enable = true;
       # telescope.enable = true;
       # lazygit.enable = true;
