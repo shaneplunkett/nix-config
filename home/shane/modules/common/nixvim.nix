@@ -830,9 +830,13 @@
           };
         };
       };
-      blink-cmp = {
-        enable = true;
-        setupLspCapabilities = true;
+      cmp = {
+        autoEnableSources = true;
+        settings.sources = [
+          { name = "nvim_lsp"; }
+          { name = "path"; }
+          { name = "buffer"; }
+        ];
 
       };
 
