@@ -6,7 +6,7 @@
     viAlias = true;
     vimAlias = true;
 
-    colorschemes.dracula.enable = true;
+    colorschemes.everforest.enable = true;
 
     globals = {
       have_nerd_font = true;
