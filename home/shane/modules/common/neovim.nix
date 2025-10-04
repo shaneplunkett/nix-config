@@ -10,9 +10,9 @@
     coc.enable = false;
     withNodeJs = true;
     extraLuaPackages = ps: [
-      ps.lua
-      ps.luarocks-nix
-      ps.magick
+#      ps.lua
+#      ps.luarocks-nix
+#      ps.magick
 
     ];
 
