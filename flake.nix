@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
     nix-darwin.url = "github:nix-darwin/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -21,8 +20,6 @@
     catppuccin.url = "github:catppuccin/nix";
 
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
-
-    # Optional: Declarative tap management
     homebrew-core = {
       url = "github:homebrew/homebrew-core";
       flake = false;
@@ -31,7 +28,11 @@
       url = "github:homebrew/homebrew-cask";
       flake = false;
     };
-
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      # If using a stable channel you can use `url = "github:nix-community/nixvim/nixos-<version>"`
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -44,6 +45,7 @@
       nix-homebrew,
       homebrew-core,
       homebrew-cask,
+      nixvim,
       ...
     }@inputs:
     let
@@ -83,6 +85,7 @@
               users.shane = import ./home/shane/homemac.nix;
               sharedModules = [
                 catppuccin.homeModules.catppuccin
+                nixvim.homeModules.nixvim
               ];
             };
           }
@@ -122,6 +125,7 @@
               users.shane = import ./home/shane/homemac.nix;
               sharedModules = [
                 catppuccin.homeModules.catppuccin
+                nixvim.homeModules.nixvim
               ];
             };
           }
@@ -142,6 +146,7 @@
               users.shane = import ./home/shane/home.nix;
               sharedModules = [
                 catppuccin.homeModules.catppuccin
+                nixvim.homeModules.nixvim
               ];
             };
           }
