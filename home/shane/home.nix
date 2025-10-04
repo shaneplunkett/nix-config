@@ -10,7 +10,7 @@
     ./modules/common/cava.nix
     ./modules/common/direnv.nix
     ./modules/common/fish.nix
-    ./modules/common/neovim.nix
+    #./modules/common/neovim.nix
     ./modules/common/nixvim.nix
     ./modules/common/starship.nix
     ./modules/common/packages.nix
@@ -47,7 +47,6 @@
   programs.home-manager.enable = true;
 
   home.sessionVariables = {
-    EDITOR = "nvim";
     STEAM_EXTRA_COMPAT_TOOLS_PATHS = "\${HOME}/.steam/root/compatibilitytools.d";
   };
 }
