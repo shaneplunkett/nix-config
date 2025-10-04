@@ -3,4 +3,6 @@
 
   programs.neovim = {
     enable = true;
+};
+
 }

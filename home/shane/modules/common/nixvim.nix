@@ -42,17 +42,17 @@ autoCmd = [
     }
   ];
     plugins = {
+	web-devicons.enable = true;
     	lualine.enable = true;
-	tmux-navigator.enable = true;
+#	tmux-navigator.enable = true;
 	telescope.enable = true;
 	lsp.enable = true;
-	lazygit.enable = true;
-	which-key.enable = true;
-	noice.enable = true;
-	snacks.enable = true;
-	conform-nvim.enable = true;
-	lazydev.enable = true;
-	web-devicons.enable = true;
+	#lazygit.enable = true;
+	#which-key.enable = true;
+#	noice.enable = true;
+#	snacks.enable = true;
+#	conform-nvim.enable = true;
+#	lazydev.enable = true;
 
 
 cmp = {
