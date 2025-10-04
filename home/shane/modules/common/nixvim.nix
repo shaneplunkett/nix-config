@@ -9,7 +9,7 @@
 
     globalOpts = {
     number = true;
-    relative = true;
+    relativenumber = true;
     completeopt = [
     "menuone"
     "noselect"
