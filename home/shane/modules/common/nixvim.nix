@@ -6,7 +6,7 @@
     viAlias = true;
     vimAlias = true;
 
-    colorschemes.catppuccin.enable = true;
+    colorschemes.dracula.enable = true;
 
     globals = {
       have_nerd_font = true;
