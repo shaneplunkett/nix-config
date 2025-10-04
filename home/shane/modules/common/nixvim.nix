@@ -75,6 +75,7 @@
       lazydev.enable = true;
       todo-comments.enable = true;
       neo-tree.enable = true;
+            nvim
       treesitter-context.enable = false;
       treesitter-textobjects = {
                 enable = true;
@@ -96,6 +97,36 @@
       };
 
       };
+            lsp-format = {
+                enable = true;
+            };
+            lsp = {
+                enable = true;
+                inlayHints = true;
+                servers = {
+
+
+                    nixd = {
+                        enable = true;
+                    };
+
+                    gopls = {
+                        enable = true;
+                        autostart = true;
+                    };
+                    pyright = {
+                        enable = true;
+                    };
+                    lua_ls = {
+                        enable = true;
+                        settings.telemetry.enable = false;
+                    };
+
+
+                };
+
+
+            };
     };
   };
 }
