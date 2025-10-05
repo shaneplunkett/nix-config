@@ -3,8 +3,8 @@
   services.hyprpaper = {
     enable = true;
     settings = {
-      preload = [ "~/wallpapers/trees.jpeg" ];
-      wallpaper = [ " , ~/wallpapers/trees.jpeg" ];
+      preload = [ "~/nix-config/home/shane/wallpapers/wallpaper.png" ];
+      wallpaper = [ " , ~/nix-config/home/shane/wallpapers/wallpaper.png" ];
     };
   };
 }
