@@ -1,7 +1,5 @@
-{
-  pkgs,
-  config,
-  ...
+{ pkgs
+, ...
 }:
 let
   omerxx-catppuccin = pkgs.tmuxPlugins.mkTmuxPlugin {

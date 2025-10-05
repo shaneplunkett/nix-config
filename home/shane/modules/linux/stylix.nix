@@ -3,8 +3,7 @@
   stylix = {
     enable = true;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
-    polarity = "dark";
-    
+
     fonts = {
       monospace = {
         package = pkgs.nerd-fonts.mononoki;
@@ -25,13 +24,13 @@
         popups = 12;
       };
     };
-    
+
     cursor = {
       package = pkgs.catppuccin-cursors.mochaLavender;
       name = "catppuccin-mocha-lavender-cursors";
       size = 16;
     };
-    
+
     opacity = {
       applications = 1.0;
       terminal = 0.95;

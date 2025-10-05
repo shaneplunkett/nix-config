@@ -153,8 +153,6 @@
   services.tumbler.enable = true;
   
   # System services
-  services.dbus.enable = true;
-  programs.dconf.enable = true;
   nixpkgs.config.allowUnfree = true;
   programs.appimage = {
     enable = true;
@@ -181,10 +179,6 @@
     wooting-udev-rules
     wootility
     
-    # System utilities
-    gsettings-desktop-schemas
-    glib
-    dconf
     
     tuigreet
   ];
