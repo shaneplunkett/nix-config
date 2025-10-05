@@ -11,6 +11,7 @@
     go
     lazydocker
     opencode
+    jetbrains.webstorm
 
   ];
 }
