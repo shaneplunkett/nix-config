@@ -35,122 +35,31 @@
     };
   };
 
-  outputs =
-    {
-      self,
-      nixpkgs,
-      home-manager,
-      catppuccin,
-      nix-darwin,
-      nix-homebrew,
-      homebrew-core,
-      homebrew-cask,
-      nixvim,
-      ...
-    }@inputs:
+  outputs = { self, nixpkgs, ... }@inputs:
     let
-      customPackagesOverlay = final: prev: import ./pkgs { pkgs = final; };
+      lib = import ./lib { inherit inputs; rootPath = ./.; };
     in
     {
-      darwinConfigurations."Shanes-MacBook-Pro" = nix-darwin.lib.darwinSystem {
-        system = "aarch64-darwin";
-        modules = [
-          { nixpkgs.overlays = [ customPackagesOverlay ]; }
-          ./hosts/mac/personal.nix
-          home-manager.darwinModules.home-manager
-          nix-homebrew.darwinModules.nix-homebrew
+      darwinConfigurations = {
+        "Shanes-MacBook-Pro" = lib.mkDarwinSystem {
+          hostname = "Shanes-MacBook-Pro";
+          system = "aarch64-darwin";
+          hostConfig = ./hosts/mac/personal.nix;
+        };
 
-          {
-            nix-homebrew = {
-              enable = true;
-              enableRosetta = true;
-              user = "shane";
-              taps = {
-                "homebrew/homebrew-core" = homebrew-core;
-                "homebrew/homebrew-cask" = homebrew-cask;
-              };
-              mutableTaps = false;
-            };
-          }
-          (
-            { config, ... }:
-            {
-              homebrew.taps = builtins.attrNames config.nix-homebrew.taps;
-            }
-          )
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.shane = import ./home/shane/homemac.nix;
-              sharedModules = [
-                catppuccin.homeModules.catppuccin
-                nixvim.homeModules.nixvim
-              ];
-            };
-          }
-        ];
+        "Shanes-Work-MacBook-Pro" = lib.mkDarwinSystem {
+          hostname = "Shanes-Work-MacBook-Pro";
+          system = "aarch64-darwin";
+          hostConfig = ./hosts/mac/work.nix;
+        };
       };
 
-      darwinConfigurations."Shanes-Work-MacBook-Pro" = nix-darwin.lib.darwinSystem {
-        system = "aarch64-darwin";
-        modules = [
-          ./hosts/mac/work.nix
-          home-manager.darwinModules.home-manager
-          nix-homebrew.darwinModules.nix-homebrew
-          { nixpkgs.overlays = [ customPackagesOverlay ]; }
-          {
-            nix-homebrew = {
-              enable = true;
-              enableRosetta = true;
-              autoMigrate = true;
-              user = "shane";
-              taps = {
-                "homebrew/homebrew-core" = homebrew-core;
-                "homebrew/homebrew-cask" = homebrew-cask;
-              };
-              mutableTaps = false;
-            };
-          }
-          (
-            { config, ... }:
-            {
-              homebrew.taps = builtins.attrNames config.nix-homebrew.taps;
-            }
-          )
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.shane = import ./home/shane/homemac.nix;
-              sharedModules = [
-                catppuccin.homeModules.catppuccin
-                nixvim.homeModules.nixvim
-              ];
-            };
-          }
-        ];
-      };
-
-      nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = { inherit inputs; };
-        modules = [
-          ./hosts/desktop/configuration.nix
-          home-manager.nixosModules.home-manager
-          { nixpkgs.overlays = [ customPackagesOverlay ]; }
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.shane = import ./home/shane/home.nix;
-              sharedModules = [
-                catppuccin.homeModules.catppuccin
-                nixvim.homeModules.nixvim
-              ];
-            };
-          }
-        ];
+      nixosConfigurations = {
+        desktop = lib.mkNixosSystem {
+          hostname = "desktop";
+          system = "x86_64-linux";
+          hostConfig = ./hosts/desktop/configuration.nix;
+        };
       };
     };
 }

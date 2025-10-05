@@ -10,8 +10,8 @@
     {
       mode = "n";
       key = "\\";
-      action = ":Neotree reveal right<CR>";
-      options.desc = "NeoTree reveal";
+      action = ":Neotree toggle right<CR>";
+      options.desc = "NeoTree toggle";
     }
     # Top Pickers & Explorer
     {
@@ -791,6 +791,12 @@
         end
       '';
       options.desc = "Previous Todo Comment";
+    }
+    {
+      mode = "n";
+      key = "<leader>xx";
+      action = "<cmd>Trouble todo toggle<cr>";
+      options.desc = "Todo (Trouble)";
     }
     {
       mode = "n";

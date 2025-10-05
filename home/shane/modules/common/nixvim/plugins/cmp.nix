@@ -6,47 +6,45 @@
       autoEnableSources = true;
       settings = {
         snippet.expand = "function(args) require('luasnip').lsp_expand(args.body) end";
-        mapping = {
-          # Navigate completion menu
-          "<C-k>" = "cmp.mapping.select_prev_item()";
-          "<C-j>" = "cmp.mapping.select_next_item()";
-          
-          # Trigger completion
-          "<C-Space>" = "cmp.mapping.complete()";
-          
-          # Close completion
-          "<C-e>" = "cmp.mapping.abort()";
-          
-          # Accept completion
-          "<CR>" = "cmp.mapping.confirm({ select = false })";
-          "<Tab>" = "cmp.mapping.confirm({ select = true })";
-          
-          # Navigate snippet placeholders
-          "<C-f>" = ''
-            cmp.mapping(function(fallback)
+        mapping.__raw = ''
+          cmp.mapping.preset.insert({
+            -- Navigate completion menu (using same keys as your old config)
+            ['<C-k>'] = cmp.mapping.select_prev_item(),
+            ['<C-j>'] = cmp.mapping.select_next_item(),
+
+            -- Trigger completion
+            ['<C-Space>'] = cmp.mapping.complete(),
+
+            -- Close completion
+            ['<C-e>'] = cmp.mapping.abort(),
+
+            -- Accept completion (Tab to accept, Enter without select)
+            ['<CR>'] = cmp.mapping.confirm({ select = false }),
+            ['<Tab>'] = cmp.mapping.confirm({ select = true }),
+
+            -- Navigate snippet placeholders
+            ['<C-f>'] = cmp.mapping(function(fallback)
               local luasnip = require('luasnip')
               if luasnip.jumpable(1) then
                 luasnip.jump(1)
               else
                 fallback()
               end
-            end, { 'i', 's' })
-          '';
-          "<C-b>" = ''
-            cmp.mapping(function(fallback)
+            end, { 'i', 's' }),
+            ['<C-b>'] = cmp.mapping(function(fallback)
               local luasnip = require('luasnip')
               if luasnip.jumpable(-1) then
                 luasnip.jump(-1)
               else
                 fallback()
               end
-            end, { 'i', 's' })
-          '';
-          
-          # Scroll documentation
-          "<C-u>" = "cmp.mapping.scroll_docs(-4)";
-          "<C-d>" = "cmp.mapping.scroll_docs(4)";
-        };
+            end, { 'i', 's' }),
+
+            -- Scroll documentation
+            ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+            ['<C-d>'] = cmp.mapping.scroll_docs(4),
+          })
+        '';
         sources = [
           { name = "nvim_lsp"; }
           { name = "nvim_lsp_signature_help"; }
@@ -55,8 +53,8 @@
           { name = "buffer"; }
         ];
         window = {
-          completion = "cmp.config.window.bordered()";
-          documentation = "cmp.config.window.bordered()";
+          completion.__raw = "cmp.config.window.bordered()";
+          documentation.__raw = "cmp.config.window.bordered()";
         };
         formatting = {
           format = ''
@@ -65,28 +63,28 @@
                 Text = '󰉿',
                 Method = '󰆧',
                 Function = '󰊕',
-                Constructor = '',
+                Constructor = '󰒓',
                 Field = '󰜢',
                 Variable = '󰀫',
                 Class = '󰠱',
-                Interface = '',
-                Module = '',
+                Interface = '󰜰',
+                Module = '󰆧',
                 Property = '󰜢',
                 Unit = '󰑭',
                 Value = '󰎠',
-                Enum = '',
+                Enum = '󰒻',
                 Keyword = '󰌋',
-                Snippet = '',
+                Snippet = '󰘦',
                 Color = '󰏘',
                 File = '󰈙',
                 Reference = '󰈇',
                 Folder = '󰉋',
-                EnumMember = '',
+                EnumMember = '󰒼',
                 Constant = '󰏿',
                 Struct = '󰙅',
-                Event = '',
+                Event = '󰉁',
                 Operator = '󰆕',
-                TypeParameter = '',
+                TypeParameter = '󰒕',
               }
               
               vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind)
@@ -109,23 +107,28 @@
     };
     
     cmp-nvim-lsp-signature-help.enable = true;
-    cmp-cmdline = {
-      enable = true;
-      settings = {
-        search = {
-          mapping = "cmp.mapping.preset.cmdline()";
-          sources = [
-            { name = "buffer"; }
-          ];
-        };
-        cmdline = {
-          mapping = "cmp.mapping.preset.cmdline()";
-          sources = [
-            { name = "path"; }
-            { name = "cmdline"; }
-          ];
-        };
-      };
-    };
+    cmp-cmdline.enable = true;
   };
+  
+  extraConfigLua = ''
+    local cmp = require('cmp')
+    
+    -- Setup completion for search
+    cmp.setup.cmdline('/', {
+      mapping = cmp.mapping.preset.cmdline(),
+      sources = {
+        { name = 'buffer' },
+      },
+    })
+    
+    -- Setup completion for commands
+    cmp.setup.cmdline(':', {
+      mapping = cmp.mapping.preset.cmdline(),
+      sources = cmp.config.sources({
+        { name = 'path' },
+      }, {
+        { name = 'cmdline' },
+      }),
+    })
+  '';
 }
