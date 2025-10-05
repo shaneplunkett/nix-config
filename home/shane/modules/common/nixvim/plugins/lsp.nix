@@ -58,21 +58,22 @@
 
     };
 
-    lspkind = {
-      enable = true;
-      settings = {
-        cmp = {
-          enable = true;
-          menu = {
-            nvim_lsp = "[LSP]";
-            nvim_lua = "[api]";
-            path = "[path]";
-            luasnip = "[snip]";
-            buffer = "[buffer]";
-          };
-        };
-      };
-    };
+    # lspkind disabled - using custom formatting in cmp.nix for LazyVim-style icons
+    # lspkind = {
+    #   enable = true;
+    #   settings = {
+    #     cmp = {
+    #       enable = true;
+    #       menu = {
+    #         nvim_lsp = "[LSP]";
+    #         nvim_lua = "[api]";
+    #         path = "[path]";
+    #         luasnip = "[snip]";
+    #         buffer = "[buffer]";
+    #       };
+    #     };
+    #   };
+    # };
 
   };
 
