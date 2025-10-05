@@ -1,6 +1,6 @@
 { inputs, rootPath }:
 let
-  inherit (inputs) nixpkgs home-manager nixvim stylix;
+  inherit (inputs) nixpkgs home-manager nixvim stylix catppuccin;
 in
 {
   mkNixosSystem =

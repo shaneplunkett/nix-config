@@ -158,6 +158,10 @@
     enable = true;
     binfmt = true;
   };
+  catppuccin = {
+    enable = false;
+
+  };
 
   environment.systemPackages = with pkgs; [
     vim
