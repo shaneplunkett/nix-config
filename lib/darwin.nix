@@ -1,6 +1,6 @@
 { inputs, rootPath }:
 let
-  inherit (inputs) nixpkgs nix-darwin home-manager catppuccin nixvim nix-homebrew homebrew-core homebrew-cask;
+  inherit (inputs) nixpkgs nix-darwin home-manager nixvim stylix nix-homebrew homebrew-core homebrew-cask;
 in
 {
   mkDarwinSystem = {
@@ -53,8 +53,8 @@ in
           useUserPackages = true;
           users.shane = import (rootPath + /home/shane/homemac.nix);
           sharedModules = [
-            catppuccin.homeModules.catppuccin
             nixvim.homeModules.nixvim
+            stylix.homeModules.stylix
           ];
         };
       }

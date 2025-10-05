@@ -17,7 +17,9 @@
       inputs.hyprland.follows = "hyprland";
     };
 
-    catppuccin.url = "github:catppuccin/nix";
+    stylix.url = "github:danth/stylix";
+
+
 
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
     homebrew-core = {

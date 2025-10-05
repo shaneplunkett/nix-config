@@ -17,7 +17,7 @@
     vlc
     samrewritten
     
-    # GTK theme support for Wayland
+    # System libraries
     glib # for gsettings
     dconf # for dconf settings
     gtk3 # GTK3 runtime

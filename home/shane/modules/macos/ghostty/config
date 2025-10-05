@@ -3,4 +3,4 @@ font-family = "Mononoki Nerd Font"
 macos-non-native-fullscreen = true
 font-size = 21
 command = /etc/profiles/per-user/shane/bin/fish --login --interactive
-theme = catppuccin-mocha
+

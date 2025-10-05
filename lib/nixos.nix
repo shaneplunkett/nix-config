@@ -1,6 +1,6 @@
 { inputs, rootPath }:
 let
-  inherit (inputs) nixpkgs home-manager catppuccin nixvim;
+  inherit (inputs) nixpkgs home-manager nixvim stylix;
 in
 {
   mkNixosSystem = {
@@ -25,7 +25,7 @@ in
       
       # Core modules
       home-manager.nixosModules.home-manager
-      catppuccin.nixosModules.catppuccin
+      stylix.nixosModules.stylix
       
       # Home Manager configuration
       {
@@ -34,8 +34,8 @@ in
           useUserPackages = true;
           users.shane = import (rootPath + /home/shane/home.nix);
           sharedModules = [
-            catppuccin.homeModules.catppuccin
             nixvim.homeModules.nixvim
+            stylix.homeModules.stylix
           ];
         };
       }

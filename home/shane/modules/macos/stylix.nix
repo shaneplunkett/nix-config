@@ -1,42 +1,10 @@
-{ config
-, pkgs
-, ...
-}:
+{ pkgs, ... }:
 {
-
-  imports = [
-    ./modules/common/btop.nix
-    ./modules/common/cava.nix
-    ./modules/common/direnv.nix
-    ./modules/common/fish.nix
-    ./modules/common/neovim.nix
-    ./modules/common/starship.nix
-    ./modules/common/packages.nix
-    ./modules/common/tmux.nix
-    ./modules/common/git.nix
-    ./modules/macos/ghostty.nix
-
-    ./modules/macos/packages.nix
-    ./modules/macos/stylix.nix
-  ];
-
-  home.username = "shane";
-  home.homeDirectory = "/Users/shane";
-
-  home.stateVersion = "24.11";
-
-  programs.home-manager.enable = true;
-
-  home.sessionVariables = {
-    EDITOR = "nvim";
-  };
-
-  # Stylix configuration
   stylix = {
     enable = true;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
     polarity = "dark";
-
+    
     fonts = {
       monospace = {
         package = pkgs.nerd-fonts.mononoki;
@@ -52,18 +20,18 @@
       };
       sizes = {
         applications = 12;
-        terminal = 16;
+        terminal = 21;  # Slightly larger for macOS
         desktop = 12;
         popups = 12;
       };
     };
-
+    
     cursor = {
       package = pkgs.catppuccin-cursors.mochaLavender;
       name = "catppuccin-mocha-lavender-cursors";
       size = 16;
     };
-
+    
     opacity = {
       applications = 1.0;
       terminal = 0.95;
