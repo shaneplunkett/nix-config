@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ ... }:
 
 {
 
@@ -7,6 +7,12 @@
     fish.enable = true;
     ghostty.enable = true;
     starship.enable = true;
+    gtk.icon = {
+      enable = true;
+      accent = "mauve";
+      flavor = "mocha";
+
+    };
 
   };
   gtk = {
@@ -22,11 +28,6 @@
       "file:///home/shane/screenshots Screenshots"
       "file:///home/shane/unraid Unraid"
     ];
-    iconTheme = {
-      package = pkgs.catppuccin-papirus-folders;
-      name = "Papirus-Dark";
-
-    };
 
   };
 
