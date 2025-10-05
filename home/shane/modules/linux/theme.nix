@@ -1,16 +1,10 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, config, ... }:
 let
   fontPackage = pkgs.mononoki;
   fontName = "Mononoki Nerd Font";
   fontSize = 12;
 
   cursorSize = 16;
-
-  themePackage = pkgs.magnetic-catppuccin-gtk;
-  themeName = "Catppuccin-Mocha-Standard-Mauve-Dark";
-
-  qtPlatformTheme = "kvantum";
-  qtStyleName = "kvantum";
 in
 {
   catppuccin = {
@@ -36,6 +30,7 @@ in
       accent = "mauve";
       flavor = "mocha";
     };
+    kvantum.enable = true;
   };
 
   home.pointerCursor = {
@@ -56,33 +51,47 @@ in
       name = fontName;
       size = fontSize;
     };
+    
     theme = {
-      package = themePackage;
-      name = themeName;
+      name = "Catppuccin-Mocha-Standard-Mauve-Dark";
+      package = pkgs.catppuccin-gtk.override {
+        accents = [ "mauve" ];
+        variant = "mocha";
+        tweaks = [ "rimless" "black" ];
+      };
     };
     
-    # Icon theme handled by catppuccin module below
-    gtk3.bookmarks = [
-      "file:///home/shane/documents Documents"
-      "file:///home/shane/downloads Downloads"
-      "file:///home/shane/music Music"
-      "file:///home/shane/pictures Pictures"
-      "file:///home/shane/templates Templates"
-      "file:///home/shane/videos Videos"
-      "file:///home/shane/screenshots Screenshots"
-      "file:///home/shane/projects Projects"
-    ];
+
+    
+    gtk3 = {
+      extraConfig.gtk-application-prefer-dark-theme = 1;
+      bookmarks = [
+        "file:///home/shane/documents Documents"
+        "file:///home/shane/downloads Downloads"
+        "file:///home/shane/music Music"
+        "file:///home/shane/pictures Pictures"
+        "file:///home/shane/templates Templates"
+        "file:///home/shane/videos Videos"
+        "file:///home/shane/screenshots Screenshots"
+        "file:///home/shane/projects Projects"
+      ];
+    };
+    
+    gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
   };
 
   qt = {
     enable = true;
-    platformTheme.name = qtPlatformTheme;
-    style.name = qtStyleName;
+    platformTheme.name = "kvantum";
+    style.name = "kvantum";
   };
   
-  # Ensure QT applications use the GTK theme
-  home.sessionVariables = {
-    GTK_THEME = themeName;
-    QT_QPA_PLATFORMTHEME = lib.mkForce "gtk3";
+  # GTK settings for Wayland via dconf
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+      cursor-size = cursorSize;
+      font-name = "${fontName} ${toString fontSize}";
+    };
   };
 }

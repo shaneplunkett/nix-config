@@ -146,6 +146,10 @@
   programs.xfconf.enable = true;
   services.gvfs.enable = true;
   services.tumbler.enable = true;
+  
+  # GTK/DConf services for proper theming on Wayland
+  services.dbus.enable = true;
+  programs.dconf.enable = true;
   nixpkgs.config.allowUnfree = true;
   programs.appimage = {
     enable = true;
@@ -171,6 +175,12 @@
     psmisc
     wooting-udev-rules
     wootility
+    
+    # GTK theming support
+    gsettings-desktop-schemas
+    glib
+    dconf
+    
     (catppuccin-sddm.override {
       flavor = "mocha";
       font = "Mononoki Nerd Font";

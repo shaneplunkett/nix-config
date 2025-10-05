@@ -16,7 +16,13 @@
     orca-slicer
     vlc
     samrewritten
-
+    
+    # GTK theme support for Wayland
+    glib # for gsettings
+    dconf # for dconf settings
+    gtk3 # GTK3 runtime
+    gtk4 # GTK4 runtime
+    
   ];
   programs.chromium = {
 

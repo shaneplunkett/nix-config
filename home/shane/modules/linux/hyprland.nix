@@ -1,6 +1,15 @@
-{ ... }:
+{ lib, ... }:
 {
-  home.sessionVariables.NIXOS_OZONE_WL = "1";
+  # Wayland environment variables
+  home.sessionVariables = {
+    NIXOS_OZONE_WL = "1";
+    QT_QPA_PLATFORM = "wayland";
+    QT_SCALE_FACTOR = "1";
+    QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+    GDK_BACKEND = "wayland,x11";
+    GTK_USE_PORTAL = "1";
+  };
+  
   wayland.windowManager.hyprland = {
     enable = true;
     settings = {
@@ -11,6 +20,8 @@
         "dunst"
         "systemctl --user start hyprpolkitagent"
         "hyprpaper"
+        # Reload dconf/GTK settings
+        "dconf load /org/gnome/desktop/interface/ < /dev/null || true"
       ];
 
       bind = [
