@@ -44,7 +44,6 @@
     targets = {
       nixvim.enable = false;
       fish.enable = false;
-      hyprland.enable = false;
 
     };
   };
