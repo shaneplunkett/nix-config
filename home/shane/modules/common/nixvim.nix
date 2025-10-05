@@ -494,19 +494,6 @@
       }
       {
         mode = "n";
-        key = "gr";
-        action.__raw = ''
-          function()
-            Snacks.picker.lsp_references()
-          end
-        '';
-        options = {
-          desc = "References";
-          nowait = true;
-        };
-      }
-      {
-        mode = "n";
         key = "gI";
         action.__raw = ''
           function()
@@ -600,6 +587,62 @@
       {
         mode = "n";
         key = "<leader>cR";
+        extraConfigLua = ''
+              luasnip = require("luasnip")
+              kind_icons = {
+                Text = "󰊄",
+                Method = " ",
+                Function = "󰡱 ",
+                Constructor = " ",
+                Field = " ",
+                Variable = "󱀍 ",
+                Class = " ",
+                Interface = " ",
+                Module = "󰕳 ",
+                Property = " ",
+                Unit = " ",
+                Value = " ",
+                Enum = " ",
+                Keyword = " ",
+                Snippet = " ",
+                Color = " ",
+                File = "",
+                Reference = " ",
+                Folder = " ",
+                EnumMember = " ",
+                Constant = " ",
+                Struct = " ",
+                Event = " ",
+                Operator = " ",
+                TypeParameter = " ",
+              } 
+
+               local cmp = require'cmp'
+
+           -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
+           cmp.setup.cmdline({'/', "?" }, {
+             sources = {
+               { name = 'buffer' }
+             }
+           })
+
+          -- Set configuration for specific filetype.
+           cmp.setup.filetype('gitcommit', {
+             sources = cmp.config.sources({
+               { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
+             }, {
+               { name = 'buffer' },
+             })
+           })
+
+           -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+           cmp.setup.cmdline(':', {
+             sources = cmp.config.sources({
+               { name = 'path' }
+             }, {
+               { name = 'cmdline' }
+             }),
+           })  '';
         action.__raw = ''
           function()
             Snacks.rename.rename_file()
@@ -1158,60 +1201,4 @@
       };
     };
   };
-  extraConfigLua = ''
-        luasnip = require("luasnip")
-        kind_icons = {
-          Text = "󰊄",
-          Method = " ",
-          Function = "󰡱 ",
-          Constructor = " ",
-          Field = " ",
-          Variable = "󱀍 ",
-          Class = " ",
-          Interface = " ",
-          Module = "󰕳 ",
-          Property = " ",
-          Unit = " ",
-          Value = " ",
-          Enum = " ",
-          Keyword = " ",
-          Snippet = " ",
-          Color = " ",
-          File = "",
-          Reference = " ",
-          Folder = " ",
-          EnumMember = " ",
-          Constant = " ",
-          Struct = " ",
-          Event = " ",
-          Operator = " ",
-          TypeParameter = " ",
-        } 
-
-         local cmp = require'cmp'
-
-     -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
-     cmp.setup.cmdline({'/', "?" }, {
-       sources = {
-         { name = 'buffer' }
-       }
-     })
-
-    -- Set configuration for specific filetype.
-     cmp.setup.filetype('gitcommit', {
-       sources = cmp.config.sources({
-         { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
-       }, {
-         { name = 'buffer' },
-       })
-     })
-
-     -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-     cmp.setup.cmdline(':', {
-       sources = cmp.config.sources({
-         { name = 'path' }
-       }, {
-         { name = 'cmdline' }
-       }),
-     })  '';
 }
