@@ -1,12 +1,12 @@
-{
-  config,
-  pkgs,
-  inputs,
-  ...
+{ config
+, pkgs
+, inputs
+, ...
 }:
 {
   imports = [
     ./hardware-configuration.nix
+    ./stylix.nix
     inputs.home-manager.nixosModules.default
   ];
 
@@ -151,7 +151,7 @@
   programs.xfconf.enable = true;
   services.gvfs.enable = true;
   services.tumbler.enable = true;
-  
+
   # System services
   nixpkgs.config.allowUnfree = true;
   programs.appimage = {
@@ -178,8 +178,8 @@
     psmisc
     wooting-udev-rules
     wootility
-    
-    
+
+
     tuigreet
   ];
 
