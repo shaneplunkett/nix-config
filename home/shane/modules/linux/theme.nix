@@ -11,6 +11,11 @@
       enable = true;
       accent = "mauve";
       flavor = "mocha";
+    };
+    hyprland = {
+      enable = true;
+      accent = "mauve";
+      flavor = "mocha";
 
     };
 

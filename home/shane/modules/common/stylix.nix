@@ -10,6 +10,7 @@
       ghostty.enable = false;
       starship.enable = false;
       fish.enable = false;
+      hyprland.enable = false;
 
     };
   };
