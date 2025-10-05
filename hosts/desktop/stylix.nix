@@ -5,6 +5,8 @@
     base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
     polarity = "dark";
 
+    image = ../../home/wallpapers/wallpaper.png;
+
     fonts = {
       monospace = {
         package = pkgs.nerd-fonts.mononoki;
@@ -37,6 +39,12 @@
       terminal = 0.95;
       desktop = 1.0;
       popups = 1.0;
+    };
+
+
+    targets = {
+      nixvim.enable = false;
+
     };
   };
 }

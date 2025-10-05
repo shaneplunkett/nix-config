@@ -1,7 +1,4 @@
-{ config
-, pkgs
-, ...
-}:
+{ ... }:
 {
 
   imports = [
@@ -30,5 +27,4 @@
     EDITOR = "nvim";
   };
 
-  # Stylix configuration
 }
