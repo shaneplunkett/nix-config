@@ -35,16 +35,24 @@
           settings.telemetry.enable = false;
         };
         ts_ls = {
-          enable = true; # TS
-          filetypes = [
-            "typescript"
-            "typescriptreact"
-            "typescript.tsx"
-          ];
+          enable = true;
         };
         cssls.enable = true;
         tailwindcss.enable = true;
         html.enable = true;
+        bashls.enable = true;
+        astro.enable = true;
+        dockerls.enable = true;
+        terraformls.enable = true;
+        jsonls.enable = true;
+        eslint.enable = true;
+        yamlls.enable = true;
+        omnisharp.enable = true;
+        phpactor.enable = true;
+        ruby_lsp.enable = true;
+        sqls.enable = true;
+        glsl_analyzer.enable = true;
+        marksman.enable = true;
 
       };
 

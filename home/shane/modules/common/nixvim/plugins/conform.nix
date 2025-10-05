@@ -20,17 +20,25 @@
           nix = [ "nixfmt" ];
           mdx = [ "prettier" ];
           markdown = [ "prettier" ];
-          python = [ "ruff" ];
+          python = [ "black" "ruff" ]; # Both black and ruff for Python
           sh = [ "shfmt" ];
+          bash = [ "shfmt" ];
           svelte = [ "prettier" ];
           typescript = [ "prettier" ];
+          typescriptreact = [ "prettier" ];
           rust = [ "rustfmt" ];
-          go = [ "gofmt" ];
+          go = [ "gofmt" "goimports" ];
           astro = [ "prettier" ];
           terraform = [ "terraform_fmt" ];
           tf = [ "terraform_fmt" ];
           sql = [ "sqlfluff" ];
           pgsql = [ "sqlfluff" ];
+          yaml = [ "prettier" ];
+          yml = [ "prettier" ];
+          ruby = [ "rubocop" ];
+          php = [ "php_cs_fixer" ];
+          dockerfile = [ "hadolint" ];
+          glsl = [ "clang_format" ];
         };
         format_on_save = ''
           function(bufnr)
