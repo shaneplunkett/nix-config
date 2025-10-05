@@ -10,8 +10,7 @@
     ./modules/common/cava.nix
     ./modules/common/direnv.nix
     ./modules/common/fish.nix
-    #./modules/common/neovim.nix
-    ./modules/common/nixvim.nix
+    ./modules/common/nixvim
     ./modules/common/starship.nix
     ./modules/common/packages.nix
     ./modules/common/tmux.nix
