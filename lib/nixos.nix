@@ -25,6 +25,7 @@ in
       
       # Core modules
       home-manager.nixosModules.home-manager
+      catppuccin.nixosModules.catppuccin
       
       # Home Manager configuration
       {

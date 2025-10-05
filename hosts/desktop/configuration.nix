@@ -55,12 +55,21 @@
     enable = true;
   };
 
-  services.displayManager.sddm = {
+  services.greetd = {
     enable = true;
-    theme = "catppuccin-mocha";
-    package = pkgs.kdePackages.sddm;
+    settings = {
+      default_session = {
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --time-format '%I:%M %p | %a • %h | %F' --cmd Hyprland --greeting 'Welcome to NixOS!' --theme 'border=#cba6f7;text=#cdd6f4;prompt=#b4befe;time=#f5e0dc;action=#89b4fa;button=#eba0ac;container=#1e1e2e;input=#313244;greet=#a6e3a1;title=#cba6f7'";
+        user = "greeter";
+      };
+    };
   };
-  services.displayManager.sddm.wayland.enable = true;
+
+  catppuccin = {
+    enable = true;
+    flavor = "mocha";
+    accent = "mauve";
+  };
   programs.hyprland = {
     enable = true;
     portalPackage =
@@ -181,12 +190,7 @@
     glib
     dconf
     
-    (catppuccin-sddm.override {
-      flavor = "mocha";
-      font = "Mononoki Nerd Font";
-      fontSize = "14";
-      loginBackground = false;
-    })
+    tuigreet
   ];
 
   environment.sessionVariables = {
