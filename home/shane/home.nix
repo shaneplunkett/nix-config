@@ -14,6 +14,7 @@
     ./modules/common/packages.nix
     ./modules/common/tmux.nix
     ./modules/common/git.nix
+    ./modules/common/stylix.nix
 
     ./modules/linux/dunst.nix
     ./modules/linux/ghostty.nix
@@ -23,7 +24,6 @@
 
     ./modules/linux/waybar.nix
     ./modules/linux/packages.nix
-    ./modules/linux/stylix.nix
   ];
 
   home.username = "shane";

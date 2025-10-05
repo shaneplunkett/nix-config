@@ -14,8 +14,9 @@
     ./modules/common/packages.nix
     ./modules/common/tmux.nix
     ./modules/common/git.nix
-    ./modules/macos/ghostty.nix
+    ./modules/common/stylix.nix
 
+    ./modules/macos/ghostty.nix
     ./modules/macos/packages.nix
     ./modules/macos/stylix.nix
   ];

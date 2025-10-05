@@ -3,42 +3,41 @@ let
   inherit (inputs) nixpkgs home-manager nixvim stylix;
 in
 {
-  mkNixosSystem = {
-    hostname,
-    system ? "x86_64-linux", 
-    hostConfig,
-    extraModules ? [ ],
-  }:
-  nixpkgs.lib.nixosSystem {
-    inherit system;
-    specialArgs = { inherit inputs; };
-    modules = [
-      # Custom packages overlay
-      { 
-        nixpkgs.overlays = [ 
-          (final: prev: import (rootPath + /pkgs) { pkgs = final; })
-        ]; 
-      }
-      
-      # Host-specific configuration
-      hostConfig
-      
-      # Core modules
-      home-manager.nixosModules.home-manager
-      stylix.nixosModules.stylix
-      
-      # Home Manager configuration
-      {
-        home-manager = {
-          useGlobalPkgs = true;
-          useUserPackages = true;
-          users.shane = import (rootPath + /home/shane/home.nix);
-          sharedModules = [
-            nixvim.homeModules.nixvim
-            stylix.homeModules.stylix
+  mkNixosSystem =
+    { hostname
+    , system ? "x86_64-linux"
+    , hostConfig
+    , extraModules ? [ ]
+    ,
+    }:
+    nixpkgs.lib.nixosSystem {
+      inherit system;
+      specialArgs = { inherit inputs; };
+      modules = [
+        # Custom packages overlay
+        {
+          nixpkgs.overlays = [
+            (final: prev: import (rootPath + /pkgs) { pkgs = final; })
           ];
-        };
-      }
-    ] ++ extraModules;
-  };
+        }
+
+        # Host-specific configuration
+        hostConfig
+
+        home-manager.nixosModules.home-manager
+        stylix.nixosModules.stylix
+
+        # Home Manager configuration
+        {
+          home-manager = {
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            users.shane = import (rootPath + /home/shane/home.nix);
+            sharedModules = [
+              nixvim.homeModules.nixvim
+            ];
+          };
+        }
+      ] ++ extraModules;
+    };
 }

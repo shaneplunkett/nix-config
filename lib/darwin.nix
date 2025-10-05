@@ -19,14 +19,12 @@ in
         ]; 
       }
       
-      # Host-specific configuration
       hostConfig
       
-      # Core modules
       home-manager.darwinModules.home-manager
       nix-homebrew.darwinModules.nix-homebrew
+      stylix.darwinModules.stylix
       
-      # Homebrew configuration
       {
         nix-homebrew = {
           enable = true;
@@ -41,12 +39,10 @@ in
         };
       }
       
-      # Homebrew taps integration
       ({ config, ... }: {
         homebrew.taps = builtins.attrNames config.nix-homebrew.taps;
       })
       
-      # Home Manager configuration
       {
         home-manager = {
           useGlobalPkgs = true;
@@ -54,7 +50,6 @@ in
           users.shane = import (rootPath + /home/shane/homemac.nix);
           sharedModules = [
             nixvim.homeModules.nixvim
-            stylix.homeModules.stylix
           ];
         };
       }
