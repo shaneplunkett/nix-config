@@ -1,6 +1,5 @@
 { self, ... }:
 {
-
   keymaps = [
     {
       mode = "i";
