@@ -14,7 +14,7 @@
     };
     hyprland = {
       enable = true;
-      accent = "mauve";
+      accent = "lavender";
       flavor = "mocha";
 
     };
