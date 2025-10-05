@@ -8,6 +8,8 @@
     QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
     GDK_BACKEND = "wayland,x11";
     GTK_USE_PORTAL = "1";
+    # Force GTK theme
+    GTK_THEME = "Catppuccin-Mocha-Standard-Mauve-Dark";
   };
   
   wayland.windowManager.hyprland = {
@@ -20,8 +22,11 @@
         "dunst"
         "systemctl --user start hyprpolkitagent"
         "hyprpaper"
-        # Reload dconf/GTK settings
-        "dconf load /org/gnome/desktop/interface/ < /dev/null || true"
+        # Reload GTK settings
+        "gsettings set org.gnome.desktop.interface gtk-theme 'Catppuccin-Mocha-Standard-Mauve-Dark'"
+        "gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'"
+        "gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'"
+        "gsettings set org.gnome.desktop.interface cursor-theme 'catppuccin-mocha-mauve-cursors'"
       ];
 
       bind = [

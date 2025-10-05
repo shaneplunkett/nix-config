@@ -44,6 +44,31 @@ in
 
   fonts.fontconfig.enable = true;
 
+  # XDG configuration files for consistent theming
+  xdg.configFile = {
+    "gtk-3.0/settings.ini".text = ''
+      [Settings]
+      gtk-application-prefer-dark-theme = 1
+      gtk-theme-name = Catppuccin-Mocha-Standard-Mauve-Dark
+      gtk-icon-theme-name = Papirus-Dark
+      gtk-cursor-theme-name = catppuccin-mocha-mauve-cursors
+      gtk-cursor-theme-size = ${toString cursorSize}
+      gtk-font-name = ${fontName} ${toString fontSize}
+      gtk-decoration-layout = menu:minimize,maximize,close
+    '';
+    
+    "gtk-4.0/settings.ini".text = ''
+      [Settings]
+      gtk-application-prefer-dark-theme = 1
+      gtk-theme-name = Catppuccin-Mocha-Standard-Mauve-Dark
+      gtk-icon-theme-name = Papirus-Dark
+      gtk-cursor-theme-name = catppuccin-mocha-mauve-cursors
+      gtk-cursor-theme-size = ${toString cursorSize}
+      gtk-font-name = ${fontName} ${toString fontSize}
+      gtk-decoration-layout = menu:minimize,maximize,close
+    '';
+  };
+
   gtk = {
     enable = true;
     font = {
@@ -61,10 +86,20 @@ in
       };
     };
     
-
+    gtk2.extraConfig = ''
+      gtk-application-prefer-dark-theme = 1
+      gtk-theme-name = "Catppuccin-Mocha-Standard-Mauve-Dark"
+      gtk-icon-theme-name = "Papirus-Dark"
+      gtk-cursor-theme-name = "catppuccin-mocha-mauve-cursors"
+      gtk-cursor-theme-size = ${toString cursorSize}
+      gtk-font-name = "${fontName} ${toString fontSize}"
+    '';
     
     gtk3 = {
-      extraConfig.gtk-application-prefer-dark-theme = 1;
+      extraConfig = {
+        gtk-application-prefer-dark-theme = 1;
+        gtk-decoration-layout = "menu:minimize,maximize,close";
+      };
       bookmarks = [
         "file:///home/shane/documents Documents"
         "file:///home/shane/downloads Downloads"
@@ -77,7 +112,10 @@ in
       ];
     };
     
-    gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
+    gtk4.extraConfig = {
+      gtk-application-prefer-dark-theme = 1;
+      gtk-decoration-layout = "menu:minimize,maximize,close";
+    };
   };
 
   qt = {
@@ -89,9 +127,19 @@ in
   # GTK settings for Wayland via dconf
   dconf.settings = {
     "org/gnome/desktop/interface" = {
+      gtk-theme = "Catppuccin-Mocha-Standard-Mauve-Dark";
+      icon-theme = "Papirus-Dark";
       color-scheme = "prefer-dark";
+      cursor-theme = "catppuccin-mocha-mauve-cursors";
       cursor-size = cursorSize;
       font-name = "${fontName} ${toString fontSize}";
+    };
+    "org/gnome/desktop/wm/preferences" = {
+      theme = "Catppuccin-Mocha-Standard-Mauve-Dark";
+    };
+    # Force GTK applications to use dark theme
+    "org/gtk/settings/file-chooser" = {
+      show-hidden = true;
     };
   };
 }
