@@ -5,7 +5,6 @@
     base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
     polarity = "dark";
 
-    image = ../../home/shane/wallpapers/wallpaper.png;
 
     fonts = {
       monospace = {
@@ -44,6 +43,7 @@
 
     targets = {
       nixvim.enable = false;
+      fish.enable = false;
 
     };
   };

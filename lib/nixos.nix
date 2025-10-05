@@ -26,6 +26,7 @@ in
 
         home-manager.nixosModules.home-manager
         stylix.nixosModules.stylix
+        catppuccin.nixosModules.catppuccin
 
         # Home Manager configuration
         {
@@ -35,6 +36,7 @@ in
             users.shane = import (rootPath + /home/shane/home.nix);
             sharedModules = [
               nixvim.homeModules.nixvim
+              catppuccin.homeModules.catppuccin
             ];
           };
         }
