@@ -14,6 +14,7 @@
     ./common/packages.nix
     ./common/homebrew.nix
     ./common/fish.nix
+    ./common/stylix.nix
   ];
 
   homebrew.casks = lib.mkAfter [

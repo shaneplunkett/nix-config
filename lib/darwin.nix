@@ -51,7 +51,6 @@ in
             users.shane = import (rootPath + /home/shane/homemac.nix);
             sharedModules = [
               nixvim.homeModules.nixvim
-              home-manager.nixosModules.home-manager
             ];
           };
         }
