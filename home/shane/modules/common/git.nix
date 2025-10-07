@@ -8,6 +8,14 @@
       ".direnv/"
       ".go/"
     ];
+    includes = [
+      {
+        condition = "gitdir:~/projects/work/";
+        contents = {
+          core.excludesfile = "~/.gitignore_work";
+        };
+      }
+    ];
     extraConfig = {
       init = {
         defaultBranch = "main";
@@ -24,4 +32,9 @@
       core.sshCommand = "ssh -i ~/.ssh/id_ed25519";
     };
   };
+
+  home.file.".gitignore_work".text = ''
+    .envrc
+    .direnv/
+  '';
 }

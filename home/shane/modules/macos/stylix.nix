@@ -3,9 +3,6 @@
 
   stylix = {
 
-    base16scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
-    image = ../../wallpapers/wallpaper.png;
-
     targets = {
       nixvim.enable = false;
       ghostty.enable = false;
