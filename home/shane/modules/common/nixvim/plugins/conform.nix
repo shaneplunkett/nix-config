@@ -1,5 +1,21 @@
 { pkgs, ... }:
 {
+  extraPackages = with pkgs; [
+    prettier
+    biome
+    black
+    ruff
+    shfmt
+    stylua
+    rustfmt
+    sqlfluff
+    nixfmt
+    hadolint
+    rubocop
+    gofumpt
+    goimports-reviser
+
+  ];
 
   plugins = {
 
@@ -7,7 +23,7 @@
       enable = true;
       settings = {
         formatters_by_ft = {
-          "_" = [ "time_whitespace" ];
+          "_" = [ "trim_whitspace" ];
           css = [ "biome" ];
           html = [ "biome" ];
           svg = [ "biome" ];

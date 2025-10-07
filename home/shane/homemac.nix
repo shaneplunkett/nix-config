@@ -11,6 +11,7 @@
     ./modules/common/tmux.nix
     ./modules/common/git.nix
     ./modules/common/nixvim/default.nix
+    ./modules/common/stylix.nix
 
 
     ./modules/macos/ghostty.nix
