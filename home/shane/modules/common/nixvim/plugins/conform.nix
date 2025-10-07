@@ -12,8 +12,7 @@
     nixfmt
     hadolint
     rubocop
-    gofumpt
-    goimports-reviser
+    gotools
 
   ];
 
@@ -36,14 +35,20 @@
           nix = [ "nixfmt" ];
           mdx = [ "prettier" ];
           markdown = [ "prettier" ];
-          python = [ "black" "ruff" ]; # Both black and ruff for Python
+          python = [
+            "black"
+            "ruff"
+          ];
           sh = [ "shfmt" ];
           bash = [ "shfmt" ];
           svelte = [ "prettier" ];
           typescript = [ "prettier" ];
           typescriptreact = [ "prettier" ];
           rust = [ "rustfmt" ];
-          go = [ "gofmt" "goimports" ];
+          go = [
+            "gofmt"
+            "goimports"
+          ];
           astro = [ "prettier" ];
           terraform = [ "terraform_fmt" ];
           tf = [ "terraform_fmt" ];

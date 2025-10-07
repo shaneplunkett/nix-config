@@ -1,14 +1,24 @@
 { inputs, rootPath }:
 let
-  inherit (inputs) nixpkgs nix-darwin home-manager nixvim stylix nix-homebrew homebrew-core homebrew-cask;
+  inherit (inputs)
+    nixpkgs
+    nix-darwin
+    home-manager
+    nixvim
+    stylix
+    nix-homebrew
+    homebrew-core
+    homebrew-cask
+    catppuccin
+    ;
 in
 {
   mkDarwinSystem =
-    { hostname
-    , system ? "aarch64-darwin"
-    , hostConfig
-    , extraModules ? [ ]
-    ,
+    {
+      hostname,
+      system ? "aarch64-darwin",
+      hostConfig,
+      extraModules ? [ ],
     }:
     nix-darwin.lib.darwinSystem {
       inherit system;
@@ -25,6 +35,7 @@ in
         home-manager.darwinModules.home-manager
         nix-homebrew.darwinModules.nix-homebrew
         stylix.darwinModules.stylix
+        catppuccin.nixosModules.catppuccin
 
         {
           nix-homebrew = {
@@ -40,9 +51,12 @@ in
           };
         }
 
-        ({ config, ... }: {
-          homebrew.taps = builtins.attrNames config.nix-homebrew.taps;
-        })
+        (
+          { config, ... }:
+          {
+            homebrew.taps = builtins.attrNames config.nix-homebrew.taps;
+          }
+        )
 
         {
           home-manager = {
@@ -51,9 +65,11 @@ in
             users.shane = import (rootPath + /home/shane/homemac.nix);
             sharedModules = [
               nixvim.homeModules.nixvim
+              catppuccin.homeModules.catppuccin
             ];
           };
         }
-      ] ++ extraModules;
+      ]
+      ++ extraModules;
     };
 }
