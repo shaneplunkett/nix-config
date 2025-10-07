@@ -13,9 +13,9 @@
     ./modules/common/nixvim/default.nix
     ./modules/common/stylix.nix
 
-
     ./modules/macos/ghostty.nix
     ./modules/macos/packages.nix
+    ./modules/macos/catppuccin.nix
   ];
 
   home.username = "shane";

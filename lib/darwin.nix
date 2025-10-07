@@ -35,7 +35,6 @@ in
         home-manager.darwinModules.home-manager
         nix-homebrew.darwinModules.nix-homebrew
         stylix.darwinModules.stylix
-        catppuccin.nixosModules.catppuccin
 
         {
           nix-homebrew = {
