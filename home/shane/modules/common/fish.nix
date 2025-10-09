@@ -11,6 +11,7 @@
     };
     generateCompletions = true;
     interactiveShellInit = ''
+      set fish_greeting
       starship init fish | source
       set -gx PATH $HOME/go/bin $PATH
 
