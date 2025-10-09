@@ -27,8 +27,6 @@
     inccommand = "split";
     cursorline = true;
     scrolloff = 999;
-    
-    # Disable built-in completion to prevent dual UI
     completeopt = "menu,menuone,noselect";
 
   };

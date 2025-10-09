@@ -1,6 +1,6 @@
 { self, ... }:
 {
-  colorschemes.dracula-nvim = {
+  colorschemes.nord = {
     enable = true;
   };
 }
