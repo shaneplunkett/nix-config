@@ -2,9 +2,8 @@
 {
   stylix = {
     enable = true;
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyo-night-dark.yaml";
     polarity = "dark";
-
 
     fonts = {
       monospace = {
@@ -40,10 +39,9 @@
       popups = 1.0;
     };
 
-
     targets = {
       nixvim.enable = false;
-      fish.enable = false;
+      fish.enable = true;
 
     };
   };

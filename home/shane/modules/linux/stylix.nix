@@ -3,15 +3,15 @@
 
   stylix = {
 
-    base16scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyo-night-dark.yaml";
     image = ../../wallpapers/wallpaper.png;
 
     targets = {
       nixvim.enable = false;
-      ghostty.enable = false;
-      starship.enable = false;
-      fish.enable = false;
-      hyprland.enable = false;
+      ghostty.enable = true;
+      starship.enable = true;
+      fish.enable = true;
+      hyprland.enable = true;
 
     };
   };

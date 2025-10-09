@@ -4,16 +4,16 @@
 
   catppuccin = {
     enable = false;
-    fish.enable = true;
-    ghostty.enable = true;
-    starship.enable = true;
+    fish.enable = false;
+    ghostty.enable = false;
+    starship.enable = false;
     gtk.icon = {
       enable = true;
       accent = "mauve";
       flavor = "mocha";
     };
     hyprland = {
-      enable = true;
+      enable = false;
       accent = "pink";
       flavor = "mocha";
 
@@ -35,6 +35,5 @@
     ];
 
   };
-
 
 }
