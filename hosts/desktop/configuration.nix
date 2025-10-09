@@ -1,12 +1,12 @@
-{ config
-, pkgs
-, inputs
-, ...
+{
+  config,
+  pkgs,
+  inputs,
+  ...
 }:
 {
   imports = [
     ./hardware-configuration.nix
-    ./stylix.nix
     inputs.home-manager.nixosModules.default
   ];
 
@@ -65,7 +65,6 @@
     };
   };
 
-
   programs.hyprland = {
     enable = true;
     portalPackage =
@@ -105,7 +104,6 @@
       "dialout"
       "wheel"
     ];
-    packages = with pkgs; [ ];
   };
   hardware.graphics = {
     enable = true;
@@ -158,10 +156,6 @@
     enable = true;
     binfmt = true;
   };
-  catppuccin = {
-    enable = false;
-
-  };
 
   environment.systemPackages = with pkgs; [
     vim
@@ -182,7 +176,6 @@
     psmisc
     wooting-udev-rules
     wootility
-
 
     tuigreet
   ];

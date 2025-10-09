@@ -6,6 +6,8 @@
     settings = {
       font-size = "16";
       command = "fish --login --interactive";
+      theme = "Dracula";
+
     };
   };
 }

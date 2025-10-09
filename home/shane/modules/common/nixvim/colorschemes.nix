@@ -1,6 +1,6 @@
 { self, ... }:
 {
-  colorschemes.tokyonight = {
+  colorschemes.dracula-nvim = {
     enable = true;
   };
 }

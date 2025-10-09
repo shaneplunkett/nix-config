@@ -2,24 +2,6 @@
 
 {
 
-  catppuccin = {
-    enable = false;
-    fish.enable = false;
-    ghostty.enable = false;
-    starship.enable = false;
-    gtk.icon = {
-      enable = true;
-      accent = "mauve";
-      flavor = "mocha";
-    };
-    hyprland = {
-      enable = false;
-      accent = "pink";
-      flavor = "mocha";
-
-    };
-
-  };
   gtk = {
     enable = true;
     gtk3.bookmarks = [

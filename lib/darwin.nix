@@ -5,11 +5,9 @@ let
     nix-darwin
     home-manager
     nixvim
-    stylix
     nix-homebrew
     homebrew-core
     homebrew-cask
-    catppuccin
     ;
 in
 {
@@ -34,7 +32,6 @@ in
 
         home-manager.darwinModules.home-manager
         nix-homebrew.darwinModules.nix-homebrew
-        stylix.darwinModules.stylix
 
         {
           nix-homebrew = {
@@ -64,7 +61,6 @@ in
             users.shane = import (rootPath + /home/shane/homemac.nix);
             sharedModules = [
               nixvim.homeModules.nixvim
-              catppuccin.homeModules.catppuccin
             ];
           };
         }

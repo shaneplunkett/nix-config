@@ -17,10 +17,6 @@
       inputs.hyprland.follows = "hyprland";
     };
 
-    stylix.url = "github:danth/stylix";
-    catppuccin.url = "github:catppuccin/nix";
-
-
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
     homebrew-core = {
       url = "github:homebrew/homebrew-core";
@@ -36,9 +32,13 @@
     };
   };
 
-  outputs = { self, nixpkgs, ... }@inputs:
+  outputs =
+    { self, nixpkgs, ... }@inputs:
     let
-      lib = import ./lib { inherit inputs; rootPath = ./.; };
+      lib = import ./lib {
+        inherit inputs;
+        rootPath = ./.;
+      };
     in
     {
       darwinConfigurations = {
