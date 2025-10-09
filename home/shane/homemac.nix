@@ -3,7 +3,7 @@
 
   imports = [
     ./modules/common/btop.nix
-    ./modules/common/cava.nix
+    # ./modules/common/cava.nix  # Temporarily disabled due to unity-test build failure
     ./modules/common/direnv.nix
     ./modules/common/fish.nix
     ./modules/common/starship.nix

@@ -9,7 +9,6 @@
     ./common/packages.nix
     ./common/homebrew.nix
     ./common/fish.nix
-    ./common/stylix.nix
   ];
 
   home-manager.backupFileExtension = "backup";

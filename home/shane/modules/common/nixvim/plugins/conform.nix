@@ -13,6 +13,7 @@
     hadolint
     rubocop
     gotools
+    terraform-ls
 
   ];
 
