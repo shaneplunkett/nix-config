@@ -12,10 +12,7 @@
     ./modules/common/git.nix
     ./modules/common/nixvim/default.nix
 
-    ./modules/macos/stylix.nix
     ./modules/macos/ghostty.nix
-    ./modules/macos/packages.nix
-    ./modules/macos/catppuccin.nix
   ];
 
   home.username = "shane";
