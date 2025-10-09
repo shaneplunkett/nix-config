@@ -5,23 +5,6 @@
   wayland.windowManager.hyprland = {
     enable = true;
     settings = {
-      # Nord colorscheme
-      "$nord0" = "rgb(2e3440)";   # Polar Night - darkest
-      "$nord1" = "rgb(3b4252)";   # Polar Night
-      "$nord2" = "rgb(434c5e)";   # Polar Night
-      "$nord3" = "rgb(4c566a)";   # Polar Night - lightest
-      "$nord4" = "rgb(d8dee9)";   # Snow Storm - darkest
-      "$nord5" = "rgb(e5e9f0)";   # Snow Storm
-      "$nord6" = "rgb(eceff4)";   # Snow Storm - lightest
-      "$nord7" = "rgb(8fbcbb)";   # Frost - teal
-      "$nord8" = "rgb(88c0d0)";   # Frost - light blue
-      "$nord9" = "rgb(81a1c1)";   # Frost - blue
-      "$nord10" = "rgb(5e81ac)";  # Frost - dark blue
-      "$nord11" = "rgb(bf616a)";  # Aurora - red
-      "$nord12" = "rgb(d08770)";  # Aurora - orange
-      "$nord13" = "rgb(ebcb8b)";  # Aurora - yellow
-      "$nord14" = "rgb(a3be8c)";  # Aurora - green
-      "$nord15" = "rgb(b48ead)";  # Aurora - purple
       "$mod" = "SUPER";
       "$terminal" = "ghostty --gtk-single-instance=true";
 
@@ -118,19 +101,21 @@
       decoration = {
         rounding = 10;
         
-        # Nord-themed shadows
-        drop_shadow = true;
-        shadow_range = 4;
-        shadow_render_power = 3;
-        "col.shadow" = "$nord0";
-        "col.shadow_inactive" = "$nord1";
-        
         # Blur settings with Nord feel
         blur = {
           enabled = true;
           size = 8;
           passes = 1;
           new_optimizations = true;
+        };
+        
+        # Nord-themed shadows
+        shadow = {
+          enabled = true;
+          range = 4;
+          render_power = 3;
+          color = "rgba(2e3440ff)";      # Nord0 - Polar Night darkest
+          color_inactive = "rgba(3b4252ff)";  # Nord1 - Polar Night
         };
       };
       
@@ -139,23 +124,20 @@
         gaps_in = 5;
         gaps_out = 10;
         
-        # Nord border colors
-        "col.active_border" = "$nord8 $nord9 45deg";  # Frost gradient
-        "col.inactive_border" = "$nord3";             # Polar Night
-        
-        # Background color
-        "col.background" = "$nord0";
+        # Nord border colors - using hex format for gradients
+        "col.active_border" = "rgba(88c0d0ff) rgba(81a1c1ff) 45deg";  # Frost gradient
+        "col.inactive_border" = "rgba(4c566aff)";                      # Polar Night
       };
       
       # Nord-themed group settings
       group = {
-        "col.border_active" = "$nord14";    # Aurora green
-        "col.border_inactive" = "$nord3";   # Polar Night
+        "col.border_active" = "rgba(a3be8cff)";    # Aurora green
+        "col.border_inactive" = "rgba(4c566aff)";    # Polar Night
         groupbar = {
           font_size = 10;
           gradients = false;
-          "col.active" = "$nord8";          # Frost blue
-          "col.inactive" = "$nord2";        # Polar Night
+          "col.active" = "rgba(88c0d0ff)";          # Frost blue
+          "col.inactive" = "rgba(434c5eff)";           # Polar Night
         };
       };
     };

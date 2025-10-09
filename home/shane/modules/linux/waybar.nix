@@ -158,7 +158,7 @@
 
       window#waybar {
           background-color: rgba(0, 0, 0, 0);
-          color: #cdd6f4;
+          color: #d8dee9;  /* Nord Snow Storm */
           border: none;
           box-shadow: none;
       }
@@ -168,16 +168,16 @@
       }
 
       window#waybar.termite {
-          background-color: #3F3F3F;
+          background-color: #3b4252;  /* Nord Polar Night */
       }
 
       window#waybar.chromium {
-          background-color: #000000;
+          background-color: #2e3440;  /* Nord Polar Night darkest */
           border: none;
       }
 
       #workspaces {
-          border: 3px solid #b4befe;
+          border: 3px solid #88c0d0;  /* Nord Frost */
       }
 
       #workspaces button {
@@ -186,23 +186,23 @@
           padding-top: 0px;
           padding-bottom: 0px;
           background-color: transparent;
-          color: #cdd6f4;
+          color: #d8dee9;  /* Nord Snow Storm */
       }
 
       #workspaces button:hover {
-          color: #f5c2e7;
+          color: #81a1c1;  /* Nord Frost lighter */
       }
 
       #workspaces button.empty {
-          color: #7f849c;
+          color: #616e88;  /* Nord muted */
       }
 
       #workspaces button.active {
-          color: #f5c2e7;
+          color: #88c0d0;  /* Nord Frost */
       }
 
       #workspaces button.urgent {
-          color: #f38ba8;
+          color: #bf616a;  /* Nord Aurora red */
       }
 
       #clock,
@@ -218,8 +218,8 @@
       #workspaces,
       #power-profiles-daemon {
           padding: 0 10px;
-          background-color: #1e1e2e;
-          color: #cdd6f4;
+          background-color: #3b4252;  /* Nord Polar Night */
+          color: #d8dee9;  /* Nord Snow Storm */
       }
 
       /* If workspaces is the leftmost module, omit left margin */
@@ -233,26 +233,26 @@
       }
 
       #clock {
-          border: 3px solid #89dceb;
+          border: 3px solid #88c0d0;  /* Nord Frost */
       }
 
       #battery {
-          border: 3px solid #b4befe;
+          border: 3px solid #81a1c1;  /* Nord Frost lighter */
       }
 
       #battery.charging, #battery.plugged {
-          border: 3px solid #a6e3a1;
+          border: 3px solid #a3be8c;  /* Nord Aurora green */
       }
 
       @keyframes blink {
           to {
-              border: 3px solid #b4befe;
+              border: 3px solid #81a1c1;  /* Nord Frost lighter */
           }
       }
 
       /* Using steps() instead of linear as a timing function to limit cpu usage */
       #battery.critical:not(.charging) {
-          border: 3px solid #f38ba8;
+          border: 3px solid #bf616a;  /* Nord Aurora red */
           animation-name: blink;
           animation-duration: 0.5s;
           animation-timing-function: steps(12);
@@ -265,77 +265,77 @@
       }
 
       #power-profiles-daemon.performance {
-          border: 3px solid #f38ba8;
+          border: 3px solid #bf616a;  /* Nord Aurora red */
       }
 
       #power-profiles-daemon.balanced {
-          border: 3px solid #f5c2e7;
+          border: 3px solid #b48ead;  /* Nord Aurora purple */
       }
 
       #power-profiles-daemon.power-saver {
-          border: 3px solid #a6e3a1;
+          border: 3px solid #a3be8c;  /* Nord Aurora green */
       }
 
       #cpu {
-          border: 3px solid #a6e3a1;
+          border: 3px solid #a3be8c;  /* Nord Aurora green */
           padding-right: 15px
       }
 
       #memory {
-          border: 3px solid #cba6f7
+          border: 3px solid #b48ead;  /* Nord Aurora purple */
       }
 
       #backlight {
-          border: 3px solid #f9e2af;
+          border: 3px solid #ebcb8b;  /* Nord Aurora yellow */
       }
 
       #bluetooth {
-          border: 3px solid #89b4fa;
+          border: 3px solid #5e81ac;  /* Nord Frost darker */
       }
 
       #network {
-          border: 3px solid #89dceb;
+          border: 3px solid #88c0d0;  /* Nord Frost */
       }
 
       #network.disconnected {
-          border: 3px solid #f38ba8;
+          border: 3px solid #bf616a;  /* Nord Aurora red */
       }
 
       #pulseaudio {
-          border: 3px solid #cba6f7;
+          border: 3px solid #b48ead;  /* Nord Aurora purple */
       }
 
       #pulseaudio.muted {
-          border: 3px solid #f38ba8;
+          border: 3px solid #bf616a;  /* Nord Aurora red */
       }
 
       #custom-media {
-          border: 3px solid #a6e3a1;
+          border: 3px solid #a3be8c;  /* Nord Aurora green */
           min-width: 100px;
       }
 
       #custom-media.custom-spotify {
-          border: 3px solid #a6e3a1;
+          border: 3px solid #a3be8c;  /* Nord Aurora green */
       }
 
       #custom-media.custom-vlc {
-          border: 3px solid #fab387;
+          border: 3px solid #d08770;  /* Nord Aurora orange */
       }
 
       #custom-media.custom-firefox {
-          border: 3px solid #f38ba8;
+          border: 3px solid #bf616a;  /* Nord Aurora red */
       }
 
       #temperature {
-          border: 3px solid #fab387;
+          border: 3px solid #d08770;  /* Nord Aurora orange */
       }
 
       #temperature.critical {
-          border: 3px solid #f38ba8;
+          border: 3px solid #bf616a;  /* Nord Aurora red */
       }
 
       #tray {
-          border: 3px solid #fab387;
+          border: 3px solid #d08770;  /* Nord Aurora orange */
       }
 
       #tray > .passive {
@@ -344,7 +344,7 @@
 
       #tray > .needs-attention {
           -gtk-icon-effect: highlight;
-          border: 3px solid #f38ba8;
+          border: 3px solid #bf616a;  /* Nord Aurora red */
       }
 
       #GtkSeparatorMenuItem {
