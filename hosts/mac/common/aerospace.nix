@@ -5,7 +5,7 @@
     enable = true;
     settings = {
       after-startup-command = [
-        "exec-and-forget /run/current-system/sw/bin/borders active_color=0xffcba6f7 inactive_color=0xff45475a width=10.0"
+        "exec-and-forget /run/current-system/sw/bin/borders active_color=0xff81a1c1 inactive_color=0xff434c5e width=10.0"
       ];
       default-root-container-layout = "tiles";
       automatically-unhide-macos-hidden-apps = true;
