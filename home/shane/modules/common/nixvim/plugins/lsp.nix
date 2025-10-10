@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ ... }:
 {
 
   plugins = {
@@ -61,33 +61,14 @@
         jsonls.enable = true;
         eslint.enable = true;
         yamlls.enable = true;
-        omnisharp.enable = true;
         phpactor.enable = true;
         ruby_lsp.enable = true;
         sqls.enable = true;
         glsl_analyzer.enable = true;
-        marksman.enable = true;
 
       };
 
     };
-
-    # lspkind disabled - using custom formatting in cmp.nix for LazyVim-style icons
-    # lspkind = {
-    #   enable = true;
-    #   settings = {
-    #     cmp = {
-    #       enable = true;
-    #       menu = {
-    #         nvim_lsp = "[LSP]";
-    #         nvim_lua = "[api]";
-    #         path = "[path]";
-    #         luasnip = "[snip]";
-    #         buffer = "[buffer]";
-    #       };
-    #     };
-    #   };
-    # };
 
   };
 
