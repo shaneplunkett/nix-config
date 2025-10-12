@@ -1,8 +1,5 @@
 {
   lib,
-  pkgs,
-  config,
-  inputs,
   ...
 }:
 let
@@ -23,21 +20,28 @@ in
         };
       } nordVivid.theme;
 
-      layout = {
-        bar.layouts = {
-          "0" = {
-            left = [
-              "media"
-            ];
-            middle = [ "workspaces" ];
-            right = [
-              "volume"
-              "systray"
-              "notifications"
-              "dashboard"
-            ];
-          };
+      bar.layouts = {
+        "*" = {
+          left = [
+            "cpu"
+            "ram"
+            "cava"
+          ];
+          middle = [
+            "workspaces"
+            "windowtitle"
+          ];
+          right = [
+            "systray"
+            "volume"
+            "network"
+            "bluetooth"
+            "clock"
+            "notifications"
+            "dashboard"
+          ];
         };
+
       };
 
       bar.launcher.autoDetectIcon = true;
@@ -45,7 +49,7 @@ in
 
       menus.clock = {
         time = {
-          military = true;
+          military = false;
           hideSeconds = true;
         };
         weather.unit = "metric";
