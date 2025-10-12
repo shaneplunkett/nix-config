@@ -12,9 +12,6 @@
         height = 30;
         modules-right = [
           "clock"
-          "network"
-          "bluetooth"
-          "pulseaudio"
           "tray"
           "custom/swaync"
         ];
@@ -235,9 +232,6 @@
       #memory,
       #temperature,
       #backlight,
-      #network,
-      #bluetooth,
-      #pulseaudio,
       #tray,
       #workspaces,
       #power-profiles-daemon,
@@ -314,25 +308,7 @@
           border: 3px solid #ebcb8b;  /* Nord Aurora yellow */
       }
 
-      #bluetooth {
-          border: 3px solid #5e81ac;  /* Nord Frost darker */
-      }
 
-      #network {
-          border: 3px solid #88c0d0;  /* Nord Frost */
-      }
-
-      #network.disconnected {
-          border: 3px solid #bf616a;  /* Nord Aurora red */
-      }
-
-      #pulseaudio {
-          border: 3px solid #b48ead;  /* Nord Aurora purple */
-      }
-
-      #pulseaudio.muted {
-          border: 3px solid #bf616a;  /* Nord Aurora red */
-      }
 
       #custom-media {
           border: 3px solid #a3be8c;  /* Nord Aurora green */
