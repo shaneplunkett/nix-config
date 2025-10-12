@@ -73,10 +73,6 @@
       };
     };
   };
-  programs.hyprpanel = {
-    enable = true;
-
-  };
 
   programs.hyprland = {
     enable = true;
