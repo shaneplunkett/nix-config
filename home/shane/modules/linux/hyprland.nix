@@ -1,12 +1,10 @@
-{ lib, ... }:
+{ ... }:
 {
-  # Wayland environment variables
-
   wayland.windowManager.hyprland = {
     enable = true;
     settings = {
       "$mod" = "SUPER";
-      "$terminal" = "ghostty --gtk-single-instance=true";
+      "$terminal" = "ghostty";
 
       exec-once = [
         "swaync"
@@ -18,7 +16,7 @@
       bind = [
         "$mod_SHIFT, Q, killactive"
         "$mod_SHIFT, RETURN, exec, $terminal"
-        "$mod, space, exec, ghostty --title launcher -e fself"
+        "$mod, space, exec, ghostty --class=com.example.launcher -e fsel"
         "$mod_SHIFT, 4, exec, hyprshot -m region --clipboard-only"
         "$mod_SHIFT,W,exec,hyprctl dispatch togglehidden"
         "$mod_SHIFT,Z,exec,killall .waybar-wrapped || waybar"
@@ -81,9 +79,9 @@
       };
 
       windowrulev2 = [
-        #fsel
-        "float, ^(launcher)$"
-        "size 500 430, ^(launcher)$"
+        "float, class:(com.example.launcher)"
+        "size 500 430, class:(com.example.launcher)"
+        #Plex
         "opaque, title:Plex*"
         #Thunar
         "float, title:.*Thunar"
