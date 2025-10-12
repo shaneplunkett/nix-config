@@ -103,15 +103,7 @@
           };
         };
 
-        bluetooth = {
-          format = " {status}";
-          format-disabled = "";
-          format-connected = " {num_connections} connected";
-          tooltip-format = "{controller_alias}\t{controller_address}";
-          "tooltip-format-connected" = "{controller_alias}\t{controller_address}\n\n{device_enumerate}";
-          "tooltip-format-enumerate-connected" = "{device_alias}\t{device_address}";
-          on-click = "blueman-manager";
-        };
+
 
         network = {
           format-wifi = "{signalStrength}%  ";
@@ -162,8 +154,6 @@
           on-click = "swaync-client -t -sw";
           on-click-right = "swaync-client -d -sw";
           escape = true;
-        };
-          on-click = "pavucontrol";
         };
       };
     };
