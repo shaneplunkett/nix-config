@@ -15,15 +15,14 @@
 
       bind = [
         "$mod_SHIFT, Q, killactive"
+        "$mod, A, exec, claude"
         "$mod_SHIFT, RETURN, exec, $terminal"
         "$mod, space, exec, ghostty --class=com.example.launcher -e fsel"
         "$mod_SHIFT, 4, exec, hyprshot -m region --clipboard-only"
         "$mod_SHIFT,W,exec,hyprctl dispatch togglehidden"
-        "$mod_SHIFT,Z,exec,killall .waybar-wrapped || waybar"
 
         # Semantic Workspace Access
         "$mod,1,workspace,1" # Default 1
-        "$mod,A,workspace,2" # A for AI
         "$mod,B,workspace,3" # B for Browser
         "$mod,E,workspace,4" # E for Email or Editor
         "$mod,T,workspace,5" # T for Terminal
