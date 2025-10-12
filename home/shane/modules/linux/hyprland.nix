@@ -10,7 +10,7 @@
         "swaync"
         "systemctl --user start hyprpolkitagent"
         "hyprpaper"
-        "waybar"
+        "hyprpanel"
       ];
 
       bind = [
