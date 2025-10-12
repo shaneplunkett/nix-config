@@ -13,7 +13,7 @@
         modules-right = [
           "clock"
           "tray"
-          "custom/swaync"
+          "custom/notification"
         ];
         modules-center = [ ];
         modules-left = [
@@ -103,8 +103,6 @@
           };
         };
 
-
-
         network = {
           format-wifi = "{signalStrength}%  ";
           format-ethernet = "{ifname} 󰈀 ";
@@ -134,225 +132,225 @@
           };
         };
 
-        "custom/swaync" = {
+        "custom/notification" = {
           tooltip = false;
           format = "{icon}";
-          format-icons = {
-            notification = "<span foreground='red'><sup></sup></span>";
-            none = "";
-            dnd-notification = "<span foreground='red'><sup></sup></span>";
-            dnd-none = "";
-            inhibited-notification = "<span foreground='red'><sup></sup></span>";
-            inhibited-none = "";
-            dnd-inhibited-notification = "<span foreground='red'><sup></sup></span>";
-            dnd-inhibited-none = "";
+          "format-icons" = {
+            notification = "󱅫";
+            none = " ";
+            "dnd-notification" = "  ";
+            "dnd-none" = "󰂛";
+            "inhibited-notification" = " ";
+            "inhibited-none" = "";
+            "dnd-inhibited-notification" = "  ";
+            "dnd-inhibited-none" = "  ";
           };
-          return-type = "json";
-          exec-if = "which swaync-client";
+          "return-type" = "json";
+          "exec-if" = "which swaync-client";
           exec = "swaync-client -swb";
-          on-click = "swaync-client -t -sw";
-          on-click-right = "swaync-client -d -sw";
+          "on-click" = "sleep 0.1 && swaync-client -t -sw";
+          "on-click-right" = "sleep 0.1 && swaync-client -d -sw";
           escape = true;
         };
       };
     };
 
     style = ''
-      * {
-          padding: 2px;
-          border-radius: 8px;
-          font-size: 16;
-          font-family: "Mononoki Nerd Font" ;
-          min-height: 20px;
-      }
+        * {
+            border-radius: 8px;
+            font-size: 16;
+            font-family: "Mononoki Nerd Font" ;
+            min-height: 20px;
+        }
 
-      window#waybar {
-          background-color: rgba(0, 0, 0, 0);
-          color: #d8dee9;  /* Nord Snow Storm */
-          border: none;
-          box-shadow: none;
-      }
+        window#waybar {
+            background-color: rgba(0, 0, 0, 0);
+            color: #d8dee9;  /* Nord Snow Storm */
+            border: none;
+            box-shadow: none;
+        }
 
-      window#waybar.hidden {
-          opacity: 0.2;
-      }
+        window#waybar.hidden {
+            opacity: 0.2;
+        }
 
-      window#waybar.termite {
-          background-color: #3b4252;  /* Nord Polar Night */
-      }
+        window#waybar.termite {
+            background-color: #3b4252;  /* Nord Polar Night */
+        }
 
-      window#waybar.chromium {
-          background-color: #2e3440;  /* Nord Polar Night darkest */
-          border: none;
-      }
+        window#waybar.chromium {
+            background-color: #2e3440;  /* Nord Polar Night darkest */
+            border: none;
+        }
 
-      #workspaces {
-          border: 3px solid #88c0d0;  /* Nord Frost */
-      }
+        #workspaces {
+            border: 3px solid #88c0d0;  /* Nord Frost */
+        }
 
-      #workspaces button {
-          padding-right: 6px;
-          padding-left: 0px;
-          padding-top: 0px;
-          padding-bottom: 0px;
-          background-color: transparent;
-          color: #d8dee9;  /* Nord Snow Storm */
-      }
+        #workspaces button {
+            padding-right: 6px;
+            padding-left: 0px;
+            padding-top: 0px;
+            padding-bottom: 0px;
+            background-color: transparent;
+            color: #d8dee9;  /* Nord Snow Storm */
+        }
 
-      #workspaces button:hover {
-          color: #81a1c1;  /* Nord Frost lighter */
-      }
+        #workspaces button:hover {
+            color: #81a1c1;  /* Nord Frost lighter */
+        }
 
-      #workspaces button.empty {
-          color: #616e88;  /* Nord muted */
-      }
+        #workspaces button.empty {
+            color: #616e88;  /* Nord muted */
+        }
 
-      #workspaces button.active {
-          color: #88c0d0;  /* Nord Frost */
-      }
+        #workspaces button.active {
+            color: #88c0d0;  /* Nord Frost */
+        }
 
-      #workspaces button.urgent {
-          color: #bf616a;  /* Nord Aurora red */
-      }
+        #workspaces button.urgent {
+            color: #bf616a;  /* Nord Aurora red */
+        }
 
-      #clock,
-      #battery,
-      #cpu,
-      #memory,
-      #temperature,
-      #backlight,
-      #tray,
-      #workspaces,
-      #power-profiles-daemon,
-      #custom-swaync {
-          padding: 0 10px;
-          background-color: #3b4252;  /* Nord Polar Night */
-          color: #d8dee9;  /* Nord Snow Storm */
-      }
+        #clock,
+        #battery,
+        #cpu,
+        #memory,
+        #temperature,
+        #backlight,
+        #tray,
+        #workspaces,
+        #power-profiles-daemon,
+        #custom-notification {
+        }
 
-      /* If workspaces is the leftmost module, omit left margin */
-      .modules-left > widget:first-child > #workspaces {
-          margin-left: 0px;
-      }
+        /* If workspaces is the leftmost module, omit left margin */
+        .modules-left > widget:first-child > #workspaces {
+            margin-left: 0px;
+        }
 
-      /* If workspaces is the rightmost module, omit right margin */
-      .modules-right > widget:last-child > #workspaces {
-          margin-right: 0;
-      }
+        /* If workspaces is the rightmost module, omit right margin */
+        .modules-right > widget:last-child > #workspaces {
+            margin-right: 0;
+        }
 
-      #clock {
-          border: 3px solid #88c0d0;  /* Nord Frost */
-      }
+        #clock {
+            border: 3px solid #88c0d0;  /* Nord Frost */
+        }
 
-      #battery {
-          border: 3px solid #81a1c1;  /* Nord Frost lighter */
-      }
+        #battery {
+            border: 3px solid #81a1c1;  /* Nord Frost lighter */
+        }
 
-      #battery.charging, #battery.plugged {
-          border: 3px solid #a3be8c;  /* Nord Aurora green */
-      }
+        #battery.charging, #battery.plugged {
+            border: 3px solid #a3be8c;  /* Nord Aurora green */
+        }
 
-      @keyframes blink {
-          to {
-              border: 3px solid #81a1c1;  /* Nord Frost lighter */
-          }
-      }
+        @keyframes blink {
+            to {
+                border: 3px solid #81a1c1;  /* Nord Frost lighter */
+            }
+        }
 
-      /* Using steps() instead of linear as a timing function to limit cpu usage */
-      #battery.critical:not(.charging) {
-          border: 3px solid #bf616a;  /* Nord Aurora red */
-          animation-name: blink;
-          animation-duration: 0.5s;
-          animation-timing-function: steps(12);
-          animation-iteration-count: infinite;
-          animation-direction: alternate;
-      }
+        /* Using steps() instead of linear as a timing function to limit cpu usage */
+        #battery.critical:not(.charging) {
+            border: 3px solid #bf616a;  /* Nord Aurora red */
+            animation-name: blink;
+            animation-duration: 0.5s;
+            animation-timing-function: steps(12);
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+        }
 
-      #power-profiles-daemon {
-          padding-right: 18px;
-      }
+        #power-profiles-daemon {
+            padding-right: 18px;
+        }
 
-      #power-profiles-daemon.performance {
-          border: 3px solid #bf616a;  /* Nord Aurora red */
-      }
+        #power-profiles-daemon.performance {
+            border: 3px solid #bf616a;  /* Nord Aurora red */
+        }
 
-      #power-profiles-daemon.balanced {
-          border: 3px solid #b48ead;  /* Nord Aurora purple */
-      }
+        #power-profiles-daemon.balanced {
+            border: 3px solid #b48ead;  /* Nord Aurora purple */
+        }
 
-      #power-profiles-daemon.power-saver {
-          border: 3px solid #a3be8c;  /* Nord Aurora green */
-      }
+        #power-profiles-daemon.power-saver {
+            border: 3px solid #a3be8c;  /* Nord Aurora green */
+        }
 
-      #cpu {
-          border: 3px solid #a3be8c;  /* Nord Aurora green */
-          padding-right: 15px
-      }
+        #cpu {
+            border: 3px solid #a3be8c;  /* Nord Aurora green */
+            padding-right: 15px;
+        }
 
-      #memory {
-          border: 3px solid #b48ead;  /* Nord Aurora purple */
-      }
+        #memory {
+            border: 3px solid #b48ead;  /* Nord Aurora purple */
+        }
 
-      #backlight {
-          border: 3px solid #ebcb8b;  /* Nord Aurora yellow */
-      }
+        #backlight {
+            border: 3px solid #ebcb8b;  /* Nord Aurora yellow */
+        }
 
 
 
-      #custom-media {
-          border: 3px solid #a3be8c;  /* Nord Aurora green */
-          min-width: 100px;
-      }
+        #custom-media {
+            border: 3px solid #a3be8c;  /* Nord Aurora green */
+            min-width: 100px;
+        }
 
-      #custom-media.custom-spotify {
-          border: 3px solid #a3be8c;  /* Nord Aurora green */
-      }
+        #custom-media.custom-spotify {
+            border: 3px solid #a3be8c;  /* Nord Aurora green */
+        }
 
-      #custom-media.custom-vlc {
-          border: 3px solid #d08770;  /* Nord Aurora orange */
-      }
+        #custom-media.custom-vlc {
+            border: 3px solid #d08770;  /* Nord Aurora orange */
+        }
 
-      #custom-media.custom-firefox {
-          border: 3px solid #bf616a;  /* Nord Aurora red */
-      }
+        #custom-media.custom-firefox {
+            border: 3px solid #bf616a;  /* Nord Aurora red */
+        }
 
-      #temperature {
-          border: 3px solid #d08770;  /* Nord Aurora orange */
-      }
+        #temperature {
+            border: 3px solid #d08770;  /* Nord Aurora orange */
+        }
 
-      #temperature.critical {
-          border: 3px solid #bf616a;  /* Nord Aurora red */
-      }
+        #temperature.critical {
+            border: 3px solid #bf616a;  /* Nord Aurora red */
+        }
 
-      #tray {
-          border: 3px solid #d08770;  /* Nord Aurora orange */
-      }
+        #tray {
+            border: 3px solid #d08770;  /* Nord Aurora orange */
+        }
 
-      #tray > .passive {
-          -gtk-icon-effect: dim;
-      }
+        #tray > .passive {
+            -gtk-icon-effect: dim;
+        }
 
-      #tray > .needs-attention {
-          -gtk-icon-effect: highlight;
-          border: 3px solid #bf616a;  /* Nord Aurora red */
-      }
+        #tray > .needs-attention {
+            -gtk-icon-effect: highlight;
+            border: 3px solid #bf616a;  /* Nord Aurora red */
+        }
 
-      #custom-swaync {
-          border: 3px solid #88c0d0;  /* Nord Frost */
-          font-size: 18px;
-      }
+        #custom-notification {
+            border: 3px solid #88c0d0;  /* Nord Frost */
+            font-size: 18px;
+            padding-top: 2px;
+            padding-bottom: 2px;
+            padding-left: 8px;
+            padding-right: 8px;
+        }
 
-      #custom-swaync.notification {
-          border: 3px solid #ebcb8b;  /* Nord Aurora yellow */
-      }
+        #custom-notification.notification {
+            border: 3px solid #ebcb8b;  /* Nord Aurora yellow */
+        }
 
-      #custom-swaync.dnd-notification {
-          border: 3px solid #bf616a;  /* Nord Aurora red */
-      }
+        #custom-notification.dnd-notification {
+            border: 3px solid #bf616a;  /* Nord Aurora red */
+        }
 
-      #GtkSeparatorMenuItem {
-          border-radius: 0px;
-          padding: 0px;
+        #GtkSeparatorMenuItem {
+            border-radius: 0px;
+        padding: 0px;
       }
     '';
   };

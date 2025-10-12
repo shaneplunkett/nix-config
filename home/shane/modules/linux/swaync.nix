@@ -2,317 +2,437 @@
 {
   services.swaync = {
     enable = true;
-    
+
     settings = {
       positionX = "right";
       positionY = "top";
+      cssPriority = "user";
       layer = "overlay";
       control-center-layer = "top";
       layer-shell = true;
-      cssPriority = "application";
       control-center-margin-top = 10;
       control-center-margin-bottom = 10;
       control-center-margin-right = 10;
       control-center-margin-left = 0;
-      notification-2fa-action = true;
-      notification-inline-replies = false;
-      notification-icon-size = 64;
-      notification-body-image-height = 100;
+      control-center-width = 400;
+      control-center-height = 850;
+      notification-window-width = 380;
+      notification-icon-size = 50;
+      notification-body-image-height = 200;
       notification-body-image-width = 200;
-      timeout = 10;
+      timeout = 8;
       timeout-low = 5;
       timeout-critical = 0;
-      fit-to-screen = true;
-      control-center-width = 380;
-      control-center-height = 700;
-      notification-window-width = 380;
+      fit-to-screen = false;
       keyboard-shortcuts = true;
       image-visibility = "when-available";
       transition-time = 200;
       hide-on-clear = false;
       hide-on-action = true;
+      text-empty = "No Notifications";
       script-fail-notify = true;
 
       widgets = [
-        "inhibitors"
-        "title"
+        "buttons-grid"
+        "menubar"
+        "volume"
         "dnd"
+        "title"
         "notifications"
         "mpris"
-        "volume"
-        "wifi"
-        "bluetooth"
       ];
 
       widget-config = {
-        inhibitors = {
-          text = "Inhibitors";
-          button-text = "Clear All";
-          clear-all-button = true;
-        };
         title = {
           text = "Notification Center";
           clear-all-button = true;
-          button-text = "Clear All";
+          button-text = " 󰆴 ";
         };
         dnd = {
           text = "Do Not Disturb";
         };
-        volume = {
-          label = "Volume";
-          show-per-app = true;
-        };
-        wifi = {
-          label = "Wi-Fi";
-        };
-        bluetooth = {
-          label = "Bluetooth";
-        };
         mpris = {
-          image-size = 96;
-          image-radius = 8;
+          image-radius = 0;
+          autohide = true;
         };
-      };
+        volume = {
+          label = "   ";
+          expand-button-label = " ";
+          collapse-button-label = " ";
+          show-per-app = true;
+          show-per-app-icon = true;
+          show-per-app-label = false;
 
-      scripts = {
-        volume-up = {
-          exec = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+";
-          urgency = "Low";
         };
-        volume-down = {
-          exec = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
-          urgency = "Low";
+        menubar = {
+          "buttons#power" = {
+            label = "⏻";
+            position = "right";
+            actions = [
+              {
+                label = "Shut down";
+                command = "systemctl poweroff";
+              }
+            ];
+          };
+          "buttons#screenshot" = {
+            position = "right";
+            actions = [
+              {
+                label = "󰹑";
+                command = "grim";
+              }
+            ];
+          };
+          "buttons#bluetooth" = {
+            position = "right";
+            actions = [
+              {
+                label = "󰂯";
+                command = "blueman-manager";
+              }
+            ];
+          };
         };
-        volume-mute = {
-          exec = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
-          urgency = "Low";
+        buttons-grid = {
+          actions = [
+            {
+              label = " ";
+              type = "toggle";
+              active = true;
+              command = "";
+              update-command = "";
+            }
+            {
+              label = "󰂯";
+              type = "toggle";
+              active = true;
+              command = "";
+              update-command = "";
+            }
+            {
+              label = "";
+              type = "toggle";
+              active = false;
+              command = "";
+              update-command = "";
+            }
+            {
+              label = "";
+              type = "toggle";
+              active = false;
+              command = "";
+              update-command = "";
+            }
+          ];
         };
       };
     };
 
     style = ''
-      /* Main control center styling - macOS inspired */
-      .control-center {
-        background: rgba(46, 52, 64, 0.98);  /* Nord Polar Night darkest with transparency */
-        border-radius: 16px;
-        margin: 0;
-        padding: 0;
-        border: 1px solid rgba(136, 192, 208, 0.3);  /* Nord Frost with transparency */
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(20px);
-      }
+      @define-color background rgb(46, 52, 64);
+      @define-color background-alt rgb(59, 66, 82);
+      @define-color foreground #eceff4;
+      @define-color red #bf616a;
+      @define-color green #a3be8c;
+      @define-color yellow #ebcb8b;
+      @define-color blue #88c0d0;
+      @define-color gray #4c566a;
+      @define-color select #5e81ac;
 
-      /* Control center header */
-      .control-center .widget-title {
-        background: transparent;
-        padding: 16px 20px 8px 20px;
-        border-bottom: 1px solid rgba(136, 192, 208, 0.2);
-        margin-bottom: 12px;
-      }
-
-      .control-center .widget-title > label {
-        color: #eceff4;  /* Nord Snow Storm bright */
+      * {
+        outline: none;
+        font-family: "Mononoki Nerd Font";
         font-size: 18px;
-        font-weight: 600;
-        margin: 0;
+        text-shadow: none;
+        color: @foreground;
+        background-color: transparent;
+        border-radius: 2px;
       }
 
-      .control-center .widget-title button {
-        background: rgba(94, 129, 172, 0.2);  /* Nord Frost with transparency */
-        border: 1px solid rgba(136, 192, 208, 0.4);
-        border-radius: 12px;
-        color: #88c0d0;  /* Nord Frost */
-        padding: 6px 12px;
-        font-size: 13px;
+      .control-center {
+        background-color: alpha(@background, 1);
+        padding: 2px;
+        border-bottom: 9px solid @blue;
+      }
+
+      .notification-row .notification-background {
+        border-radius: 2px;
+        margin: 5px 0 15px;
+      }
+
+      .notification {
+        background-color: @background;
+        border: 1px solid alpha(@foreground, 0.05);
+        border-radius: 2px;
+        padding: 6px 10px;
+        margin-bottom: 6px;
+        min-height: 50px;
+        box-shadow: none;
+      }
+
+      .notification .summary {
+        font-size: 1rem;
         font-weight: 500;
-        transition: all 0.2s ease;
+        margin-bottom: 2px;
       }
 
-      .control-center .widget-title button:hover {
-        background: rgba(136, 192, 208, 0.3);
-        border-color: #88c0d0;
-        color: #eceff4;
+      .notification .time {
+        font-size: 0.75rem;
+        color: alpha(@foreground, 0.6);
       }
 
-      /* Widget sections */
-      .widget-dnd, .widget-inhibitors {
-        background: rgba(67, 76, 94, 0.6);  /* Nord Polar Night lighter */
-        border-radius: 12px;
-        margin: 8px 16px;
-        padding: 12px 16px;
-        border: 1px solid rgba(136, 192, 208, 0.2);
+      .notification .body {
+        font-size: 0.95rem;
+        color: @foreground;
       }
 
-      .widget-dnd > switch, .widget-inhibitors > switch {
-        border-radius: 16px;
-        background: rgba(94, 129, 172, 0.3);
-        border: 1px solid rgba(136, 192, 208, 0.4);
+      .notification-action > button {
+        padding: 5px 10px;
+        font-size: 0.9rem;
+        background-color: @select;
+        color: @foreground;
+        border-radius: 2px;
+        border: none;
+        margin: 6px 6px 0 0;
       }
 
-      .widget-dnd > switch:checked, .widget-inhibitors > switch:checked {
-        background: #88c0d0;  /* Nord Frost */
+      .notification-action > button:hover {
+        background-color: @blue;
       }
 
-      /* Control widgets (Volume, WiFi, Bluetooth) */
-      .widget-volume, .widget-wifi, .widget-bluetooth {
-        background: rgba(67, 76, 94, 0.6);
-        border-radius: 12px;
-        margin: 8px 16px;
-        padding: 16px;
-        border: 1px solid rgba(136, 192, 208, 0.2);
+      .notification-action > button:hover label {
+        background-color: @blue;
+        color: @background;
       }
 
-      .widget-volume .widget-label, .widget-wifi .widget-label, .widget-bluetooth .widget-label {
-        color: #eceff4;
-        font-size: 15px;
-        font-weight: 500;
-        margin-bottom: 8px;
+      .notification.critical {
+        background: @red;
+        border-left: 9px solid @red;
       }
 
-      /* Volume slider */
-      .widget-volume scale {
-        margin: 8px 0;
+      .notification.critical .title,
+      .notification.critical .body,
+      .notification.critical .summary {
+        color: alpha(@background, 0.9);
+        font-weight: bold;
       }
 
-      .widget-volume scale trough {
-        background: rgba(94, 129, 172, 0.3);
-        border-radius: 8px;
-        min-height: 6px;
+      .notification.low,
+      .notification.normal {
+        background-color: alpha(@background, 0.95);
+        border-left: 9px solid @blue;
+      }
+
+      .image {
+        margin-right: 10px;
+        min-width: 36px;
+        min-height: 36px;
         border: none;
       }
 
-      .widget-volume scale highlight {
-        background: linear-gradient(90deg, #88c0d0, #81a1c1);  /* Nord Frost gradient */
+      .close-button {
+        background-color: alpha(@gray, 0.8);
         border-radius: 8px;
       }
 
-      .widget-volume scale slider {
-        background: #eceff4;  /* Nord Snow Storm bright */
-        border: 2px solid #88c0d0;
-        border-radius: 50%;
-        min-width: 18px;
-        min-height: 18px;
+      .close-button label {
+        color: aliceblue;
       }
 
-      /* WiFi and Bluetooth toggle buttons */
-      .widget-wifi button, .widget-bluetooth button {
-        background: rgba(94, 129, 172, 0.3);
-        border: 1px solid rgba(136, 192, 208, 0.4);
-        border-radius: 10px;
-        color: #d8dee9;
-        padding: 8px 16px;
-        font-size: 13px;
-        transition: all 0.2s ease;
-        width: 100%;
+      .close-button:hover {
+        background-color: alpha(@red, 0.8);
       }
 
-      .widget-wifi button:hover, .widget-bluetooth button:hover {
-        background: rgba(136, 192, 208, 0.4);
-        border-color: #88c0d0;
+      .notification-group-collapse-button,
+      .notification-group-close-all-button {
+        background-color: @gray;
+        color: @foreground;
+        border-radius: 6px;
       }
 
-      .widget-wifi button.active, .widget-bluetooth button.active {
-        background: #88c0d0;
-        color: #2e3440;  /* Nord Polar Night darkest */
-        border-color: #88c0d0;
+      .notification-group-collapse-button:hover {
+        background-color: @blue;
+        color: @background;
       }
 
-      /* Media player widget */
-      .widget-mpris {
-        background: rgba(67, 76, 94, 0.6);
-        border-radius: 12px;
-        margin: 8px 16px;
-        padding: 16px;
-        border: 1px solid rgba(136, 192, 208, 0.2);
+      .notification-group-close-all-button:hover {
+        background-color: @red;
+        color: @background;
       }
 
-      .widget-mpris-player {
-        padding: 8px;
+      scale trough {
+        margin: 0 1rem;
+        background-color: @gray;
+        min-height: 8px;
+        min-width: 70px;
+        border-radius: 30px;
+      }
+
+      trough highlight {
+        background: @blue;
+        border-radius: 30px;
+      }
+
+      slider {
+        border-radius: 30px;
+        background-color: @foreground;
+      }
+
+      tooltip {
+        background-color: @gray;
+        color: @foreground;
+      }
+
+      .widget-buttons-grid {
+        font-size: 1rem;
+        padding: 20px 20px 10px;
+      }
+
+      .widget-buttons-grid button {
+        background: @gray;
+        color: @foreground;
+        border-radius: 50px;
+        min-width: 60px;
+        min-height: 30px;
+        margin: 0 3px;
+        padding: 6px;
+      }
+
+      .widget-buttons-grid button:hover {
+        background: @select;
+      }
+
+      .widget-buttons-grid button.toggle:checked {
+        background: @blue;
+      }
+
+      .widget-buttons-grid button.toggle:checked label {
+        background: @blue;
+        color: @background;
+      }
+
+      .widget-buttons-grid button.toggle:checked:hover {
+        background: alpha(@blue, 0.8);
+      }
+
+      .widget-mpris .widget-mpris-player {
+        padding: 6px;
+        margin: 6px 10px;
+        background-color: transparent;
+        box-shadow: none;
+        border-radius: 2px;
+      }
+
+      .widget-mpris label,
+      .widget-mpris-title,
+      .widget-mpris-subtitle {
+        color: @foreground;
       }
 
       .widget-mpris-title {
-        color: #eceff4;
-        font-size: 15px;
-        font-weight: 600;
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin: 0 8px 8px;
+        text-align: center;
       }
 
       .widget-mpris-subtitle {
-        color: #81a1c1;  /* Nord Frost light */
-        font-size: 13px;
+        font-size: 1rem;
+        text-align: center;
       }
 
-      /* Notifications area */
-      .widget-notifications {
-        margin: 8px 16px 16px 16px;
+      .widget-mpris-album-art.art {
+        border-radius: 999px;
+        min-width: 128px;
+        min-height: 128px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        overflow: hidden;
+        box-shadow: none;
       }
 
-      .widget-notifications .notification-row .notification-background {
-        background: rgba(67, 76, 94, 0.6);
+      picture.mpris-background {
+        opacity: 0;
+        background: none;
+        box-shadow: none;
+        border: none;
+      }
+
+      .widget-volume {
+        padding: 6px 5px 5px;
+        font-size: 1.3rem;
+      }
+
+      .widget-volume button {
+        border: none;
+      }
+
+      .per-app-volume {
+        padding: 4px 8px 8px;
+        margin: 0 8px 8px;
+      }
+
+      .widget-backlight {
+        padding: 0 0 3px 16px;
+        font-size: 1.1rem;
+      }
+
+      .widget-dnd {
+        font-weight: bold;
+        padding: 20px 15px 15px;
+      }
+
+      .widget-dnd > switch {
+        background: @yellow;
+        border: none;
+        border-radius: 100px;
+        padding: 3px;
+      }
+
+      .widget-dnd > switch:checked {
+        background: @green;
+      }
+
+      .widget-dnd > switch slider {
+        background: @background;
         border-radius: 12px;
-        margin: 6px 0;
-        border: 1px solid rgba(136, 192, 208, 0.2);
-        padding: 0;
+        min-width: 12px;
+        min-height: 12px;
       }
 
-      .widget-notifications .notification-row .notification {
-        padding: 12px 16px;
-        border-radius: 12px;
-        color: #d8dee9;
+      .widget-title {
+        padding: 15px;
+        font-weight: bold;
       }
 
-      .widget-notifications .notification-row .notification .notification-content .summary {
-        color: #eceff4;
-        font-weight: 600;
-        font-size: 14px;
-        margin-bottom: 4px;
+      .widget-title > label {
+        font-size: 1.5rem;
       }
 
-      .widget-notifications .notification-row .notification .notification-content .body {
-        color: #d8dee9;
-        font-size: 13px;
-        line-height: 1.4;
+      .widget-title > button {
+        background: @red;
+        border: none;
+        border-radius: 100px;
+        padding: 0 6px;
+        transition: all 0.7s ease;
       }
 
-      .widget-notifications .notification-row .notification .notification-content .time {
-        color: #81a1c1;
-        font-size: 12px;
+      .widget-title > button label {
+        color: @background;
       }
 
-      /* Floating notifications styling */
-      .floating-notifications.background .notification-row .notification-background {
-        background: rgba(46, 52, 64, 0.98);
-        border-radius: 12px;
-        margin: 8px 16px;
-        border: 1px solid rgba(136, 192, 208, 0.3);
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(20px);
+      .widget-title > button:hover {
+        background: alpha(@red, 0.8);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.65);
       }
 
-      .floating-notifications.background .notification-row .notification {
-        padding: 12px 16px;
-        border-radius: 12px;
-        color: #d8dee9;
+      .blank-window {
+        background: transparent;
       }
 
-      .floating-notifications.background .notification-row .notification.critical {
-        border-color: #bf616a;  /* Nord Aurora red */
-        box-shadow: 0 4px 16px rgba(191, 97, 106, 0.3);
-      }
-
-      .floating-notifications.background .notification-row .notification .notification-content .summary {
-        color: #eceff4;
-        font-weight: 600;
-        font-size: 14px;
-      }
-
-      .floating-notifications.background .notification-row .notification .notification-content .body {
-        color: #d8dee9;
-        font-size: 13px;
-      }
-
-      .floating-notifications.background .notification-row .notification .notification-content .time {
-        color: #81a1c1;
-        font-size: 12px;
+      .control-center-list {
+        background: transparent;
       }
     '';
   };
