@@ -3,25 +3,17 @@
   plugins = {
     neo-tree = {
       enable = true;
-      
-
-      
-      # Basic nixvim configuration
-      sources = [ "filesystem" "buffers" "git_status" ];
-      
-      window.mappings = {
-        "\\" = "close_window";
-        "l" = "open";  
-        "h" = "close_node";
-        "<space>" = "none";
+      settings = {
+        sources = [
+          "filesystem"
+          "buffers"
+          "git_status"
+        ];
       };
-      
-
 
     };
   };
-  
-  # Complete neo-tree configuration via extraConfigLua to match old config
+
   extraConfigLua = ''
     require('neo-tree').setup({
       sources = { "filesystem", "buffers", "git_status" },

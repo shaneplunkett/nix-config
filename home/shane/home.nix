@@ -14,6 +14,7 @@
     ./modules/common/packages.nix
     ./modules/common/tmux.nix
     ./modules/common/git.nix
+    ./modules/common/fsel.nix
 
     ./modules/linux/swaync.nix
     ./modules/linux/ghostty.nix
