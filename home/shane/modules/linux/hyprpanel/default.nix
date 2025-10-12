@@ -1,19 +1,11 @@
-{
-  config,
-  pkgs,
-  lib,
-  inputs,
-  ...
-}:
-let
-  nordVivid = import ./nord_vivid.nix;
-in
+{ inputs, ... }:
 {
   programs.hyprpanel = {
     enable = true;
     systemd.enable = true;
     settings = {
-      theme = lib.recursiveUpdate {
+      theme = {
+        name = "nord-vivid";
 
         bar.transparent = true;
 
@@ -21,7 +13,7 @@ in
           name = "Mononoki Nerd Font";
           size = "16px";
         };
-      } nordVivid.theme;
+      };
 
       layout = {
         bar.layouts = {
