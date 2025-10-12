@@ -1,20 +1,22 @@
 { ... }:
 {
-  xdg.desktopEntries.claude = {
-    name = "Claude";
-    exec = "chromium --app=https://claude.ai --class=claude";
-    icon = "${icons/claude.png}";
-    categories = [
-      "Office"
-    ];
-  };
+  xdg.desktopEntries = {
+    claude = {
+      name = "Claude";
+      exec = "chromium --app=https://claude.ai --class=claude";
+      icon = "${icons/claude.png}";
+      categories = [
+        "Office"
+      ];
+    };
 
-  xdg.desktopEntries.chatgpt = {
-    name = "ChatGPT";
-    exec = "chromium --app=https://chatgpt.com --class=chatgpt";
-    icon = "${icons/chatgpt.png}";
-    categories = [
-      "Office"
-    ];
+    chatgpt = {
+      name = "ChatGPT";
+      exec = "chromium --app=https://chatgpt.com --class=chatgpt";
+      icon = "${icons/chatgpt.png}";
+      categories = [
+        "Office"
+      ];
+    };
   };
 }
