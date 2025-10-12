@@ -17,6 +17,7 @@
     vlc
     samrewritten
     swaynotificationcenter
+    fsel
   ];
   programs.chromium = {
 

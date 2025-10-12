@@ -1,7 +1,0 @@
-{ ... }:
-{
-  programs.fsel = {
-    enable = true;
-
-  };
-}
