@@ -66,11 +66,10 @@
         };
         menubar = {
           "buttons#power" = {
-            label = "⏻";
             position = "right";
             actions = [
               {
-                label = "Shut down";
+                label = "⏻";
                 command = "systemctl poweroff";
               }
             ];
