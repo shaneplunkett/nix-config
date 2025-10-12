@@ -9,10 +9,10 @@
       "$terminal" = "ghostty --gtk-single-instance=true";
 
       exec-once = [
-        "dunst"
+        "swaync"
         "systemctl --user start hyprpolkitagent"
         "hyprpaper"
-
+        "waybar"
       ];
 
       bind = [
