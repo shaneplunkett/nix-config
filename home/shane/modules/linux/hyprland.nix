@@ -18,7 +18,7 @@
       bind = [
         "$mod_SHIFT, Q, killactive"
         "$mod_SHIFT, RETURN, exec, $terminal"
-        "$mod, space, exec, rofi -show drun"
+        "$mod, space, exec, ghostty --title launcher -e fself"
         "$mod_SHIFT, 4, exec, hyprshot -m region --clipboard-only"
         "$mod_SHIFT,W,exec,hyprctl dispatch togglehidden"
         "$mod_SHIFT,Z,exec,killall .waybar-wrapped || waybar"
@@ -81,6 +81,9 @@
       };
 
       windowrulev2 = [
+        #fsel
+        "float, ^(launcher)$"
+        "size 500 430, ^(launcher)$"
         "opaque, title:Plex*"
         #Thunar
         "float, title:.*Thunar"
@@ -100,7 +103,7 @@
       ];
       decoration = {
         rounding = 10;
-        
+
         # Blur settings with Nord feel
         blur = {
           enabled = true;
@@ -108,36 +111,36 @@
           passes = 1;
           new_optimizations = true;
         };
-        
+
         # Nord-themed shadows
         shadow = {
           enabled = true;
           range = 4;
           render_power = 3;
-          color = "rgba(2e3440ff)";      # Nord0 - Polar Night darkest
-          color_inactive = "rgba(3b4252ff)";  # Nord1 - Polar Night
+          color = "rgba(2e3440ff)"; # Nord0 - Polar Night darkest
+          color_inactive = "rgba(3b4252ff)"; # Nord1 - Polar Night
         };
       };
-      
+
       general = {
         border_size = 2;
         gaps_in = 5;
         gaps_out = 10;
-        
+
         # Nord border colors - using hex format for gradients
-        "col.active_border" = "rgba(88c0d0ff) rgba(81a1c1ff) 45deg";  # Frost gradient
-        "col.inactive_border" = "rgba(4c566aff)";                      # Polar Night
+        "col.active_border" = "rgba(88c0d0ff) rgba(81a1c1ff) 45deg"; # Frost gradient
+        "col.inactive_border" = "rgba(4c566aff)"; # Polar Night
       };
-      
+
       # Nord-themed group settings
       group = {
-        "col.border_active" = "rgba(a3be8cff)";    # Aurora green
-        "col.border_inactive" = "rgba(4c566aff)";    # Polar Night
+        "col.border_active" = "rgba(a3be8cff)"; # Aurora green
+        "col.border_inactive" = "rgba(4c566aff)"; # Polar Night
         groupbar = {
           font_size = 10;
           gradients = false;
-          "col.active" = "rgba(88c0d0ff)";          # Frost blue
-          "col.inactive" = "rgba(434c5eff)";           # Polar Night
+          "col.active" = "rgba(88c0d0ff)"; # Frost blue
+          "col.inactive" = "rgba(434c5eff)"; # Polar Night
         };
       };
     };

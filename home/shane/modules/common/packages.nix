@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 {
   home.packages = with pkgs; [
     jq
@@ -11,6 +11,6 @@
     go
     lazydocker
     opencode
-
+    inputs.fsel.packages.${pkgs.system}.default
   ];
 }
