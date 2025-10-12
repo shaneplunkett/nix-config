@@ -20,6 +20,7 @@
     ./modules/linux/ghostty.nix
     ./modules/linux/hyprland.nix
     ./modules/linux/hyprpaper.nix
+    ./modules/linux/hyprpanel.nix
     ./modules/linux/rofi.nix
     ./modules/linux/theme.nix
     ./modules/linux/waybar.nix
