@@ -3,11 +3,18 @@
   xdg.desktopEntries.claude = {
     name = "Claude";
     exec = "chromium --app=https://claude.ai --class=claude";
-    icon = "./icons/claude.png";
+    icon = "${icons/claude.png}";
     categories = [
-      "Network"
       "Office"
     ];
-    startupWMClass = "claude";
+  };
+
+  xdg.desktopEntries.chatgpt = {
+    name = "ChatGPT";
+    exec = "chromium --app=https://chatgpt.com --class=chatgpt";
+    icon = "${icons/chatgpt.png}";
+    categories = [
+      "Office"
+    ];
   };
 }

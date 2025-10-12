@@ -24,6 +24,7 @@
     ./modules/linux/theme.nix
     ./modules/linux/waybar.nix
     ./modules/linux/packages.nix
+    ./modules/linux/webapps
   ];
 
   home.username = "shane";
