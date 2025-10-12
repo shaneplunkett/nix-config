@@ -50,20 +50,22 @@
     style = ''
       .floating-notifications.background .notification-row .notification-background {
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.8), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
-        border-radius: 12.6px;
+        border-radius: 8px;
         margin: 18px;
-        background-color: rgba(61, 56, 70, 0.7);
-        color: #cad3f5;
+        background-color: rgba(59, 66, 82, 0.95);  /* Nord Polar Night */
+        color: #d8dee9;  /* Nord Snow Storm */
         padding: 0;
+        border: 2px solid #5e81ac;  /* Nord Frost */
       }
 
       .floating-notifications.background .notification-row .notification-background .notification {
-        padding: 7px;
-        border-radius: 12.6px;
+        padding: 10px;
+        border-radius: 8px;
       }
 
       .floating-notifications.background .notification-row .notification-background .notification.critical {
-        box-shadow: inset 0 0 7px 0 #ed8796;
+        box-shadow: inset 0 0 7px 0 #bf616a;  /* Nord Aurora red */
+        border-color: #bf616a;
       }
 
       .floating-notifications.background .notification-row .notification-background .notification .notification-content {
@@ -71,15 +73,16 @@
       }
 
       .floating-notifications.background .notification-row .notification-background .notification .notification-content .summary {
-        color: #cad3f5;
+        color: #eceff4;  /* Nord Snow Storm bright */
+        font-weight: bold;
       }
 
       .floating-notifications.background .notification-row .notification-background .notification .notification-content .time {
-        color: #a5adcb;
+        color: #81a1c1;  /* Nord Frost light */
       }
 
       .floating-notifications.background .notification-row .notification-background .notification .notification-content .body {
-        color: #cad3f5;
+        color: #d8dee9;  /* Nord Snow Storm */
       }
 
       .floating-notifications.background .notification-row .notification-background .notification > *:last-child > * {
@@ -87,56 +90,75 @@
       }
 
       .floating-notifications.background .notification-row .notification-background .notification > *:last-child > * .notification-action {
-        border-radius: 7px;
-        color: #cad3f5;
-        background-color: #494d64;
-        box-shadow: inset 0 0 0 1px #6e738d;
+        border-radius: 6px;
+        color: #eceff4;  /* Nord Snow Storm bright */
+        background-color: #434c5e;  /* Nord Polar Night lighter */
+        border: 2px solid #5e81ac;  /* Nord Frost */
         margin: 7px;
       }
 
       .floating-notifications.background .notification-row .notification-background .notification > *:last-child > * .notification-action:hover {
-        box-shadow: inset 0 0 0 1px #6e738d;
-        background-color: #5b6078;
-        color: #cad3f5;
+        background-color: #5e81ac;  /* Nord Frost */
+        color: #eceff4;
+        border-color: #88c0d0;  /* Nord Frost lighter */
       }
 
       .floating-notifications.background .notification-row .notification-background .notification > *:last-child > * .notification-action:active {
-        box-shadow: inset 0 0 0 1px #6e738d;
-        background-color: #494d64;
-        color: #cad3f5;
+        background-color: #434c5e;
+        color: #eceff4;
+        border-color: #5e81ac;
       }
 
       .control-center {
         box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.8), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
-        border-radius: 12.6px;
+        border-radius: 8px;
         margin: 18px;
-        background-color: rgba(61, 56, 70, 0.7);
-        color: #cad3f5;
+        background-color: rgba(59, 66, 82, 0.95);  /* Nord Polar Night */
+        color: #d8dee9;  /* Nord Snow Storm */
         padding: 14px;
+        border: 2px solid #5e81ac;  /* Nord Frost */
       }
 
       .control-center .widget-title > label {
-        color: #cad3f5;
+        color: #eceff4;  /* Nord Snow Storm bright */
         font-size: 1.3em;
+        font-weight: bold;
       }
 
       .control-center .widget-title button {
-        border-radius: 7px;
-        color: #cad3f5;
-        background-color: #494d64;
-        box-shadow: inset 0 0 0 1px #6e738d;
+        border-radius: 6px;
+        color: #eceff4;  /* Nord Snow Storm bright */
+        background-color: #434c5e;  /* Nord Polar Night lighter */
+        border: 2px solid #5e81ac;  /* Nord Frost */
       }
 
       .control-center .widget-title button:hover {
-        box-shadow: inset 0 0 0 1px #6e738d;
-        background-color: #5b6078;
-        color: #cad3f5;
+        background-color: #5e81ac;  /* Nord Frost */
+        color: #eceff4;
+        border-color: #88c0d0;  /* Nord Frost lighter */
       }
 
       .control-center .widget-title button:active {
-        box-shadow: inset 0 0 0 1px #6e738d;
-        background-color: #494d64;
-        color: #cad3f5;
+        background-color: #434c5e;
+        color: #eceff4;
+        border-color: #5e81ac;
+      }
+
+      .control-center .notification-row .notification-background {
+        background-color: rgba(67, 76, 94, 0.8);  /* Nord Polar Night even lighter */
+        border: 1px solid #5e81ac;
+        border-radius: 6px;
+        margin: 4px 0;
+      }
+
+      .control-center .notification-row .notification-background .notification {
+        color: #d8dee9;
+        padding: 8px;
+      }
+
+      .control-center .notification-row .notification-background .notification .notification-content .summary {
+        color: #eceff4;
+        font-weight: bold;
       }
     '';
   };

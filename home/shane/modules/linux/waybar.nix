@@ -16,6 +16,7 @@
           "bluetooth"
           "pulseaudio"
           "tray"
+          "custom/swaync"
         ];
         modules-center = [ ];
         modules-left = [
@@ -126,22 +127,45 @@
         pulseaudio = {
           format = "{volume}% {icon} {format_source}";
           format-bluetooth = "{volume}% {icon} {format_source}";
-          format-bluetooth-muted = "󰝟 {icon} {format_source}";
+          format-bluetooth-muted = "󰝟 {icon} {format_source}";
           format-muted = "󰝟 {format_source}";
-          format-source = "{volume}% ";
-          format-source-muted = " ";
+          format-source = "{volume}% ";
+          format-source-muted = " ";
           format-icons = {
-            headphone = " ";
-            headset = "";
-            phone = "";
-            portable = "";
-            car = "";
+            headphone = " ";
+            headset = "";
+            phone = "";
+            portable = "";
+            car = "";
             default = [
-              ""
-              ""
-              ""
+              ""
+              ""
+              ""
             ];
           };
+          on-click = "pavucontrol";
+        };
+
+        "custom/swaync" = {
+          tooltip = false;
+          format = "{icon} {}";
+          format-icons = {
+            notification = " ";
+            none = " ";
+            dnd-notification = " ";
+            dnd-none = " ";
+            inhibited-notification = " ";
+            inhibited-none = " ";
+            dnd-inhibited-notification = " ";
+            dnd-inhibited-none = " ";
+          };
+          return-type = "json";
+          exec-if = "which swaync-client";
+          exec = "swaync-client -swb";
+          on-click = "swaync-client -t -sw";
+          on-click-right = "swaync-client -d -sw";
+          escape = true;
+        };
           on-click = "pavucontrol";
         };
       };
@@ -216,7 +240,8 @@
       #pulseaudio,
       #tray,
       #workspaces,
-      #power-profiles-daemon {
+      #power-profiles-daemon,
+      #custom-swaync {
           padding: 0 10px;
           background-color: #3b4252;  /* Nord Polar Night */
           color: #d8dee9;  /* Nord Snow Storm */
@@ -344,6 +369,19 @@
 
       #tray > .needs-attention {
           -gtk-icon-effect: highlight;
+          border: 3px solid #bf616a;  /* Nord Aurora red */
+      }
+
+      #custom-swaync {
+          border: 3px solid #88c0d0;  /* Nord Frost */
+          font-size: 18px;
+      }
+
+      #custom-swaync.notification {
+          border: 3px solid #ebcb8b;  /* Nord Aurora yellow */
+      }
+
+      #custom-swaync.dnd-notification {
           border: 3px solid #bf616a;  /* Nord Aurora red */
       }
 
