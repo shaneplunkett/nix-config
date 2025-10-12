@@ -16,8 +16,7 @@
     orca-slicer
     vlc
     samrewritten
-    
-    
+    swaynotificationcenter
   ];
   programs.chromium = {
 

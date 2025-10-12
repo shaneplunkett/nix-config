@@ -54,6 +54,15 @@
   services.teamviewer = {
     enable = true;
   };
+  systemd.services.greetd = {
+    serviceConfig = {
+      Type = "idle";
+    };
+    unitConfig = {
+      After = [ "multi-user.target" ];
+
+    };
+  };
 
   services.greetd = {
     enable = true;
