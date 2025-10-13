@@ -17,6 +17,7 @@
     vlc
     samrewritten
     swaynotificationcenter
+    inputs.fsel.packages.${pkgs.system}.default
   ];
   programs.chromium = {
 

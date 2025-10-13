@@ -11,6 +11,5 @@
     go
     lazydocker
     opencode
-    inputs.fsel.packages.${pkgs.system}.default
   ];
 }
