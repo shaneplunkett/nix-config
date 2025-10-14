@@ -17,7 +17,6 @@
     vlc
     samrewritten
     swaynotificationcenter
-    inputs.fsel.packages.${pkgs.system}.default
     inputs.zen-browser.packages.${system}.default
     bun
   ];
