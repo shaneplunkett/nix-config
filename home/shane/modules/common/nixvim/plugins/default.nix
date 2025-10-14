@@ -14,7 +14,6 @@
     ./noice.nix
     ./nui.nix
     ./notify.nix
-    ./opencode.nix
     ./snacks.nix
     ./telescope.nix
     ./tmux-navigator.nix
