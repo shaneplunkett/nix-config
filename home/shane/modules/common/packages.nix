@@ -10,6 +10,5 @@
     vesktop
     go
     lazydocker
-    opencode
   ];
 }
