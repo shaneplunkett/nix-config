@@ -19,6 +19,8 @@
     swaynotificationcenter
     inputs.zen-browser.packages.${system}.default
     bun
+    bruno
+    podman-desktop
   ];
   programs.chromium = {
 
