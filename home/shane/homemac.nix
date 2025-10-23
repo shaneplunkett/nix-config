@@ -10,6 +10,7 @@
     ./modules/common/tmux.nix
     ./modules/common/git.nix
     ./modules/common/nixvim/default.nix
+    ./modules/common/mcp.nix
 
     ./modules/macos/ghostty.nix
   ];

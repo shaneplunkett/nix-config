@@ -1,8 +1,8 @@
 { ... }:
 {
   xdg.desktopEntries = {
-    claude = {
-      name = "Claude";
+    claude-web = {
+      name = "Claude-Web";
       exec = "chromium --app=https://claude.ai --class=claude";
       icon = "${icons/claude.png}";
       categories = [

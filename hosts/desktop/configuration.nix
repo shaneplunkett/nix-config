@@ -185,6 +185,7 @@
     psmisc
     wooting-udev-rules
     wootility
+    podman
 
     tuigreet
   ];
