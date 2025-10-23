@@ -15,10 +15,6 @@
       url = "github:shaneplunkett/claude-desktop-linux-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    mcp-servers-nix = {
-      url = "github:natsukium/mcp-servers-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     hyprland.url = "github:hyprwm/Hyprland";
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
