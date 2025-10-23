@@ -25,7 +25,6 @@
     inputs.claude-desktop.packages.${system}.claude-desktop-with-fhs
     bun
     bruno
-    podman-desktop
     kubectl
   ];
   programs.chromium = {
