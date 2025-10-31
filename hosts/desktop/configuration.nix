@@ -145,6 +145,19 @@
       "nofail"
     ];
   };
+  fileSystems."home/shane/unraid/appdata" = {
+    device = "//192.168.1.132/appdata";
+    fsType = "cifs";
+    options = [
+      "guest"
+      "uid=1000"
+      "gid=100" # Replace with your GID
+      "vers=3.0"
+      "x-systemd.automount"
+      "x-systemd.idle-timeout=600"
+      "nofail"
+    ];
+  };
   services.hardware.openrgb.enable = true;
   programs.steam.enable = true;
   programs.steam.gamescopeSession.enable = true;
