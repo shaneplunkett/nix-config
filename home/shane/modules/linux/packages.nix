@@ -9,7 +9,7 @@
     plex-desktop
     ferdium
     mangohud
-    protonup
+    protonup-ng
     libnotify
     pavucontrol
     blueman
