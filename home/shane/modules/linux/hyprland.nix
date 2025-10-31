@@ -16,7 +16,7 @@
       bind = [
         "$mod_SHIFT, Q, killactive"
         "$mod, A, exec, claude"
-        "$mod_SHIFT, RETURN, exec, $terminal"
+        "$mod, RETURN, exec, $terminal"
         "$mod, space, exec, rofi -show drun"
         "$mod_SHIFT, 4, exec, hyprshot -m region --clipboard-only"
         "$mod_SHIFT,W,exec,hyprctl dispatch togglehidden"
