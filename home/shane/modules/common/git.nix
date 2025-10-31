@@ -2,21 +2,11 @@
 {
   programs.git = {
     enable = true;
-    userName = "shaneplunkett";
-    userEmail = "113661103+shaneplunkett@users.noreply.github.com";
-    ignores = [
-      ".direnv/"
-      ".go/"
-    ];
-    includes = [
-      {
-        condition = "gitdir:~/projects/work/";
-        contents = {
-          core.excludesfile = "~/.gitignore_work";
-        };
-      }
-    ];
-    extraConfig = {
+    settings = {
+      user = {
+        name = "shaneplunkett";
+        email = "113661103+shaneplunkett@users.noreply.github.com";
+      };
       init = {
         defaultBranch = "main";
       };
@@ -34,6 +24,18 @@
         editor = "nvim";
       };
     };
+    ignores = [
+      ".direnv/"
+      ".go/"
+    ];
+    includes = [
+      {
+        condition = "gitdir:~/projects/work/";
+        contents = {
+          core.excludesfile = "~/.gitignore_work";
+        };
+      }
+    ];
   };
 
   home.file.".gitignore_work".text = ''

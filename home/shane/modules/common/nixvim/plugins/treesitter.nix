@@ -6,9 +6,11 @@
     treesitter-context.enable = false;
     treesitter-textobjects = {
       enable = true;
-      select = {
-        enable = true;
-        lookahead = true;
+      settings = {
+        select = {
+          enable = true;
+          lookahead = true;
+        };
       };
     };
     treesitter = {
