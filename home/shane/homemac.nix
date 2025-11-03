@@ -3,8 +3,7 @@
 
   imports = [
     ./modules/common
-
-    ./modules/macos/ghostty.nix
+    ./modules/macos
   ];
 
   home.username = "shane";
