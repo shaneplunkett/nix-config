@@ -5,26 +5,8 @@
 {
 
   imports = [
-    ./modules/common/btop.nix
-    ./modules/common/cava.nix
-    ./modules/common/direnv.nix
-    ./modules/common/fish.nix
-    ./modules/common/nixvim
-    ./modules/common/starship.nix
-    ./modules/common/packages.nix
-    ./modules/common/tmux.nix
-    ./modules/common/git.nix
-
-    ./modules/linux/swaync.nix
-    ./modules/linux/ghostty.nix
-    ./modules/linux/hyprland.nix
-    ./modules/linux/hyprpaper.nix
-    ./modules/linux/hyprpanel
-    ./modules/linux/rofi/rofi.nix
-    ./modules/linux/theme.nix
-    ./modules/linux/waybar.nix
-    ./modules/linux/packages.nix
-    ./modules/linux/webapps
+    ./modules/common
+    ./modules/linux
   ];
 
   home.username = "shane";

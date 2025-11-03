@@ -10,6 +10,7 @@
     ferdium
     mangohud
     protonup-ng
+    ytmdesktop
     libnotify
     pavucontrol
     blueman
