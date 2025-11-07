@@ -5,7 +5,7 @@
     withNodeJs = true;
     viAlias = true;
     vimAlias = true;
-    
+
     imports = [
       ./colorschemes.nix
       ./globals.nix
@@ -15,3 +15,4 @@
     ];
   };
 }
+
