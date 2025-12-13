@@ -5,6 +5,10 @@
 }:
 {
   home.packages = with pkgs; [
+    zip
+    xz
+    unzip
+    p7zip
     signal-desktop
     plex-desktop
     ferdium

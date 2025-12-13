@@ -123,6 +123,7 @@
         border_size = 2;
         gaps_in = 5;
         gaps_out = 25;
+        resize_on_border = true;
 
         # Nord border colors - using hex format for gradients
         "col.active_border" = "rgba(88c0d0ff) rgba(81a1c1ff) 45deg"; # Frost gradient
