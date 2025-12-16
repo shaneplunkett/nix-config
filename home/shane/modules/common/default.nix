@@ -11,7 +11,6 @@
     ./packages.nix
     ./tmux.nix
     ./git.nix
-    ./vscode.nix
 
   ];
 

@@ -13,6 +13,7 @@
     ./waybar.nix
     ./packages.nix
     ./webapps
+    ./vscode.nix
 
   ];
 
