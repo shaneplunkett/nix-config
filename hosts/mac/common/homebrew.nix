@@ -18,6 +18,7 @@
       "hammerspoon"
       "docker-desktop"
       "claude"
+      "gemini-cli"
     ];
     onActivation.cleanup = "zap";
     onActivation.autoUpdate = true;
