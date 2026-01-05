@@ -32,6 +32,7 @@
     bruno
     kubectl
     alvr
+    intiface-central
   ];
   programs.chromium = {
 
