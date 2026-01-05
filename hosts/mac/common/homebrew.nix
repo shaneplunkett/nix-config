@@ -17,8 +17,9 @@
       "ferdium"
       "hammerspoon"
       "docker-desktop"
+      "claude-code"
       "claude"
-      "gemini-cli"
+      "gcloud-cli"
     ];
     onActivation.cleanup = "zap";
     onActivation.autoUpdate = true;
