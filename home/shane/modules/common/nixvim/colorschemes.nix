@@ -1,6 +1,6 @@
 { self, ... }:
 {
-  colorschemes.nord = {
+  colorschemes.catppuccin = {
     enable = true;
   };
 }
