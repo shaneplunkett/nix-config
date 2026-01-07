@@ -164,10 +164,6 @@
   programs.gamemode.enable = true;
   programs.fish.enable = true;
   programs.thunar.enable = true;
-  programs.thunar.plugins = with pkgs.xfce; [
-    thunar-archive-plugin
-    thunar-volman
-  ];
   programs.xfconf.enable = true;
   services.gvfs.enable = true;
   services.tumbler.enable = true;
@@ -199,6 +195,8 @@
     wooting-udev-rules
     wootility
     podman
+    thunar-archive-plugin
+    thunar-volman
 
     tuigreet
   ];

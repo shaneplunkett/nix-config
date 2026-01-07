@@ -7,7 +7,6 @@
     lazygit
     starship
     obsidian
-    vesktop
     go
     lazydocker
   ];
