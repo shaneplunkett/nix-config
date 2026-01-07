@@ -6,9 +6,8 @@
     settings = {
       font-size = "16";
       command = "fish --login --interactive";
-      theme = "Nord";
+      theme = "catppuccin-mocha";
       confirm-close-surface = "false";
-      shell-integration-features = "ssh-terminfo,ssh-env";
 
     };
   };

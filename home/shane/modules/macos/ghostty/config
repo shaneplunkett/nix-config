@@ -2,7 +2,6 @@ macos-titlebar-style = hidden
 font-family = "Mononoki Nerd Font"
 macos-non-native-fullscreen = true
 font-size = 21
-shell-integration-features = ssh-terminfo,ssh-env
 command = /etc/profiles/per-user/shane/bin/fish --login --interactive
-theme = "nord"
+theme = "catppuccin-mocha"
 
