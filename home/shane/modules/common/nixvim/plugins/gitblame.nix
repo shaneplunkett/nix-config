@@ -11,13 +11,5 @@
       };
     };
   };
-  
-  keymaps = [
-    {
-      mode = "n";
-      key = "<leader>gB";
-      action = ":GitBlameToggle<CR>";
-      options.desc = "Git Blame";
-    }
-  ];
+
 }

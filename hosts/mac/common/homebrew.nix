@@ -21,6 +21,10 @@
       "claude"
       "gcloud-cli"
     ];
+
+    brews = [
+      "gemini-cli"
+    ];
     onActivation.cleanup = "zap";
     onActivation.autoUpdate = true;
     onActivation.upgrade = true;

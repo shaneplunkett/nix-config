@@ -15,17 +15,8 @@
       inlayHints = true;
       keymaps = {
         silent = true;
-        diagnostic = {
-          "<leader>k" = "open_float";
-          "[d" = "goto_prev";
-          "]d" = "goto_next";
-        };
-        lspBuf = {
-          "K" = "hover";
-          "<leader>ca" = "code_action";
-          "<leader>rn" = "rename";
-          "<leader>f" = "format";
-        };
+        diagnostic = { };
+        lspBuf = { };
       };
       servers = {
 
