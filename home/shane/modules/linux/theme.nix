@@ -26,7 +26,7 @@ in
     };
 
     theme = {
-      name = "Catppuccin-Mocha-Standard-Blue-Dark";
+      name = "catppuccin-mocha-blue-standard+rimless,black";
       package = pkgs.catppuccin-gtk.override {
         accents = [ "blue" ];
         size = "standard";
@@ -47,6 +47,14 @@ in
       name = "catppuccin-mocha-blue-cursors";
       package = pkgs.catppuccin-cursors.mochaBlue;
       size = cursorSize;
+    };
+
+    gtk3.extraConfig = {
+      gtk-application-prefer-dark-theme = 1;
+    };
+
+    gtk4.extraConfig = {
+      gtk-application-prefer-dark-theme = 1;
     };
 
     gtk3.bookmarks = [
