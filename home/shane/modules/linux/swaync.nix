@@ -129,15 +129,15 @@
     };
 
     style = ''
-      @define-color background rgb(46, 52, 64);
-      @define-color background-alt rgb(59, 66, 82);
-      @define-color foreground #eceff4;
-      @define-color red #bf616a;
-      @define-color green #a3be8c;
-      @define-color yellow #ebcb8b;
-      @define-color blue #88c0d0;
-      @define-color gray #4c566a;
-      @define-color select #5e81ac;
+      @define-color background rgb(30, 30, 46);
+      @define-color background-alt rgb(24, 24, 37);
+      @define-color foreground #cdd6f4;
+      @define-color red #f38ba8;
+      @define-color green #a6e3a1;
+      @define-color yellow #f9e2af;
+      @define-color blue #89b4fa;
+      @define-color gray #585b70;
+      @define-color select #b4befe;
 
       * {
         outline: none;

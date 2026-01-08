@@ -3,14 +3,14 @@
   ...
 }:
 let
-  # Nord theme colors
+  # Catppuccin Mocha theme colors
   bg = "default";
-  default_fg = "#D8DEE9";
-  session_fg = "#A3BE8C";
-  session_selection_fg = "#3B4252";
-  session_selection_bg = "#81A1C1";
-  active_window_fg = "#88C0D0";
-  active_pane_border = "#abb2bf";
+  default_fg = "#cdd6f4";
+  session_fg = "#a6e3a1";
+  session_selection_fg = "#1e1e2e";
+  session_selection_bg = "#89b4fa";
+  active_window_fg = "#89b4fa";
+  active_pane_border = "#b4befe";
 in
 {
   programs.tmux = {

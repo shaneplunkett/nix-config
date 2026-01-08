@@ -101,7 +101,7 @@
       decoration = {
         rounding = 10;
 
-        # Blur settings with Nord feel
+        # Catppuccin Mocha settings
         blur = {
           enabled = true;
           size = 8;
@@ -109,13 +109,13 @@
           new_optimizations = true;
         };
 
-        # Nord-themed shadows
+        # Catppuccin Mocha shadows
         shadow = {
           enabled = true;
           range = 4;
           render_power = 3;
-          color = "rgba(2e3440ff)"; # Nord0 - Polar Night darkest
-          color_inactive = "rgba(3b4252ff)"; # Nord1 - Polar Night
+          color = "rgba(1e1e2eff)"; # Base
+          color_inactive = "rgba(181825ff)"; # Mantle
         };
       };
 
@@ -125,20 +125,20 @@
         gaps_out = 25;
         resize_on_border = true;
 
-        # Nord border colors - using hex format for gradients
-        "col.active_border" = "rgba(88c0d0ff) rgba(81a1c1ff) 45deg"; # Frost gradient
-        "col.inactive_border" = "rgba(4c566aff)"; # Polar Night
+        # Catppuccin Mocha border colors
+        "col.active_border" = "rgba(89b4faff) rgba(89dcebff) 45deg"; # Blue to Sky gradient
+        "col.inactive_border" = "rgba(585b70ff)"; # Surface2
       };
 
-      # Nord-themed group settings
+      # Catppuccin Mocha group settings
       group = {
-        "col.border_active" = "rgba(a3be8cff)"; # Aurora green
-        "col.border_inactive" = "rgba(4c566aff)"; # Polar Night
+        "col.border_active" = "rgba(a6e3a1ff)"; # Green
+        "col.border_inactive" = "rgba(585b70ff)"; # Surface2
         groupbar = {
           font_size = 10;
           gradients = false;
-          "col.active" = "rgba(88c0d0ff)"; # Frost blue
-          "col.inactive" = "rgba(434c5eff)"; # Polar Night
+          "col.active" = "rgba(89b4faff)"; # Blue
+          "col.inactive" = "rgba(313244ff)"; # Surface0
         };
       };
     };

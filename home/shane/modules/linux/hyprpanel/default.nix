@@ -3,7 +3,7 @@
   ...
 }:
 let
-  nordVivid = import ./nord_vivid.nix;
+  themeConfig = import ./catppuccin_mocha.nix;
 in
 {
   programs.hyprpanel = {
@@ -18,7 +18,7 @@ in
           name = "Mononoki Nerd Font";
           size = "16px";
         };
-      } nordVivid.theme;
+      } themeConfig.theme;
 
       bar.layouts = {
         "*" = {

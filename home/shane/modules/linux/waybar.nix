@@ -165,7 +165,7 @@
 
         window#waybar {
             background-color: rgba(0, 0, 0, 0);
-            color: #d8dee9;  /* Nord Snow Storm */
+            color: #cdd6f4;  /* Nord Snow Storm */
             border: none;
             box-shadow: none;
         }
@@ -175,16 +175,16 @@
         }
 
         window#waybar.termite {
-            background-color: #3b4252;  /* Nord Polar Night */
+            background-color: #181825;  /* Nord Polar Night */
         }
 
         window#waybar.chromium {
-            background-color: #2e3440;  /* Nord Polar Night darkest */
+            background-color: #11111b;  /* Nord Polar Night darkest */
             border: none;
         }
 
         #workspaces {
-            border: 3px solid #88c0d0;  /* Nord Frost */
+            border: 3px solid #89dceb;  /* Nord Frost */
         }
 
         #workspaces button {
@@ -193,23 +193,23 @@
             padding-top: 0px;
             padding-bottom: 0px;
             background-color: transparent;
-            color: #d8dee9;  /* Nord Snow Storm */
+            color: #cdd6f4;  /* Nord Snow Storm */
         }
 
         #workspaces button:hover {
-            color: #81a1c1;  /* Nord Frost lighter */
+            color: #89b4fa;  /* Nord Frost lighter */
         }
 
         #workspaces button.empty {
-            color: #616e88;  /* Nord muted */
+            color: #6c7086;  /* Nord muted */
         }
 
         #workspaces button.active {
-            color: #88c0d0;  /* Nord Frost */
+            color: #89dceb;  /* Nord Frost */
         }
 
         #workspaces button.urgent {
-            color: #bf616a;  /* Nord Aurora red */
+            color: #f38ba8;  /* Nord Aurora red */
         }
 
         #clock,
@@ -235,26 +235,26 @@
         }
 
         #clock {
-            border: 3px solid #88c0d0;  /* Nord Frost */
+            border: 3px solid #89dceb;  /* Nord Frost */
         }
 
         #battery {
-            border: 3px solid #81a1c1;  /* Nord Frost lighter */
+            border: 3px solid #89b4fa;  /* Nord Frost lighter */
         }
 
         #battery.charging, #battery.plugged {
-            border: 3px solid #a3be8c;  /* Nord Aurora green */
+            border: 3px solid #a6e3a1;  /* Nord Aurora green */
         }
 
         @keyframes blink {
             to {
-                border: 3px solid #81a1c1;  /* Nord Frost lighter */
+                border: 3px solid #89b4fa;  /* Nord Frost lighter */
             }
         }
 
         /* Using steps() instead of linear as a timing function to limit cpu usage */
         #battery.critical:not(.charging) {
-            border: 3px solid #bf616a;  /* Nord Aurora red */
+            border: 3px solid #f38ba8;  /* Nord Aurora red */
             animation-name: blink;
             animation-duration: 0.5s;
             animation-timing-function: steps(12);
@@ -267,59 +267,59 @@
         }
 
         #power-profiles-daemon.performance {
-            border: 3px solid #bf616a;  /* Nord Aurora red */
+            border: 3px solid #f38ba8;  /* Nord Aurora red */
         }
 
         #power-profiles-daemon.balanced {
-            border: 3px solid #b48ead;  /* Nord Aurora purple */
+            border: 3px solid #cba6f7;  /* Nord Aurora purple */
         }
 
         #power-profiles-daemon.power-saver {
-            border: 3px solid #a3be8c;  /* Nord Aurora green */
+            border: 3px solid #a6e3a1;  /* Nord Aurora green */
         }
 
         #cpu {
-            border: 3px solid #a3be8c;  /* Nord Aurora green */
+            border: 3px solid #a6e3a1;  /* Nord Aurora green */
             padding-right: 15px;
         }
 
         #memory {
-            border: 3px solid #b48ead;  /* Nord Aurora purple */
+            border: 3px solid #cba6f7;  /* Nord Aurora purple */
         }
 
         #backlight {
-            border: 3px solid #ebcb8b;  /* Nord Aurora yellow */
+            border: 3px solid #f9e2af;  /* Nord Aurora yellow */
         }
 
 
 
         #custom-media {
-            border: 3px solid #a3be8c;  /* Nord Aurora green */
+            border: 3px solid #a6e3a1;  /* Nord Aurora green */
             min-width: 100px;
         }
 
         #custom-media.custom-spotify {
-            border: 3px solid #a3be8c;  /* Nord Aurora green */
+            border: 3px solid #a6e3a1;  /* Nord Aurora green */
         }
 
         #custom-media.custom-vlc {
-            border: 3px solid #d08770;  /* Nord Aurora orange */
+            border: 3px solid #fab387;  /* Nord Aurora orange */
         }
 
         #custom-media.custom-firefox {
-            border: 3px solid #bf616a;  /* Nord Aurora red */
+            border: 3px solid #f38ba8;  /* Nord Aurora red */
         }
 
         #temperature {
-            border: 3px solid #d08770;  /* Nord Aurora orange */
+            border: 3px solid #fab387;  /* Nord Aurora orange */
         }
 
         #temperature.critical {
-            border: 3px solid #bf616a;  /* Nord Aurora red */
+            border: 3px solid #f38ba8;  /* Nord Aurora red */
         }
 
         #tray {
-            border: 3px solid #d08770;  /* Nord Aurora orange */
+            border: 3px solid #fab387;  /* Nord Aurora orange */
         }
 
         #tray > .passive {
@@ -328,11 +328,11 @@
 
         #tray > .needs-attention {
             -gtk-icon-effect: highlight;
-            border: 3px solid #bf616a;  /* Nord Aurora red */
+            border: 3px solid #f38ba8;  /* Nord Aurora red */
         }
 
         #custom-notification {
-            border: 3px solid #88c0d0;  /* Nord Frost */
+            border: 3px solid #89dceb;  /* Nord Frost */
             font-size: 18px;
             padding-top: 2px;
             padding-bottom: 2px;
@@ -341,11 +341,11 @@
         }
 
         #custom-notification.notification {
-            border: 3px solid #ebcb8b;  /* Nord Aurora yellow */
+            border: 3px solid #f9e2af;  /* Nord Aurora yellow */
         }
 
         #custom-notification.dnd-notification {
-            border: 3px solid #bf616a;  /* Nord Aurora red */
+            border: 3px solid #f38ba8;  /* Nord Aurora red */
         }
 
         #GtkSeparatorMenuItem {

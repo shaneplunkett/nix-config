@@ -12,8 +12,11 @@ in
     size = cursorSize;
     gtk.enable = true;
     x11.enable = true;
-    package = pkgs.nordzy-cursor-theme;
-    name = "Nordzy-cursors";
+    package = pkgs.catppuccin-cursors.override {
+      flavor = "mocha";
+      accent = "blue";
+    };
+    name = "catppuccin-mocha-blue-cursors";
   };
 
   gtk = {
@@ -26,18 +29,29 @@ in
     };
 
     theme = {
-      name = "Nordic-darker";
-      package = pkgs.nordic;
+      name = "Catppuccin-Mocha-Standard-Blue-Dark";
+      package = pkgs.catppuccin-gtk.override {
+        accents = [ "blue" ];
+        size = "standard";
+        tweaks = [ "rimless" "black" ];
+        variant = "mocha";
+      };
     };
 
     iconTheme = {
-      name = "Nordzy-dark";
-      package = pkgs.nordzy-icon-theme;
+      name = "Papirus-Dark";
+      package = pkgs.catppuccin-papirus-folders.override {
+        flavor = "mocha";
+        accent = "blue";
+      };
     };
 
     cursorTheme = {
-      name = "Nordzy-cursors";
-      package = pkgs.nordzy-cursor-theme;
+      name = "catppuccin-mocha-blue-cursors";
+      package = pkgs.catppuccin-cursors.override {
+        flavor = "mocha";
+        accent = "blue";
+      };
       size = cursorSize;
     };
 
