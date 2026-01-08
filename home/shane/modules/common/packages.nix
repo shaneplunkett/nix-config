@@ -2,6 +2,7 @@
 {
   home.packages = with pkgs; [
     jq
+    fd
     bat
     lsd
     lazygit
@@ -11,5 +12,6 @@
     lazydocker
     google-cloud-sdk
     gemini-cli
+    zed-editor
   ];
 }
