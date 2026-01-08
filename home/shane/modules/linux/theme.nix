@@ -12,10 +12,7 @@ in
     size = cursorSize;
     gtk.enable = true;
     x11.enable = true;
-    package = pkgs.catppuccin-cursors.override {
-      flavor = "mocha";
-      accent = "blue";
-    };
+    package = pkgs.catppuccin-cursors.mochaBlue;
     name = "catppuccin-mocha-blue-cursors";
   };
 
@@ -48,10 +45,7 @@ in
 
     cursorTheme = {
       name = "catppuccin-mocha-blue-cursors";
-      package = pkgs.catppuccin-cursors.override {
-        flavor = "mocha";
-        accent = "blue";
-      };
+      package = pkgs.catppuccin-cursors.mochaBlue;
       size = cursorSize;
     };
 
