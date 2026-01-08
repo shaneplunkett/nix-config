@@ -51,6 +51,7 @@
             "goimports"
           ];
           astro = [ "prettier" ];
+          hcl = [ "terraform_fmt" ];
           terraform = [ "terraform_fmt" ];
           tf = [ "terraform_fmt" ];
           sql = [ "sqlfluff" ];
