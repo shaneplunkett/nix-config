@@ -7,11 +7,11 @@
     vimAlias = true;
 
     imports = [
-      ./colorschemes.nix
       ./globals.nix
-      ./keymaps.nix
       ./options.nix
       ./plugins
+      ./keymaps.nix
+      ./colorschemes.nix
     ];
   };
 }
