@@ -6,7 +6,7 @@
     settings = {
       font-size = "16";
       command = "fish --login --interactive";
-      theme = "catppuccin-mocha";
+      theme = "Catppuccin Mocha";
       confirm-close-surface = "false";
 
     };

@@ -9,5 +9,7 @@
     obsidian
     go
     lazydocker
+    google-cloud-sdk
+    gemini-cli
   ];
 }

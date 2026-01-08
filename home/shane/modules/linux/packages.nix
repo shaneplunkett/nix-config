@@ -26,8 +26,8 @@
     vlc
     samrewritten
     swaynotificationcenter
-    inputs.zen-browser.packages.${system}.default
-    inputs.claude-desktop.packages.${system}.claude-desktop-with-fhs
+    inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default
+    inputs.claude-desktop.packages.${stdenv.hostPlatform.system}.claude-desktop-with-fhs
     bun
     bruno
     kubectl
