@@ -1,16 +1,19 @@
 { ... }:
 {
   imports = [
+    ./cmp.nix
     ./conform.nix
     ./flash.nix
+    ./gitblame.nix
     ./lazydev.nix
     ./lazygit.nix
     ./lsp.nix
     ./lualine.nix
+    ./luasnip.nix
     ./neotree.nix
     ./noice.nix
-    ./notify.nix
     ./nui.nix
+    ./notify.nix
     ./opencode.nix
     ./snacks.nix
     ./telescope.nix
