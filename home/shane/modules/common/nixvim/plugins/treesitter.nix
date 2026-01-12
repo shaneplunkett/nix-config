@@ -14,7 +14,30 @@
       };
 
       nixvimInjections = true;
-      grammarPackages = pkgs.vimPlugins.nvim-treesitter.allGrammars;
+      grammarPackages = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
+        css
+        eex
+        elixir
+        erlang
+        heex
+        html
+        hyprlang
+        javascript
+        nix
+        python
+        svelte
+        typescript
+        terraform
+        hcl
+        astro
+        rust
+        ruby
+        sql
+        glimmer
+        c_sharp
+        glsl
+
+      ];
     };
 
     treesitter-context = {
@@ -32,4 +55,3 @@
     };
   };
 }
-
