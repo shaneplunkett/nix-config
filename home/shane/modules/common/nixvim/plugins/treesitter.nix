@@ -14,6 +14,7 @@
       };
 
       nixvimInjections = true;
+      nixGrammars = true;
       grammarPackages = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
         css
         eex
@@ -53,5 +54,9 @@
         };
       };
     };
+    extraConfigLua = ''
+      local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+    '';
   };
+
 }

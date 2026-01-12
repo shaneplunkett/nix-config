@@ -15,7 +15,8 @@
       inlayHints = true;
       keymaps = {
         silent = true;
-        lspBuf = {gd = {
+        lspBuf = {
+          gd = {
             action = "definition";
             desc = "Goto Definition";
           };
@@ -35,12 +36,12 @@
             action = "type_definition";
             desc = "Type Definition";
           };
-            "<leader>cr" = {
+          "<leader>cr" = {
             action = "rename";
             desc = "Rename";
           };
-          
-           };
+
+        };
       };
       servers = {
 
@@ -64,7 +65,11 @@
           settings.telemetry.enable = false;
         };
         ts_ls = {
+          enable = false;
+        };
+        tsgo = {
           enable = true;
+
         };
         cssls.enable = true;
         tailwindcss.enable = true;
