@@ -56,7 +56,6 @@ in
       };
 
       menus.dashboard.directories.enabled = false;
-      menus.dashboard.stats.enable_gpu = true;
 
     };
   };

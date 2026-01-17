@@ -22,7 +22,7 @@
       "$mod" = "SUPER";
       "$terminal" = "ghostty";
 
-      exec-once = [];
+      exec-once = [ ];
 
       bind = [
         "$mod_SHIFT, Q, killactive"
@@ -34,6 +34,7 @@
 
         # Semantic Workspace Access
         "$mod,1,workspace,1" # Default 1
+        "$mod,A,workspace,2" # B for Browser
         "$mod,B,workspace,3" # B for Browser
         "$mod,E,workspace,4" # E for Email or Editor
         "$mod,T,workspace,5" # T for Terminal
