@@ -7,8 +7,12 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ./hardware-custom.nix
     ./hyprland.nix
     ./gaming.nix
+    ./audio.nix
+    ./storage.nix
+    ./fonts.nix
     inputs.home-manager.nixosModules.default
   ];
 
@@ -21,9 +25,6 @@
 
   networking.hostName = "desktop";
   networking.networkmanager.enable = true;
-
-  hardware.bluetooth.enable = true;
-  hardware.bluetooth.powerOnBoot = true;
 
   nix.settings.experimental-features = [
     "nix-command"
@@ -44,44 +45,12 @@
     LC_TIME = "en_AU.UTF-8";
   };
 
-  fonts = {
-    enableDefaultPackages = true;
-    packages = with pkgs; [
-      nerd-fonts.fira-code
-      nerd-fonts.jetbrains-mono
-      nerd-fonts.hack
-      nerd-fonts.mononoki
-    ];
-  };
   services.teamviewer = {
     enable = true;
   };
 
   services.flatpak.enable = true;
 
-  services.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  security.pam.loginLimits = [
-    {
-      domain = "*";
-      item = "nofile";
-      type = "soft";
-      value = "4096";
-    }
-    {
-      domain = "*";
-      item = "nofile";
-      type = "hard";
-      value = "8192";
-    }
-  ];
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
-  systemd.user.services.pipewire-pulse.wantedBy = [ "pipewire.service" ];
   users.users.shane = {
     isNormalUser = true;
     description = "Shane Plunkett";
@@ -89,50 +58,6 @@
       "networkmanager"
       "dialout"
       "wheel"
-    ];
-  };
-  hardware.graphics = {
-    enable = true;
-  };
-  services.xserver.videoDrivers = [ "amdgpu" ];
-
-  fileSystems."home/shane/unraid/programs" = {
-    device = "//192.168.1.132/Programs";
-    fsType = "cifs";
-    options = [
-      "guest"
-      "uid=1000"
-      "gid=100" # Replace with your GID
-      "vers=3.0"
-      "x-systemd.automount"
-      "x-systemd.idle-timeout=600"
-      "nofail"
-    ];
-  };
-  fileSystems."home/shane/unraid/media" = {
-    device = "//192.168.1.132/media";
-    fsType = "cifs";
-    options = [
-      "guest"
-      "uid=1000"
-      "gid=100" # Replace with your GID
-      "vers=3.0"
-      "x-systemd.automount"
-      "x-systemd.idle-timeout=600"
-      "nofail"
-    ];
-  };
-  fileSystems."home/shane/unraid/appdata" = {
-    device = "//192.168.1.132/appdata";
-    fsType = "cifs";
-    options = [
-      "guest"
-      "uid=1000"
-      "gid=100" # Replace with your GID
-      "vers=3.0"
-      "x-systemd.automount"
-      "x-systemd.idle-timeout=600"
-      "nofail"
     ];
   };
 
