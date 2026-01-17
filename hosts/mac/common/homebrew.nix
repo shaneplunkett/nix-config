@@ -20,6 +20,7 @@
       "claude-code"
       "claude"
       "gcloud-cli"
+      "teamviewer"
     ];
 
     brews = [

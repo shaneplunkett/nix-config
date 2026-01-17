@@ -14,5 +14,6 @@
     gemini-cli
     zed-editor
     terraform
+    prisma-language-server
   ];
 }

@@ -39,6 +39,7 @@
         glimmer
         c_sharp
         glsl
+        prisma
 
       ];
     };
