@@ -7,6 +7,8 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ./hyprland.nix
+    ./gaming.nix
     inputs.home-manager.nixosModules.default
   ];
 
@@ -54,33 +56,8 @@
   services.teamviewer = {
     enable = true;
   };
-  systemd.services.greetd = {
-    serviceConfig = {
-      Type = "idle";
-    };
-    unitConfig = {
-      After = [ "multi-user.target" ];
 
-    };
-  };
-
-  services.greetd = {
-    enable = true;
-    settings = {
-      default_session = {
-        command = "${pkgs.tuigreet}/bin/tuigreet --time --time-format '%I:%M %p | %a • %h | %F' --cmd start-hyprland --greeting 'Welcome to NixOS!'";
-        user = "greeter";
-      };
-    };
-  };
-
-  programs.hyprland = {
-    enable = true;
-    portalPackage =
-      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
-  };
   services.flatpak.enable = true;
-  programs.hyprland.package = inputs.hyprland.packages."${pkgs.stdenv.hostPlatform.system}".hyprland;
 
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -104,7 +81,7 @@
     alsa.support32Bit = true;
     pulse.enable = true;
   };
-
+  systemd.user.services.pipewire-pulse.wantedBy = [ "pipewire.service" ];
   users.users.shane = {
     isNormalUser = true;
     description = "Shane Plunkett";
@@ -158,15 +135,6 @@
       "nofail"
     ];
   };
-  services.hardware.openrgb.enable = true;
-  programs.steam.enable = true;
-  programs.steam.gamescopeSession.enable = true;
-  programs.gamemode.enable = true;
-  programs.fish.enable = true;
-  programs.thunar.enable = true;
-  programs.xfconf.enable = true;
-  services.gvfs.enable = true;
-  services.tumbler.enable = true;
 
   # System services
   nixpkgs.config.allowUnfree = true;
@@ -174,38 +142,19 @@
     enable = true;
     binfmt = true;
   };
+  programs.fish.enable = true;
 
   environment.systemPackages = with pkgs; [
     vim
-    bitwarden-cli
     git
     wget
     home-manager
-    mangohud
     gh
-    hyprpolkitagent
     gcc
-    wl-clipboard
     zip
     unzip
-    lutris
-    heroic
-    teamviewer
     psmisc
-    wooting-udev-rules
-    wootility
-    podman
-    thunar-archive-plugin
-    thunar-volman
-
-    tuigreet
   ];
-
-  environment.sessionVariables = {
-    NIXOS_OZONE_LAYER = "1";
-    MOZ_ENABLE_WAYLAND = "1";
-    WLR_RENDERER_ALLOW_SOFTWARE = "1";
-  };
 
   system.stateVersion = "24.11";
 }
