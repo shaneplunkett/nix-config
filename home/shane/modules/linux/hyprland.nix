@@ -1,17 +1,54 @@
-{ ... }:
+{ pkgs, lib, ... }:
 {
+  systemd.user.services = {
+    swaync = {
+      Unit = {
+        Description = "Sway Notification Center";
+        After = [ "graphical-session.target" ];
+        PartOf = [ "graphical-session.target" ];
+      };
+      Service = {
+        ExecStart = "${pkgs.swaynotificationcenter}/bin/swaync";
+        Restart = "on-failure";
+      };
+      Install.WantedBy = [ "graphical-session.target" ];
+    };
+
+    hyprpaper = {
+      Unit = {
+        Description = "Hyprpaper";
+        After = [ "graphical-session.target" ];
+        PartOf = [ "graphical-session.target" ];
+      };
+      Service = {
+        ExecStart = "${pkgs.hyprpaper}/bin/hyprpaper";
+        Restart = "on-failure";
+      };
+      Install.WantedBy = [ "graphical-session.target" ];
+    };
+
+    hyprpolkitagent = {
+      Unit = {
+        Description = "Hyprland Polkit Agent";
+        After = [ "graphical-session.target" ];
+        PartOf = [ "graphical-session.target" ];
+      };
+      Service = {
+        ExecStart = "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent";
+        Restart = "on-failure";
+      };
+      Install.WantedBy = [ "graphical-session.target" ];
+    };
+  };
+
   wayland.windowManager.hyprland = {
     enable = true;
+    systemd.enable = false;
     settings = {
       "$mod" = "SUPER";
       "$terminal" = "ghostty";
 
-      exec-once = [
-        "swaync"
-        "systemctl --user start hyprpolkitagent"
-        "hyprpaper"
-        "hyprpanel"
-      ];
+      exec-once = [];
 
       bind = [
         "$mod_SHIFT, Q, killactive"
