@@ -1,32 +1,6 @@
 { pkgs, lib, ... }:
 {
   systemd.user.services = {
-    swaync = {
-      Unit = {
-        Description = "Sway Notification Center";
-        After = [ "graphical-session.target" ];
-        PartOf = [ "graphical-session.target" ];
-      };
-      Service = {
-        ExecStart = "${pkgs.swaynotificationcenter}/bin/swaync";
-        Restart = "on-failure";
-      };
-      Install.WantedBy = [ "graphical-session.target" ];
-    };
-
-    hyprpaper = {
-      Unit = {
-        Description = "Hyprpaper";
-        After = [ "graphical-session.target" ];
-        PartOf = [ "graphical-session.target" ];
-      };
-      Service = {
-        ExecStart = "${pkgs.hyprpaper}/bin/hyprpaper";
-        Restart = "on-failure";
-      };
-      Install.WantedBy = [ "graphical-session.target" ];
-    };
-
     hyprpolkitagent = {
       Unit = {
         Description = "Hyprland Polkit Agent";
@@ -35,7 +9,7 @@
       };
       Service = {
         ExecStart = "${pkgs.hyprpolkitagent}/libexec/hyprpolkitagent";
-        Restart = "on-failure";
+        Restart = lib.mkForce "on-failure";
       };
       Install.WantedBy = [ "graphical-session.target" ];
     };
