@@ -22,7 +22,10 @@
       "$mod" = "SUPER";
       "$terminal" = "ghostty";
 
-      exec-once = [ ];
+      exec-once = [
+        "hyprpanel"
+        "hyprpaper"
+      ];
 
       bind = [
         "$mod_SHIFT, Q, killactive"
