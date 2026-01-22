@@ -32,6 +32,7 @@
     kubectl
     alvr
     intiface-central
+    google-chrome
   ];
   programs.chromium = {
 
