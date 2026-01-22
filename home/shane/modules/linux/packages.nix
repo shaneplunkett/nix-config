@@ -26,7 +26,6 @@
     vlc
     samrewritten
     swaynotificationcenter
-    inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default
     inputs.claude-desktop.packages.${stdenv.hostPlatform.system}.claude-desktop-with-fhs
     bun
     bruno
@@ -37,6 +36,5 @@
   programs.chromium = {
 
     enable = true;
-    package = pkgs.ungoogled-chromium;
   };
 }

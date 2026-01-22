@@ -12,7 +12,6 @@
     lazydocker
     google-cloud-sdk
     gemini-cli
-    zed-editor
     terraform
     prisma-language-server
     opencode
