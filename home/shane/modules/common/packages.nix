@@ -15,5 +15,6 @@
     zed-editor
     terraform
     prisma-language-server
+    opencode
   ];
 }
