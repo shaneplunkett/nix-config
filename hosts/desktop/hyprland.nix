@@ -2,8 +2,6 @@
 {
   programs.hyprland = {
     enable = true;
-    withUWSM = true;
-    xwayland.enable = true;
   };
 
   services.greetd = {
@@ -23,6 +21,12 @@
     unitConfig = {
       After = [ "multi-user.target" ];
     };
+  };
+
+  environment.sessionVariables = {
+    NIXOS_OZONE_LAYER = "1";
+    MOZ_ENABLE_WAYLAND = "1";
+    WLR_RENDERER_ALLOW_SOFTWARE = "1";
   };
 
   programs.thunar.enable = true;
