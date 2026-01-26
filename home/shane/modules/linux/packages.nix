@@ -24,7 +24,6 @@
     orca-slicer
     vlc
     samrewritten
-    swaynotificationcenter
     bun
     bruno
     kubectl
