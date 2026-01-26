@@ -3,7 +3,6 @@
   ...
 }:
 let
-  # Catppuccin Mocha theme colors
   bg = "default";
   default_fg = "#cdd6f4";
   session_fg = "#a6e3a1";

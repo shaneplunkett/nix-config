@@ -3,7 +3,6 @@
   imports = [
 
     ./btop.nix
-    ./cava.nix
     ./direnv.nix
     ./fish.nix
     ./nixvim

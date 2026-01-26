@@ -13,7 +13,6 @@
     google-cloud-sdk
     gemini-cli
     terraform
-    prisma-language-server
     opencode
   ];
 }

@@ -8,6 +8,7 @@
       drs = "sudo darwin-rebuild switch --flake ~/nix-config";
       nrs = "sudo nixos-rebuild switch --flake ~/nix-config#desktop";
       ngc = "sudo nix-collect-garbage -d";
+      tfi = "terraform init";
       tfp = "terraform plan";
       tfa = "terraform apply";
       tfaa = "terraform apply -auto-approve";
