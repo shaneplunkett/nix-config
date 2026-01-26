@@ -1,6 +1,7 @@
 { pkgs, ... }:
 {
 
+  services.xserver.videoDrivers = [ "amdgpu" ];
   services.flatpak.enable = true;
   services.gvfs.enable = true;
   services.tumbler.enable = true;
