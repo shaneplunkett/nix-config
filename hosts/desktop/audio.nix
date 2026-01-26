@@ -1,26 +1,23 @@
-{ pkgs, ... }:
+{ ... }:
 {
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
-  security.pam.loginLimits = [
-    {
-      domain = "*";
-      item = "nofile";
-      type = "soft";
-      value = "4096";
-    }
-    {
-      domain = "*";
-      item = "nofile";
-      type = "hard";
-      value = "8192";
-    }
-  ];
   services.pipewire = {
     enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    jack.enable = true;
+    wireplumber.enable = true;
+
+    # AirPlay Support
+    raopOpenFirewall = true;
+    extraConfig.pipewire = {
+      "10-airplay" = {
+        name = "libpipewire-module-raop-discover";
+
+      };
+
+    };
   };
-  systemd.user.services.pipewire-pulse.wantedBy = [ "pipewire.service" ];
 }
