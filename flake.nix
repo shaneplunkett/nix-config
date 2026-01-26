@@ -48,13 +48,13 @@
         "Shanes-MacBook-Pro" = lib.mkDarwinSystem {
           hostname = "Shanes-MacBook-Pro";
           system = "aarch64-darwin";
-          hostConfig = ./hosts/mac/personal.nix;
+          hostConfig = ./hosts/darwin/personal.nix;
         };
 
         "Shanes-Work-MacBook-Pro" = lib.mkDarwinSystem {
           hostname = "Shanes-Work-MacBook-Pro";
           system = "aarch64-darwin";
-          hostConfig = ./hosts/mac/work.nix;
+          hostConfig = ./hosts/darwin/work.nix;
         };
       };
 

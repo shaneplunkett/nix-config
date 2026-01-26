@@ -18,5 +18,4 @@
     enable = true;
     binfmt = true;
   };
-  programs.fish.enable = true;
 }
