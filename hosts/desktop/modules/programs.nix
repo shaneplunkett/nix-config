@@ -4,6 +4,7 @@
     enable = true;
   };
 
+  #Hyprland sessionVariables
   environment.sessionVariables = {
     NIXOS_OZONE_LAYER = "1";
     MOZ_ENABLE_WAYLAND = "1";

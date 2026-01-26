@@ -1,18 +1,9 @@
 { inputs, ... }:
 {
   imports = [
-    ./audio.nix
-    ./fonts.nix
-    ./gaming.nix
     ./hardware-configuration.nix
-    ./hardware-custom.nix
-    ./locale.nix
-    ./networking.nix
-    ./packages.nix
-    ./programs.nix
-    ./services.nix
-    ./storage.nix
-    ./user.nix
+    ./modules
+    ../../modules/nixos
     inputs.home-manager.nixosModules.default
   ];
 
