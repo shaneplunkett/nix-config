@@ -26,7 +26,6 @@
     vlc
     samrewritten
     swaynotificationcenter
-    inputs.claude-desktop.packages.${stdenv.hostPlatform.system}.claude-desktop-with-fhs
     bun
     bruno
     kubectl
@@ -34,8 +33,4 @@
     intiface-central
     google-chrome
   ];
-  programs.chromium = {
-
-    enable = true;
-  };
 }
