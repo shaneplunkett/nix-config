@@ -12,7 +12,7 @@ let
       owner = "isaacphi";
       repo = "mcp-language-server";
       rev = "main";
-      sha256 = "sha256-ksQoVmYTdjtK7HCKOFzieK2F0OVgceIMTuOP2dXBzlk=";
+      sha256 = "sha256-INyzT/8UyJfg1PW5+PqZkIy/MZrDYykql0rD2Sl97Gg=";
     };
     vendorHash = "sha256-INyzT/8UyJfg1PW5+PqZkIy/MZrDYykql0rD2Sl97Gg=";
     subPackages = [ "." ];
@@ -62,7 +62,9 @@ let
       echo "✓ Using empty workspace"
     fi
 
-    nohup ${inputs.claude-desktop.packages.${pkgs.system}.claude-desktop-with-fhs}/bin/claude-desktop \
+    nohup ${
+      inputs.claude-desktop.packages.${pkgs.stdenv.hostPlatform.system}.claude-desktop-with-fhs
+    }/bin/claude-desktop \
       --enable-features=UseOzonePlatform \
       --ozone-platform=wayland \
       "$@" > /dev/null 2>&1 &
