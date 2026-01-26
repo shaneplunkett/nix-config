@@ -11,10 +11,10 @@ let
     src = pkgs.fetchFromGitHub {
       owner = "isaacphi";
       repo = "mcp-language-server";
-      rev = "main";
+      rev = "e4395849a52e18555361abab60a060802c06bf50";
       sha256 = "sha256-INyzT/8UyJfg1PW5+PqZkIy/MZrDYykql0rD2Sl97Gg=";
     };
-    vendorHash = "sha256-INyzT/8UyJfg1PW5+PqZkIy/MZrDYykql0rD2Sl97Gg=";
+    vendorHash = "sha256-WcYKtM8r9xALx68VvgRabMPq8XnubhTj6NAdtmaPa+g=";
     subPackages = [ "." ];
     doCheck = false;
   };
