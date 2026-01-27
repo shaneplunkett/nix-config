@@ -27,6 +27,9 @@ let
           "-y"
           "@modelcontextprotocol/server-memory"
         ];
+        env = {
+          MEMORY_FILE_PATH = "/home/shane/mcp-memory/memory.jsonl";
+        };
       };
       shadcn = {
         command = "npx";
