@@ -89,7 +89,7 @@
 
   # PAM configuration for sudo with Touch ID and Apple Watch
   security.pam.services.sudo_local = {
-    enable = true;
+    enable = false;
     reattach = true;
     touchIdAuth = true;
     watchIdAuth = true;
