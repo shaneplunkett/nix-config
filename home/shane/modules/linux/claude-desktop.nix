@@ -1,51 +1,13 @@
 {
   pkgs,
   inputs,
+  config,
   ...
 }:
 let
-  claudeNodejs = pkgs.nodejs;
-  mcp-language-server = pkgs.buildGoModule {
-    pname = "mcp-language-server";
-    version = "unstable";
-    src = pkgs.fetchFromGitHub {
-      owner = "isaacphi";
-      repo = "mcp-language-server";
-      rev = "e4395849a52e18555361abab60a060802c06bf50";
-      sha256 = "sha256-INyzT/8UyJfg1PW5+PqZkIy/MZrDYykql0rD2Sl97Gg=";
-    };
-    vendorHash = "sha256-WcYKtM8r9xALx68VvgRabMPq8XnubhTj6NAdtmaPa+g=";
-    subPackages = [ "." ];
-    doCheck = false;
-  };
-
-  mcpConfig = {
-    mcpServers = {
-      memory = {
-        command = "${claudeNodejs}/bin/npx";
-        args = [
-          "-y"
-          "@modelcontextprotocol/server-memory"
-        ];
-        env = {
-          MEMORY_FILE_PATH = "/home/shane/mcp-memory/memory.jsonl";
-        };
-      };
-      shadcn = {
-        command = "npx";
-        args = [
-          "shadcn@latest"
-          "mcp"
-        ];
-      };
-      code-context-provider-mcp = {
-        command = "npx";
-        args = [
-          "-y"
-          "code-context-provider-mcp@latest"
-        ];
-      };
-    };
+  shared = import ../../common/claude-mcp.nix {
+    inherit pkgs;
+    homeDirectory = config.home.homeDirectory;
   };
 
   claude-desktop-wrapped = pkgs.writeShellScriptBin "claude-desktop" ''
@@ -77,13 +39,12 @@ let
   '';
 in
 {
-  home.packages = [
-    claude-desktop-wrapped
-    mcp-language-server
-  ];
+  home.packages = [ claude-desktop-wrapped ] ++ shared.packages;
+
   home.file.".config/Claude/claude_desktop_config.json" = {
-    text = builtins.toJSON mcpConfig;
+    text = builtins.toJSON shared.config;
   };
+
   home.file.".local/share/applications/claude-desktop.desktop".text = ''
     [Desktop Entry]
     Name=Claude Desktop

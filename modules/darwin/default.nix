@@ -7,7 +7,6 @@
     ./packages.nix
     ./user.nix
     ./settings.nix
-    ./hammerspoon
 
   ];
 
