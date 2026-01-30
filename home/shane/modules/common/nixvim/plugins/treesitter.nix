@@ -30,6 +30,7 @@
         python
         svelte
         typescript
+        tsx
         terraform
         hcl
         astro
