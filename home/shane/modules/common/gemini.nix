@@ -48,8 +48,11 @@ in
     GOOGLE_CLOUD_PROJECT = googleCloudProject;
   };
 
-  # Generate Catppuccin Mocha theme file
-  home.file.".gemini/themes/catppuccin-mocha.json".text = builtins.toJSON catppuccinMocha;
+  # Generate Catppuccin Mocha theme file (force copy instead of symlink for Gemini CLI compatibility)
+  home.file.".gemini/themes/catppuccin-mocha.json" = {
+    text = builtins.toJSON catppuccinMocha;
+    force = true;
+  };
 
   # Generate Gemini CLI settings.json with shared MCP configuration
   home.file.".gemini/settings.json".text = builtins.toJSON {
