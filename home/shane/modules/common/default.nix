@@ -10,7 +10,8 @@
     ./packages.nix
     ./tmux.nix
     ./git.nix
-
+    ./gemini.nix
+    ./claude.nix
+    ./mcp-servers.nix
   ];
-
 }
