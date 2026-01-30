@@ -1,6 +1,6 @@
 { pkgs, config, ... }:
 let
-  shared = import ../common/claude-mcp.nix {
+  shared = import ../common/claude.nix {
     inherit pkgs;
     homeDirectory = config.home.homeDirectory;
   };
