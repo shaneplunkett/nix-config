@@ -4,4 +4,5 @@ let
 in
 {
   "context7.age".publicKeys = [ shane ];
+  "gemini.age".publicKeys = [ shane ];
 }
