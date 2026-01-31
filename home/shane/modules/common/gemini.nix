@@ -11,13 +11,6 @@ let
     homeDirectory = config.home.homeDirectory;
   };
 
-  # Get Google Cloud project from environment or use default
-  googleCloudProject =
-    if builtins.getEnv "GOOGLE_CLOUD_PROJECT" != "" then
-      builtins.getEnv "GOOGLE_CLOUD_PROJECT"
-    else
-      "autograb-dev"; # Default to your work project
-
   # Catppuccin Mocha theme
   catppuccinMocha = {
     name = "Catppuccin Mocha";
@@ -43,16 +36,17 @@ let
   };
 in
 {
-  # Set Google Cloud project environment variable for Gemini CLI
-  home.sessionVariables = lib.mkIf (googleCloudProject != "") {
-    GOOGLE_CLOUD_PROJECT = googleCloudProject;
-  };
 
-  # Generate Catppuccin Mocha theme file (force copy instead of symlink for Gemini CLI compatibility)
-  home.file.".gemini/themes/catppuccin-mocha.json" = {
-    text = builtins.toJSON catppuccinMocha;
-    force = true;
-  };
+  # Copy Catppuccin Mocha theme file (not symlink) for Gemini CLI compatibility
+  # Gemini CLI won't load themes that resolve outside home directory
+  home.activation.copyGeminiTheme = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        $DRY_RUN_CMD mkdir -p $HOME/.gemini/themes
+        $DRY_RUN_CMD rm -f $HOME/.gemini/themes/catppuccin-mocha.json
+        $DRY_RUN_CMD cat > $HOME/.gemini/themes/catppuccin-mocha.json <<'EOF'
+    ${builtins.toJSON catppuccinMocha}
+    EOF
+        $DRY_RUN_CMD chmod 644 $HOME/.gemini/themes/catppuccin-mocha.json
+  '';
 
   # Generate Gemini CLI settings.json with shared MCP configuration
   home.file.".gemini/settings.json".text = builtins.toJSON {
