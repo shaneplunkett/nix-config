@@ -56,6 +56,17 @@ let
         command = "${context7-wrapper}";
         args = [ ];
       };
+
+    todoist = {
+      command = "${claudeNodejs}/bin/npx";
+      args = [
+        "-y"
+        "todoist-mcp"
+      ];
+      env = {
+        API_KEY = "${config.age.secrets.todoist.path}";
+      };
+    };
   };
 in
 {

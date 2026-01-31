@@ -6,9 +6,12 @@
       context7 = {
         file = ../../../../secrets/context7.age;
       };
-    };
-    gemini = {
-      file = ../../../../secrets/gemini.age;
+      gemini = {
+        file = ../../../../secrets/gemini.age;
+      };
+      todoist = {
+        file = ../../../../secrets/todoist.age;
+      };
     };
 
   };

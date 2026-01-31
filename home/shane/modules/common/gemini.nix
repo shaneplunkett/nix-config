@@ -48,7 +48,7 @@ in
         $DRY_RUN_CMD chmod 644 $HOME/.gemini/themes/catppuccin-mocha.json
   '';
   home.sessionVariables = {
-    GEMINI_SYSTEM_INSTRUCTION = config.age.secrets.gemini.path;
+    GEMINI_SYSTEM_MD = config.age.secrets.gemini.path;
   };
   # Generate Gemini CLI settings.json with shared MCP configuration
   home.file.".gemini/settings.json".text = builtins.toJSON {
