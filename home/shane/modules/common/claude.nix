@@ -1,7 +1,7 @@
-{ pkgs, homeDirectory }:
+{ pkgs, homeDirectory, config }:
 let
   shared = import ./mcp-servers.nix {
-    inherit pkgs homeDirectory;
+    inherit pkgs homeDirectory config;
   };
 
   mcpConfig = {

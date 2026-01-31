@@ -6,7 +6,7 @@
 }:
 let
   shared = import ../common/claude.nix {
-    inherit pkgs;
+    inherit pkgs config;
     homeDirectory = config.home.homeDirectory;
   };
 

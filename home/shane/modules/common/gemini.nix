@@ -7,7 +7,7 @@
 
 let
   mcpServers = import ./mcp-servers.nix {
-    inherit pkgs;
+    inherit pkgs config;
     homeDirectory = config.home.homeDirectory;
   };
 
