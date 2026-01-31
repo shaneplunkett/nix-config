@@ -1,6 +1,11 @@
 { inputs, rootPath }:
 let
-  inherit (inputs) nixpkgs home-manager nixvim;
+  inherit (inputs)
+    nixpkgs
+    home-manager
+    nixvim
+    agenix
+    ;
 in
 {
   mkNixosSystem =
@@ -23,7 +28,7 @@ in
 
         # Host-specific configuration
         hostConfig
-
+        agenix.nixosModules.default
         home-manager.nixosModules.home-manager
 
         # Home Manager configuration
@@ -35,6 +40,7 @@ in
             users.shane = import (rootPath + /home/shane/home.nix);
             sharedModules = [
               nixvim.homeModules.nixvim
+              agenix.homeManagerModules.default
             ];
           };
         }

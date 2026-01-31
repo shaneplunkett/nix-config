@@ -8,6 +8,7 @@ let
     nix-homebrew
     homebrew-core
     homebrew-cask
+    agenix
     ;
 in
 {
@@ -32,6 +33,7 @@ in
 
         home-manager.darwinModules.home-manager
         nix-homebrew.darwinModules.nix-homebrew
+        agenix.darwinModules.default
 
         {
           nix-homebrew = {
@@ -61,6 +63,7 @@ in
             users.shane = import (rootPath + /home/shane/homemac.nix);
             sharedModules = [
               nixvim.homeModules.nixvim
+              agenix.homeManagerModules.default
             ];
           };
         }

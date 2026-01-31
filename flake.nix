@@ -12,6 +12,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    agenix.url = "github:ryantm/agenix";
+
     claude-desktop = {
       url = "github:shaneplunkett/claude-desktop-linux-flake";
       inputs.nixpkgs.follows = "nixpkgs";
