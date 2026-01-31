@@ -30,5 +30,6 @@
     alvr
     intiface-central
     google-chrome
+    capacities
   ];
 }

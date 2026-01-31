@@ -6,4 +6,5 @@ in
   "context7.age".publicKeys = [ shane ];
   "gemini.age".publicKeys = [ shane ];
   "todoist.age".publicKeys = [ shane ];
+  "capacities.age".publicKeys = [ shane ];
 }
