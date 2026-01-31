@@ -11,5 +11,6 @@
     ./tmux.nix
     ./git.nix
     ./gemini.nix
+    ./age.nix
   ];
 }

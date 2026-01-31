@@ -1,8 +1,9 @@
-{ pkgs, ... }:
+{ inputs, pkgs, ... }:
 {
 
   environment.systemPackages = with pkgs; [
-    agenix-cli
+    inputs.agenix.packages.${stdenv.hostPlatform.system}.agenix
+
   ];
 
 }
