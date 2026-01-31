@@ -10,6 +10,7 @@
     ./lsp.nix
     ./lualine.nix
     ./luasnip.nix
+    ./mini.nix
     ./neotree.nix
     ./noice.nix
     ./nui.nix

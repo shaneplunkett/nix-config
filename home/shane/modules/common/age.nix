@@ -9,6 +9,9 @@
       gemini = {
         file = ../../../../secrets/gemini.age;
       };
+      github = {
+        file = ../../../../secrets/github.age;
+      };
       todoist = {
         file = ../../../../secrets/todoist.age;
       };

@@ -69,6 +69,27 @@ let
         command = "${todoist-wrapper}";
         args = [ ];
       };
+
+    github =
+      let
+        github-wrapper = pkgs.writeShellScript "github-mcp-wrapper" ''
+          export GITHUB_PERSONAL_ACCESS_TOKEN=$(cat ${config.age.secrets.github.path})
+          exec ${claudeNodejs}/bin/npx -y @modelcontextprotocol/server-github
+        '';
+      in
+      {
+        command = "${github-wrapper}";
+        args = [ ];
+      };
+
+    obsidian = {
+      command = "${claudeNodejs}/bin/npx";
+      args = [
+        "-y"
+        "@mauricio.wolff/mcp-obsidian@latest"
+        "${homeDirectory}/Prime"
+      ];
+    };
   };
 in
 {

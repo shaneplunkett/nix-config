@@ -56,50 +56,6 @@
           completion.__raw = "cmp.config.window.bordered()";
           documentation.__raw = "cmp.config.window.bordered()";
         };
-        formatting = {
-          format = ''
-            function(entry, vim_item)
-              local kind_icons = {
-                Text = '󰉿',
-                Method = '󰆧',
-                Function = '󰊕',
-                Constructor = '󰒓',
-                Field = '󰜢',
-                Variable = '󰀫',
-                Class = '󰠱',
-                Interface = '󰜰',
-                Module = '󰆧',
-                Property = '󰜢',
-                Unit = '󰑭',
-                Value = '󰎠',
-                Enum = '󰒻',
-                Keyword = '󰌋',
-                Snippet = '󰘦',
-                Color = '󰏘',
-                File = '󰈙',
-                Reference = '󰈇',
-                Folder = '󰉋',
-                EnumMember = '󰒼',
-                Constant = '󰏿',
-                Struct = '󰙅',
-                Event = '󰉁',
-                Operator = '󰆕',
-                TypeParameter = '󰒕',
-              }
-              
-              vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind)
-              vim_item.menu = ({
-                nvim_lsp = '[LSP]',
-                nvim_lsp_signature_help = '[Signature]',
-                luasnip = '[Snippet]',
-                buffer = '[Buffer]',
-                path = '[Path]',
-              })[entry.source.name]
-              
-              return vim_item
-            end
-          '';
-        };
         experimental = {
           ghost_text = true;
         };
@@ -108,6 +64,18 @@
     
     cmp-nvim-lsp-signature-help.enable = true;
     cmp-cmdline.enable = true;
+
+    lspkind = {
+      enable = true;
+      settings = {
+        symbol_map = {
+          Copilot = "";
+        };
+        maxwidth = 50;
+        ellipsis_char = "...";
+        mode = "symbol_text";
+      };
+    };
   };
   
   extraConfigLua = ''

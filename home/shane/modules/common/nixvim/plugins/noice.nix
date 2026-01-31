@@ -5,6 +5,7 @@
       enable = true;
       settings = {
         lsp = {
+          hover.silent = true;
           override = {
             "vim.lsp.util.convert_input_to_markdown_lines" = true;
             "vim.lsp.util.stylize_markdown" = true;
@@ -23,6 +24,13 @@
               ];
             };
             view = "mini";
+          }
+          {
+            filter = {
+              event = "notify";
+              find = "No information available";
+            };
+            opts.skip = true;
           }
         ];
         presets = {

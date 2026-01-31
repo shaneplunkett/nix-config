@@ -16,33 +16,11 @@
       keymaps = {
         silent = true;
         lspBuf = {
-          gd = {
-            action = "definition";
-            desc = "Goto Definition";
-          };
-          gr = {
-            action = "references";
-            desc = "Goto References";
-          };
-          gD = {
-            action = "declaration";
-            desc = "Goto Declaration";
-          };
-          gI = {
-            action = "implementation";
-            desc = "Goto Implementation";
-          };
-          gT = {
-            action = "type_definition";
-            desc = "Type Definition";
-          };
           "<leader>cr" = {
             action = "rename";
             desc = "Rename";
           };
-
         };
-
       };
       servers = {
 
@@ -65,12 +43,51 @@
           enable = true;
           settings.telemetry.enable = false;
         };
+        # Disable ts_ls in favor of vtsls
         ts_ls = {
           enable = false;
         };
+        # Experimental microsoft Go implementation - disabled for stability
         tsgo = {
+          enable = false;
+        };
+        # High performance Typescript LSP (wrapper around VSCode's TS service)
+        vtsls = {
           enable = true;
-
+          # Recommended settings for web dev
+          settings = {
+            typescript = {
+              updateImportsOnFileMove.enabled = "always";
+              inlayHints = {
+                parameterNames.enabled = "literals";
+                parameterTypes.enabled = true;
+                variableTypes.enabled = false;
+                propertyDeclarationTypes.enabled = true;
+                functionLikeReturnTypes.enabled = true;
+                enumMemberValues.enabled = true;
+              };
+            };
+            javascript = {
+              updateImportsOnFileMove.enabled = "always";
+              inlayHints = {
+                parameterNames.enabled = "literals";
+                parameterTypes.enabled = true;
+                variableTypes.enabled = false;
+                propertyDeclarationTypes.enabled = true;
+                functionLikeReturnTypes.enabled = true;
+                enumMemberValues.enabled = true;
+              };
+            };
+            vtsls = {
+              enableMoveToFileCodeAction = true;
+              autoUseWorkspaceTsdk = true;
+              experimental = {
+                completion = {
+                  enableServerSideFuzzyMatch = true;
+                };
+              };
+            };
+          };
         };
         cssls.enable = true;
         tailwindcss.enable = true;
