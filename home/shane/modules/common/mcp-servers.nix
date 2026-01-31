@@ -1,4 +1,8 @@
-{ pkgs, homeDirectory }:
+{
+  pkgs,
+  config,
+  homeDirectory,
+}:
 let
   claudeNodejs = pkgs.nodejs;
 
@@ -41,6 +45,17 @@ let
         "code-context-provider-mcp@latest"
       ];
     };
+    context7 =
+      let
+        context7-wrapper = pkgs.writeShellScript "context7-mcp-wrapper" ''
+          API_KEY=$(cat ${config.age.secrets.context7.path})
+          exec ${claudeNodejs}/bin/npx -y @upstash/context7-mcp --api-key "$API_KEY"
+        '';
+      in
+      {
+        command = "${context7-wrapper}";
+        args = [ ];
+      };
   };
 in
 {
