@@ -57,16 +57,18 @@ let
         args = [ ];
       };
 
-    todoist = {
-      command = "${claudeNodejs}/bin/npx";
-      args = [
-        "-y"
-        "todoist-mcp"
-      ];
-      env = {
-        API_KEY = "${config.age.secrets.todoist.path}";
+    todoist =
+      let
+        todoist-wrapper = pkgs.writeShellScript "todoist-mcp-wrapper" ''
+          export XDG_RUNTIME_DIR=''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}
+          export API_KEY=$(cat $XDG_RUNTIME_DIR/agenix/todoist)
+          exec ${claudeNodejs}/bin/npx -y todoist-mcp
+        '';
+      in
+      {
+        command = "${todoist-wrapper}";
+        args = [ ];
       };
-    };
   };
 in
 {
