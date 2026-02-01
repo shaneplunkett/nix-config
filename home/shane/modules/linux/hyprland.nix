@@ -11,6 +11,8 @@
         "systemctl --user start hyprpolkitagent"
         "hyprpanel"
         "hyprpaper"
+        "wl-paste --type text --watch cliphist store"
+        "wl-paste --type image --watch cliphist store"
       ];
 
       bind = [
@@ -18,6 +20,7 @@
         "$mod, A, exec, claude"
         "$mod, RETURN, exec, $terminal"
         "$mod, space, exec, rofi -show drun"
+        "$mod, V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
         "$mod_SHIFT, 4, exec, hyprshot -m region --clipboard-only"
         "$mod_SHIFT,W,exec,hyprctl dispatch togglehidden"
 

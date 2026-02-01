@@ -22,6 +22,7 @@
     ./todo-comments.nix
     ./treesitter.nix
     ./trouble.nix
+    ./undotree.nix
     ./web-devicons.nix
     ./which-key.nix
   ];

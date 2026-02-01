@@ -14,5 +14,9 @@
     gemini-cli
     terraform
     opencode
+    ripgrep
+    tealdeer
+    zoxide
+    fzf
   ];
 }

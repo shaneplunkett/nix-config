@@ -6,6 +6,7 @@
     ./fonts.nix
     ./homedrives.nix
     ./locale.nix
+    ./maintenance.nix
     ./user.nix
 
   ];

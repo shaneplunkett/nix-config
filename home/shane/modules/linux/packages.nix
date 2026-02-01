@@ -18,6 +18,8 @@
     pavucontrol
     blueman
     hyprshot
+    swappy
+    cliphist
     vdhcoapp
     hyprpaper
     obsidian
