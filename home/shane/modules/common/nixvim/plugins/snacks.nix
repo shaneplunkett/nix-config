@@ -221,6 +221,16 @@
     # --- UI & Utilities ---
     {
       mode = "n";
+      key = "<leader>uh";
+      action.__raw = ''
+        function()
+          Snacks.toggle.inlay_hints():toggle()
+        end
+      '';
+      options.desc = "Toggle Inlay Hints";
+    }
+    {
+      mode = "n";
       key = "<leader>z";
       action.__raw = ''
         function()
