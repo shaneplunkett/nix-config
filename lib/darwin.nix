@@ -21,6 +21,7 @@ in
     }:
     nix-darwin.lib.darwinSystem {
       inherit system;
+      specialArgs = { inherit inputs; };
       modules = [
         # Custom packages overlay
         {
@@ -60,6 +61,7 @@ in
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
+            extraSpecialArgs = { inherit inputs; };
             users.shane = import (rootPath + /home/shane/homemac.nix);
             sharedModules = [
               nixvim.homeModules.nixvim
