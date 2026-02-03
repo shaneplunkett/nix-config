@@ -61,8 +61,8 @@ let
       let
         todoist-wrapper = pkgs.writeShellScript "todoist-mcp-wrapper" ''
           export XDG_RUNTIME_DIR=''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}
-          export API_KEY=$(cat $XDG_RUNTIME_DIR/agenix/todoist)
-          exec ${claudeNodejs}/bin/npx -y todoist-mcp
+          export TODOIST_API_TOKEN=$(cat $XDG_RUNTIME_DIR/agenix/todoist)
+          exec ${claudeNodejs}/bin/npx -y @modelcontextprotocol/server-todoist
         '';
       in
       {

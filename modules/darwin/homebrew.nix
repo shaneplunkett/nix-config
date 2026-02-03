@@ -21,6 +21,7 @@
       "claude"
       "gcloud-cli"
       "teamviewer"
+      "todoist-app"
     ];
 
     brews = [
