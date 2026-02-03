@@ -89,7 +89,29 @@
             };
           };
         };
-        cssls.enable = true;
+        cssls = {
+          enable = true;
+          settings = {
+            css = {
+              validate = true;
+              lint = {
+                unknownAtRules = "ignore";
+              };
+            };
+            scss = {
+              validate = true;
+              lint = {
+                unknownAtRules = "ignore";
+              };
+            };
+            less = {
+              validate = true;
+              lint = {
+                unknownAtRules = "ignore";
+              };
+            };
+          };
+        };
         tailwindcss.enable = true;
         html.enable = true;
         bashls.enable = true;
