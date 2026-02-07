@@ -1,22 +1,53 @@
-{ ... }:
+{ pkgs, lib, ... }:
+let
+  profiles = {
+    personal = "Default";
+    work = "Profile 1";
+  };
+  mkWebApp =
+    {
+      name,
+      url,
+      profile ? "personal",
+      icon ? null,
+      categories ? [ "Network" ],
+      class ? builtins.replaceStrings [ " " ] [ "-" ] (lib.toLower name),
+    }:
+    {
+      inherit categories;
+      icon = if icon != null then icon else name;
+      exec = lib.concatStringsSep " " [
+        "${pkgs.google-chrome}/bin/google-chrome-stable"
+        "--app=${url}"
+        "--class=${class}"
+        "--profile-directory=${profiles.${profile}}"
+      ];
+      type = "Application";
+      settings.StartupWMClass = class;
+    };
+in
 {
   xdg.desktopEntries = {
-    claude-web = {
-      name = "Claude-Web";
-      exec = "chromium --app=https://claude.ai --class=claude";
-      icon = "${icons/claude.png}";
-      categories = [
-        "Office"
-      ];
+    slack = mkWebApp {
+      name = "Slack";
+      url = "https://app.slack.com";
+      profile = "work";
+      icon = ./icons/slack.png;
+      categories = [ "Office" ];
     };
-
-    chatgpt = {
+    chatgpt = mkWebApp {
       name = "ChatGPT";
-      exec = "chromium --app=https://chatgpt.com --class=chatgpt";
-      icon = "${icons/chatgpt.png}";
-      categories = [
-        "Office"
-      ];
+      url = "https://chat.openai.com";
+      profile = "personal";
+      icon = ./icons/chatgpt.png;
+      categories = [ "Office" ];
+    };
+    claude-web = mkWebApp {
+      name = "Claude";
+      url = "https://claude.ai";
+      profile = "personal";
+      icon = ./icons/claude.png;
+      categories = [ "Office" ];
     };
   };
 }
