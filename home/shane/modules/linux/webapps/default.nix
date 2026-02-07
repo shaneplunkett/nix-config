@@ -14,10 +14,10 @@ let
       class ? builtins.replaceStrings [ " " ] [ "-" ] (lib.toLower name),
     }:
     {
-      inherit categories;
+      inherit name categories;
       icon = if icon != null then icon else name;
       exec = lib.concatStringsSep " " [
-        "${pkgs.google-chrome}/bin/google-chrome-stable"
+        "${pkgs.google-chrome}/share/google/chrome/google-chrome"
         "--app=${url}"
         "--class=${class}"
         "--profile-directory=${profiles.${profile}}"
@@ -30,7 +30,7 @@ in
   xdg.desktopEntries = {
     slack = mkWebApp {
       name = "Slack";
-      url = "https://app.slack.com";
+      url = "https://autograb.slack.com";
       profile = "work";
       icon = ./icons/slack.png;
       categories = [ "Office" ];
