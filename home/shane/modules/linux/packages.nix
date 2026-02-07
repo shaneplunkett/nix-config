@@ -20,7 +20,6 @@
     hyprshot
     swappy
     cliphist
-    vdhcoapp
     hyprpaper
     obsidian
     orca-slicer
@@ -32,6 +31,5 @@
     alvr
     intiface-central
     google-chrome
-    capacities
   ];
 }
