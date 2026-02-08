@@ -18,5 +18,6 @@
     tealdeer
     zoxide
     fzf
+    vesktop
   ];
 }

@@ -16,6 +16,7 @@
     tuigreet
     thunar-archive-plugin
     thunar-volman
+    openocd
   ];
 
 }
