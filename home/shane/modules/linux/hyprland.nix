@@ -79,20 +79,20 @@
         ];
       };
 
-      windowrulev2 = [
-        "float, class:(com.example.launcher)"
-        "size 500 430, class:(com.example.launcher)"
-        #Plex
-        "opaque, title:Plex*"
-        #Thunar
-        "float, title:.*Thunar"
-        "size 1100 700, title:.*Thunar"
-        #Bluetooth
-        "float, title:.*Bluetooth Devices"
-        "size 1100 700, title:.*Bluetooth Devices"
-        #Volume Control
-        "float, title:.*Volume Control"
-        "size 1100 700, title:.*Volume Control"
+      windowrule = [
+        "float 1, match:class ^com\.example\.launcher$"
+        "size 500 430, match:class ^com\.example\.launcher$"
+        # Plex
+        "opaque 1, match:title ^Plex.*$"
+        # Thunar
+        "float 1, match:title ^.*Thunar$"
+        "size 1100 700, match:title ^.*Thunar$"
+        # Bluetooth
+        "float 1, match:title ^.*Bluetooth Devices$"
+        "size 1100 700, match:title ^.*Bluetooth Devices$"
+        # Volume Control
+        "float 1, match:title ^.*Volume Control$"
+        "size 1100 700, match:title ^.*Volume Control$"
       ];
 
       monitor = [
