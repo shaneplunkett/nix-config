@@ -31,5 +31,6 @@
     alvr
     intiface-central
     google-chrome
+    vesktop
   ];
 }

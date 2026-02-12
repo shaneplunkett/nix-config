@@ -13,4 +13,7 @@
     gh
     jankyborders
   ];
+  nixpkgs.config.permittedInsecurePackages = [
+    "google-chrome-144.0.7559.97"
+  ];
 }

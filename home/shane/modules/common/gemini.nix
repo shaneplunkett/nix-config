@@ -48,6 +48,7 @@ in
         $DRY_RUN_CMD chmod 644 $HOME/.gemini/themes/catppuccin-mocha.json
   '';
   home.sessionVariables = {
+    GOOGLE_CLOUD_PROJECT = "autograb-dev";
     GEMINI_SYSTEM_MD = config.age.secrets.gemini.path;
   };
   # Generate Gemini CLI settings.json with shared MCP configuration
