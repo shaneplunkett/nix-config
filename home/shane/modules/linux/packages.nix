@@ -31,6 +31,7 @@
     alvr
     intiface-central
     google-chrome
+    qalculate-qt
     vesktop
   ];
 }

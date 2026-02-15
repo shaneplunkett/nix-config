@@ -23,6 +23,7 @@
         "$mod, V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
         "$mod_SHIFT, 4, exec, hyprshot -m region --clipboard-only"
         "$mod_SHIFT,W,exec,hyprctl dispatch togglehidden"
+        "$mod_SHIFT,F,fullscreen"
 
         "$mod,1,workspace,1"
         "$mod,A,workspace,2"
@@ -97,11 +98,11 @@
 
       monitor = [
         "DP-2,3840x2160@240,0x0,1,vrr, 2"
-        "HDMI-A-1, 2560x1440@60, -1440x0, 1, transform, 3"
+        "HDMI-A-1, 2560x1440@60, -3000x0, 1, transform, 3"
       ];
 
       workspace = [
-        "1, monitor:DP-2"
+        "1, monitor:DP-2, default:true"
         "2, monitor:DP-2"
         "3, monitor:DP-2"
         "4, monitor:DP-2"
