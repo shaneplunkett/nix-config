@@ -18,6 +18,5 @@
     tealdeer
     zoxide
     fzf
-    sesh
   ];
 }

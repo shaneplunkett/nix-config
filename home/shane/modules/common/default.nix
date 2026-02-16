@@ -12,5 +12,6 @@
     ./git.nix
     ./gemini.nix
     ./age.nix
+    ./sesh.nix
   ];
 }
