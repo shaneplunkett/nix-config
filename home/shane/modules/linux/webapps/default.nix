@@ -53,7 +53,7 @@ in
       name = "Mail";
       url = "https://www.icloud.com/mail/";
       profile = "personal";
-      icon = ./icons/claude.jpg;
+      icon = ./icons/icloud.jpg;
       categories = [ "Office" ];
     };
   };
