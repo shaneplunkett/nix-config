@@ -49,5 +49,12 @@ in
       icon = ./icons/claude.png;
       categories = [ "Office" ];
     };
+    icloud-mail = mkWebApp {
+      name = "Mail";
+      url = "https://www.icloud.com/mail/";
+      profile = "personal";
+      icon = ./icons/claude.jpg;
+      categories = [ "Office" ];
+    };
   };
 }
