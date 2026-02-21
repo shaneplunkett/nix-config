@@ -18,6 +18,12 @@
       posthog = {
         file = ../../../../secrets/posthog.age;
       };
+      google-oauth-client-id = {
+        file = ../../../../secrets/google-oauth-client-id.age;
+      };
+      google-oauth-client-secret = {
+        file = ../../../../secrets/google-oauth-client-secret.age;
+      };
     };
 
   };

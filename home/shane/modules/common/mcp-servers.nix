@@ -76,6 +76,20 @@ context7 =
         args = [ ];
       };
 
+    google-workspace =
+      let
+        google-workspace-wrapper = pkgs.writeShellScript "google-workspace-mcp-wrapper" ''
+          export XDG_RUNTIME_DIR=''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}
+          export GOOGLE_OAUTH_CLIENT_ID=$(cat ${config.age.secrets.google-oauth-client-id.path})
+          export GOOGLE_OAUTH_CLIENT_SECRET=$(cat ${config.age.secrets.google-oauth-client-secret.path})
+          exec ${pkgs.uv}/bin/uvx workspace-mcp
+        '';
+      in
+      {
+        command = "${google-workspace-wrapper}";
+        args = [ ];
+      };
+
     obsidian = {
       command = "${claudeNodejs}/bin/npx";
       args = [
