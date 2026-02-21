@@ -6,20 +6,6 @@
 let
   claudeNodejs = pkgs.nodejs;
 
-  mcp-language-server = pkgs.buildGoModule {
-    pname = "mcp-language-server";
-    version = "unstable";
-    src = pkgs.fetchFromGitHub {
-      owner = "isaacphi";
-      repo = "mcp-language-server";
-      rev = "e4395849a52e18555361abab60a060802c06bf50";
-      sha256 = "sha256-INyzT/8UyJfg1PW5+PqZkIy/MZrDYykql0rD2Sl97Gg=";
-    };
-    vendorHash = "sha256-WcYKtM8r9xALx68VvgRabMPq8XnubhTj6NAdtmaPa+g=";
-    subPackages = [ "." ];
-    doCheck = false;
-  };
-
   mcpServers = {
     memory = {
       command = "${claudeNodejs}/bin/npx";
@@ -69,6 +55,18 @@ let
         args = [ ];
       };
 
+    todoist =
+      let
+        todoist-wrapper = pkgs.writeShellScript "todoist-mcp-wrapper" ''
+          export TODOIST_API_TOKEN=$(cat ${config.age.secrets.todoist.path})
+          exec ${claudeNodejs}/bin/npx -y @greirson/mcp-todoist
+        '';
+      in
+      {
+        command = "${todoist-wrapper}";
+        args = [ ];
+      };
+
     obsidian = {
       command = "${claudeNodejs}/bin/npx";
       args = [
@@ -77,13 +75,21 @@ let
         "${homeDirectory}/Prime"
       ];
     };
+    chrome-devtools = {
+      command = "${claudeNodejs}/bin/npx";
+      args = [
+        "-y"
+        "chrome-devtools-mcp@latest"
+        "--browserUrl"
+        "http://localhost:9222"
+      ];
+    };
   };
 in
 {
   inherit mcpServers;
 
   packages = [
-    mcp-language-server
     claudeNodejs
   ];
 }

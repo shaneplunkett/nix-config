@@ -30,7 +30,12 @@
     kubectl
     alvr
     intiface-central
-    google-chrome
+    (google-chrome.override {
+      commandLineArgs = [
+        "--remote-debugging-port=9222"
+        "--remote-debugging-address=127.0.0.1"
+      ];
+    })
     qalculate-qt
     vesktop
   ];
