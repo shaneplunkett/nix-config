@@ -24,16 +24,10 @@ let
         "mcp"
       ];
     };
-    code-context-provider-mcp = {
-      command = "${claudeNodejs}/bin/npx";
-      args = [
-        "-y"
-        "code-context-provider-mcp@latest"
-      ];
-    };
-    context7 =
+context7 =
       let
         context7-wrapper = pkgs.writeShellScript "context7-mcp-wrapper" ''
+          export XDG_RUNTIME_DIR=''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}
           API_KEY=$(cat ${config.age.secrets.context7.path})
           exec ${claudeNodejs}/bin/npx -y @upstash/context7-mcp --api-key "$API_KEY"
         '';
@@ -46,6 +40,7 @@ let
     github =
       let
         github-wrapper = pkgs.writeShellScript "github-mcp-wrapper" ''
+          export XDG_RUNTIME_DIR=''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}
           export GITHUB_PERSONAL_ACCESS_TOKEN=$(cat ${config.age.secrets.github.path})
           exec ${claudeNodejs}/bin/npx -y @modelcontextprotocol/server-github
         '';
@@ -58,6 +53,7 @@ let
     todoist =
       let
         todoist-wrapper = pkgs.writeShellScript "todoist-mcp-wrapper" ''
+          export XDG_RUNTIME_DIR=''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}
           export TODOIST_API_TOKEN=$(cat ${config.age.secrets.todoist.path})
           exec ${claudeNodejs}/bin/npx -y @greirson/mcp-todoist
         '';
@@ -73,6 +69,13 @@ let
         "-y"
         "@mauricio.wolff/mcp-obsidian@latest"
         "${homeDirectory}/Prime"
+      ];
+    };
+    desktop-commander = {
+      command = "${claudeNodejs}/bin/npx";
+      args = [
+        "-y"
+        "@wonderwhy-er/desktop-commander@latest"
       ];
     };
     chrome-devtools = {

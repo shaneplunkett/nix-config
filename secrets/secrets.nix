@@ -8,4 +8,5 @@ in
   "github.age".publicKeys = [ shane ];
   "todoist.age".publicKeys = [ shane ];
   "capacities.age".publicKeys = [ shane ];
+  "posthog.age".publicKeys = [ shane ];
 }
