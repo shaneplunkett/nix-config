@@ -9,4 +9,6 @@ in
   "todoist.age".publicKeys = [ shane ];
   "capacities.age".publicKeys = [ shane ];
   "posthog.age".publicKeys = [ shane ];
+  "google-oauth-client-id.age".publicKeys = [ shane ];
+  "google-oauth-client-secret.age".publicKeys = [ shane ];
 }

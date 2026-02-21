@@ -15,6 +15,9 @@
       todoist = {
         file = ../../../../secrets/todoist.age;
       };
+      posthog = {
+        file = ../../../../secrets/posthog.age;
+      };
     };
 
   };

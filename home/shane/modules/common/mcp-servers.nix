@@ -63,6 +63,19 @@ context7 =
         args = [ ];
       };
 
+    posthog =
+      let
+        posthog-wrapper = pkgs.writeShellScript "posthog-mcp-wrapper" ''
+          export XDG_RUNTIME_DIR=''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}
+          export POSTHOG_AUTH_HEADER="Bearer $(cat ${config.age.secrets.posthog.path})"
+          exec ${claudeNodejs}/bin/npx -y mcp-remote@latest https://mcp.posthog.com/mcp --header "Authorization:$POSTHOG_AUTH_HEADER"
+        '';
+      in
+      {
+        command = "${posthog-wrapper}";
+        args = [ ];
+      };
+
     obsidian = {
       command = "${claudeNodejs}/bin/npx";
       args = [
