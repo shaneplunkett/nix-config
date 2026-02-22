@@ -11,7 +11,6 @@
     go
     lazydocker
     google-cloud-sdk
-    gemini-cli
     terraform
     opencode
     ripgrep

@@ -6,6 +6,23 @@
 let
   claudeNodejs = pkgs.nodejs;
 
+  mkGoogleWorkspace = port:
+    let
+      google-workspace-wrapper = pkgs.writeShellScript "google-workspace-mcp-wrapper-${toString port}" ''
+        export XDG_RUNTIME_DIR=''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}
+        export GOOGLE_OAUTH_CLIENT_ID=$(cat ${config.age.secrets.google-oauth-client-id.path})
+        export GOOGLE_OAUTH_CLIENT_SECRET=$(cat ${config.age.secrets.google-oauth-client-secret.path})
+        export UV_PYTHON=${pkgs.python3}/bin/python3
+        export WORKSPACE_MCP_PORT=${toString port}
+        export MCP_SINGLE_USER_MODE=1
+        exec ${pkgs.uv}/bin/uvx workspace-mcp
+      '';
+    in
+    {
+      command = "${google-workspace-wrapper}";
+      args = [ ];
+    };
+
   mcpServers = {
     memory = {
       command = "${claudeNodejs}/bin/npx";
@@ -76,19 +93,7 @@ context7 =
         args = [ ];
       };
 
-    google-workspace =
-      let
-        google-workspace-wrapper = pkgs.writeShellScript "google-workspace-mcp-wrapper" ''
-          export XDG_RUNTIME_DIR=''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}
-          export GOOGLE_OAUTH_CLIENT_ID=$(cat ${config.age.secrets.google-oauth-client-id.path})
-          export GOOGLE_OAUTH_CLIENT_SECRET=$(cat ${config.age.secrets.google-oauth-client-secret.path})
-          exec ${pkgs.uv}/bin/uvx workspace-mcp
-        '';
-      in
-      {
-        command = "${google-workspace-wrapper}";
-        args = [ ];
-      };
+    google-workspace = mkGoogleWorkspace 8000;
 
     obsidian = {
       command = "${claudeNodejs}/bin/npx";
@@ -117,7 +122,7 @@ context7 =
   };
 in
 {
-  inherit mcpServers;
+  inherit mcpServers mkGoogleWorkspace;
 
   packages = [
     claudeNodejs

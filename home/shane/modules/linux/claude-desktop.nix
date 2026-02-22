@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   inputs,
   config,
   ...
@@ -9,6 +10,14 @@ let
     inherit pkgs config;
     homeDirectory = config.home.homeDirectory;
   };
+
+  # Claude Desktop uses port 8001 for google-workspace OAuth to avoid
+  # conflicting with Claude Code's instance on port 8000
+  desktopMcpServers = shared.config.mcpServers // {
+    google-workspace = shared.mkGoogleWorkspace 8001;
+  };
+
+  mcpServersJson = builtins.toJSON desktopMcpServers;
 
   claude-desktop-wrapped = pkgs.writeShellScriptBin "claude-desktop" ''
     EMPTY_WORKSPACE="$HOME/.cache/claude-empty-workspace"
@@ -42,8 +51,22 @@ in
   home.packages = [ claude-desktop-wrapped ] ++ shared.packages;
 
   home.file.".config/Claude/claude_desktop_config.json" = {
-    text = builtins.toJSON shared.config;
+    text = builtins.toJSON { mcpServers = desktopMcpServers; };
   };
+
+  # Merge mcpServers into ~/.claude.json (Claude Code CLI reads user-scope MCP servers from here)
+  # Uses shared.config.mcpServers (port 8000) not desktopMcpServers (port 8001)
+  home.activation.claudeCodeMcpServers = let
+    claudeCodeServersJson = builtins.toJSON shared.config.mcpServers;
+  in lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    CLAUDE_JSON="$HOME/.claude.json"
+    if [ -f "$CLAUDE_JSON" ]; then
+      $DRY_RUN_CMD ${pkgs.jq}/bin/jq --argjson servers '${claudeCodeServersJson}' '.mcpServers = $servers' "$CLAUDE_JSON" > "$CLAUDE_JSON.tmp" \
+        && $DRY_RUN_CMD mv "$CLAUDE_JSON.tmp" "$CLAUDE_JSON"
+    else
+      $DRY_RUN_CMD echo '${builtins.toJSON { mcpServers = shared.config.mcpServers; }}' > "$CLAUDE_JSON"
+    fi
+  '';
 
   home.file.".local/share/applications/claude-desktop.desktop".text = ''
     [Desktop Entry]

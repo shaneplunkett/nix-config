@@ -13,5 +13,6 @@
     ./gemini.nix
     ./age.nix
     ./sesh.nix
+    ./claude-code.nix
   ];
 }
