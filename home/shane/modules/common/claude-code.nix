@@ -14,7 +14,8 @@ let
       export HOME=$(mktemp -d)
       mkdir -p $HOME/.tweakcc
       cp ${tweakccConfig} $HOME/.tweakcc/config.json
-      TWEAKCC_CC_INSTALLATION_PATH=$out/lib/node_modules/@anthropic-ai/claude-code \
+      chmod u+w $HOME/.tweakcc/config.json
+      TWEAKCC_CC_INSTALLATION_PATH=$out/lib/node_modules/@anthropic-ai/claude-code/cli.js \
         tweakcc --apply
     '';
   });
