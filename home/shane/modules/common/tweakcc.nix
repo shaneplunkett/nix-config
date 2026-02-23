@@ -14,7 +14,6 @@ buildNpmPackage {
     hash = "sha256-MsEKV0Grm0OqeFDPsc98qfh5BtC/zk61KeCEJmo3iR8=";
   };
 
-  # The upstream lockfile is missing cli-spinners — use a regenerated one
   postPatch = ''
     cp ${./tweakcc-package-lock.json} package-lock.json
   '';

@@ -6,7 +6,8 @@
 let
   claudeNodejs = pkgs.nodejs;
 
-  mkGoogleWorkspace = port:
+  mkGoogleWorkspace =
+    port:
     let
       google-workspace-wrapper = pkgs.writeShellScript "google-workspace-mcp-wrapper-${toString port}" ''
         export XDG_RUNTIME_DIR=''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}
@@ -41,7 +42,7 @@ let
         "mcp"
       ];
     };
-context7 =
+    context7 =
       let
         context7-wrapper = pkgs.writeShellScript "context7-mcp-wrapper" ''
           export XDG_RUNTIME_DIR=''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}
@@ -121,19 +122,26 @@ context7 =
     };
   };
 
-  # Tiered MCP server groupings for Claude Code sub-agent architecture
-  # User tier: always available in ~/.claude.json
-  # Home tier: available when cwd is ~ via ~/.mcp.json
-  # Dev tier: available in project directories via project .mcp.json
   mcpServerTiers = {
     user = {
       inherit (mcpServers) memory;
     };
     home = {
-      inherit (mcpServers) obsidian todoist google-workspace desktop-commander posthog;
+      inherit (mcpServers)
+        obsidian
+        todoist
+        google-workspace
+        desktop-commander
+        posthog
+        ;
     };
     dev = {
-      inherit (mcpServers) github context7 shadcn chrome-devtools;
+      inherit (mcpServers)
+        github
+        context7
+        shadcn
+        chrome-devtools
+        ;
     };
   };
 in
