@@ -120,9 +120,25 @@ context7 =
       ];
     };
   };
+
+  # Tiered MCP server groupings for Claude Code sub-agent architecture
+  # User tier: always available in ~/.claude.json
+  # Home tier: available when cwd is ~ via ~/.mcp.json
+  # Dev tier: available in project directories via project .mcp.json
+  mcpServerTiers = {
+    user = {
+      inherit (mcpServers) memory;
+    };
+    home = {
+      inherit (mcpServers) obsidian todoist google-workspace desktop-commander posthog;
+    };
+    dev = {
+      inherit (mcpServers) github context7 shadcn chrome-devtools;
+    };
+  };
 in
 {
-  inherit mcpServers mkGoogleWorkspace;
+  inherit mcpServers mkGoogleWorkspace mcpServerTiers;
 
   packages = [
     claudeNodejs

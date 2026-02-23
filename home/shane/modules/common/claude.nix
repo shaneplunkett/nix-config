@@ -9,6 +9,6 @@ let
   };
 in
 {
-  inherit (shared) packages mkGoogleWorkspace;
+  inherit (shared) packages mkGoogleWorkspace mcpServerTiers;
   config = mcpConfig;
 }

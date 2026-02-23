@@ -24,6 +24,15 @@
       google-oauth-client-secret = {
         file = ../../../../secrets/google-oauth-client-secret.age;
       };
+      vex-core = {
+        file = ../../../../secrets/vex-core.age;
+      };
+      vex-interaction = {
+        file = ../../../../secrets/vex-interaction.age;
+      };
+      vex-protocols = {
+        file = ../../../../secrets/vex-protocols.age;
+      };
     };
 
   };
