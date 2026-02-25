@@ -30,7 +30,6 @@
     kubectl
     alvr
     intiface-central
-    winboat
     (google-chrome.override {
       commandLineArgs = [
         "--remote-debugging-port=9222"
