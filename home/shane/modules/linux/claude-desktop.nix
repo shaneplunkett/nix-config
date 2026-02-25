@@ -33,7 +33,7 @@ let
       echo "✓ Using empty workspace"
     fi
 
-    nohup ${pkgs.claude-desktop-with-fhs}/bin/claude-desktop \
+    nohup ${pkgs.claude-desktop}/bin/claude-desktop \
       "$@" > /dev/null 2>&1 &
 
     disown

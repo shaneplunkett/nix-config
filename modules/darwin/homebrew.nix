@@ -17,7 +17,6 @@
       "ferdium"
       "hammerspoon"
       "docker-desktop"
-      "claude-code"
       "chatgpt"
       "claude"
       "gcloud-cli"
