@@ -15,11 +15,19 @@ in
       openssl
       nodejs
       uv
+      # GPU/rendering — electron needs these for hardware-accelerated compositing
+      mesa
+      libGL
+      libdrm
+      vulkan-loader
+      # Wayland support
+      wayland
     ];
+    # --no-sandbox: electron's internal sandbox conflicts with bwrap's sandbox
     runScript = "${claude-desktop}/bin/claude-desktop";
     extraInstallCommands = ''
       mkdir -p $out/share/applications
-      cp ${claude-desktop}/share/applications/Claude.desktop $out/share/applications/
+      cp ${claude-desktop}/share/applications/claude-desktop.desktop $out/share/applications/
 
       mkdir -p $out/share/icons
       cp -r ${claude-desktop}/share/icons/* $out/share/icons/

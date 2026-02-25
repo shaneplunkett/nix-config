@@ -2,189 +2,84 @@
   lib,
   stdenvNoCC,
   fetchurl,
-  electron,
-  p7zip,
-  icoutils,
-  nodePackages,
-  imagemagick,
-  makeDesktopItem,
-  makeWrapper,
-  perl,
+  dpkg,
 }:
 let
   pname = "claude-desktop";
 
-  # ── Version config (update these three values to bump) ──────────────
+  # ── Version config (update these values to bump) ─────────────────────
   version = "1.1.4173";
-  urlHash = "12766c56e46a0f6bf202bfa397fceafe4468d7de";
-  hash = "sha256-4sazmsG32bweAEAEWCJaWW/8rbCf2A0UyxTHKRQSIcw=";
-  # ────────────────────────────────────────────────────────────────────
+  debVersion = "1.3.14";
+  hash = "sha256-pxs90d2sAMqPn6vKWlJEY8cd6sfh6bxj7zgZeqsP8kM=";
+  # ─────────────────────────────────────────────────────────────────────
 
-  srcExe = fetchurl {
-    url = "https://downloads.claude.ai/releases/win32/x64/${version}/Claude-${urlHash}.exe";
+  src = fetchurl {
+    url = "https://github.com/aaddrick/claude-desktop-debian/releases/download/v${debVersion}%2Bclaude${version}/claude-desktop_${version}-${debVersion}_amd64.deb";
     inherit hash;
   };
-
-  nativeStub = ./claude-native-stub.js;
 in
-stdenvNoCC.mkDerivation rec {
-  inherit pname version;
+stdenvNoCC.mkDerivation {
+  inherit pname version src;
 
-  src = ./.;
+  nativeBuildInputs = [ dpkg ];
 
-  nativeBuildInputs = [
-    p7zip
-    nodePackages.asar
-    makeWrapper
-    imagemagick
-    icoutils
-    perl
-  ];
-
-  desktopItem = makeDesktopItem {
-    name = "Claude";
-    exec = "claude-desktop %u";
-    icon = "claude";
-    type = "Application";
-    terminal = false;
-    desktopName = "Claude";
-    genericName = "Claude Desktop";
-    comment = "AI Assistant by Anthropic";
-    startupWMClass = "Claude";
-    startupNotify = true;
-    categories = [
-      "Office"
-      "Utility"
-      "Network"
-      "Chat"
-    ];
-    mimeTypes = [ "x-scheme-handler/claude" ];
-  };
-
-  buildPhase = ''
-    runHook preBuild
-
-    mkdir -p $TMPDIR/build
-    cd $TMPDIR/build
-
-    # Extract Windows installer
-    7z x -y ${srcExe}
-    7z x -y "AnthropicClaude-${version}-full.nupkg"
-
-    # Extract icons from claude.exe
-    wrestool -x -t 14 lib/net45/claude.exe -o claude.ico
-    icotool -x claude.ico
-
-    for size in 16 24 32 48 64 256; do
-      mkdir -p $TMPDIR/build/icons/hicolor/"$size"x"$size"/apps
-      install -Dm 644 claude_*"$size"x"$size"x32.png \
-        $TMPDIR/build/icons/hicolor/"$size"x"$size"/apps/claude.png
-    done
-
-    rm claude.ico
-
-    # Process app.asar
-    mkdir -p electron-app
-    cp "lib/net45/resources/app.asar" electron-app/
-    cp -r "lib/net45/resources/app.asar.unpacked" electron-app/
-
-    cd electron-app
-    asar extract app.asar app.asar.contents
-
-    # ── Patch 1: Title bar (enable on Linux) ──────────────────────────
-    SEARCH_BASE="app.asar.contents/.vite/renderer/main_window/assets"
-    TARGET_FILE=$(find "$SEARCH_BASE" -type f -name "MainWindowPage-*.js" | head -1)
-    if [ -n "$TARGET_FILE" ]; then
-      echo "Patching title bar in: $TARGET_FILE"
-      perl -i -pe \
-        's{if\(!(\w+)\s*&&\s*(\w+)\)}{if($1 && $2)}g' \
-        "$TARGET_FILE"
-    fi
-
-    # ── Patch 2-5: index.js patches ──────────────────────────────────
-    INDEX_FILE="app.asar.contents/.vite/build/index.js"
-    if [ -f "$INDEX_FILE" ]; then
-      # Platform detection: add Linux support for Claude Code binary
-      echo "Patching platform detection..."
-      sed -i 's/if(process.platform==="win32")return"win32-x64";throw/if(process.platform==="win32")return"win32-x64";if(process.platform==="linux")return process.arch==="arm64"?"linux-arm64":"linux-x64";throw/g' "$INDEX_FILE"
-
-      # Origin validation: fix file:// protocol check
-      echo "Patching origin validation..."
-      sed -i -E 's/e\.protocol==="file:"\&\&[a-zA-Z]+\.app\.isPackaged===!0/e.protocol==="file:"/g' "$INDEX_FILE"
-
-      # Tray icon: use dark variant on Linux
-      echo "Patching tray icon theme..."
-      sed -i -E 's/:([a-zA-Z])="TrayIconTemplate\.png"/:\1=require("electron").nativeTheme.shouldUseDarkColors?"TrayIconTemplate-Dark.png":"TrayIconTemplate.png"/g' "$INDEX_FILE"
-
-      # Window blur: fix quick submit hide
-      echo "Patching window blur..."
-      sed -i 's/e\.hide()/e.blur(),e.hide()/g' "$INDEX_FILE"
-    fi
-
-    # ── Install JS native stub ────────────────────────────────────────
-    echo "Installing native stub..."
-    mkdir -p app.asar.contents/node_modules/@ant/claude-native
-    mkdir -p app.asar.unpacked/node_modules/@ant/claude-native
-    cp ${nativeStub} app.asar.contents/node_modules/@ant/claude-native/index.js
-    cp ${nativeStub} app.asar.unpacked/node_modules/@ant/claude-native/index.js
-
-    # Swift addon stub
-    mkdir -p app.asar.contents/node_modules/@ant/claude-swift
-    mkdir -p app.asar.unpacked/node_modules/@ant/claude-swift
-    echo "module.exports = {};" > app.asar.contents/node_modules/@ant/claude-swift/index.js
-    echo "module.exports = {};" > app.asar.unpacked/node_modules/@ant/claude-swift/index.js
-
-    # ── Tray icons ────────────────────────────────────────────────────
-    mkdir -p app.asar.contents/resources
-    cp ../lib/net45/resources/Tray* app.asar.contents/resources/ 2>/dev/null || true
-
-    # Fix icon alpha for Linux tray visibility
-    for icon in app.asar.contents/resources/TrayIconTemplate*.png; do
-      if [ -f "$icon" ]; then
-        convert "$icon" -channel A -fx "a>0?1:0" "$icon" 2>/dev/null || true
-      fi
-    done
-
-    # ── i18n locale files ─────────────────────────────────────────────
-    mkdir -p app.asar.contents/resources/i18n
-    cp ../lib/net45/resources/*.json app.asar.contents/resources/i18n/ 2>/dev/null || true
-
-    # Repack
-    asar pack app.asar.contents app.asar
-
-    runHook postBuild
+  unpackPhase = ''
+    dpkg-deb -x $src $TMPDIR/extracted
   '';
 
   installPhase = ''
     runHook preInstall
 
-    mkdir -p $out/lib/$pname
-    cp -r $TMPDIR/build/electron-app/app.asar $out/lib/$pname/
-    cp -r $TMPDIR/build/electron-app/app.asar.unpacked $out/lib/$pname/
+    # Electron app and launcher
+    mkdir -p $out/lib
+    cp -r $TMPDIR/extracted/usr/lib/claude-desktop $out/lib/claude-desktop
 
+    # Icons
     mkdir -p $out/share/icons
-    cp -r $TMPDIR/build/icons/* $out/share/icons
+    cp -r $TMPDIR/extracted/usr/share/icons/* $out/share/icons/
 
+    # Desktop entry
     mkdir -p $out/share/applications
-    install -Dm0644 {${desktopItem},$out}/share/applications/Claude.desktop
+    cp $TMPDIR/extracted/usr/share/applications/claude-desktop.desktop $out/share/applications/
 
+    # Binary — use the bundled Electron directly
     mkdir -p $out/bin
-    makeWrapper ${electron}/bin/electron $out/bin/$pname \
-      --add-flags "$out/lib/$pname/app.asar" \
-      --add-flags "\''${CLAUDE_USE_WAYLAND:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations,UseOzonePlatform --gtk-version=4}" \
-      --set-default GDK_BACKEND "x11" \
-      --set ELECTRON_FORCE_IS_PACKAGED "true" \
-      --set CHROME_DESKTOP "Claude.desktop" \
-      --prefix XDG_DATA_DIRS : "$out/share"
+    cat > $out/bin/claude-desktop <<'LAUNCHER'
+    #!/usr/bin/env bash
+    source "/usr/lib/claude-desktop/launcher-common.sh"
+    setup_logging || exit 1
+    setup_electron_env
+    detect_display_backend
+    electron_exec="ELECTRON_PATH"
+    app_path="APP_PATH"
+    build_electron_args 'deb'
+    electron_args+=("$app_path")
+    cd "APP_DIR" || exit 1
+    exec "$electron_exec" "''${electron_args[@]}" "$@"
+    LAUNCHER
+    chmod +x $out/bin/claude-desktop
+
+    # Patch paths in launcher
+    substituteInPlace $out/bin/claude-desktop \
+      --replace-fail "ELECTRON_PATH" "$out/lib/claude-desktop/node_modules/electron/dist/electron" \
+      --replace-fail "APP_PATH" "$out/lib/claude-desktop/node_modules/electron/dist/resources/app.asar" \
+      --replace-fail "APP_DIR" "$out/lib/claude-desktop" \
+      --replace-fail "/usr/lib/claude-desktop/launcher-common.sh" "$out/lib/claude-desktop/launcher-common.sh"
+
+    # Patch the .desktop file to use our path
+    substituteInPlace $out/share/applications/claude-desktop.desktop \
+      --replace-fail "/usr/bin/claude-desktop" "$out/bin/claude-desktop" \
+      --replace-fail "Icon=claude-desktop" "Icon=claude-desktop"
 
     runHook postInstall
   '';
 
-  dontUnpack = true;
   dontConfigure = true;
+  dontBuild = true;
 
   meta = with lib; {
-    description = "Claude Desktop for Linux";
+    description = "Claude Desktop for Linux (via aaddrick/claude-desktop-debian)";
+    homepage = "https://github.com/aaddrick/claude-desktop-debian";
     license = licenses.unfree;
     platforms = [ "x86_64-linux" ];
     sourceProvenance = with sourceTypes; [ binaryNativeCode ];
