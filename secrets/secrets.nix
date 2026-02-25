@@ -11,8 +11,6 @@ in
   "posthog.age".publicKeys = [ shane ];
   "google-oauth-client-id.age".publicKeys = [ shane ];
   "google-oauth-client-secret.age".publicKeys = [ shane ];
-  "xero-client-id.age".publicKeys = [ shane ];
-  "xero-client-secret.age".publicKeys = [ shane ];
   "vex-core.age".publicKeys = [ shane ];
   "vex-interaction.age".publicKeys = [ shane ];
   "vex-protocols.age".publicKeys = [ shane ];

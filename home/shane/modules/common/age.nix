@@ -24,12 +24,6 @@
       google-oauth-client-secret = {
         file = ../../../../secrets/google-oauth-client-secret.age;
       };
-      xero-client-id = {
-        file = ../../../../secrets/xero-client-id.age;
-      };
-      xero-client-secret = {
-        file = ../../../../secrets/xero-client-secret.age;
-      };
       vex-core = {
         file = ../../../../secrets/vex-core.age;
       };

@@ -120,18 +120,6 @@ let
         "http://localhost:9222"
       ];
     };
-    xero =
-      let
-        xero-wrapper = pkgs.writeShellScript "xero-mcp-wrapper" ''
-          export XERO_CLIENT_ID=$(cat ${config.age.secrets.xero-client-id.path})
-          export XERO_CLIENT_SECRET=$(cat ${config.age.secrets.xero-client-secret.path})
-          exec ${claudeNodejs}/bin/npx -y @xeroapi/xero-mcp-server@latest
-        '';
-      in
-      {
-        command = "${xero-wrapper}";
-        args = [ ];
-      };
   };
 
   mcpServerTiers = {
@@ -145,7 +133,6 @@ let
         google-workspace
         desktop-commander
         posthog
-        xero
         ;
     };
     dev = {

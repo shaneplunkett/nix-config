@@ -79,11 +79,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1771999805,
-        "narHash": "sha256-SPmpJMBIw03lteO9Gaqd58VgoO/jwAVWcEer99NA/PU=",
+        "lastModified": 1771656777,
+        "narHash": "sha256-OD17BpL419h2yjo9coO8Ef75leFi9JMOaX+AxJxV5uY=",
         "owner": "shaneplunkett",
         "repo": "claude-desktop-linux-flake",
-        "rev": "e56387a9f8662dd4a1fbb42c9143c4b18b1de8c1",
+        "rev": "824496f502b0f270c63c5cc6f3eb8b5676c5a41d",
         "type": "github"
       },
       "original": {
