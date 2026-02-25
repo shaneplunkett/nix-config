@@ -1,7 +1,6 @@
 {
   pkgs,
   lib,
-  inputs,
   config,
   ...
 }:
@@ -42,9 +41,7 @@ let
       echo "✓ Using empty workspace"
     fi
 
-    nohup ${
-      inputs.claude-desktop.packages.${pkgs.stdenv.hostPlatform.system}.claude-desktop-with-fhs
-    }/bin/claude-desktop \
+    nohup ${pkgs.claude-desktop-with-fhs}/bin/claude-desktop \
       --enable-features=UseOzonePlatform \
       --ozone-platform=wayland \
       "$@" > /dev/null 2>&1 &
