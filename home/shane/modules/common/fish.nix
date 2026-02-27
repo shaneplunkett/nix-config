@@ -12,6 +12,7 @@
       tfp = "terraform plan";
       tfa = "terraform apply";
       tfaa = "terraform apply -auto-approve";
+      nvl = "nvim --listen /tmp/nvim";
     };
     functions = {
       prettyjson = ''

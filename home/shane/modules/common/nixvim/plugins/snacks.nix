@@ -91,6 +91,18 @@
       options.desc = "Buffers";
     }
 
+    # --- Search ---
+    {
+      mode = "n";
+      key = "<leader>sg";
+      action.__raw = ''
+        function()
+          Snacks.picker.grep()
+        end
+      '';
+      options.desc = "Search Grep";
+    }
+
     # --- LSP Integration (Kickstart.nvim style) ---
     {
       mode = "n";

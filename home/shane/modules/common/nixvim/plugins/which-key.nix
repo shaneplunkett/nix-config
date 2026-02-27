@@ -34,6 +34,10 @@
             group = "Code";
           }
           {
+            __unkeyed-1 = "<leader>u";
+            group = "UI Toggles";
+          }
+          {
             __unkeyed-1 = "g";
             group = "Goto";
           }

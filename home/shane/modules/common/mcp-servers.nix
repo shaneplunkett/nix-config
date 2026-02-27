@@ -120,6 +120,17 @@ let
         "http://localhost:9222"
       ];
     };
+    neovim = {
+      command = "${claudeNodejs}/bin/npx";
+      args = [
+        "-y"
+        "mcp-neovim-server"
+      ];
+      env = {
+        NVIM_SOCKET_PATH = "/tmp/nvim";
+        ALLOW_SHELL_COMMANDS = "true";
+      };
+    };
   };
 
   mcpServerTiers = {
@@ -141,6 +152,7 @@ let
         context7
         shadcn
         chrome-devtools
+        neovim
         ;
     };
   };

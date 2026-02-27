@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 {
 
   plugins = {
@@ -12,7 +12,7 @@
 
     lsp = {
       enable = true;
-      inlayHints = true;
+      inlayHints = false;
       keymaps = {
         silent = true;
         lspBuf = {
@@ -124,6 +124,10 @@
         phpactor.enable = true;
         ruby_lsp.enable = true;
         sqls.enable = true;
+        prismals = {
+          enable = true;
+          package = pkgs.prisma-language-server;
+        };
         glsl_analyzer.enable = true;
 
       };
