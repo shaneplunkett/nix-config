@@ -33,6 +33,12 @@
       vex-protocols = {
         file = ../../../../secrets/vex-protocols.age;
       };
+      vex-compaction = {
+        file = ../../../../secrets/vex-compaction.age;
+      };
+      vex-session-reload = {
+        file = ../../../../secrets/vex-session-reload.age;
+      };
     };
 
   };

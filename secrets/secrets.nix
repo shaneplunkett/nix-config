@@ -14,4 +14,6 @@ in
   "vex-core.age".publicKeys = [ shane ];
   "vex-interaction.age".publicKeys = [ shane ];
   "vex-protocols.age".publicKeys = [ shane ];
+  "vex-compaction.age".publicKeys = [ shane ];
+  "vex-session-reload.age".publicKeys = [ shane ];
 }

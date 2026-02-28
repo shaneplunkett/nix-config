@@ -208,6 +208,20 @@ in
           "WebFetch(domain:www.npmjs.com)"
         ];
 
+      # Only memory enabled by default — toggle others per session as needed
+      disabledMcpjsonServers = [
+        "chrome-devtools"
+        "context7"
+        "desktop-commander"
+        "github"
+        "google-workspace"
+        "neovim"
+        "obsidian"
+        "posthog"
+        "shadcn"
+        "todoist"
+      ];
+
       statusLine = {
         type = "command";
         command = "${claudeNodejs}/bin/npx ccstatusline@latest";
@@ -219,7 +233,7 @@ in
             hooks = [
               {
                 type = "command";
-                command = "echo 'COMPACTION INSTRUCTIONS: Preserve all architectural decisions, file paths modified, key constraints, current task state, and user preferences. Summarize code changes with before/after context. Keep exact error messages and their resolutions. Maintain the full list of files created or modified.'";
+                command = "cat ${config.age.secrets.vex-compaction.path}";
               }
             ];
           }
@@ -230,7 +244,7 @@ in
             hooks = [
               {
                 type = "command";
-                command = "echo '--- Post-compaction context reload ---' && echo \"Git branch: $(git branch --show-current 2>/dev/null || echo N/A)\" && echo 'Recent commits:' && git log --oneline -5 2>/dev/null || true && echo 'Modified files:' && git diff --name-only 2>/dev/null || true";
+                command = "cat ${config.age.secrets.vex-session-reload.path} && echo \"Git branch: $(git branch --show-current 2>/dev/null || echo N/A)\" && echo 'Recent commits:' && git log --oneline -5 2>/dev/null || true && echo 'Modified files:' && git diff --name-only 2>/dev/null || true";
               }
             ];
           }
