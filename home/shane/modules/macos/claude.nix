@@ -8,7 +8,6 @@ in
 {
   home.packages = shared.packages;
 
-  # Claude Desktop keeps ALL MCPs (no sub-agent architecture there)
   home.file."Library/Application Support/Claude/claude_desktop_config.json" = {
     text = builtins.toJSON shared.config;
   };

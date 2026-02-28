@@ -41,6 +41,7 @@
         c_sharp
         glsl
         prisma
+        go
 
       ];
     };

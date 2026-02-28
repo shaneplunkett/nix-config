@@ -7,17 +7,14 @@
 let
   claudeNodejs = pkgs.nodejs;
 
-  # Shared MCP server definitions (used for Claude Code tiered deployment)
+  # Shared MCP server definitions
   shared = import ./claude.nix {
     inherit pkgs config;
     homeDirectory = config.home.homeDirectory;
   };
 
-  # Tiered MCP configs for Claude Code
-  # User-level: memory + dev tools (available globally across all projects)
-  userMcpServers = shared.mcpServerTiers.user // shared.mcpServerTiers.dev;
-  # Home project-level: obsidian, todoist, google-workspace, desktop-commander, posthog
-  homeMcpJson = builtins.toJSON { mcpServers = shared.mcpServerTiers.home; };
+  # All MCPs in a single flat set
+  allMcpServers = shared.config.mcpServers;
 
   # tweakcc — Claude Code TUI customisation
   tweakcc = pkgs.callPackage ./tweakcc.nix { };
@@ -36,26 +33,6 @@ let
     '';
   });
 
-  skillNames = [
-    "memory-save"
-    "todoist-ops"
-    "obsidian-ops"
-    "google-ops"
-    "work-ops"
-    "daily"
-    "weekly"
-    "work"
-    "pd-update"
-  ];
-
-  skillFiles = builtins.listToAttrs (
-    map (name: {
-      name = ".claude/skills/${name}/SKILL.md";
-      value = {
-        source = ./skills/${name}/SKILL.md;
-      };
-    }) skillNames
-  );
 in
 {
   programs.claude-code = {
@@ -231,16 +208,6 @@ in
           "WebFetch(domain:www.npmjs.com)"
         ];
 
-      disabledMcpjsonServers = [
-        "github"
-        "shadcn"
-        "chrome-devtools"
-        "desktop-commander"
-        "google-workspace"
-        "obsidian"
-        "posthog"
-      ];
-
       statusLine = {
         type = "command";
         command = "${claudeNodejs}/bin/npx ccstatusline@latest";
@@ -272,14 +239,12 @@ in
     };
   };
 
-  home.file = skillFiles // {
-    ".claude/CLAUDE.md".text = ''
-      # Vex
-      @vex/core.md
-      @vex/interaction.md
-      @vex/protocols.md
-    '';
-  };
+  home.file.".claude/CLAUDE.md".text = ''
+    # Vex
+    @vex/core.md
+    @vex/interaction.md
+    @vex/protocols.md
+  '';
 
   home.activation.vexPersona = lib.hm.dag.entryAfter [ "writeBoundary" "agenixInstall" ] ''
     $DRY_RUN_CMD mkdir -p "$HOME/.claude/vex"
@@ -288,22 +253,42 @@ in
     $DRY_RUN_CMD install -m 600 ${config.age.secrets.vex-protocols.path} "$HOME/.claude/vex/protocols.md"
   '';
 
-  # Claude Code tiered MCP deployment:
-  # ~/.claude.json — user-level: memory + dev tools (github, context7, shadcn, chrome-devtools)
-  # ~/.mcp.json — home project: obsidian, todoist, google-workspace, desktop-commander, posthog
+  # Deploy all MCPs to ~/.claude.json (user-level, available everywhere)
   home.activation.claudeCodeMcpServers = let
-    userServersJson = builtins.toJSON userMcpServers;
+    allServersJson = builtins.toJSON allMcpServers;
   in lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    # User-level: memory + dev tools (available in every project)
     CLAUDE_JSON="$HOME/.claude.json"
     if [ -f "$CLAUDE_JSON" ]; then
-      $DRY_RUN_CMD ${pkgs.jq}/bin/jq --argjson servers '${userServersJson}' '.mcpServers = $servers' "$CLAUDE_JSON" > "$CLAUDE_JSON.tmp" \
+      $DRY_RUN_CMD ${pkgs.jq}/bin/jq --argjson servers '${allServersJson}' '.mcpServers = $servers' "$CLAUDE_JSON" > "$CLAUDE_JSON.tmp" \
         && $DRY_RUN_CMD mv "$CLAUDE_JSON.tmp" "$CLAUDE_JSON"
     else
-      $DRY_RUN_CMD echo '${builtins.toJSON { mcpServers = userMcpServers; }}' > "$CLAUDE_JSON"
+      $DRY_RUN_CMD echo '${builtins.toJSON { mcpServers = allMcpServers; }}' > "$CLAUDE_JSON"
     fi
 
-    # Home project-level: home tier MCPs
-    $DRY_RUN_CMD echo '${homeMcpJson}' > "$HOME/.mcp.json"
+    # Clean up old home-project MCP config if it exists
+    rm -f "$HOME/.mcp.json"
+  '';
+
+  # Symlink skills from ~/ai-skills/ into ~/.claude/skills/
+  home.activation.claudeCodeSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    SKILLS_DIR="$HOME/.claude/skills"
+    $DRY_RUN_CMD mkdir -p "$SKILLS_DIR"
+
+    # Clean existing skill symlinks (managed by this activation)
+    $DRY_RUN_CMD find "$SKILLS_DIR" -maxdepth 1 -type l -delete 2>/dev/null || true
+
+    # Symlink personal skills
+    for skill in "$HOME/ai-skills/personal"/*/; do
+      [ -d "$skill" ] || continue
+      name=$(basename "$skill")
+      $DRY_RUN_CMD ln -sfn "$skill" "$SKILLS_DIR/$name"
+    done
+
+    # Symlink work skills
+    for skill in "$HOME/ai-skills/work"/*/; do
+      [ -d "$skill" ] || continue
+      name=$(basename "$skill")
+      $DRY_RUN_CMD ln -sfn "$skill" "$SKILLS_DIR/$name"
+    done
   '';
 }

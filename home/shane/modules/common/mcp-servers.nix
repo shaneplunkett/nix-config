@@ -133,32 +133,9 @@ let
     };
   };
 
-  mcpServerTiers = {
-    user = {
-      inherit (mcpServers) memory;
-    };
-    home = {
-      inherit (mcpServers)
-        obsidian
-        todoist
-        google-workspace
-        desktop-commander
-        posthog
-        ;
-    };
-    dev = {
-      inherit (mcpServers)
-        github
-        context7
-        shadcn
-        chrome-devtools
-        neovim
-        ;
-    };
-  };
 in
 {
-  inherit mcpServers mkGoogleWorkspace mcpServerTiers;
+  inherit mcpServers mkGoogleWorkspace;
 
   packages = [
     claudeNodejs
