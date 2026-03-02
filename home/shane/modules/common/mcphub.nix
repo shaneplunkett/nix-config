@@ -32,7 +32,10 @@ let
       };
 
       mcphub = {
-        image = "samanhappy/mcphub:latest";
+        build = {
+          context = ".";
+          dockerfile = "Dockerfile";
+        };
         ports = [ "3000:3000" ];
         env_file = [ ".env" ];
         extra_hosts = [ "host.docker.internal:host-gateway" ];
@@ -110,14 +113,27 @@ let
         args = [ "shadcn@latest" "mcp" ];
       };
       tailscale = {
-        command = "sh";
-        args = [ "-c" "TAILSCALE_API_KEY=$TAILSCALE_API_KEY TAILSCALE_TAILNET=$TAILSCALE_TAILNET exec npx -y @hexsleeves/tailscale-mcp-server" ];
+        command = "npx";
+        args = [ "-y" "@hexsleeves/tailscale-mcp-server" ];
+        env = {
+          TAILSCALE_API_KEY = "\${TAILSCALE_API_KEY}";
+          TAILSCALE_TAILNET = "\${TAILSCALE_TAILNET}";
+        };
       };
     };
   };
 
 in
 {
+  # Dockerfile — extends MCPHub image with tailscale CLI
+  home.file."mcphub/Dockerfile".text = ''
+    FROM samanhappy/mcphub:latest
+    RUN apt-get update \
+      && apt-get install -y curl \
+      && curl -fsSL https://tailscale.com/install.sh | sh \
+      && apt-get clean && rm -rf /var/lib/apt/lists/*
+  '';
+
   # docker-compose.yml
   home.file."mcphub/docker-compose.yml".text = dockerComposeYml;
 
@@ -150,12 +166,15 @@ TAILSCALE_TAILNET=$(cat ${config.age.secrets.tailscale-tailnet.path})
 POSTGRES_PASSWORD=mcphub
 ENVEOF'
 
-    # Seed mcp_settings.json from template on first run only
-    # All other config (bearer auth, smart routing, OAuth) managed via dashboard
-    if [ ! -f "$MCPHUB_DIR/mcp_settings.json" ]; then
-      $DRY_RUN_CMD cp \
-        ${builtins.toFile "mcp_settings_template.json" mcpSettingsTemplate} \
-        "$MCPHUB_DIR/mcp_settings.json"
+    # Always sync mcpServers from nix, preserve everything else (bearerKeys, users, systemConfig)
+    TEMPLATE='${builtins.toFile "mcp_settings_template.json" mcpSettingsTemplate}'
+    if [ -f "$MCPHUB_DIR/mcp_settings.json" ]; then
+      $DRY_RUN_CMD ${pkgs.jq}/bin/jq -s '.[0] * { mcpServers: .[1].mcpServers }' \
+        "$MCPHUB_DIR/mcp_settings.json" "$TEMPLATE" \
+        > "$MCPHUB_DIR/mcp_settings.json.tmp" \
+        && mv "$MCPHUB_DIR/mcp_settings.json.tmp" "$MCPHUB_DIR/mcp_settings.json"
+    else
+      $DRY_RUN_CMD cp "$TEMPLATE" "$MCPHUB_DIR/mcp_settings.json"
     fi
 
     $DRY_RUN_CMD chmod 600 "$MCPHUB_DIR/.env" "$MCPHUB_DIR/mcp_settings.json"
