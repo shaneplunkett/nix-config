@@ -113,12 +113,8 @@ let
         args = [ "shadcn@latest" "mcp" ];
       };
       tailscale = {
-        command = "npx";
-        args = [ "-y" "@hexsleeves/tailscale-mcp-server" ];
-        env = {
-          TAILSCALE_API_KEY = "\${TAILSCALE_API_KEY}";
-          TAILSCALE_TAILNET = "\${TAILSCALE_TAILNET}";
-        };
+        command = "sh";
+        args = [ "-c" "TAILSCALE_API_KEY=$TAILSCALE_API_KEY TAILSCALE_TAILNET=$TAILSCALE_TAILNET exec npx -y @hexsleeves/tailscale-mcp-server" ];
       };
     };
   };
