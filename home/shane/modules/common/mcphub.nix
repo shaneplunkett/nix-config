@@ -137,7 +137,7 @@ let
       };
       graphiti = {
         command = "npx";
-        args = [ "-y" "mcp-remote" "http://graphiti-mcp:8000/mcp/" ];
+        args = [ "-y" "mcp-remote" "http://graphiti-mcp:8000/mcp" "--allow-http" ];
       };
       todoist = {
         command = "sh";
