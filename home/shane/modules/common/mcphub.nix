@@ -7,7 +7,7 @@
 let
   mcphubDir = "${config.home.homeDirectory}/mcphub";
 
-  # docker-compose.yml — MCPHub + PostgreSQL with pgvector
+  # docker-compose.yml — MCPHub + PostgreSQL + Neo4j + Graphiti
   dockerComposeYml = builtins.toJSON {
     services = {
       postgres = {
@@ -31,6 +31,54 @@ let
         restart = "unless-stopped";
       };
 
+      neo4j = {
+        image = "neo4j:5.26.0";
+        environment = {
+          NEO4J_AUTH = "neo4j/\${NEO4J_PASSWORD}";
+          NEO4J_server_memory_heap_initial__size = "256m";
+          NEO4J_server_memory_heap_max__size = "512m";
+          NEO4J_server_memory_pagecache_size = "256m";
+        };
+        volumes = [
+          "neo4j_data:/data"
+          "neo4j_logs:/logs"
+        ];
+        healthcheck = {
+          test = [ "CMD" "wget" "-O" "/dev/null" "http://localhost:7474" ];
+          interval = "10s";
+          timeout = "5s";
+          retries = 5;
+          start_period = "30s";
+        };
+        ports = [ "7474:7474" "7687:7687" ];
+        networks = [ "mcphub" ];
+        restart = "unless-stopped";
+      };
+
+      graphiti-mcp = {
+        image = "zepai/knowledge-graph-mcp:standalone";
+        depends_on = {
+          neo4j = { condition = "service_healthy"; };
+        };
+        environment = {
+          NEO4J_URI = "bolt://neo4j:7687";
+          NEO4J_USER = "neo4j";
+          NEO4J_PASSWORD = "\${NEO4J_PASSWORD}";
+          NEO4J_DATABASE = "neo4j";
+          OPENAI_API_KEY = "\${OPENAI_API_KEY}";
+          GRAPHITI_GROUP_ID = "vex";
+          SEMAPHORE_LIMIT = "10";
+          CONFIG_PATH = "/app/mcp/config/config.yaml";
+          GRAPHITI_TELEMETRY_ENABLED = "false";
+        };
+        volumes = [
+          "./graphiti-config.yaml:/app/mcp/config/config.yaml:ro"
+        ];
+        ports = [ "8000:8000" ];
+        networks = [ "mcphub" ];
+        restart = "unless-stopped";
+      };
+
       mcphub = {
         build = {
           context = ".";
@@ -44,6 +92,9 @@ let
         depends_on = {
           postgres = {
             condition = "service_healthy";
+          };
+          graphiti-mcp = {
+            condition = "service_started";
           };
         };
         volumes = [
@@ -63,6 +114,8 @@ let
       pgdata = {};
       mcphub-data = {};
       tailscale-state = {};
+      neo4j_data = {};
+      neo4j_logs = {};
     };
 
     networks = {
@@ -81,6 +134,10 @@ let
         env = {
           MEMORY_FILE_PATH = "/data/memory/memory.jsonl";
         };
+      };
+      graphiti = {
+        command = "npx";
+        args = [ "-y" "mcp-remote" "http://graphiti-mcp:8000/mcp/" ];
       };
       todoist = {
         command = "sh";
@@ -133,6 +190,27 @@ in
     CREATE EXTENSION IF NOT EXISTS vector;
   '';
 
+  # Graphiti config — OpenAI for LLM extraction + embeddings
+  home.file."mcphub/graphiti-config.yaml".text = ''
+    llm:
+      provider: "openai"
+      model: "gpt-4o-mini"
+      max_tokens: 4096
+      providers:
+        openai:
+          api_key: ''${OPENAI_API_KEY}
+          api_url: https://api.openai.com/v1
+
+    embedder:
+      provider: "openai"
+      model: "text-embedding-3-small"
+      dimensions: 1536
+      providers:
+        openai:
+          api_key: ''${OPENAI_API_KEY}
+          api_url: https://api.openai.com/v1
+  '';
+
   # Activation script: generate .env and patch mcp_settings.json with secrets
   home.activation.mcphubConfig = lib.hm.dag.entryAfter [ "writeBoundary" "agenixInstall" ] ''
     MCPHUB_DIR="${mcphubDir}"
@@ -179,6 +257,7 @@ TAILSCALE_API_KEY=$(cat ${config.age.secrets.tailscale-api.path})
 TAILSCALE_TAILNET=$(cat ${config.age.secrets.tailscale-tailnet.path})
 TAILSCALE_AUTH_KEY=$(cat ${config.age.secrets.tailscale-authkey.path})
 POSTGRES_PASSWORD=mcphub
+NEO4J_PASSWORD=graphiti-poc
 ENVEOF'
 
     # Always sync mcpServers from nix, preserve everything else (bearerKeys, users, systemConfig)
