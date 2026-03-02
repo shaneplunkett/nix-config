@@ -45,6 +45,12 @@
       openai = {
         file = ../../../../secrets/openai.age;
       };
+      tailscale-api = {
+        file = ../../../../secrets/tailscale-api.age;
+      };
+      tailscale-tailnet = {
+        file = ../../../../secrets/tailscale-tailnet.age;
+      };
     };
 
   };

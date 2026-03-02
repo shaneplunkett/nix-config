@@ -18,4 +18,6 @@ in
   "vex-session-reload.age".publicKeys = [ shane ];
   "mcphub-bearer.age".publicKeys = [ shane ];
   "openai.age".publicKeys = [ shane ];
+  "tailscale-api.age".publicKeys = [ shane ];
+  "tailscale-tailnet.age".publicKeys = [ shane ];
 }

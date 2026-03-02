@@ -98,10 +98,6 @@ let
         command = "npx";
         args = [ "-y" "@mauricio.wolff/mcp-obsidian@latest" "/data/obsidian" ];
       };
-      posthog = {
-        command = "sh";
-        args = [ "-c" "exec npx -y mcp-remote@latest https://mcp.posthog.com/mcp --header \"x-posthog-api-key:$POSTHOG_API_KEY\"" ];
-      };
       neovim = {
         command = "npx";
         args = [ "-y" "mcp-neovim-server" ];
@@ -112,6 +108,10 @@ let
       shadcn = {
         command = "npx";
         args = [ "shadcn@latest" "mcp" ];
+      };
+      tailscale = {
+        command = "sh";
+        args = [ "-c" "TAILSCALE_API_KEY=$TAILSCALE_API_KEY TAILSCALE_TAILNET=$TAILSCALE_TAILNET exec npx -y @hexsleeves/tailscale-mcp-server" ];
       };
     };
   };
@@ -145,6 +145,8 @@ OPENAI_API_KEY=$(cat ${config.age.secrets.openai.path})
 MCPHUB_BEARER_TOKEN=$(cat ${config.age.secrets.mcphub-bearer.path})
 GOOGLE_OAUTH_CLIENT_ID=$(cat ${config.age.secrets.google-oauth-client-id.path})
 GOOGLE_OAUTH_CLIENT_SECRET=$(cat ${config.age.secrets.google-oauth-client-secret.path})
+TAILSCALE_API_KEY=$(cat ${config.age.secrets.tailscale-api.path})
+TAILSCALE_TAILNET=$(cat ${config.age.secrets.tailscale-tailnet.path})
 POSTGRES_PASSWORD=mcphub
 ENVEOF'
 
