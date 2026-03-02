@@ -51,6 +51,9 @@
       tailscale-tailnet = {
         file = ../../../../secrets/tailscale-tailnet.age;
       };
+      tailscale-authkey = {
+        file = ../../../../secrets/tailscale-authkey.age;
+      };
     };
 
   };
