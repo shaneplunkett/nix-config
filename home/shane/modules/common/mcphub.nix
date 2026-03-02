@@ -65,7 +65,7 @@ let
     };
   };
 
-  # mcp_settings.json template — secrets patched in at activation time
+  # mcp_settings.json template — server definitions only, all other config via dashboard
   mcpSettingsTemplate = builtins.toJSON {
     mcpServers = {
       memory = {
@@ -114,13 +114,6 @@ let
         args = [ "shadcn@latest" "mcp" ];
       };
     };
-    smartRouting = {
-      enabled = true;
-      dbUrl = "postgresql://mcphub:mcphub@postgres:5432/mcphub";
-      embeddingProvider = "openai";
-      openaiApiKey = "__OPENAI_API_KEY__";
-      openaiApiEmbeddingModel = "text-embedding-3-small";
-    };
   };
 
 in
@@ -155,16 +148,13 @@ GOOGLE_OAUTH_CLIENT_SECRET=$(cat ${config.age.secrets.google-oauth-client-secret
 POSTGRES_PASSWORD=mcphub
 ENVEOF'
 
-    # Patch mcp_settings.json with secrets from agenix
-    OPENAI_KEY="$(cat ${config.age.secrets.openai.path})"
-    BEARER_TOKEN="$(cat ${config.age.secrets.mcphub-bearer.path})"
-
-    $DRY_RUN_CMD ${pkgs.jq}/bin/jq \
-      --arg openai "$OPENAI_KEY" \
-      --arg bearer "$BEARER_TOKEN" \
-      '.smartRouting.openaiApiKey = $openai | .mcpServers.bearer_token = $bearer' \
-      ${builtins.toFile "mcp_settings_template.json" mcpSettingsTemplate} \
-      > "$MCPHUB_DIR/mcp_settings.json"
+    # Seed mcp_settings.json from template on first run only
+    # All other config (bearer auth, smart routing, OAuth) managed via dashboard
+    if [ ! -f "$MCPHUB_DIR/mcp_settings.json" ]; then
+      $DRY_RUN_CMD cp \
+        ${builtins.toFile "mcp_settings_template.json" mcpSettingsTemplate} \
+        "$MCPHUB_DIR/mcp_settings.json"
+    fi
 
     $DRY_RUN_CMD chmod 600 "$MCPHUB_DIR/.env" "$MCPHUB_DIR/mcp_settings.json"
   '';
