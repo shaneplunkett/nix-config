@@ -135,7 +135,7 @@ in
     $DRY_RUN_CMD mkdir -p "$MCPHUB_DIR"
 
     # Dockerfile — cp from nix store so it's a real file (Docker can't follow symlinks outside build context)
-    $DRY_RUN_CMD cp '${builtins.toFile "mcphub-Dockerfile" ''
+    $DRY_RUN_CMD install -m 644 '${builtins.toFile "mcphub-Dockerfile" ''
       FROM samanhappy/mcphub:latest
       RUN apt-get update \
         && apt-get install -y curl \
