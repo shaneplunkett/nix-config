@@ -244,7 +244,7 @@ in
       tailscaled --state=/var/lib/tailscale/tailscaled.state &
       sleep 2
       if [ -n "$TAILSCALE_AUTH_KEY" ]; then
-        tailscale up --authkey="$TAILSCALE_AUTH_KEY" --hostname=mcphub --accept-routes
+        tailscale up --authkey="$TAILSCALE_AUTH_KEY" --hostname=mcphub --accept-routes --accept-dns=false
       fi
       exec /usr/local/bin/entrypoint.sh "$@"
     ''}' "$MCPHUB_DIR/entrypoint-wrapper.sh"
