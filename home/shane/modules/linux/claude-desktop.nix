@@ -10,11 +10,7 @@ let
     homeDirectory = config.home.homeDirectory;
   };
 
-  # Claude Desktop uses port 8001 for google-workspace OAuth to avoid
-  # conflicting with Claude Code's instance on port 8000
-  desktopMcpServers = shared.config.mcpServers // {
-    google-workspace = shared.mkGoogleWorkspace 8001;
-  };
+  desktopMcpServers = shared.config.mcpServers;
 
   claude-desktop-wrapped = pkgs.writeShellScriptBin "claude-desktop" ''
     EMPTY_WORKSPACE="$HOME/.cache/claude-empty-workspace"

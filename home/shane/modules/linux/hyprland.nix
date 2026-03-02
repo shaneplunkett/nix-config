@@ -23,7 +23,7 @@
         "$mod, V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
         "$mod_SHIFT, 4, exec, hyprshot -m region --clipboard-only"
         "$mod_SHIFT,W,exec,hyprctl dispatch togglehidden"
-        "$mod_SHIFT,F,fullscreen"
+        "$mod_SHIFT,F,togglefloating"
 
         "$mod,1,workspace,1"
         "$mod,A,workspace,2"

@@ -39,6 +39,12 @@
       vex-session-reload = {
         file = ../../../../secrets/vex-session-reload.age;
       };
+      mcphub-bearer = {
+        file = ../../../../secrets/mcphub-bearer.age;
+      };
+      openai = {
+        file = ../../../../secrets/openai.age;
+      };
     };
 
   };

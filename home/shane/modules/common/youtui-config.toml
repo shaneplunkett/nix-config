@@ -1,0 +1,204 @@
+# youtui config - vim-ified by Vex 💜
+# F-keys and arrow keys nuked. Pure vim.
+# Globals use Ctrl modifiers so they never conflict with text entry.
+auth_type = "Browser"
+downloader_type = "YtDlp"
+yt_dlp_command = "yt-dlp"
+
+# ━━━ Global ━━━
+# These work EVERYWHERE, even in text entry.
+# All ctrl-modified to avoid eating keystrokes.
+[keybinds.global]
+# Nuke defaults
+F1 = "no_op"
+F10 = "no_op"
+F12 = "no_op"
+# Ctrl globals - safe everywhere
+C-q = {action = "quit", visibility = "global"}
+C-c = "quit"
+C-l = {action = "view_logs", visibility = "global"}
+"?" = {action = "toggle_help", visibility = "global"}
+space = {action = "play_pause", visibility = "global"}
+# Media - these are fine unmodified (you don't type +->< in searches)
+"+" = "vol_up"
+"-" = "vol_down"
+">" = "next_song"
+"<" = "prev_song"
+"]" = "seek_forward"
+"[" = "seek_back"
+
+[mode_names.global]
+
+# ━━━ Playlist View ━━━
+[keybinds.playlist]
+# Nuke defaults
+F5 = "no_op"
+# Vim replacements
+tab = {action = "playlist.view_browser", visibility = "global"}
+enter.enter = "playlist.play_selected"
+enter.d = "playlist.delete_selected"
+enter.D = "playlist.delete_all"
+
+[mode_names.playlist]
+enter = "Playlist Action"
+
+# ━━━ Browser View ━━━
+[keybinds.browser]
+# Nuke defaults
+F2 = "no_op"
+F5 = "no_op"
+F6 = "no_op"
+left = "no_op"
+right = "no_op"
+# Ctrl for things you might trigger while search is open
+C-s = {action = "browser.search", visibility = "global"}
+C-t = {action = "browser.change_search_type", visibility = "global"}
+tab = {action = "browser.view_playlist", visibility = "global"}
+# Plain keys for panel nav (only active when not typing)
+"h" = "browser.left"
+"l" = "browser.right"
+
+# ━━━ Artist List ━━━
+[keybinds.browser_artists]
+enter = "browser_artists.display_selected_artist_albums"
+
+# ━━━ Search Suggestions ━━━
+[keybinds.browser_search]
+# Nuke defaults
+down = "no_op"
+up = "no_op"
+# Vim command-line style
+C-n = "browser_search.next_search_suggestion"
+C-p = "browser_search.prev_search_suggestion"
+
+# ━━━ Artist Songs ━━━
+[keybinds.browser_artist_songs]
+# Nuke defaults
+F3 = "no_op"
+F4 = "no_op"
+# Plain keys fine here - you're in a list, not typing
+"f" = {action = "browser_artist_songs.filter", visibility = "global"}
+"s" = {action = "browser_artist_songs.sort", visibility = "global"}
+enter.enter = "browser_artist_songs.play_song"
+enter.p = "browser_artist_songs.play_songs"
+enter.a = "browser_artist_songs.play_album"
+enter.space = "browser_artist_songs.add_song_to_playlist"
+enter.P = "browser_artist_songs.add_songs_to_playlist"
+enter.A = "browser_artist_songs.add_album_to_playlist"
+
+[mode_names.browser_artist_songs]
+enter = "Play"
+
+# ━━━ Playlist Browser ━━━
+[keybinds.browser_playlists]
+enter = "browser_playlists.display_selected_playlist"
+
+# ━━━ Playlist Songs ━━━
+[keybinds.browser_playlist_songs]
+# Nuke defaults
+F3 = "no_op"
+F4 = "no_op"
+# Plain keys fine - list context
+"f" = {action = "browser_playlist_songs.filter", visibility = "global"}
+"s" = {action = "browser_playlist_songs.sort", visibility = "global"}
+enter.enter = "browser_playlist_songs.play_song"
+enter.p = "browser_playlist_songs.play_songs"
+enter.space = "browser_playlist_songs.add_song_to_playlist"
+enter.P = "browser_playlist_songs.add_songs_to_playlist"
+
+[mode_names.browser_playlist_songs]
+enter = "Play"
+
+# ━━━ Song Search Results ━━━
+[keybinds.browser_songs]
+# Nuke defaults
+F3 = "no_op"
+F4 = "no_op"
+# Plain keys fine - list context
+"f" = {action = "browser_songs.filter", visibility = "global"}
+"s" = {action = "browser_songs.sort", visibility = "global"}
+enter.enter = "browser_songs.play_song"
+enter.p = "browser_songs.play_songs"
+enter.space = "browser_songs.add_song_to_playlist"
+enter.P = "browser_songs.add_songs_to_playlist"
+
+[mode_names.browser_songs]
+enter = "Play"
+
+# ━━━ Help ━━━
+[keybinds.help]
+# Nuke defaults
+F1 = "no_op"
+# Vim replacements
+"?" = {action = "help.close", visibility = "global"}
+"q" = {action = "help.close", visibility = "hidden"}
+esc = {action = "help.close", visibility = "hidden"}
+
+# ━━━ Filter ━━━
+[keybinds.filter]
+# Nuke defaults
+F3 = "no_op"
+"A-F3" = "no_op"
+# Vim replacements
+esc = {action = "filter.close", visibility = "hidden"}
+enter = {action = "filter.apply", visibility = "global"}
+C-x = {action = "filter.clear_filter", visibility = "global"}
+
+# ━━━ Sort ━━━
+[keybinds.sort]
+# Nuke defaults
+F4 = "no_op"
+"A-F4" = "no_op"
+"A-enter" = "no_op"
+# Vim replacements
+enter = {action = "sort.sort_selected_asc", visibility = "global"}
+"r" = {action = "sort.sort_selected_desc", visibility = "global"}
+C-x = {action = "sort.clear_sort", visibility = "global"}
+esc = {action = "sort.close", visibility = "hidden"}
+
+# ━━━ Logs ━━━
+[keybinds.log]
+# Nuke defaults
+F5 = "no_op"
+"S-left" = "no_op"
+"S-right" = "no_op"
+left = "no_op"
+right = "no_op"
+up = "no_op"
+down = "no_op"
+pageup = "no_op"
+pagedown = "no_op"
+# Vim replacements
+tab = {action = "log.view_browser", visibility = "global"}
+"H" = "log.reduce_captured"
+"L" = "log.increase_captured"
+"h" = "log.reduce_shown"
+"l" = "log.increase_shown"
+"k" = "log.up"
+"j" = "log.down"
+C-u = "log.page_up"
+C-d = "log.page_down"
+"x" = "log.toggle_hide_filtered"
+esc = "log.exit_page_mode"
+"f" = "log.toggle_target_focus"
+"t" = "log.toggle_target_selector"
+
+# ━━━ Text Entry ━━━
+[keybinds.text_entry]
+enter = {action = "text_entry.submit", visibility = "hidden"}
+left = {action = "text_entry.left", visibility = "hidden"}
+right = {action = "text_entry.right", visibility = "hidden"}
+backspace = {action = "text_entry.backspace", visibility = "hidden"}
+
+# ━━━ List Navigation ━━━
+[keybinds.list]
+# Nuke defaults
+up = "no_op"
+down = "no_op"
+pageup = "no_op"
+pagedown = "no_op"
+# Vim replacements
+"k" = {action = "list.up", visibility = "hidden"}
+"j" = {action = "list.down", visibility = "hidden"}
+C-u = "list.page_up"
+C-d = "list.page_down"

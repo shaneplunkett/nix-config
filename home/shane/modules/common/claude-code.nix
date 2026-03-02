@@ -212,7 +212,6 @@ in
       disabledMcpjsonServers = [
         "chrome-devtools"
         "context7"
-        "desktop-commander"
         "github"
         "google-workspace"
         "neovim"

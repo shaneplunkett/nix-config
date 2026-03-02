@@ -16,4 +16,6 @@ in
   "vex-protocols.age".publicKeys = [ shane ];
   "vex-compaction.age".publicKeys = [ shane ];
   "vex-session-reload.age".publicKeys = [ shane ];
+  "mcphub-bearer.age".publicKeys = [ shane ];
+  "openai.age".publicKeys = [ shane ];
 }
