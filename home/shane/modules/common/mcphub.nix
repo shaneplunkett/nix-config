@@ -190,8 +190,18 @@ in
     CREATE EXTENSION IF NOT EXISTS vector;
   '';
 
-  # Graphiti config — OpenAI for LLM extraction + embeddings
+  # Graphiti config — Neo4j database + OpenAI for LLM extraction + embeddings
   home.file."mcphub/graphiti-config.yaml".text = ''
+    database:
+      provider: "neo4j"
+      providers:
+        neo4j:
+          uri: ''${NEO4J_URI:bolt://neo4j:7687}
+          username: ''${NEO4J_USER:neo4j}
+          password: ''${NEO4J_PASSWORD:demodemo}
+          database: ''${NEO4J_DATABASE:neo4j}
+          use_parallel_runtime: false
+
     llm:
       provider: "openai"
       model: "gpt-4o-mini"
