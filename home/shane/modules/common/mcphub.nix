@@ -125,15 +125,6 @@ let
 
 in
 {
-  # Dockerfile — extends MCPHub image with tailscale CLI
-  home.file."mcphub/Dockerfile".text = ''
-    FROM samanhappy/mcphub:latest
-    RUN apt-get update \
-      && apt-get install -y curl \
-      && curl -fsSL https://tailscale.com/install.sh | sh \
-      && apt-get clean && rm -rf /var/lib/apt/lists/*
-  '';
-
   # docker-compose.yml
   home.file."mcphub/docker-compose.yml".text = dockerComposeYml;
 
@@ -146,6 +137,15 @@ in
   home.activation.mcphubConfig = lib.hm.dag.entryAfter [ "writeBoundary" "agenixInstall" ] ''
     MCPHUB_DIR="${mcphubDir}"
     $DRY_RUN_CMD mkdir -p "$MCPHUB_DIR"
+
+    # Dockerfile — cp from nix store so it's a real file (Docker can't follow symlinks outside build context)
+    $DRY_RUN_CMD cp '${builtins.toFile "mcphub-Dockerfile" ''
+      FROM samanhappy/mcphub:latest
+      RUN apt-get update \
+        && apt-get install -y curl \
+        && curl -fsSL https://tailscale.com/install.sh | sh \
+        && apt-get clean && rm -rf /var/lib/apt/lists/*
+    ''}' "$MCPHUB_DIR/Dockerfile"
 
     # Ensure mcp-memory directory exists
     $DRY_RUN_CMD mkdir -p "$HOME/mcp-memory"
