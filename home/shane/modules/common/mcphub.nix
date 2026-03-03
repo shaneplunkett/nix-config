@@ -104,6 +104,7 @@ let
           "\${HOME}/Prime:/data/obsidian:ro"
           "/tmp:/tmp"
           "tailscale-state:/var/lib/tailscale"
+          "\${HOME}/.google_workspace_mcp/credentials:/root/.google_workspace_mcp/credentials"
         ];
         networks = [ "mcphub" ];
         restart = "unless-stopped";

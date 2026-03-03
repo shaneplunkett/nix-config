@@ -21,4 +21,5 @@ in
   "tailscale-api.age".publicKeys = [ shane ];
   "tailscale-tailnet.age".publicKeys = [ shane ];
   "tailscale-authkey.age".publicKeys = [ shane ];
+  "postman-api.age".publicKeys = [ shane ];
 }
