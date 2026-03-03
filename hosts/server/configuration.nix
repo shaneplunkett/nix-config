@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, pkgs, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -34,6 +34,15 @@
 
   # Dynamic linker compat for tools like esbuild, uv-managed python, etc.
   programs.nix-ld.enable = true;
+
+  # System packages — needed globally so #!/usr/bin/env node works in spawned scripts
+  environment.systemPackages = with pkgs; [
+    nodejs
+    pnpm
+    git
+    uv
+    jq
+  ];
 
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
