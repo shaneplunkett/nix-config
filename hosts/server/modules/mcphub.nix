@@ -95,14 +95,18 @@ in
           fi
 
           # Install dependencies and build
-          # Unset NODE_ENV so pnpm install includes devDependencies (tsc, vite)
           cd "$REPO_DIR"
           export HOME="/var/lib/mcphub"
           export npm_config_cache="/var/lib/mcphub/.npm"
           export NODE_OPTIONS="--max-old-space-size=512"
           unset NODE_ENV
           ${pkgs.pnpm}/bin/pnpm install
-          ${pkgs.pnpm}/bin/pnpm build
+          # Only build if dist/ doesn't exist (first deploy or after clearing)
+          # pnpm build has systemd sandbox incompatibilities — run manually if needed:
+          #   sudo -u mcphub env HOME=/var/lib/mcphub pnpm -C /var/lib/mcphub/mcphub-repo build
+          if [ ! -f "$REPO_DIR/dist/index.js" ]; then
+            ${pkgs.pnpm}/bin/pnpm build
+          fi
 
           # Compose env file from agenix secrets
           cat > /var/lib/mcphub/env <<EOF
