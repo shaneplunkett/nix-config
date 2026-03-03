@@ -8,6 +8,9 @@
       "--accept-routes"
       "--accept-dns=false"
     ];
+    # Let NixOS firewall handle rules — tailscaled's ts-input chain
+    # drops incoming Tailscale traffic despite trustedInterfaces
+    extraDaemonFlags = [ "--netfilter-mode=off" ];
   };
 
   # Trust all traffic on the Tailscale interface
