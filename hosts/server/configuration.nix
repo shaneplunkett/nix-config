@@ -2,6 +2,7 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ./modules
     ../../modules/common
     ../../modules/nixos/locale.nix
     ../../modules/nixos/maintenance.nix
@@ -31,7 +32,10 @@
 
   networking.firewall.enable = true;
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings = {
+    experimental-features = [ "nix-command" "flakes" ];
+    trusted-users = [ "root" "shane" ];
+  };
 
   system.stateVersion = "24.11";
 }
