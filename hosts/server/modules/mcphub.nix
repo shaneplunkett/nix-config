@@ -95,10 +95,12 @@ in
           fi
 
           # Install dependencies and build
+          # Unset NODE_ENV so pnpm install includes devDependencies (tsc, vite)
           cd "$REPO_DIR"
           export HOME="/var/lib/mcphub"
           export npm_config_cache="/var/lib/mcphub/.npm"
           export NODE_OPTIONS="--max-old-space-size=512"
+          unset NODE_ENV
           ${pkgs.pnpm}/bin/pnpm install
           ${pkgs.pnpm}/bin/pnpm build
 
