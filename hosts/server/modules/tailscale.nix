@@ -13,8 +13,8 @@
   # Trust all traffic on the Tailscale interface
   networking.firewall.trustedInterfaces = [ "tailscale0" ];
 
-  # Allow Funnel traffic on WAN
-  networking.firewall.allowedTCPPorts = [ 443 ];
+  # Allow MCPHub (3000) + Funnel (443)
+  networking.firewall.allowedTCPPorts = [ 443 3000 ];
 
   # Accept all Tailscale traffic — must run AFTER tailscaled inserts ts-input
   systemd.services.tailscale-accept = {
