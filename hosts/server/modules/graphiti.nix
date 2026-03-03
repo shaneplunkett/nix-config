@@ -71,17 +71,20 @@ in
           fi
 
           # Write env file from agenix secrets
-          cat > /run/graphiti/env <<EOF
-          OPENAI_API_KEY=$(cat ${config.age.secrets.openai.path})
-          NEO4J_URI=bolt://127.0.0.1:7687
-          NEO4J_USER=neo4j
-          NEO4J_PASSWORD=graphiti-poc
-          NEO4J_DATABASE=neo4j
-          GRAPHITI_GROUP_ID=vex
-          SEMAPHORE_LIMIT=10
-          CONFIG_PATH=${graphitiConfig}
-          GRAPHITI_TELEMETRY_ENABLED=false
-          EOF
+          mkdir -p /var/lib/graphiti
+          cat > /var/lib/graphiti/env <<EOF
+OPENAI_API_KEY=$(cat ${config.age.secrets.openai.path})
+NEO4J_URI=bolt://127.0.0.1:7687
+NEO4J_USER=neo4j
+NEO4J_PASSWORD=graphiti-poc
+NEO4J_DATABASE=neo4j
+GRAPHITI_GROUP_ID=vex
+SEMAPHORE_LIMIT=10
+CONFIG_PATH=${graphitiConfig}
+GRAPHITI_TELEMETRY_ENABLED=false
+EOF
+          chmod 600 /var/lib/graphiti/env
+          chown graphiti:graphiti /var/lib/graphiti/env
 
           # Install dependencies
           cd "$REPO_DIR/mcp_server"
@@ -90,7 +93,7 @@ in
       in "+${setupScript}";
 
       ExecStart = "${pkgs.uv}/bin/uv run main.py --database-provider neo4j --transport http --host 0.0.0.0 --port 8000";
-      EnvironmentFile = "/run/graphiti/env";
+      EnvironmentFile = "-/var/lib/graphiti/env";
 
       # Hardening
       NoNewPrivileges = true;

@@ -22,10 +22,10 @@ in
     https.enable = false;
 
     extraServerConfig = ''
-      # Memory tuning
-      server.memory.heap.initial_size=1g
-      server.memory.heap.max_size=2g
-      server.memory.pagecache.size=1g
+      # Memory tuning (conservative for 8GB VM)
+      server.memory.heap.initial_size=512m
+      server.memory.heap.max_size=1g
+      server.memory.pagecache.size=512m
 
       # APOC Core procedures allowlist
       dbms.security.procedures.allowlist=apoc.*

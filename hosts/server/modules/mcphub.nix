@@ -102,20 +102,20 @@ in
           ${pkgs.pnpm}/bin/pnpm build
 
           # Compose env file from agenix secrets
-          cat > /run/mcphub/env <<EOF
-          TODOIST_API_TOKEN=$(cat ${config.age.secrets.todoist.path})
-          GITHUB_PERSONAL_ACCESS_TOKEN=$(cat ${config.age.secrets.github.path})
-          CONTEXT7_API_KEY=$(cat ${config.age.secrets.context7.path})
-          OPENAI_API_KEY=$(cat ${config.age.secrets.openai.path})
-          MCPHUB_BEARER_TOKEN=$(cat ${config.age.secrets.mcphub-bearer.path})
-          GOOGLE_OAUTH_CLIENT_ID=$(cat ${config.age.secrets.google-oauth-client-id.path})
-          GOOGLE_OAUTH_CLIENT_SECRET=$(cat ${config.age.secrets.google-oauth-client-secret.path})
-          TAILSCALE_API_KEY=$(cat ${config.age.secrets.tailscale-api.path})
-          TAILSCALE_TAILNET=$(cat ${config.age.secrets.tailscale-tailnet.path})
-          DATABASE_URL=postgresql://mcphub@localhost/mcphub
-          EOF
-          chown mcphub:mcphub /run/mcphub/env
-          chmod 600 /run/mcphub/env
+          cat > /var/lib/mcphub/env <<EOF
+TODOIST_API_TOKEN=$(cat ${config.age.secrets.todoist.path})
+GITHUB_PERSONAL_ACCESS_TOKEN=$(cat ${config.age.secrets.github.path})
+CONTEXT7_API_KEY=$(cat ${config.age.secrets.context7.path})
+OPENAI_API_KEY=$(cat ${config.age.secrets.openai.path})
+MCPHUB_BEARER_TOKEN=$(cat ${config.age.secrets.mcphub-bearer.path})
+GOOGLE_OAUTH_CLIENT_ID=$(cat ${config.age.secrets.google-oauth-client-id.path})
+GOOGLE_OAUTH_CLIENT_SECRET=$(cat ${config.age.secrets.google-oauth-client-secret.path})
+TAILSCALE_API_KEY=$(cat ${config.age.secrets.tailscale-api.path})
+TAILSCALE_TAILNET=$(cat ${config.age.secrets.tailscale-tailnet.path})
+DATABASE_URL=postgresql://mcphub@localhost/mcphub
+EOF
+          chown mcphub:mcphub /var/lib/mcphub/env
+          chmod 600 /var/lib/mcphub/env
 
           # Deploy mcp_settings.json — merge mcpServers from template, preserve dashboard config
           TEMPLATE='${builtins.toFile "mcp_settings_template.json" mcpSettingsTemplate}'
@@ -136,7 +136,7 @@ in
       in "+${setupScript}";
 
       ExecStart = "${pkgs.nodejs}/bin/node /var/lib/mcphub/mcphub-repo/dist/index.js";
-      EnvironmentFile = "/run/mcphub/env";
+      EnvironmentFile = "-/var/lib/mcphub/env";
 
       Environment = [
         "HOME=/var/lib/mcphub"
