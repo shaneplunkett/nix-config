@@ -132,7 +132,9 @@ EOF
 
           # Set up Google Workspace OAuth credentials directory
           mkdir -p "/var/lib/mcphub/.google_workspace_mcp/credentials"
-          chown -R mcphub:mcphub "/var/lib/mcphub/.google_workspace_mcp"
+
+          # Fix ownership — ExecStartPre runs as root, service runs as mcphub
+          chown -R mcphub:mcphub /var/lib/mcphub
         '';
       in "+${setupScript}";
 
