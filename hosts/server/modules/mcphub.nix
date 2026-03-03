@@ -68,6 +68,8 @@ in
       pkgs.uv
       pkgs.python312
       pkgs.git
+      pkgs.bash
+      pkgs.coreutils
     ];
 
     serviceConfig = {
