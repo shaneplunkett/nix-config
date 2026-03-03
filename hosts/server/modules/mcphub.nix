@@ -128,7 +128,7 @@ EOF
           TEMPLATE='${builtins.toFile "mcp_settings_template.json" mcpSettingsTemplate}'
           SETTINGS="/var/lib/mcphub/mcphub-repo/mcp_settings.json"
           if [ -f "$SETTINGS" ]; then
-            ${pkgs.jq}/bin/jq -s '.[0] * { mcpServers: .[1].mcpServers }' \
+            ${pkgs.jq}/bin/jq -s '.[0] + { mcpServers: .[1].mcpServers }' \
               "$SETTINGS" "$TEMPLATE" > "$SETTINGS.tmp" \
               && mv "$SETTINGS.tmp" "$SETTINGS"
           else
