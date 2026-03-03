@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 {
   services.tailscale = {
     enable = true;
@@ -16,13 +16,19 @@
   # Allow Funnel traffic on WAN
   networking.firewall.allowedTCPPorts = [ 443 ];
 
-  # Accept all Tailscale traffic before tailscaled's ts-input chain can drop it
-  networking.firewall.extraCommands = ''
-    iptables -I INPUT 1 -i tailscale0 -j ACCEPT
-  '';
-  networking.firewall.extraStopCommands = ''
-    iptables -D INPUT -i tailscale0 -j ACCEPT 2>/dev/null || true
-  '';
+  # Accept all Tailscale traffic — must run AFTER tailscaled inserts ts-input
+  systemd.services.tailscale-accept = {
+    description = "Accept all Tailscale interface traffic";
+    after = [ "tailscaled.service" ];
+    wants = [ "tailscaled.service" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "${pkgs.iptables}/bin/iptables -I INPUT 1 -i tailscale0 -j ACCEPT";
+      ExecStop = "${pkgs.iptables}/bin/iptables -D INPUT -i tailscale0 -j ACCEPT";
+    };
+  };
 
   # Funnel oneshot — expose MCPHub via Tailscale Funnel
   systemd.services.tailscale-funnel = {
