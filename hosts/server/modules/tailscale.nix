@@ -8,9 +8,6 @@
       "--accept-routes"
       "--accept-dns=false"
     ];
-    # Let NixOS firewall handle rules — tailscaled's ts-input chain
-    # drops incoming Tailscale traffic despite trustedInterfaces
-    extraDaemonFlags = [ "--netfilter-mode=off" ];
   };
 
   # Trust all traffic on the Tailscale interface
@@ -18,6 +15,14 @@
 
   # Allow Funnel traffic on WAN
   networking.firewall.allowedTCPPorts = [ 443 ];
+
+  # Accept all Tailscale traffic before tailscaled's ts-input chain can drop it
+  networking.firewall.extraCommands = ''
+    iptables -I INPUT 1 -i tailscale0 -j ACCEPT
+  '';
+  networking.firewall.extraStopCommands = ''
+    iptables -D INPUT -i tailscale0 -j ACCEPT 2>/dev/null || true
+  '';
 
   # Funnel oneshot — expose MCPHub via Tailscale Funnel
   systemd.services.tailscale-funnel = {
