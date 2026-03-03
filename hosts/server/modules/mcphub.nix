@@ -121,7 +121,8 @@ GOOGLE_OAUTH_CLIENT_ID=$(cat ${config.age.secrets.google-oauth-client-id.path})
 GOOGLE_OAUTH_CLIENT_SECRET=$(cat ${config.age.secrets.google-oauth-client-secret.path})
 TAILSCALE_API_KEY=$(cat ${config.age.secrets.tailscale-api.path})
 TAILSCALE_TAILNET=$(cat ${config.age.secrets.tailscale-tailnet.path})
-DATABASE_URL=postgresql://mcphub@localhost/mcphub
+DB_URL=postgresql://mcphub@/mcphub?host=/run/postgresql
+SMART_ROUTING_ENABLED=true
 EOF
           chown mcphub:mcphub /var/lib/mcphub/env
           chmod 600 /var/lib/mcphub/env
@@ -159,7 +160,7 @@ EOF
       NoNewPrivileges = true;
       PrivateTmp = true;
       ProtectSystem = "strict";
-      ReadWritePaths = [ "/var/lib/mcphub" "/run/mcphub" "/tmp" ];
+      ReadWritePaths = [ "/var/lib/mcphub" "/run/mcphub" "/run/postgresql" "/tmp" ];
       ProtectHome = true;
 
       Restart = "on-failure";
