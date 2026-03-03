@@ -13,6 +13,7 @@ in
       hostname,
       system ? "x86_64-linux",
       hostConfig,
+      homeConfig ? (rootPath + /home/shane/home.nix),
       extraModules ? [ ],
     }:
     nixpkgs.lib.nixosSystem {
@@ -37,7 +38,7 @@ in
             useGlobalPkgs = true;
             useUserPackages = true;
             extraSpecialArgs = { inherit inputs; };
-            users.shane = import (rootPath + /home/shane/home.nix);
+            users.shane = import homeConfig;
             sharedModules = [
               nixvim.homeModules.nixvim
               agenix.homeManagerModules.default

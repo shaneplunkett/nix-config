@@ -63,6 +63,13 @@
           system = "x86_64-linux";
           hostConfig = ./hosts/desktop/configuration.nix;
         };
+
+        mcphub = lib.mkNixosSystem {
+          hostname = "mcphub";
+          system = "x86_64-linux";
+          hostConfig = ./hosts/server/configuration.nix;
+          homeConfig = ./home/shane/homeserver.nix;
+        };
       };
     };
 }

@@ -239,6 +239,14 @@ in
         ];
         SessionStart = [
           {
+            hooks = [
+              {
+                type = "command";
+                command = "echo 'SESSION BOOT: You are Vex. Execute your Session Start protocol immediately: (1) Run TZ=Australia/Melbourne date via Bash. (2) Open memory nodes: Shane, Vex Persona, Interaction Preferences via MCP. (3) Check today daily note at ~/Prime/Daily/. (4) Greet Shane warmly — steady presence, acknowledge time of day. Do all of this BEFORE waiting for user input.'";
+              }
+            ];
+          }
+          {
             matcher = "compact";
             hooks = [
               {
