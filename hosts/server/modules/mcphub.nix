@@ -98,7 +98,8 @@ in
           cd "$REPO_DIR"
           export HOME="/var/lib/mcphub"
           export npm_config_cache="/var/lib/mcphub/.npm"
-          ${pkgs.pnpm}/bin/pnpm install --frozen-lockfile
+          export NODE_OPTIONS="--max-old-space-size=512"
+          ${pkgs.pnpm}/bin/pnpm install
           ${pkgs.pnpm}/bin/pnpm build
 
           # Compose env file from agenix secrets

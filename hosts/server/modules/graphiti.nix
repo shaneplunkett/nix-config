@@ -86,9 +86,11 @@ EOF
           chmod 600 /var/lib/graphiti/env
           chown graphiti:graphiti /var/lib/graphiti/env
 
-          # Install dependencies
+          # Install dependencies — force uv to use Nix Python, not download its own
           cd "$REPO_DIR/mcp_server"
-          ${pkgs.uv}/bin/uv sync
+          export UV_PYTHON_PREFERENCE=only-system
+          export UV_PYTHON=${pkgs.python312}/bin/python3
+          ${pkgs.uv}/bin/uv sync --python ${pkgs.python312}/bin/python3
         '';
       in "+${setupScript}";
 
