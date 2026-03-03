@@ -53,7 +53,7 @@ in
     serviceConfig = {
       User = "graphiti";
       Group = "graphiti";
-      WorkingDirectory = "/var/lib/graphiti/repo/mcp_server";
+      WorkingDirectory = "/var/lib/graphiti";
       StateDirectory = "graphiti";
       RuntimeDirectory = "graphiti";
 
@@ -92,7 +92,10 @@ EOF
         '';
       in "+${setupScript}";
 
-      ExecStart = "${pkgs.uv}/bin/uv run main.py --database-provider neo4j --transport http --host 0.0.0.0 --port 8000";
+      ExecStart = pkgs.writeShellScript "graphiti-start" ''
+        cd /var/lib/graphiti/repo/mcp_server
+        exec ${pkgs.uv}/bin/uv run main.py --database-provider neo4j --transport http --host 0.0.0.0 --port 8000
+      '';
       EnvironmentFile = "-/var/lib/graphiti/env";
 
       # Hardening

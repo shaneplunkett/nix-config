@@ -25,7 +25,7 @@
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
-      ExecStart = "${config.services.tailscale.package}/bin/tailscale funnel --bg 443 http://127.0.0.1:3000";
+      ExecStart = "${config.services.tailscale.package}/bin/tailscale funnel --bg 3000";
     };
   };
 }

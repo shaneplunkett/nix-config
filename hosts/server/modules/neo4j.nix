@@ -51,6 +51,7 @@ in
       Type = "oneshot";
       User = "neo4j";
       Group = "neo4j";
+      Environment = "NEO4J_HOME=${config.services.neo4j.directories.home}";
       ExecStart = "${neo4jPkg}/bin/neo4j-admin dbms set-initial-password graphiti-poc";
     };
   };

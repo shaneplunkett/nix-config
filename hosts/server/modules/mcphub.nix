@@ -73,7 +73,7 @@ in
     serviceConfig = {
       User = "mcphub";
       Group = "mcphub";
-      WorkingDirectory = "/var/lib/mcphub/mcphub-repo";
+      WorkingDirectory = "/var/lib/mcphub";
       StateDirectory = "mcphub";
       RuntimeDirectory = "mcphub";
 
