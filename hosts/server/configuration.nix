@@ -32,6 +32,9 @@
 
   networking.firewall.enable = true;
 
+  # Dynamic linker compat for tools like esbuild, uv-managed python, etc.
+  programs.nix-ld.enable = true;
+
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
     trusted-users = [ "root" "shane" ];

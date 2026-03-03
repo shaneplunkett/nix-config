@@ -86,11 +86,14 @@ EOF
           chmod 600 /var/lib/graphiti/env
           chown graphiti:graphiti /var/lib/graphiti/env
 
-          # Install dependencies — force uv to use Nix Python, not download its own
+          # Install dependencies
           cd "$REPO_DIR/mcp_server"
           export UV_PYTHON_PREFERENCE=only-system
           export UV_PYTHON=${pkgs.python312}/bin/python3
           ${pkgs.uv}/bin/uv sync --python ${pkgs.python312}/bin/python3
+
+          # Fix ownership — ExecStartPre runs as root, service runs as graphiti
+          chown -R graphiti:graphiti /var/lib/graphiti
         '';
       in "+${setupScript}";
 
