@@ -3,7 +3,10 @@ let
   server = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJxopanPQqEtRB1p8B1BF8aeHG7DbZZUGWqvXS3aslbc";
 
   # Shared: decryptable by both desktop (shane) and server
-  both = [ shane server ];
+  both = [
+    shane
+    server
+  ];
 in
 {
   # Shared secrets (desktop + server)
@@ -28,7 +31,11 @@ in
   "vex-compaction.age".publicKeys = [ shane ];
   "vex-session-reload.age".publicKeys = [ shane ];
   "postman-api.age".publicKeys = [ shane ];
+  "langsmith-api.age".publicKeys = [ shane ];
 
   # Server-only secrets
-  "restic-password.age".publicKeys = [ server shane ];
+  "restic-password.age".publicKeys = [
+    server
+    shane
+  ];
 }
