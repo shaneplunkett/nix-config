@@ -9,7 +9,7 @@ let
   mcphubWrapper =
     server:
     pkgs.writeShellScript "mcphub-${server}" ''
-      BEARER_PATH="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/agenix/mcphub-bearer"
+      BEARER_PATH="${config.age.secrets.mcphub-bearer.path}"
       AUTH="Bearer $(cat "$BEARER_PATH")"
       exec ${claudeNodejs}/bin/npx -y mcp-remote@latest \
         'http://localhost:3000/mcp/${server}' \
@@ -55,7 +55,7 @@ let
     };
     posthog = {
       command = "${pkgs.writeShellScript "posthog-mcp" ''
-        POSTHOG_KEY="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/agenix/posthog"
+        POSTHOG_KEY="${config.age.secrets.posthog.path}"
         exec ${claudeNodejs}/bin/npx -y mcp-remote@latest \
           https://mcp.posthog.com/mcp \
           --header "x-posthog-api-key:$(cat "$POSTHOG_KEY")"

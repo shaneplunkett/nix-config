@@ -237,6 +237,8 @@ GOOGLE_OAUTH_CLIENT_SECRET=$(cat ${config.age.secrets.google-oauth-client-secret
 TAILSCALE_API_KEY=$(cat ${config.age.secrets.tailscale-api.path})
 TAILSCALE_TAILNET=$(cat ${config.age.secrets.tailscale-tailnet.path})
 POSTGRES_PASSWORD=mcphub
+DATABASE_URL=postgresql://mcphub:mcphub@postgres:5432/mcphub
+JWT_SECRET=$(cat ${config.age.secrets.mcphub-bearer.path})
 NEO4J_PASSWORD=graphiti-poc
 ENVEOF'
 
