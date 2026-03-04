@@ -80,15 +80,10 @@ let
       };
 
       mcphub = {
-        build = {
-          context = ".";
-          dockerfile = "Dockerfile";
-        };
+        image = "samanhappy/mcphub:latest";
         ports = [ "3000:3000" ];
         env_file = [ ".env" ];
         extra_hosts = [ "host.docker.internal:host-gateway" ];
-        cap_add = [ "NET_ADMIN" "NET_RAW" ];
-        devices = [ "/dev/net/tun:/dev/net/tun" ];
         depends_on = {
           postgres = {
             condition = "service_healthy";
@@ -103,7 +98,6 @@ let
           "\${HOME}/mcp-memory:/data/memory"
           "\${HOME}/Prime:/data/obsidian:ro"
           "/tmp:/tmp"
-          "tailscale-state:/var/lib/tailscale"
           "\${HOME}/.google_workspace_mcp/credentials:/root/.google_workspace_mcp/credentials"
         ];
         networks = [ "mcphub" ];
@@ -114,7 +108,6 @@ let
     volumes = {
       pgdata = {};
       mcphub-data = {};
-      tailscale-state = {};
       neo4j_data = {};
       neo4j_logs = {};
     };
@@ -227,29 +220,6 @@ in
     MCPHUB_DIR="${mcphubDir}"
     $DRY_RUN_CMD mkdir -p "$MCPHUB_DIR"
 
-    # Dockerfile — cp from nix store so it's a real file (Docker can't follow symlinks outside build context)
-    $DRY_RUN_CMD install -m 644 '${builtins.toFile "mcphub-Dockerfile" ''
-      FROM samanhappy/mcphub:latest
-      RUN apt-get update \
-        && apt-get install -y curl iptables \
-        && curl -fsSL https://tailscale.com/install.sh | sh \
-        && apt-get clean && rm -rf /var/lib/apt/lists/*
-      COPY entrypoint-wrapper.sh /usr/local/bin/entrypoint-wrapper.sh
-      ENTRYPOINT ["/usr/local/bin/entrypoint-wrapper.sh"]
-      CMD ["pnpm", "start"]
-    ''}' "$MCPHUB_DIR/Dockerfile"
-
-    # Entrypoint wrapper — starts tailscaled then hands off to MCPHub
-    $DRY_RUN_CMD install -m 755 '${builtins.toFile "entrypoint-wrapper.sh" ''
-      #!/bin/sh
-      tailscaled --state=/var/lib/tailscale/tailscaled.state &
-      sleep 2
-      if [ -n "$TAILSCALE_AUTH_KEY" ]; then
-        tailscale up --authkey="$TAILSCALE_AUTH_KEY" --hostname=mcphub --accept-routes --accept-dns=false
-      fi
-      exec /usr/local/bin/entrypoint.sh "$@"
-    ''}' "$MCPHUB_DIR/entrypoint-wrapper.sh"
-
     # Ensure mcp-memory directory exists
     $DRY_RUN_CMD mkdir -p "$HOME/mcp-memory"
 
@@ -266,7 +236,6 @@ GOOGLE_OAUTH_CLIENT_ID=$(cat ${config.age.secrets.google-oauth-client-id.path})
 GOOGLE_OAUTH_CLIENT_SECRET=$(cat ${config.age.secrets.google-oauth-client-secret.path})
 TAILSCALE_API_KEY=$(cat ${config.age.secrets.tailscale-api.path})
 TAILSCALE_TAILNET=$(cat ${config.age.secrets.tailscale-tailnet.path})
-TAILSCALE_AUTH_KEY=$(cat ${config.age.secrets.tailscale-authkey.path})
 POSTGRES_PASSWORD=mcphub
 NEO4J_PASSWORD=graphiti-poc
 ENVEOF'

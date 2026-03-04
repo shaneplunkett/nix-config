@@ -54,6 +54,9 @@
       tailscale-authkey = {
         file = ../../../../secrets/tailscale-authkey.age;
       };
+      langsmith-api = {
+        file = ../../../../secrets/langsmith-api.age;
+      };
     };
 
   };
