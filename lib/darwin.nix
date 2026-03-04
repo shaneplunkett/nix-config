@@ -27,6 +27,11 @@ in
         {
           nixpkgs.overlays = [
             (final: prev: import (rootPath + /pkgs) { pkgs = final; })
+            (final: prev: {
+              yt-dlp = prev.yt-dlp.overridePythonAttrs (old: {
+                dependencies = prev.lib.concatAttrValues (builtins.removeAttrs old.optional-dependencies [ "secretstorage" ]);
+              });
+            })
           ];
         }
 

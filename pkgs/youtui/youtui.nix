@@ -7,7 +7,6 @@
   makeWrapper,
   alsa-lib,
   dbus,
-  darwin,
   yt-dlp,
 }:
 rustPlatform.buildRustPackage {
@@ -31,19 +30,10 @@ rustPlatform.buildRustPackage {
     makeWrapper
   ];
 
-  buildInputs =
-    lib.optionals stdenv.hostPlatform.isLinux [
-      alsa-lib
-      dbus
-    ]
-    ++ lib.optionals stdenv.hostPlatform.isDarwin (
-      with darwin.apple_sdk.frameworks; [
-        AppKit
-        AudioUnit
-        CoreAudio
-        CoreFoundation
-      ]
-    );
+  buildInputs = lib.optionals stdenv.hostPlatform.isLinux [
+    alsa-lib
+    dbus
+  ];
 
   postInstall = ''
     wrapProgram $out/bin/youtui \
