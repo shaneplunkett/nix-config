@@ -174,18 +174,7 @@ let
     };
   };
 
-in
-{
-  # docker-compose.yml
-  home.file."mcphub/docker-compose.yml".text = dockerComposeYml;
-
-  # pgvector init script
-  home.file."mcphub/init-pgvector.sql".text = ''
-    CREATE EXTENSION IF NOT EXISTS vector;
-  '';
-
-  # Graphiti config — Neo4j database + OpenAI for LLM extraction + embeddings
-  home.file."mcphub/graphiti-config.yaml".text = ''
+  graphitiConfig = ''
     database:
       provider: "neo4j"
       providers:
@@ -215,10 +204,21 @@ in
           api_url: https://api.openai.com/v1
   '';
 
-  # Activation script: generate .env and patch mcp_settings.json with secrets
+in
+{
+  # Activation script: generate all mcphub files as real copies (not symlinks) for Docker compatibility
   home.activation.mcphubConfig = lib.hm.dag.entryAfter [ "writeBoundary" "agenixInstall" ] ''
     MCPHUB_DIR="${mcphubDir}"
     $DRY_RUN_CMD mkdir -p "$MCPHUB_DIR"
+
+    # docker-compose.yml — real file so Docker can read it
+    $DRY_RUN_CMD install -m 644 '${builtins.toFile "docker-compose.yml" dockerComposeYml}' "$MCPHUB_DIR/docker-compose.yml"
+
+    # pgvector init script
+    $DRY_RUN_CMD install -m 644 '${builtins.toFile "init-pgvector.sql" "CREATE EXTENSION IF NOT EXISTS vector;\n"}' "$MCPHUB_DIR/init-pgvector.sql"
+
+    # Graphiti config
+    $DRY_RUN_CMD install -m 644 '${builtins.toFile "graphiti-config.yaml" graphitiConfig}' "$MCPHUB_DIR/graphiti-config.yaml"
 
     # Ensure mcp-memory directory exists
     $DRY_RUN_CMD mkdir -p "$HOME/mcp-memory"

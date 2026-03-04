@@ -6,14 +6,16 @@
 let
   claudeNodejs = pkgs.nodejs;
 
-  mcphubWrapper = server: pkgs.writeShellScript "mcphub-${server}" ''
-    BEARER_PATH="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/agenix/mcphub-bearer"
-    AUTH="Bearer $(cat "$BEARER_PATH")"
-    exec ${claudeNodejs}/bin/npx -y mcp-remote@latest \
-      'http://mcphub:3000/mcp/${server}' \
-      --header "Authorization:$AUTH" \
-      --allow-http
-  '';
+  mcphubWrapper =
+    server:
+    pkgs.writeShellScript "mcphub-${server}" ''
+      BEARER_PATH="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/agenix/mcphub-bearer"
+      AUTH="Bearer $(cat "$BEARER_PATH")"
+      exec ${claudeNodejs}/bin/npx -y mcp-remote@latest \
+        'http://localhost:3000/mcp/${server}' \
+        --header "Authorization:$AUTH" \
+        --allow-http
+    '';
 
   mkMcpHubServer = server: {
     command = "${mcphubWrapper server}";
@@ -35,12 +37,21 @@ let
     # Desktop-only: direct local connections
     neovim = {
       command = "${claudeNodejs}/bin/npx";
-      args = [ "-y" "mcp-neovim-server" ];
-      env = { NVIM_SOCKET_PATH = "/tmp/nvim"; };
+      args = [
+        "-y"
+        "mcp-neovim-server"
+      ];
+      env = {
+        NVIM_SOCKET_PATH = "/tmp/nvim";
+      };
     };
     obsidian = {
       command = "${claudeNodejs}/bin/npx";
-      args = [ "-y" "@mauricio.wolff/mcp-obsidian@latest" "${homeDirectory}/Prime" ];
+      args = [
+        "-y"
+        "@mauricio.wolff/mcp-obsidian@latest"
+        "${homeDirectory}/Prime"
+      ];
     };
     posthog = {
       command = "${pkgs.writeShellScript "posthog-mcp" ''
