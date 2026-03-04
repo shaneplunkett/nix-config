@@ -5,13 +5,13 @@
   ...
 }:
 let
-  shared = import ../common/claude.nix {
+  shared = import ../common/mcp-servers.nix {
     inherit pkgs config;
     homeDirectory = config.home.homeDirectory;
   };
 
   desktopMcpServers = {
-    mcphub-smart = shared.config.mcpServers.mcphub-smart;
+    mcphub-smart = shared.mcpServers.mcphub-smart;
   };
 
   claude-desktop-wrapped = pkgs.writeShellScriptBin "claude-desktop" ''

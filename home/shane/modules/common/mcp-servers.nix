@@ -23,7 +23,7 @@ let
   };
 
   mcpServers = {
-    # MCPHub-proxied servers (running on VM)
+    # MCPHub-proxied servers (local docker compose @ localhost:3000)
     memory = mkMcpHubServer "memory";
     todoist = mkMcpHubServer "todoist";
     github = mkMcpHubServer "github";

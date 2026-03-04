@@ -14,7 +14,6 @@
     ./age.nix
     ./sesh.nix
     ./claude-code.nix
-    ./mcphub.nix
     ./youtui.nix
   ];
 }

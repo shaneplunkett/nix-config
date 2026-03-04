@@ -7,14 +7,13 @@
 let
   claudeNodejs = pkgs.nodejs;
 
-  # Shared MCP server definitions
-  shared = import ./claude.nix {
+  # MCP server definitions (MCPHub local docker compose + direct local servers)
+  shared = import ./mcp-servers.nix {
     inherit pkgs config;
     homeDirectory = config.home.homeDirectory;
   };
 
-  # All MCPs in a single flat set
-  allMcpServers = shared.config.mcpServers;
+  allMcpServers = shared.mcpServers;
 
   # tweakcc — Claude Code TUI customisation
   tweakcc = pkgs.callPackage ./tweakcc.nix { };
