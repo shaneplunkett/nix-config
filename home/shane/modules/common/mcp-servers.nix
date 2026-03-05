@@ -1,7 +1,7 @@
 {
   pkgs,
-  config,
   homeDirectory,
+  ...
 }:
 let
   claudeNodejs = pkgs.nodejs;
@@ -9,10 +9,10 @@ let
   mcphubWrapper =
     server:
     pkgs.writeShellScript "mcphub-${server}" ''
-      BEARER_PATH="${config.age.secrets.mcphub-bearer.path}"
+      BEARER_PATH="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/agenix/mcphub-bearer"
       AUTH="Bearer $(cat "$BEARER_PATH")"
       exec ${claudeNodejs}/bin/npx -y mcp-remote@latest \
-        'http://localhost:3000/mcp/${server}' \
+        'http://mcphub:3000/mcp/${server}' \
         --header "Authorization:$AUTH" \
         --allow-http
     '';
@@ -32,7 +32,7 @@ let
     shadcn = mkMcpHubServer "shadcn";
     tailscale = mkMcpHubServer "tailscale";
     graphiti = mkMcpHubServer "graphiti";
-    mcphub-smart = mkMcpHubServer "smart";
+    mcphub-smart = mkMcpHubServer "\$smart";
 
     # Desktop-only: direct local connections
     neovim = {
@@ -55,7 +55,7 @@ let
     };
     posthog = {
       command = "${pkgs.writeShellScript "posthog-mcp" ''
-        POSTHOG_KEY="${config.age.secrets.posthog.path}"
+        POSTHOG_KEY="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/agenix/posthog"
         exec ${claudeNodejs}/bin/npx -y mcp-remote@latest \
           https://mcp.posthog.com/mcp \
           --header "x-posthog-api-key:$(cat "$POSTHOG_KEY")"

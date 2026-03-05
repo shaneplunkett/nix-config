@@ -12,6 +12,7 @@ let
 
   desktopMcpServers = {
     mcphub-smart = shared.mcpServers.mcphub-smart;
+    obsidian = shared.mcpServers.obsidian;
   };
 
   claude-desktop-wrapped = pkgs.writeShellScriptBin "claude-desktop" ''
