@@ -61,7 +61,7 @@ in
         {
           nix-homebrew = {
             enable = true;
-            enableRosetta = true;
+            enableRosetta = system == "aarch64-darwin";
             autoMigrate = true;
             user = "shane";
             taps = {
