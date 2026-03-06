@@ -17,6 +17,8 @@ in
       hostname,
       system ? "aarch64-darwin",
       hostConfig,
+      homeConfig ? (rootPath + /home/shane/homemac.nix),
+      enableHomebrew ? true,
       extraModules ? [ ],
     }:
     nix-darwin.lib.darwinSystem {
@@ -38,8 +40,23 @@ in
         hostConfig
 
         home-manager.darwinModules.home-manager
-        nix-homebrew.darwinModules.nix-homebrew
         agenix.darwinModules.default
+
+        {
+          home-manager = {
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            extraSpecialArgs = { inherit inputs; };
+            users.shane = import homeConfig;
+            sharedModules = [
+              nixvim.homeModules.nixvim
+              agenix.homeManagerModules.default
+            ];
+          };
+        }
+      ]
+      ++ (if enableHomebrew then [
+        nix-homebrew.darwinModules.nix-homebrew
 
         {
           nix-homebrew = {
@@ -61,20 +78,7 @@ in
             homebrew.taps = builtins.attrNames config.nix-homebrew.taps;
           }
         )
-
-        {
-          home-manager = {
-            useGlobalPkgs = true;
-            useUserPackages = true;
-            extraSpecialArgs = { inherit inputs; };
-            users.shane = import (rootPath + /home/shane/homemac.nix);
-            sharedModules = [
-              nixvim.homeModules.nixvim
-              agenix.homeManagerModules.default
-            ];
-          };
-        }
-      ]
+      ] else [ ])
       ++ extraModules;
     };
 }

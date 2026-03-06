@@ -55,6 +55,14 @@
           system = "aarch64-darwin";
           hostConfig = ./hosts/darwin/work.nix;
         };
+
+        "macvm" = lib.mkDarwinSystem {
+          hostname = "macvm";
+          system = "x86_64-darwin";
+          hostConfig = ./hosts/darwin/macvm.nix;
+          homeConfig = ./home/shane/homemacserver.nix;
+          enableHomebrew = false;
+        };
       };
 
       nixosConfigurations = {
