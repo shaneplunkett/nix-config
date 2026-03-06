@@ -31,9 +31,9 @@ let
         ${if runtime == "python" then ''
           ${pkgs.uv}/bin/uv sync --python ${pkgs.python312}/bin/python3
         '' else ''
-          ${pkgs.nodejs}/bin/npm install --production 2>/dev/null || ${pkgs.nodejs}/bin/npm install
+          ${pkgs.nodejs}/bin/npm install
           if [ -f package.json ] && grep -q '"build"' package.json; then
-            ${pkgs.nodejs}/bin/npm run build || true
+            ${pkgs.nodejs}/bin/npm run build
           fi
         ''}
 
@@ -82,14 +82,14 @@ let
       port = 8010;
       repoUrl = "https://github.com/imdinu/apple-mail-mcp.git";
       runtime = "python";
-      stdioCmd = dir: "${pkgs.uv}/bin/uv run --directory ${dir}/repo python -m apple_mail_mcp";
+      stdioCmd = dir: "${pkgs.uv}/bin/uv run --directory ${dir}/repo apple-mail-mcp";
     })
     (mkMcpDaemon {
       name = "mac-messages";
       port = 8011;
       repoUrl = "https://github.com/carterlasalle/mac_messages_mcp.git";
       runtime = "python";
-      stdioCmd = dir: "${pkgs.uv}/bin/uv run --directory ${dir}/repo python -m mac_messages_mcp";
+      stdioCmd = dir: "${pkgs.uv}/bin/uv run --directory ${dir}/repo mac-messages-mcp";
     })
     (mkMcpDaemon {
       name = "applescript";
@@ -103,7 +103,7 @@ let
       port = 8013;
       repoUrl = "https://github.com/recursechat/mcp-server-apple-shortcuts.git";
       runtime = "node";
-      stdioCmd = dir: "${pkgs.nodejs}/bin/node ${dir}/repo/dist/index.js";
+      stdioCmd = dir: "${pkgs.nodejs}/bin/node ${dir}/repo/index.js";
     })
     # Phase 2 — uncomment when ready:
     # (mkMcpDaemon {
