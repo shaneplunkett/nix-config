@@ -34,6 +34,12 @@ let
     graphiti = mkMcpHubServer "graphiti";
     mcphub-smart = mkMcpHubServer "\$smart";
 
+    # macOS MCP servers (via MCPHub -> macvm)
+    apple-mail = mkMcpHubServer "apple-mail";
+    mac-messages = mkMcpHubServer "mac-messages";
+    applescript = mkMcpHubServer "applescript";
+    apple-shortcuts = mkMcpHubServer "apple-shortcuts";
+
     # Desktop-only: direct local connections
     neovim = {
       command = "${claudeNodejs}/bin/npx";

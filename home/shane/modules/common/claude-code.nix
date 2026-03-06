@@ -208,10 +208,14 @@ in
 
       # Only memory enabled by default — toggle others per session as needed
       disabledMcpjsonServers = [
+        "apple-mail"
+        "apple-shortcuts"
+        "applescript"
         "chrome-devtools"
         "context7"
         "github"
         "google-workspace"
+        "mac-messages"
         "neovim"
         "obsidian"
         "posthog"
