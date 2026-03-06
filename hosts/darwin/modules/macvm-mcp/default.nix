@@ -23,6 +23,7 @@ let
           ${pkgs.git}/bin/git clone ${repoUrl} "$REPO_DIR"
         else
           cd "$REPO_DIR"
+          ${pkgs.git}/bin/git checkout -- . 2>/dev/null || true
           ${pkgs.git}/bin/git pull --ff-only || true
         fi
 
@@ -103,7 +104,7 @@ let
       port = 8013;
       repoUrl = "https://github.com/recursechat/mcp-server-apple-shortcuts.git";
       runtime = "node";
-      stdioCmd = dir: "${pkgs.nodejs}/bin/node ${dir}/repo/index.js";
+      stdioCmd = dir: "${pkgs.nodejs}/bin/node ${dir}/repo/build/index.js";
     })
     # Phase 2 — uncomment when ready:
     # (mkMcpDaemon {
