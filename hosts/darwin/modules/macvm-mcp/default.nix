@@ -48,7 +48,7 @@ let
           --stdio "${stdioCmd stateDir}" \
           --port ${toString port} \
           --baseUrl /mcp \
-          --outputTransport streamable-http
+          --outputTransport streamableHttp
       '';
     in
     {
@@ -59,7 +59,7 @@ let
           RunAtLoad = true;
           KeepAlive = true;
           UserName = "shane";
-          WorkingDirectory = stateDir;
+          WorkingDirectory = "/tmp";
           StandardOutPath = "/var/log/mcp/${name}.log";
           StandardErrorPath = "/var/log/mcp/${name}.err";
           EnvironmentVariables = {
