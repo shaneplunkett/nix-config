@@ -61,7 +61,6 @@
           system = "x86_64-darwin";
           hostConfig = ./hosts/darwin/macvm.nix;
           homeConfig = ./home/shane/homemacserver.nix;
-          enableHomebrew = false;
         };
       };
 
