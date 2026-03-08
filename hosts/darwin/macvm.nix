@@ -8,8 +8,6 @@
     ./modules/macvm-mcp
   ];
 
-  networking.hostName = "macvm";
-
   system.defaults.loginwindow.autoLoginUser = "shane";
 
   system.activationScripts.preventSleep.text = ''

@@ -20,8 +20,9 @@ in
       inherit system;
       specialArgs = { inherit inputs; };
       modules = [
-        # Custom packages overlay
+        # Hostname injection + custom packages overlay
         {
+          networking.hostName = hostname;
           nixpkgs.overlays = [
             (final: prev: import (rootPath + /pkgs) { pkgs = final; })
           ];

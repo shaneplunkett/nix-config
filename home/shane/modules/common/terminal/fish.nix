@@ -5,8 +5,7 @@
     shellAliases = {
       cat = "bat";
       ls = "lsd";
-      drs = "sudo darwin-rebuild switch --flake ~/nix-config";
-      nrs = "sudo nixos-rebuild switch --flake ~/nix-config#desktop";
+      nrs = "if test (uname) = Darwin; sudo darwin-rebuild switch --flake ~/nix-config; else; sudo nixos-rebuild switch --flake ~/nix-config; end";
       ngc = "sudo nix-collect-garbage -d";
       tfi = "terraform init";
       tfp = "terraform plan";
