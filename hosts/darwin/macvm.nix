@@ -26,7 +26,5 @@
     onActivation.upgrade = true;
   };
 
-  home-manager.backupFileExtension = "backup";
-
   system.stateVersion = 6;
 }

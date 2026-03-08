@@ -25,7 +25,7 @@
       enable = true;
       settings = {
         formatters_by_ft = {
-          "_" = [ "trim_whitspace" ];
+          "_" = [ "trim_whitespace" ];
           css = [ "biome" ];
           html = [ "biome" ];
           svg = [ "biome" ];
