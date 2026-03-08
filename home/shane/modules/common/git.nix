@@ -6,6 +6,16 @@
       user = {
         name = "shaneplunkett";
         email = "113661103+shaneplunkett@users.noreply.github.com";
+        signingKey = "~/.ssh/id_ed25519.pub";
+      };
+      gpg = {
+        format = "ssh";
+      };
+      commit = {
+        gpgSign = true;
+      };
+      tag = {
+        gpgSign = true;
       };
       init = {
         defaultBranch = "main";
