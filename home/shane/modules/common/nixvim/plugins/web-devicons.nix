@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ ... }:
 {
   plugins = {
     web-devicons = {

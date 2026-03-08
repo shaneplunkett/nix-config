@@ -1,4 +1,4 @@
-{ self, ... }:
+{ ... }:
 {
   opts = {
     number = true;
