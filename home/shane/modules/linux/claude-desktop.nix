@@ -11,7 +11,6 @@ let
   };
 
   desktopMcpServers = {
-    mcphub-smart = shared.mcpServers.mcphub-smart;
     obsidian = shared.mcpServers.obsidian;
   };
 

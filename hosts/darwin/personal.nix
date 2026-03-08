@@ -1,10 +1,14 @@
-{ ... }:
+{ lib, ... }:
 
 {
   imports = [
     ../../modules/common
     ../../modules/darwin
   ];
+
+  homebrew.masApps = {
+    "Xcode" = 497799835;
+  };
 
   home-manager.backupFileExtension = "backup";
 

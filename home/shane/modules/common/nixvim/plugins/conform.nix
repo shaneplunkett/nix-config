@@ -14,6 +14,8 @@
     rubocop
     gotools
     terraform-ls
+    swiftformat
+    swiftlint
 
   ];
 
@@ -62,6 +64,7 @@
           php = [ "php_cs_fixer" ];
           dockerfile = [ "hadolint" ];
           glsl = [ "clang_format" ];
+          swift = [ "swiftformat" ];
         };
         format_on_save = ''
           function(bufnr)

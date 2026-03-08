@@ -130,6 +130,19 @@
         };
         glsl_analyzer.enable = true;
 
+        sourcekit = {
+          enable = true;
+          cmd = [
+            "xcrun"
+            "sourcekit-lsp"
+          ];
+          filetypes = [
+            "swift"
+            "objc"
+            "objcpp"
+          ];
+        };
+
       };
 
     };

@@ -38,6 +38,10 @@
             group = "UI Toggles";
           }
           {
+            __unkeyed-1 = "<leader>X";
+            group = "Xcode";
+          }
+          {
             __unkeyed-1 = "g";
             group = "Goto";
           }

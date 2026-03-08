@@ -26,6 +26,7 @@
 
     brews = [
       "gemini-cli"
+      "xcode-build-server"
     ];
     onActivation.cleanup = "zap";
     onActivation.autoUpdate = true;

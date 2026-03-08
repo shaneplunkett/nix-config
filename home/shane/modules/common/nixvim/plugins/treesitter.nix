@@ -42,6 +42,7 @@
         glsl
         prisma
         go
+        swift
 
       ];
     };

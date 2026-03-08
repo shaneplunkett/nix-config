@@ -25,5 +25,6 @@
     ./undotree.nix
     ./web-devicons.nix
     ./which-key.nix
+    ./xcodebuild.nix
   ];
 }
