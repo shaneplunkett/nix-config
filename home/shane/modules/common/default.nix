@@ -8,6 +8,7 @@
     ./git.nix
     ./nixvim
     ./packages.nix
+    ./ssh.nix
     ./terminal
     ./youtui
   ];
