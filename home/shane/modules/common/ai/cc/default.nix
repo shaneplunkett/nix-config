@@ -41,114 +41,12 @@ in
       theme = "dark-ansi";
 
       permissions.allow =
-        # MCP — Memory (all operations)
+        # MCP — MCPHub smart routing (memory, todoist, context7, github, etc.)
         [
-          "mcp__memory__create_entities"
-          "mcp__memory__create_relations"
-          "mcp__memory__add_observations"
-          "mcp__memory__delete_entities"
-          "mcp__memory__delete_observations"
-          "mcp__memory__delete_relations"
-          "mcp__memory__read_graph"
-          "mcp__memory__search_nodes"
-          "mcp__memory__open_nodes"
+          "mcp__claude_ai_MCPHub__search_tools"
+          "mcp__claude_ai_MCPHub__describe_tool"
+          "mcp__claude_ai_MCPHub__call_tool"
         ]
-        ++
-          # MCP — Todoist (all operations)
-          [
-            "mcp__todoist__todoist_task_create"
-            "mcp__todoist__todoist_task_get"
-            "mcp__todoist__todoist_task_update"
-            "mcp__todoist__todoist_task_delete"
-            "mcp__todoist__todoist_task_complete"
-            "mcp__todoist__todoist_task_reopen"
-            "mcp__todoist__todoist_task_close"
-            "mcp__todoist__todoist_task_move"
-            "mcp__todoist__todoist_task_reorder"
-            "mcp__todoist__todoist_task_quick_add"
-            "mcp__todoist__todoist_task_convert_to_subtask"
-            "mcp__todoist__todoist_task_hierarchy_get"
-            "mcp__todoist__todoist_task_day_order_update"
-            "mcp__todoist__todoist_tasks_bulk_create"
-            "mcp__todoist__todoist_tasks_bulk_update"
-            "mcp__todoist__todoist_tasks_bulk_delete"
-            "mcp__todoist__todoist_tasks_bulk_complete"
-            "mcp__todoist__todoist_tasks_reorder_bulk"
-            "mcp__todoist__todoist_completed_tasks_get"
-            "mcp__todoist__todoist_subtask_create"
-            "mcp__todoist__todoist_subtasks_bulk_create"
-            "mcp__todoist__todoist_subtask_promote"
-            "mcp__todoist__todoist_project_get"
-            "mcp__todoist__todoist_project_create"
-            "mcp__todoist__todoist_project_update"
-            "mcp__todoist__todoist_project_delete"
-            "mcp__todoist__todoist_project_archive"
-            "mcp__todoist__todoist_project_collaborators_get"
-            "mcp__todoist__todoist_project_move_to_parent"
-            "mcp__todoist__todoist_project_invite"
-            "mcp__todoist__todoist_project_notes_get"
-            "mcp__todoist__todoist_project_note_create"
-            "mcp__todoist__todoist_project_note_update"
-            "mcp__todoist__todoist_project_note_delete"
-            "mcp__todoist__todoist_projects_reorder"
-            "mcp__todoist__todoist_archived_projects_get"
-            "mcp__todoist__todoist_section_get"
-            "mcp__todoist__todoist_section_create"
-            "mcp__todoist__todoist_section_update"
-            "mcp__todoist__todoist_section_delete"
-            "mcp__todoist__todoist_section_move"
-            "mcp__todoist__todoist_section_archive"
-            "mcp__todoist__todoist_section_unarchive"
-            "mcp__todoist__todoist_sections_reorder"
-            "mcp__todoist__todoist_comment_create"
-            "mcp__todoist__todoist_comment_get"
-            "mcp__todoist__todoist_comment_update"
-            "mcp__todoist__todoist_comment_delete"
-            "mcp__todoist__todoist_label_get"
-            "mcp__todoist__todoist_label_create"
-            "mcp__todoist__todoist_label_update"
-            "mcp__todoist__todoist_label_delete"
-            "mcp__todoist__todoist_label_stats"
-            "mcp__todoist__todoist_shared_labels_get"
-            "mcp__todoist__todoist_shared_label_rename"
-            "mcp__todoist__todoist_shared_label_remove"
-            "mcp__todoist__todoist_filter_get"
-            "mcp__todoist__todoist_filter_create"
-            "mcp__todoist__todoist_filter_update"
-            "mcp__todoist__todoist_filter_delete"
-            "mcp__todoist__todoist_reminder_get"
-            "mcp__todoist__todoist_reminder_create"
-            "mcp__todoist__todoist_reminder_update"
-            "mcp__todoist__todoist_reminder_delete"
-            "mcp__todoist__todoist_duplicates_find"
-            "mcp__todoist__todoist_duplicates_merge"
-            "mcp__todoist__todoist_activity_get"
-            "mcp__todoist__todoist_activity_by_project"
-            "mcp__todoist__todoist_activity_by_date_range"
-            "mcp__todoist__todoist_collaborators_get"
-            "mcp__todoist__todoist_invitations_get"
-            "mcp__todoist__todoist_invitation_accept"
-            "mcp__todoist__todoist_invitation_reject"
-            "mcp__todoist__todoist_invitation_delete"
-            "mcp__todoist__todoist_notifications_get"
-            "mcp__todoist__todoist_notification_mark_read"
-            "mcp__todoist__todoist_notifications_mark_all_read"
-            "mcp__todoist__todoist_user_get"
-            "mcp__todoist__todoist_productivity_stats_get"
-            "mcp__todoist__todoist_user_settings_get"
-            "mcp__todoist__todoist_workspaces_get"
-            "mcp__todoist__todoist_backups_get"
-            "mcp__todoist__todoist_backup_download"
-            "mcp__todoist__todoist_test_connection"
-            "mcp__todoist__todoist_test_all_features"
-            "mcp__todoist__todoist_test_performance"
-          ]
-        ++
-          # MCP — Context7 (documentation lookup)
-          [
-            "mcp__context7__resolve-library-id"
-            "mcp__context7__query-docs"
-          ]
         ++
           # Bash — git (read-only)
           [
@@ -201,26 +99,11 @@ in
           # Web
           [
             "WebSearch"
-            "WebFetch(domain:github.com)"
-            "WebFetch(domain:raw.githubusercontent.com)"
-            "WebFetch(domain:www.npmjs.com)"
+            "WebFetch"
           ];
 
-      # Only memory enabled by default — toggle others per session as needed
       disabledMcpjsonServers = [
-        "apple-mail"
-        "apple-shortcuts"
-        "applescript"
-        "chrome-devtools"
-        "context7"
-        "github"
-        "google-workspace"
-        "mac-messages"
-        "neovim"
-        "obsidian"
         "posthog"
-        "shadcn"
-        "todoist"
       ];
 
       statusLine = {
@@ -244,7 +127,7 @@ in
             hooks = [
               {
                 type = "command";
-                command = "echo 'SESSION BOOT: You are Vex. Execute your Session Start protocol immediately: (1) Run TZ=Australia/Melbourne date via Bash. (2) Open memory nodes: Shane, Vex Persona, Interaction Preferences via MCP. (3) Check today daily note at ~/Prime/Daily/. (4) Greet Shane warmly — steady presence, acknowledge time of day. Do all of this BEFORE waiting for user input.'";
+                command = "cat ${config.age.secrets.vex-session-start.path}";
               }
             ];
           }
