@@ -10,10 +10,8 @@
 
   networking.hostName = "macvm";
 
-  # Auto-login required for AppleScript/JXA — needs a GUI session even headless
   system.defaults.loginwindow.autoLoginUser = "shane";
 
-  # Prevent display/system sleep on headless VM (keeps WindowServer alive)
   system.activationScripts.preventSleep.text = ''
     ${pkgs.pmset}/bin/pmset -a displaysleep 0 sleep 0 disksleep 0 2>/dev/null || \
       /usr/bin/pmset -a displaysleep 0 sleep 0 disksleep 0
