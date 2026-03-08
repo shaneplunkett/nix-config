@@ -131,7 +131,7 @@
         glsl_analyzer.enable = true;
 
         sourcekit = {
-          enable = true;
+          enable = pkgs.stdenv.isDarwin;
           cmd = [
             "xcrun"
             "sourcekit-lsp"

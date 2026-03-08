@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   extraPackages = with pkgs; [
     prettier
@@ -14,9 +14,9 @@
     rubocop
     gotools
     terraform-ls
+  ] ++ lib.optionals pkgs.stdenv.isDarwin [
     swiftformat
     swiftlint
-
   ];
 
   plugins = {

@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
-  extraPlugins = [
+  extraPlugins = lib.mkIf pkgs.stdenv.isDarwin [
     (pkgs.vimUtils.buildVimPlugin {
       name = "xcodebuild-nvim";
       src = pkgs.fetchFromGitHub {
@@ -14,15 +14,15 @@
     })
   ];
 
-  extraPackages = with pkgs; [
+  extraPackages = lib.mkIf pkgs.stdenv.isDarwin (with pkgs; [
     xcbeautify
-  ];
+  ]);
 
-  extraConfigLua = ''
+  extraConfigLua = lib.mkIf pkgs.stdenv.isDarwin ''
     require("xcodebuild").setup({})
   '';
 
-  keymaps = [
+  keymaps = lib.mkIf pkgs.stdenv.isDarwin [
     {
       mode = "n";
       key = "<leader>Xb";
