@@ -6,33 +6,7 @@
 let
   claudeNodejs = pkgs.nodejs;
 
-  mcphubWrapper =
-    server:
-    pkgs.writeShellScript "mcphub-${server}" ''
-      BEARER_PATH="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/agenix/mcphub-bearer"
-      AUTH="Bearer $(cat "$BEARER_PATH")"
-      exec ${claudeNodejs}/bin/npx -y mcp-remote@latest \
-        'http://mcphub:3000/mcp/${server}' \
-        --header "Authorization:$AUTH" \
-        --allow-http
-    '';
-
-  mkMcpHubServer = server: {
-    command = "${mcphubWrapper server}";
-    args = [ ];
-  };
-
   mcpServers = {
-    # MCPHub-proxied servers (local docker compose @ localhost:3000)
-    memory = mkMcpHubServer "memory";
-    todoist = mkMcpHubServer "todoist";
-    github = mkMcpHubServer "github";
-    context7 = mkMcpHubServer "context7";
-    google-workspace = mkMcpHubServer "google-workspace";
-    shadcn = mkMcpHubServer "shadcn";
-    tailscale = mkMcpHubServer "tailscale";
-    graphiti = mkMcpHubServer "graphiti";
-    mcphub-smart = mkMcpHubServer "\$smart";
 
     # macOS MCP servers (via MCPHub -> macvm)
     apple-mail = mkMcpHubServer "apple-mail";
