@@ -5,14 +5,11 @@
   ...
 }:
 let
-  shared = import ../common/mcp-servers.nix {
+  shared = import ../common/ai/cdesktop {
     inherit pkgs config;
-    homeDirectory = config.home.homeDirectory;
   };
 
-  desktopMcpServers = {
-    obsidian = shared.mcpServers.obsidian;
-  };
+  desktopMcpServers = shared.desktopMcpServers;
 
   claude-desktop-wrapped = pkgs.writeShellScriptBin "claude-desktop" ''
     EMPTY_WORKSPACE="$HOME/.cache/claude-empty-workspace"

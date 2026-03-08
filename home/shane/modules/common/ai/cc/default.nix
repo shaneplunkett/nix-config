@@ -8,7 +8,7 @@ let
   claudeNodejs = pkgs.nodejs;
 
   # MCP server definitions (MCPHub local docker compose + direct local servers)
-  shared = import ./mcp-servers.nix {
+  shared = import ../mcp {
     inherit pkgs config;
     homeDirectory = config.home.homeDirectory;
   };

@@ -10,10 +10,9 @@
     ./packages.nix
     ./tmux.nix
     ./git.nix
-    ./gemini.nix
+    ./ai
     ./age.nix
     ./sesh.nix
-    ./claude-code.nix
     ./youtui.nix
   ];
 }

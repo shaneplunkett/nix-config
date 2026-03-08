@@ -29,7 +29,7 @@
       "xcode-build-server"
     ];
 
-    homebrew.masApps = {
+    masApps = {
       "Xcode" = 497799835;
     };
     onActivation.cleanup = "zap";
