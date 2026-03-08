@@ -3,11 +3,11 @@
 
   imports = [
     ./modules/common/btop.nix
-    ./modules/common/direnv.nix
-    ./modules/common/fish.nix
+    ./modules/common/terminal/direnv.nix
+    ./modules/common/terminal/fish.nix
     ./modules/common/nixvim
-    ./modules/common/starship.nix
-    ./modules/common/tmux.nix
+    ./modules/common/terminal/starship.nix
+    ./modules/common/terminal/tmux.nix
     ./modules/common/git.nix
     ./modules/common/age.nix
   ];
