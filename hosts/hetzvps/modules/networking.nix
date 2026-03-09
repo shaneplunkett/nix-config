@@ -5,6 +5,7 @@
   networking.firewall = {
     enable = true;
     trustedInterfaces = [ "tailscale0" ];
+    allowedTCPPorts = [ 22 ];
     allowedUDPPorts = [ 41641 ];
   };
 
