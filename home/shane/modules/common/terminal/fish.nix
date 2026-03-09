@@ -5,7 +5,6 @@
     shellAliases = {
       cat = "bat";
       ls = "lsd";
-      nrs = "if test (uname) = Darwin; sudo darwin-rebuild switch --flake ~/nix-config; else; sudo nixos-rebuild switch --flake ~/nix-config; end";
       ngc = "sudo nix-collect-garbage -d";
       tfi = "terraform init";
       tfp = "terraform plan";
@@ -14,6 +13,13 @@
       nvl = "nvim --listen /tmp/nvim";
     };
     functions = {
+      nrs = ''
+        if test (uname) = Darwin
+          sudo darwin-rebuild switch --flake ~/nix-config
+        else
+          sudo nixos-rebuild switch --flake ~/nix-config
+        end
+      '';
       prettyjson = ''
         jq -R -r '. as $line | try (fromjson | 
             "\u001b[36m\(.level | ascii_upcase)\u001b[0m \u001b[35m[\(.module // "unknown")]\u001b[0m \(.message) \(if .operation_name then "\u001b[33m(\(.operation_name))\u001b[0m" else "" end)" + 
