@@ -3,7 +3,6 @@
 
   imports = [
 
-    ./ghostty.nix
     ./hyprland.nix
     ./hyprpaper.nix
     ./hyprpanel
