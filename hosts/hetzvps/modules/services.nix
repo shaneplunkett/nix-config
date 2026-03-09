@@ -27,5 +27,6 @@
       "docker"
       "wheel"
     ];
+    openssh.authorizedKeys.keyFiles = [ ../../../authorized-keys ];
   };
 }
