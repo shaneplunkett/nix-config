@@ -36,20 +36,24 @@
         hostname = "shanes-macbook-pro";
         user = "shane";
         identityFile = "~/.ssh/id_ed25519";
-        requestTTY = "yes";
-        remoteCommand = "fish -l";
         serverAliveInterval = 60;
         serverAliveCountMax = 3;
+        extraOptions = {
+          RequestTTY = "yes";
+          RemoteCommand = "fish -l";
+        };
       };
 
       "wmbp" = {
         hostname = "shanes-work-macbook-pro";
         user = "shane";
         identityFile = "~/.ssh/id_ed25519";
-        requestTTY = "yes";
-        remoteCommand = "fish -l";
         serverAliveInterval = 60;
         serverAliveCountMax = 3;
+        extraOptions = {
+          RequestTTY = "yes";
+          RemoteCommand = "fish -l";
+        };
       };
     };
   };
