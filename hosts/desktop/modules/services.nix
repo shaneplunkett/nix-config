@@ -5,7 +5,6 @@
   services.flatpak.enable = true;
   services.gvfs.enable = true;
   services.tumbler.enable = true;
-  services.tailscale.enable = true;
 
   services.greetd = {
     enable = true;

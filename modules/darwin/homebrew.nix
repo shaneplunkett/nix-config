@@ -10,7 +10,6 @@
       "ghostty"
       "postman"
       "elgato-camera-hub"
-      "tailscale-app"
       "chatgpt"
       "plex"
       "hiddenbar"
