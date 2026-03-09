@@ -18,6 +18,8 @@
     };
   };
 
+  security.sudo.wheelNeedsPassword = false;
+
   users.users.shane = {
     isNormalUser = true;
     description = "Shane Plunkett";
