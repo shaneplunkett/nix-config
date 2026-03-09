@@ -13,7 +13,6 @@ in
   "tailscale-tailnet.age".publicKeys = [ shane ];
   "tailscale-authkey.age".publicKeys = [ shane ];
   "gemini.age".publicKeys = [ shane ];
-  "capacities.age".publicKeys = [ shane ];
   "posthog.age".publicKeys = [ shane ];
   "vex-core.age".publicKeys = [ shane ];
   "vex-interaction.age".publicKeys = [ shane ];
@@ -21,6 +20,5 @@ in
   "vex-session-start.age".publicKeys = [ shane ];
   "vex-compaction.age".publicKeys = [ shane ];
   "vex-session-reload.age".publicKeys = [ shane ];
-  "postman-api.age".publicKeys = [ shane ];
   "langsmith-api.age".publicKeys = [ shane ];
 }
