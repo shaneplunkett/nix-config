@@ -2,6 +2,7 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ./networking-hetzner.nix
     ./modules
     ../../modules/common
     ../../modules/nixos/docker.nix
@@ -10,5 +11,5 @@
     ../../modules/nixos/maintenance.nix
   ];
 
-  system.stateVersion = "24.11";
+  system.stateVersion = "23.11";
 }

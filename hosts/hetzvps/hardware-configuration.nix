@@ -17,7 +17,7 @@
   };
 
   fileSystems."/boot/efi" = {
-    device = "/dev/disk/by-uuid/FF96-CA8E";
+    device = "/dev/disk/by-uuid/3D18-653A";
     fsType = "vfat";
   };
 
