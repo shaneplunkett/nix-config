@@ -15,15 +15,41 @@
       };
 
       "pve" = {
-        hostname = "192.168.1.169";
+        hostname = "pve";
         user = "shane";
         identityFile = "~/.ssh/id_ed25519";
       };
 
       "cube" = {
-        hostname = "192.168.1.238";
+        hostname = "cube";
         user = "shane";
         identityFile = "~/.ssh/id_ed25519";
+      };
+
+      "desktop" = {
+        hostname = "desktop";
+        user = "shane";
+        identityFile = "~/.ssh/id_ed25519";
+      };
+
+      "mbp" = {
+        hostname = "shanes-macbook-pro";
+        user = "shane";
+        identityFile = "~/.ssh/id_ed25519";
+        requestTTY = "yes";
+        remoteCommand = "fish -l";
+        serverAliveInterval = 60;
+        serverAliveCountMax = 3;
+      };
+
+      "wmbp" = {
+        hostname = "shanes-work-macbook-pro";
+        user = "shane";
+        identityFile = "~/.ssh/id_ed25519";
+        requestTTY = "yes";
+        remoteCommand = "fish -l";
+        serverAliveInterval = 60;
+        serverAliveCountMax = 3;
       };
     };
   };
