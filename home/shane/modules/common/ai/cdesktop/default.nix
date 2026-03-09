@@ -12,8 +12,8 @@ let
   };
 in
 {
-  # Only obsidian runs locally in Desktop — everything else goes through MCPHub
   desktopMcpServers = {
+    neovim = shared.mcpServers.neovim;
     obsidian = shared.mcpServers.obsidian;
   };
 

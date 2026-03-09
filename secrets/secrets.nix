@@ -1,5 +1,6 @@
 let
   shane = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINfq31bP+xQwlO/joZeGU6LaLYZXV2ql7TLSv5ToVUtJ";
+  hetzvps = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHEBFW/DDx2DP4ulllLkxL6EBvpjOST9H6mPYfcI0eV+";
 in
 {
   "context7.age".publicKeys = [ shane ];
@@ -11,7 +12,7 @@ in
   "google-oauth-client-secret.age".publicKeys = [ shane ];
   "tailscale-api.age".publicKeys = [ shane ];
   "tailscale-tailnet.age".publicKeys = [ shane ];
-  "tailscale-authkey.age".publicKeys = [ shane ];
+  "tailscale-authkey.age".publicKeys = [ shane hetzvps ];
   "gemini.age".publicKeys = [ shane ];
   "posthog.age".publicKeys = [ shane ];
   "vex-core.age".publicKeys = [ shane ];
