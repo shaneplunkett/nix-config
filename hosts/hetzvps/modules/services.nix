@@ -4,6 +4,10 @@
     enable = true;
     useRoutingFeatures = "both";
     authKeyFile = config.age.secrets.tailscale-authkey.path;
+    extraUpFlags = [
+      "--advertise-exit-node"
+      "--hostname=hetzvps"
+    ];
   };
 
   age.secrets.tailscale-authkey = {
