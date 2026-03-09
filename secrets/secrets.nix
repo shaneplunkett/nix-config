@@ -1,6 +1,6 @@
 let
   shane = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINfq31bP+xQwlO/joZeGU6LaLYZXV2ql7TLSv5ToVUtJ";
-  hetzvps = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHEBFW/DDx2DP4ulllLkxL6EBvpjOST9H6mPYfcI0eV+";
+  hetzvps = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDc1xHPXKWRdlPL7Kkk44Kxwo5fWGuMF/X8TnnKeejyI";
 in
 {
   "context7.age".publicKeys = [ shane ];
@@ -22,4 +22,5 @@ in
   "vex-compaction.age".publicKeys = [ shane ];
   "vex-session-reload.age".publicKeys = [ shane ];
   "langsmith-api.age".publicKeys = [ shane ];
+  "restic-password.age".publicKeys = [ shane ];
 }
