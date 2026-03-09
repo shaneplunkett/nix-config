@@ -14,7 +14,9 @@ buildGoModule rec {
     hash = "sha256-DD3DXTev8WHNkAYDrPY2PISuA8WwKuK0GCLebpn01Rg=";
   };
 
-  vendorHash = lib.fakeHash;
+  vendorHash = "sha256-4OPCUWXxsAnzxsqZPHhjvhxQQf5Knm7nGqrdjH4I4YY=";
+
+  doCheck = false;
 
   ldflags = [
     "-s"

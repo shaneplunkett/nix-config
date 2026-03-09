@@ -5,6 +5,7 @@
     fd
     bat
     lsd
+    lazycommit
     lazygit
     starship
     obsidian
