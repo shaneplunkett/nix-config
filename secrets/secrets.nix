@@ -1,6 +1,6 @@
 let
   shane = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINfq31bP+xQwlO/joZeGU6LaLYZXV2ql7TLSv5ToVUtJ";
-  hetzvps = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAXT4KdjMrcTEpD69iRyUv4KS87LQGrImZG/HRZKWJ6O";
+  hetzvps = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZsq1NuUb93XrV2+aX6ztiSOpvh2Ym/u8ssrxY44p+h";
 in
 {
   "context7.age".publicKeys = [ shane ];

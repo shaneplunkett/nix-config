@@ -17,7 +17,7 @@
         ];
         ipv6.addresses = [
           { address = "2a01:4f8:1c19:fa80::1"; prefixLength = 64; }
-          { address = "fe80::9000:7ff:fe57:2eea"; prefixLength = 64; }
+          { address = "fe80::9000:7ff:fe57:37a5"; prefixLength = 64; }
         ];
         ipv4.routes = [ { address = "172.31.1.1"; prefixLength = 32; } ];
         ipv6.routes = [ { address = "fe80::1"; prefixLength = 128; } ];
@@ -25,6 +25,6 @@
     };
   };
   services.udev.extraRules = ''
-    ATTR{address}=="92:00:07:57:2e:ea", NAME="eth0"
+    ATTR{address}=="92:00:07:57:37:a5", NAME="eth0"
   '';
 }
