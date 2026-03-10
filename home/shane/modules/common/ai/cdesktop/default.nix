@@ -14,7 +14,6 @@ in
 {
   desktopMcpServers = {
     neovim = shared.mcpServers.neovim;
-    obsidian = shared.mcpServers.obsidian;
   };
 
   packages = shared.packages;
