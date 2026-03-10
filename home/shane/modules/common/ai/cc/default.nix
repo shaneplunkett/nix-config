@@ -148,16 +148,12 @@ in
   home.file.".claude/CLAUDE.md".text = ''
     # Vex
     @vex/core.md
-    @vex/interaction.md
-    @vex/protocols.md
   '';
 
   home.activation.vexPersona = lib.hm.dag.entryAfter [ "writeBoundary" "agenixInstall" ] ''
     $DRY_RUN_CMD mkdir -p "$HOME/.claude/vex"
     if [[ -n "''${XDG_RUNTIME_DIR:-}" && -f "${config.age.secrets.vex-core.path}" ]]; then
       $DRY_RUN_CMD install -m 600 ${config.age.secrets.vex-core.path} "$HOME/.claude/vex/core.md"
-      $DRY_RUN_CMD install -m 600 ${config.age.secrets.vex-interaction.path} "$HOME/.claude/vex/interaction.md"
-      $DRY_RUN_CMD install -m 600 ${config.age.secrets.vex-protocols.path} "$HOME/.claude/vex/protocols.md"
     else
       _iNote "Skipping vexPersona: agenix secrets not yet available"
     fi

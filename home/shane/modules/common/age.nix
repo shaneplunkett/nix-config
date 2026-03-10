@@ -27,12 +27,6 @@
       vex-core = {
         file = ../../../../secrets/vex-core.age;
       };
-      vex-interaction = {
-        file = ../../../../secrets/vex-interaction.age;
-      };
-      vex-protocols = {
-        file = ../../../../secrets/vex-protocols.age;
-      };
       vex-session-start = {
         file = ../../../../secrets/vex-session-start.age;
       };
