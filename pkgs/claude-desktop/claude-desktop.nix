@@ -8,9 +8,9 @@ let
   pname = "claude-desktop";
 
   # ── Version config (update these values to bump) ─────────────────────
-  version = "1.1.4173";
-  debVersion = "1.3.14";
-  hash = "sha256-yoVXMNYdqCoSGWGf2YSZkka1KBO2ldvhdH0f1eLWQEo=";
+  version = "1.1.5749";
+  debVersion = "1.3.17";
+  hash = "sha256-Wxizu+/7xXBbutS/+euU5QW4ec836CWdUqF+G6Swfzg=";
   # ─────────────────────────────────────────────────────────────────────
 
   src = fetchurl {
