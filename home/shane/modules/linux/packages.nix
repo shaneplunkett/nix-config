@@ -28,7 +28,6 @@
     bun
     bruno
     kubectl
-    alvr
     intiface-central
     (google-chrome.override {
       commandLineArgs = [
