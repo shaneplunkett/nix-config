@@ -5,20 +5,20 @@
 }:
 buildNpmPackage {
   pname = "tweakcc";
-  version = "4.0.6";
+  version = "4.0.11";
 
   src = fetchFromGitHub {
     owner = "Piebald-AI";
     repo = "tweakcc";
-    rev = "v4.0.6";
-    hash = "sha256-MsEKV0Grm0OqeFDPsc98qfh5BtC/zk61KeCEJmo3iR8=";
+    rev = "v4.0.11";
+    hash = "sha256-ZsxQ+WDeYQGZ7nENZQWdY/f/Jz1BINcH7yrwFWKkaMc=";
   };
 
   postPatch = ''
     cp ${./tweakcc-package-lock.json} package-lock.json
   '';
 
-  npmDepsHash = "sha256-oAA4iXeVCemwkbSuG3w9bRF7eCxwSSm3IEANSTCNf4A=";
+  npmDepsHash = "sha256-PDpuJKa96HnksgDdndXkmWuDpbkiKgDYDe+GlwPwcic=";
 
   makeCacheWritable = true;
   npmFlags = [ "--legacy-peer-deps" ];

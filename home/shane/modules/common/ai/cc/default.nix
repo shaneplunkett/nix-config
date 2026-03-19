@@ -5,8 +5,6 @@
   ...
 }:
 let
-  claudeNodejs = pkgs.nodejs;
-
   # MCP server definitions (MCPHub local docker compose + direct local servers)
   shared = import ../mcp {
     inherit pkgs config;
@@ -19,15 +17,28 @@ let
   tweakcc = pkgs.callPackage ./tweakcc.nix { };
   tweakccConfig = ./tweakcc-config.json;
 
+  # vex-statusline — themed status line
+  vex-statusline = pkgs.writeShellScriptBin "vex-statusline" ''
+    exec ${pkgs.python3}/bin/python3 ${./vex-statusline.py}
+  '';
+
   claude-code-vex = pkgs.claude-code.overrideAttrs (old: {
     nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ tweakcc ];
     postInstall = old.postInstall + ''
-      export HOME=$(mktemp -d)
-      mkdir -p $HOME/.tweakcc
-      cp ${tweakccConfig} $HOME/.tweakcc/config.json
-      chmod u+w $HOME/.tweakcc/config.json
-      TWEAKCC_CC_INSTALLATION_PATH=$out/lib/node_modules/@anthropic-ai/claude-code/cli.js \
-        tweakcc --apply
+      export TWEAKCC_CONFIG_DIR=$(mktemp -d)
+      cp ${tweakccConfig} $TWEAKCC_CONFIG_DIR/config.json
+      chmod u+w $TWEAKCC_CONFIG_DIR/config.json
+
+      CLI=$out/lib/node_modules/@anthropic-ai/claude-code/cli.js
+      BEFORE=$(sha256sum "$CLI" | cut -d' ' -f1)
+
+      TWEAKCC_CC_INSTALLATION_PATH="$CLI" tweakcc --apply
+
+      AFTER=$(sha256sum "$CLI" | cut -d' ' -f1)
+      if [ "$BEFORE" = "$AFTER" ]; then
+        echo "ERROR: tweakcc --apply made no changes to cli.js — patches are stale"
+        exit 1
+      fi
     '';
   });
 
@@ -108,7 +119,7 @@ in
 
       statusLine = {
         type = "command";
-        command = "${claudeNodejs}/bin/npx ccstatusline@latest";
+        command = "${vex-statusline}/bin/vex-statusline";
       };
 
       hooks = {
