@@ -8,6 +8,7 @@
     ./gitblame.nix
     ./lazydev.nix
     ./lazygit.nix
+    ./lint.nix
     ./lsp.nix
     ./lualine.nix
     ./luasnip.nix

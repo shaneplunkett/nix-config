@@ -19,6 +19,12 @@
       action.__raw = "function() vim.ui.open(vim.fn.expand('<cfile>')) end";
       options.desc = "Open with system app";
     }
+    {
+      mode = "n";
+      key = "gl";
+      action.__raw = "function() vim.diagnostic.open_float() end";
+      options.desc = "Line diagnostics";
+    }
   ];
 
 }

@@ -49,6 +49,11 @@
         };
         pyright = {
           enable = true;
+          settings = {
+            python.analysis = {
+              typeCheckingMode = "basic";
+            };
+          };
         };
         lua_ls = {
           enable = true;
@@ -130,7 +135,7 @@
         dockerls.enable = true;
         terraformls.enable = true;
         jsonls.enable = true;
-        eslint.enable = true;
+        eslint.enable = false;
         yamlls.enable = true;
         phpactor.enable = true;
         ruby_lsp.enable = true;
