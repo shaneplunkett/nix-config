@@ -1,4 +1,7 @@
 { ... }:
+let
+  colours = import ../common/theme/colours.nix;
+in
 {
   wayland.windowManager.hyprland = {
     enable = true;
@@ -128,8 +131,8 @@
           enabled = true;
           range = 4;
           render_power = 3;
-          color = "rgba(1e1e2eff)"; # Base
-          color_inactive = "rgba(181825ff)"; # Mantle
+          color = "rgba(${colours.base}ff)";
+          color_inactive = "rgba(${colours.mantle}ff)";
         };
       };
 
@@ -139,18 +142,18 @@
         gaps_out = 25;
         resize_on_border = true;
 
-        "col.active_border" = "rgba(89b4faff) rgba(89dcebff) 45deg";
-        "col.inactive_border" = "rgba(585b70ff)";
+        "col.active_border" = "rgba(${colours.mauve}ff) rgba(${colours.lavender}ff) 45deg";
+        "col.inactive_border" = "rgba(${colours.surface2}ff)";
       };
 
       group = {
-        "col.border_active" = "rgba(a6e3a1ff)";
-        "col.border_inactive" = "rgba(585b70ff)";
+        "col.border_active" = "rgba(${colours.green}ff)";
+        "col.border_inactive" = "rgba(${colours.surface2}ff)";
         groupbar = {
           font_size = 10;
           gradients = false;
-          "col.active" = "rgba(89b4faff)";
-          "col.inactive" = "rgba(313244ff)";
+          "col.active" = "rgba(${colours.mauve}ff)";
+          "col.inactive" = "rgba(${colours.surface0}ff)";
         };
       };
     };

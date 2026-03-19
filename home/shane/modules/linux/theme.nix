@@ -8,13 +8,6 @@ in
 {
   fonts.fontconfig.enable = true;
 
-  home.pointerCursor = {
-    size = cursorSize;
-    gtk.enable = true;
-    x11.enable = true;
-    package = pkgs.catppuccin-cursors.mochaBlue;
-    name = "catppuccin-mocha-blue-cursors";
-  };
 
   gtk = {
     enable = true;
@@ -25,29 +18,8 @@ in
       size = fontSize;
     };
 
-    theme = {
-      name = "catppuccin-mocha-blue-standard+rimless,black";
-      package = pkgs.catppuccin-gtk.override {
-        accents = [ "blue" ];
-        size = "standard";
-        tweaks = [ "rimless" "black" ];
-        variant = "mocha";
-      };
-    };
-
-    iconTheme = {
-      name = "Papirus-Dark";
-      package = pkgs.catppuccin-papirus-folders.override {
-        flavor = "mocha";
-        accent = "blue";
-      };
-    };
-
-    cursorTheme = {
-      name = "catppuccin-mocha-blue-cursors";
-      package = pkgs.catppuccin-cursors.mochaBlue;
-      size = cursorSize;
-    };
+    # catppuccin/nix handles gtk.theme and gtk.iconTheme via catppuccin.gtk
+    # catppuccin/nix handles gtk.cursorTheme via catppuccin.cursors
 
     gtk3.extraConfig = {
       gtk-application-prefer-dark-theme = 1;

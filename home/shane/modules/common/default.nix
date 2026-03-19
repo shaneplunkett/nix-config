@@ -11,6 +11,7 @@
     ./packages.nix
     ./ssh.nix
     ./terminal
+    ./theme
     ./youtui
   ];
 }

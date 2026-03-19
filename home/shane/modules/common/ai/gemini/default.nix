@@ -11,27 +11,28 @@ let
     homeDirectory = config.home.homeDirectory;
   };
 
-  # Catppuccin Mocha theme
+  colours = import ../../theme/colours.nix;
+
   catppuccinMocha = {
     name = "Catppuccin Mocha";
     type = "custom";
-    Background = "#1e1e2e";
-    Foreground = "#cdd6f4";
-    LightBlue = "#89dceb";
-    AccentBlue = "#89b4fa";
-    AccentPurple = "#cba6f7";
-    AccentCyan = "#94e2d5";
-    AccentGreen = "#a6e3a1";
-    AccentYellow = "#f9e2af";
-    AccentRed = "#f38ba8";
-    Comment = "#9399b2";
-    Gray = "#7f849c";
+    Background = "#${colours.base}";
+    Foreground = "#${colours.text}";
+    LightBlue = "#${colours.sky}";
+    AccentBlue = "#${colours.blue}";
+    AccentPurple = "#${colours.mauve}";
+    AccentCyan = "#${colours.teal}";
+    AccentGreen = "#${colours.green}";
+    AccentYellow = "#${colours.yellow}";
+    AccentRed = "#${colours.red}";
+    Comment = "#${colours.overlay2}";
+    Gray = "#${colours.overlay1}";
     DiffAdded = "#546d5c";
     DiffRemoved = "#734a5f";
     GradientColors = [
-      "#89b4fa"
-      "#cba6f7"
-      "#f38ba8"
+      "#${colours.blue}"
+      "#${colours.mauve}"
+      "#${colours.red}"
     ];
   };
 in

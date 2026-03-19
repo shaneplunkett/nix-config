@@ -5,6 +5,7 @@ let
     home-manager
     nixvim
     agenix
+    catppuccin
     ;
 in
 {
@@ -31,6 +32,7 @@ in
         # Host-specific configuration
         hostConfig
         agenix.nixosModules.default
+        catppuccin.nixosModules.catppuccin
         home-manager.nixosModules.home-manager
 
         # Home Manager configuration
@@ -43,6 +45,7 @@ in
             sharedModules = [
               nixvim.homeModules.nixvim
               agenix.homeManagerModules.default
+              catppuccin.homeModules.catppuccin
             ];
           };
         }

@@ -3,7 +3,8 @@
   ...
 }:
 let
-  themeConfig = import ./catppuccin_mocha.nix;
+  colours = import ../../common/theme/colours.nix;
+  themeConfig = import ./catppuccin_mocha.nix { inherit colours; };
 in
 {
   programs.hyprpanel = {

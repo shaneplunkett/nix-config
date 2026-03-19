@@ -9,6 +9,7 @@ let
     homebrew-core
     homebrew-cask
     agenix
+    catppuccin
     ;
 in
 {
@@ -52,6 +53,7 @@ in
             sharedModules = [
               nixvim.homeModules.nixvim
               agenix.homeManagerModules.default
+              catppuccin.homeModules.catppuccin
             ];
           };
         }

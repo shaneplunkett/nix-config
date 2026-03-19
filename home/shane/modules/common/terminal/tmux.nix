@@ -3,13 +3,15 @@
   ...
 }:
 let
+  colours = import ../theme/colours.nix;
+
   bg = "default";
-  default_fg = "#cdd6f4";
-  session_fg = "#a6e3a1";
-  session_selection_fg = "#1e1e2e";
-  session_selection_bg = "#89b4fa";
-  active_window_fg = "#89b4fa";
-  active_pane_border = "#b4befe";
+  default_fg = "#${colours.text}";
+  session_fg = "#${colours.green}";
+  session_selection_fg = "#${colours.base}";
+  session_selection_bg = "#${colours.mauve}";
+  active_window_fg = "#${colours.mauve}";
+  active_pane_border = "#${colours.lavender}";
 in
 {
   programs.tmux = {

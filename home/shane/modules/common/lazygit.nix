@@ -1,29 +1,32 @@
 { ... }:
+let
+  colours = import ./theme/colours.nix;
+in
 {
   xdg.configFile."lazygit/config.yml".text = ''
     gui:
       theme:
         activeBorderColor:
-          - '#cba6f7'
+          - '#${colours.mauve}'
           - bold
         inactiveBorderColor:
-          - '#a6adc8'
+          - '#${colours.subtext0}'
         optionsTextColor:
-          - '#89b4fa'
+          - '#${colours.blue}'
         selectedLineBgColor:
-          - '#313244'
+          - '#${colours.surface0}'
         cherryPickedCommitBgColor:
-          - '#45475a'
+          - '#${colours.surface1}'
         cherryPickedCommitFgColor:
-          - '#cba6f7'
+          - '#${colours.mauve}'
         unstagedChangesColor:
-          - '#f38ba8'
+          - '#${colours.red}'
         defaultFgColor:
-          - '#cdd6f4'
+          - '#${colours.text}'
         searchingActiveBorderColor:
-          - '#f9e2af'
+          - '#${colours.yellow}'
       authorColors:
-        '*': '#b4befe'
+        '*': '#${colours.lavender}'
     customCommands:
       - key: "<c-a>"
         description: "AI commit message"
