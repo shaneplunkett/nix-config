@@ -57,6 +57,12 @@ in
       ] ++ lib.optionals (shell == "hyprpanel") [
         "$mod, space, exec, rofi -show drun"
         "$mod, V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
+      ] ++ lib.optionals (shell == "noctalia") [
+        "$mod, space, exec, noctalia-shell ipc call launcher toggle"
+        "$mod, V, exec, noctalia-shell ipc call launcher clipboard"
+        "$mod, N, exec, noctalia-shell ipc call controlCenter toggle"
+        "$mod SHIFT, L, exec, noctalia-shell ipc call lockScreen lock"
+        "$mod SHIFT, T, exec, noctalia-shell ipc call plugin:vex-timer toggle"
       ];
 
       bindm = [
@@ -98,7 +104,7 @@ in
       ];
 
       monitor = [
-        "DP-2,3840x2160@240,0x0,1,vrr, 2"
+        "DP-2,3840x2160@240,0x0,1.2,vrr,2"
         "HDMI-A-1, 2560x1440@60, -3000x0, 1, transform, 3"
       ];
 
