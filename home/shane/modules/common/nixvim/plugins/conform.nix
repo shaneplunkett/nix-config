@@ -12,6 +12,7 @@
     nixfmt
     hadolint
     rubocop
+    gofumpt
     gotools
     terraform-ls
   ] ++ lib.optionals pkgs.stdenv.isDarwin [
@@ -49,7 +50,7 @@
           typescriptreact = [ "prettier" ];
           rust = [ "rustfmt" ];
           go = [
-            "gofmt"
+            "gofumpt"
             "goimports"
           ];
           astro = [ "prettier" ];

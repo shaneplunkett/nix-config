@@ -6,6 +6,7 @@ let
     nixvim
     agenix
     catppuccin
+    noctalia
     ;
 in
 {
@@ -15,11 +16,13 @@ in
       system ? "x86_64-linux",
       hostConfig,
       homeConfig ? (rootPath + /home/shane/home.nix),
+      compositor ? "hyprland",
+      shell ? "hyprpanel",
       extraModules ? [ ],
     }:
     nixpkgs.lib.nixosSystem {
       inherit system;
-      specialArgs = { inherit inputs; };
+      specialArgs = { inherit inputs compositor shell; };
       modules = [
         # Hostname injection + custom packages overlay
         {
@@ -40,12 +43,14 @@ in
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
-            extraSpecialArgs = { inherit inputs; };
+            extraSpecialArgs = { inherit inputs compositor shell; };
             users.shane = import homeConfig;
             sharedModules = [
               nixvim.homeModules.nixvim
               agenix.homeManagerModules.default
               catppuccin.homeModules.catppuccin
+            ] ++ nixpkgs.lib.optionals (shell == "noctalia") [
+              noctalia.homeModules.default
             ];
           };
         }

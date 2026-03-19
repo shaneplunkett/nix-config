@@ -29,13 +29,9 @@
     bruno
     kubectl
     intiface-central
-    (google-chrome.override {
-      commandLineArgs = [
-        "--remote-debugging-port=9222"
-        "--remote-debugging-address=127.0.0.1"
-        "--user-data-dir=$HOME/.config/google-chrome-debug"
-      ];
-    })
+    megacmd
+    yt-dlp
+    google-chrome
     qalculate-qt
     vesktop
   ];

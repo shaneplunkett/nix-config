@@ -28,6 +28,7 @@
     cursorline = true;
     scrolloff = 999;
     completeopt = "menu,menuone,noselect";
+    swapfile = false;
 
   };
 }

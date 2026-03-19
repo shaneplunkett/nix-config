@@ -7,6 +7,9 @@ let
   themeConfig = import ./catppuccin_mocha.nix { inherit colours; };
 in
 {
+  # Shell-specific services launched via compositor exec-once
+  wayland.windowManager.hyprland.settings.exec-once = [ "swaync" ];
+
   programs.hyprpanel = {
     enable = true;
     systemd.enable = true;
@@ -17,12 +20,12 @@ in
 
         font = {
           name = "Mononoki Nerd Font";
-          size = "16px";
+          size = "20px";
         };
       } themeConfig.theme;
 
       bar.layouts = {
-        "*" = {
+        "DP-2" = {
           left = [
             "cpu"
             "ram"
@@ -33,6 +36,7 @@ in
             "windowtitle"
           ];
           right = [
+            "custom/wallpaper"
             "systray"
             "volume"
             "network"
@@ -41,6 +45,11 @@ in
             "notifications"
             "dashboard"
           ];
+        };
+        "HDMI-A-1" = {
+          left = [];
+          middle = [];
+          right = [];
         };
 
       };

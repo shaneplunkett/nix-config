@@ -1,6 +1,7 @@
 { ... }:
 {
   imports = [
+    ./cheatsheet.nix
     ./cmp.nix
     ./conform.nix
     ./flash.nix

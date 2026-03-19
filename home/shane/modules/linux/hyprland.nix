@@ -1,19 +1,16 @@
-{ ... }:
+{ lib, compositor, shell, ... }:
 let
   colours = import ../common/theme/colours.nix;
 in
 {
   wayland.windowManager.hyprland = {
-    enable = true;
+    enable = (compositor == "hyprland");
     settings = {
       "$mod" = "SUPER";
       "$terminal" = "ghostty";
 
       exec-once = [
-        "swaync"
         "systemctl --user start hyprpolkitagent"
-        "hyprpanel"
-        "hyprpaper"
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
       ];
@@ -22,8 +19,6 @@ in
         "$mod_SHIFT, Q, killactive"
         "$mod, A, exec, claude"
         "$mod, RETURN, exec, $terminal"
-        "$mod, space, exec, rofi -show drun"
-        "$mod, V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
         "$mod_SHIFT, 4, exec, hyprshot -m region --clipboard-only"
         "$mod_SHIFT,W,exec,hyprctl dispatch togglehidden"
         "$mod_SHIFT,F,togglefloating"
@@ -59,6 +54,9 @@ in
         "$mod,l,movefocus,r"
         "$mod,k,movefocus,u"
         "$mod,j,movefocus,d"
+      ] ++ lib.optionals (shell == "hyprpanel") [
+        "$mod, space, exec, rofi -show drun"
+        "$mod, V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
       ];
 
       bindm = [

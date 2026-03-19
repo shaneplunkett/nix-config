@@ -32,6 +32,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     catppuccin.url = "github:catppuccin/nix";
+
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    noctalia-qs = {
+      url = "github:noctalia-dev/noctalia-qs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -69,6 +78,8 @@
           hostname = "desktop";
           system = "x86_64-linux";
           hostConfig = ./hosts/desktop/configuration.nix;
+          compositor = "hyprland"; # or "niri"
+          shell = "hyprpanel"; # or "noctalia"
         };
 
         hetzvps = lib.mkNixosSystem {

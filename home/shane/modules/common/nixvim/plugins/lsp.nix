@@ -26,6 +26,7 @@
 
         nixd = {
           enable = true;
+          cmd = [ "nixd" "--log=error" ];
           settings = {
             formatting.command = [ "nixfmt" ];
             nixpkgs.expr = "import <nixpkgs> {}";
@@ -35,6 +36,16 @@
         gopls = {
           enable = true;
           autostart = true;
+          settings = {
+            gofumpt = true;
+            staticcheck = true;
+            usePlaceholders = true;
+            analyses = {
+              unusedparams = true;
+              unusedvariable = true;
+              shadow = true;
+            };
+          };
         };
         pyright = {
           enable = true;

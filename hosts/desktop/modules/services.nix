@@ -1,4 +1,7 @@
-{ pkgs, ... }:
+{ pkgs, compositor, ... }:
+let
+  sessionCmd = if compositor == "niri" then "niri-session" else "start-hyprland";
+in
 {
 
   services.xserver.videoDrivers = [ "amdgpu" ];
@@ -11,7 +14,7 @@
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.tuigreet}/bin/tuigreet --time --time-format '%I:%M %p | %a • %h | %F' --cmd start-hyprland --greeting 'Welcome to NixOS!'";
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --time-format '%I:%M %p | %a • %h | %F' --cmd ${sessionCmd} --greeting 'Welcome to NixOS!'";
         user = "greeter";
       };
     };

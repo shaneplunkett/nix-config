@@ -1,8 +1,8 @@
-{ ... }:
+{ pkgs, compositor, ... }:
 {
   programs.neovim.defaultEditor = true;
   programs.hyprland = {
-    enable = true;
+    enable = (compositor == "hyprland");
   };
 
   #Hyprland sessionVariables
@@ -10,6 +10,11 @@
     NIXOS_OZONE_LAYER = "1";
     MOZ_ENABLE_WAYLAND = "1";
     WLR_RENDERER_ALLOW_SOFTWARE = "1";
+  };
+
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   };
 
   programs.thunar.enable = true;

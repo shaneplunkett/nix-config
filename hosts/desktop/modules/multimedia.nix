@@ -1,8 +1,8 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 {
   # v4l2loopback — creates a virtual camera device that OBS can output to
-  boot.extraModulePackages = with pkgs.config.boot.kernelPackages or pkgs.linuxPackages_latest; [
-    pkgs.linuxPackages_latest.v4l2loopback
+  boot.extraModulePackages = [
+    config.boot.kernelPackages.v4l2loopback
   ];
   boot.kernelModules = [ "v4l2loopback" ];
   boot.extraModprobeConfig = ''
@@ -20,4 +20,26 @@
     # Camera controls GUI for tweaking webcam settings (exposure, white balance, etc.)
     pkgs.cameractrls-gtk4
   ];
+
+  # Virtual audio loopback — creates a sink OBS outputs to and a source Chrome sees as a mic
+  services.pipewire.extraConfig.pipewire."20-obs-virtual-mic" = {
+    "context.modules" = [
+      {
+        name = "libpipewire-module-loopback";
+        args = {
+          "node.description" = "OBS Virtual Mic";
+          "capture.props" = {
+            "node.name" = "obs_virtual_mic_sink";
+            "media.class" = "Audio/Sink";
+            "audio.position" = [ "FL" "FR" ];
+          };
+          "playback.props" = {
+            "node.name" = "obs_virtual_mic_source";
+            "media.class" = "Audio/Source";
+            "audio.position" = [ "FL" "FR" ];
+          };
+        };
+      }
+    ];
+  };
 }

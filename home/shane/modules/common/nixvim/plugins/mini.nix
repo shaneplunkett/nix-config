@@ -51,10 +51,6 @@
       enable = true;
       settings = {
         modes = { insert = true; command = false; terminal = false; };
-        skip_next = [ "" " " "\t" "\r" "\n" "}" "]" ")" ">" ];
-        skip_ts = [ "string" ];
-        skip_unbalanced = true;
-        markdown = true;
       };
     };
   };
