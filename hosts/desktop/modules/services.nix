@@ -20,6 +20,15 @@ in
     };
   };
 
+  # Passwordless sudo for nixos-rebuild (allows Claude Code to switch)
+  security.sudo.extraRules = [{
+    users = [ "shane" ];
+    commands = [{
+      command = "/run/current-system/sw/bin/nixos-rebuild";
+      options = [ "NOPASSWD" ];
+    }];
+  }];
+
   systemd.services.greetd = {
     serviceConfig = {
       Type = "idle";
