@@ -79,7 +79,7 @@
           system = "x86_64-linux";
           hostConfig = ./hosts/desktop/configuration.nix;
           compositor = "hyprland"; # or "niri"
-          shell = "hyprpanel"; # or "noctalia"
+          shell = "noctalia"; # or "hyprpanel"
         };
 
         hetzvps = lib.mkNixosSystem {
