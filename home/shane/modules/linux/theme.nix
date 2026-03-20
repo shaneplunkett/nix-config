@@ -8,6 +8,13 @@ in
 {
   fonts.fontconfig.enable = true;
 
+  home.pointerCursor = {
+    name = "catppuccin-mocha-mauve-cursors";
+    package = pkgs.catppuccin-cursors.mochaMauve;
+    size = cursorSize;
+    gtk.enable = true;
+    x11.enable = true;
+  };
 
   gtk = {
     enable = true;
