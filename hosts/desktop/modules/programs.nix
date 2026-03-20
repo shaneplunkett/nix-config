@@ -18,8 +18,6 @@
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   };
 
-  programs.thunar.enable = true;
-  programs.xfconf.enable = true;
 
   programs.appimage = {
     enable = true;

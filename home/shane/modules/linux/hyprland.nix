@@ -99,9 +99,9 @@ in
         "size 500 430, match:class ^com\.example\.launcher$"
         # Plex
         "opaque 1, match:title ^Plex.*$"
-        # Thunar
-        "float 1, match:title ^.*Thunar$"
-        "size 1100 700, match:title ^.*Thunar$"
+        # Nemo
+        "float 1, match:class ^nemo$"
+        "size 1100 700, match:class ^nemo$"
         # Bluetooth
         "float 1, match:title ^.*Bluetooth Devices$"
         "size 1100 700, match:title ^.*Bluetooth Devices$"

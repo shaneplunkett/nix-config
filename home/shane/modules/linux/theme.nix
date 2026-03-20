@@ -46,4 +46,22 @@ in
     enable = true;
     platformTheme.name = "gtk";
   };
+
+  xdg.desktopEntries.nemo = {
+    name = "Files";
+    comment = "Access and organise files";
+    exec = "nemo %U";
+    icon = "nemo";
+    terminal = false;
+    type = "Application";
+    categories = [ "GNOME" "GTK" "Utility" "Core" "FileManager" ];
+    mimeType = [ "inode/directory" ];
+  };
+
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "inode/directory" = "nemo.desktop";
+    };
+  };
 }

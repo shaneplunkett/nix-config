@@ -14,8 +14,8 @@
     hyprpolkitagent
     wl-clipboard
     tuigreet
-    thunar-archive-plugin
-    thunar-volman
+    nemo-with-extensions
+    file-roller
     openocd
   ];
 
