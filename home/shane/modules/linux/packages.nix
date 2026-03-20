@@ -47,6 +47,5 @@ in
     yt-dlp
     google-chrome
     qalculate-qt
-    vesktop
   ];
 }

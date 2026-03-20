@@ -60,7 +60,7 @@ in
     [Desktop Entry]
     Name=Claude Desktop
     Exec=${claude-desktop-wrapped}/bin/claude-desktop
-    Icon=claude
+    Icon=claude-desktop
     Type=Application
     Categories=Development;Utility;
   '';
