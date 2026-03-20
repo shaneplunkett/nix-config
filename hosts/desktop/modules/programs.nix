@@ -7,9 +7,10 @@
 
   #Hyprland sessionVariables
   environment.sessionVariables = {
-    NIXOS_OZONE_LAYER = "1";
+    NIXOS_OZONE_WL = "1";
     MOZ_ENABLE_WAYLAND = "1";
     WLR_RENDERER_ALLOW_SOFTWARE = "1";
+    CLAUDE_USE_WAYLAND = "1";
   };
 
   xdg.portal = {

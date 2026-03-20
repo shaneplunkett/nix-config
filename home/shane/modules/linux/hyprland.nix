@@ -1,4 +1,9 @@
-{ lib, compositor, shell, ... }:
+{
+  lib,
+  compositor,
+  shell,
+  ...
+}:
 let
   colours = import ../common/theme/colours.nix;
 in
@@ -54,10 +59,12 @@ in
         "$mod,l,movefocus,r"
         "$mod,k,movefocus,u"
         "$mod,j,movefocus,d"
-      ] ++ lib.optionals (shell == "hyprpanel") [
+      ]
+      ++ lib.optionals (shell == "hyprpanel") [
         "$mod, space, exec, rofi -show drun"
         "$mod, V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
-      ] ++ lib.optionals (shell == "noctalia") [
+      ]
+      ++ lib.optionals (shell == "noctalia") [
         "$mod, space, exec, noctalia-shell ipc call launcher toggle"
         "$mod, V, exec, noctalia-shell ipc call launcher clipboard"
         "$mod, N, exec, noctalia-shell ipc call controlCenter toggle"
@@ -123,6 +130,7 @@ in
 
       decoration = {
         rounding = 10;
+        border_part_of_window = false;
 
         blur = {
           enabled = true;
@@ -143,7 +151,7 @@ in
       general = {
         border_size = 2;
         gaps_in = 5;
-        gaps_out = 25;
+        gaps_out = 50;
         resize_on_border = true;
 
         "col.active_border" = "rgba(${colours.mauve}ff) rgba(${colours.lavender}ff) 45deg";

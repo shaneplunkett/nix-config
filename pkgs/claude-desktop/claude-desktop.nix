@@ -28,7 +28,7 @@ appimageTools.wrapType2 {
   extraInstallCommands = ''
     source "${makeWrapper}/nix-support/setup-hook"
     wrapProgram $out/bin/claude-desktop \
-      --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations}}"
+      --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations --force-device-scale-factor=1.2}}"
 
     # Install desktop file
     install -m 444 -D ${appimageContents}/io.github.aaddrick.claude-desktop-debian.desktop \

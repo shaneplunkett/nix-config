@@ -2,7 +2,21 @@
   pkgs,
   ...
 }:
+let
+  electronFlags = ''
+    --ozone-platform-hint=auto
+    --enable-features=WaylandWindowDecorations
+    --force-device-scale-factor=1.2
+  '';
+in
 {
+  # Electron app scaling flags (fractional scaling on Wayland)
+  xdg.configFile."electron-flags.conf".text = electronFlags;
+  xdg.configFile."electron32-flags.conf".text = electronFlags;
+  xdg.configFile."electron33-flags.conf".text = electronFlags;
+  xdg.configFile."electron34-flags.conf".text = electronFlags;
+  xdg.configFile."chrome-flags.conf".text = electronFlags;
+
   home.packages = with pkgs; [
     zip
     xz
