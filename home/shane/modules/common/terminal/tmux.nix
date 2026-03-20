@@ -40,7 +40,7 @@ in
           set -g @sessionx-preview-location 'top'
           set -g @sessionx-preview-size '50%'
           set -g @sessionx-filtered-sessions 'scratch'
-          set -g @sessionx-ls-command 'lsd --color=always --icon=always'
+          set -g @sessionx-ls-command 'eza --color=always --icons=always'
         '';
       }
       {
