@@ -3,6 +3,7 @@
   imports = [
     ./hardware-configuration.nix
     ./modules
+    ./services
     ../../modules/common
     ../../modules/nixos
     inputs.home-manager.nixosModules.default

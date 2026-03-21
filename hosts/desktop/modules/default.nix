@@ -8,7 +8,7 @@
     ./networking.nix
     ./packages.nix
     ./programs.nix
-    ./services.nix
+    ./services
     ./vr.nix
 
   ];
