@@ -1,8 +1,24 @@
-{ pkgs, compositor, ... }:
+{ pkgs, lib, compositor, ... }:
 let
   colours = import ../../../home/shane/modules/common/theme/colours.nix;
 
   greeterBackground = builtins.toString ../assets/greeter-bg.jpg;
+
+  # Minimal Hyprland config for the greeter session only
+  greeterHyprlandConfig = pkgs.writeText "greetd-hyprland.conf" ''
+    exec-once = regreet; hyprctl dispatch exit
+
+    monitor = DP-2, 3840x2160@240, 0x0, 1.2
+    monitor = HDMI-A-1, disable
+
+    misc {
+      disable_hyprland_logo = true
+      disable_splash_rendering = true
+    }
+
+    env = GTK_USE_PORTAL,0
+    env = GDK_DEBUG,no-portals
+  '';
 in
 {
   services.xserver.videoDrivers = [ "amdgpu" ];
@@ -14,6 +30,8 @@ in
   programs.regreet = {
     enable = true;
 
+    cageArgs = [ "-s" ];  # not used — overridden by Hyprland below
+
     settings = {
       background = {
         path = greeterBackground;
@@ -21,7 +39,7 @@ in
       };
 
       appearance = {
-        greeting_msg = "welcome back";
+        greeting_msg = "welcome back, shane";
       };
 
       GTK = {
@@ -40,47 +58,52 @@ in
     };
 
     extraCss = ''
-      /* ── catppuccin mocha — regreet theme ── */
+      /* ── catppuccin mocha — regreet ── */
 
-      /* main window — transparent so wallpaper shows */
+      /* transparent window so wallpaper picture shows through */
       window {
         background-color: transparent;
       }
 
-      /* ── frosted glass card ── */
-      box.container {
-        background-color: alpha(#${colours.base}, 0.65);
-        border-radius: 16px;
-        border: 1px solid alpha(#${colours.lavender}, 0.08);
-        box-shadow: 0 8px 32px alpha(black, 0.4);
-        padding: 36px 32px;
-      }
-
-      /* ── text ── */
+      /* all text defaults */
       label {
         color: #${colours.text};
         font-family: "Mononoki Nerd Font", monospace;
       }
 
-      label.greeting {
-        color: #${colours.text};
-        font-size: 18px;
-        font-weight: 400;
-        letter-spacing: 0.5px;
+      /* ── login card (frosted glass) ── */
+      frame.background {
+        background-color: alpha(#${colours.base}, 0.65);
+        border-radius: 16px;
+        border: 1px solid alpha(#${colours.lavender}, 0.08);
+        box-shadow: 0 8px 32px alpha(black, 0.4);
+        padding: 32px;
       }
 
-      label.clock {
+      frame.background > grid {
+        row-spacing: 12px;
+      }
+
+      /* ── greeting label ── */
+      label#message_label {
+        color: #${colours.text};
+        font-size: 16px;
+        margin-bottom: 12px;
+      }
+
+      /* ── clock ── */
+      frame#clock_frame {
+        background-color: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 12px 24px;
+      }
+
+      frame#clock_frame label {
         color: #${colours.lavender};
-        font-size: 64px;
+        font-size: 48px;
         font-weight: 300;
         letter-spacing: 2px;
-      }
-
-      label.date {
-        color: #${colours.subtext0};
-        font-size: 14px;
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
       }
 
       /* ── input fields ── */
@@ -89,11 +112,11 @@ in
         background-color: #${colours.surface0};
         border: 1px solid transparent;
         border-radius: 8px;
-        padding: 12px 14px;
+        padding: 10px 14px;
         font-family: "Mononoki Nerd Font", monospace;
         font-size: 14px;
         caret-color: #${colours.mauve};
-        transition: all 200ms ease;
+        min-height: 20px;
       }
 
       entry:focus {
@@ -102,37 +125,51 @@ in
         box-shadow: 0 0 0 3px alpha(#${colours.mauve}, 0.1);
       }
 
-      entry placeholder {
-        color: #${colours.overlay0};
-      }
-
-      /* ── buttons ── */
-      button {
+      /* ── login button ── */
+      button.suggested-action {
         color: #${colours.crust};
         background-color: #${colours.mauve};
         border: none;
         border-radius: 8px;
-        padding: 12px 20px;
+        padding: 10px 20px;
         font-family: "Mononoki Nerd Font", monospace;
         font-size: 14px;
         font-weight: 600;
         letter-spacing: 1px;
-        transition: all 200ms ease;
+        min-height: 20px;
       }
 
-      button:hover {
+      button.suggested-action:hover {
         background-color: #${colours.lavender};
       }
 
-      button:active {
+      button.suggested-action:active {
         background-color: #${colours.mauve};
       }
 
-      /* power/system buttons */
+      /* ── cancel / toggle buttons ── */
+      button#cancel_button,
+      button.toggle {
+        background-color: #${colours.surface0};
+        color: #${colours.subtext0};
+        border: none;
+        border-radius: 8px;
+        min-height: 20px;
+      }
+
+      button#cancel_button:hover,
+      button.toggle:hover {
+        background-color: #${colours.surface1};
+        color: #${colours.text};
+      }
+
+      /* ── power buttons ── */
       button.destructive-action {
         background-color: transparent;
         color: #${colours.overlay1};
         border: none;
+        border-radius: 8px;
+        padding: 8px 12px;
         font-size: 12px;
       }
 
@@ -141,50 +178,46 @@ in
         background-color: alpha(#${colours.surface1}, 0.4);
       }
 
-      button.flat {
-        background-color: transparent;
-        color: #${colours.overlay1};
-        border: none;
-      }
-
-      button.flat:hover {
-        color: #${colours.text};
-        background-color: alpha(#${colours.surface1}, 0.4);
-      }
-
-      /* ── combo boxes (session selector) ── */
+      /* ── session/user combo boxes ── */
       combobox {
-        color: #${colours.subtext0};
-        background-color: transparent;
-        border: 1px solid #${colours.surface1};
-        border-radius: 6px;
-        font-size: 12px;
+        font-family: "Mononoki Nerd Font", monospace;
       }
 
-      combobox:hover {
-        border-color: #${colours.overlay0};
+      combobox box.linked button.combo {
+        background-color: #${colours.surface0};
+        color: #${colours.subtext0};
+        border: 1px solid transparent;
+        border-radius: 8px;
+        padding: 8px 12px;
+        min-height: 20px;
+      }
+
+      combobox box.linked button.combo:hover {
+        background-color: #${colours.surface1};
         color: #${colours.text};
       }
 
-      dropdown {
+      /* combo popup menu */
+      window.popup > contents {
         background-color: #${colours.surface0};
-        border-radius: 8px;
         border: 1px solid #${colours.surface1};
+        border-radius: 8px;
       }
 
-      dropdown > popover > contents {
-        background-color: #${colours.surface0};
+      /* ── error infobar ── */
+      infobar {
+        background-color: alpha(#${colours.red}, 0.15);
+        border-radius: 8px;
       }
 
-      /* ── scrollbar ── */
-      scrollbar {
-        background-color: transparent;
+      infobar label {
+        color: #${colours.red};
       }
 
-      scrollbar slider {
-        background-color: #${colours.surface2};
-        border-radius: 4px;
-        min-width: 6px;
+      /* ── entry labels (User:, Session:, etc) ── */
+      frame.background > grid > label {
+        color: #${colours.subtext0};
+        font-size: 13px;
       }
     '';
 
@@ -210,7 +243,6 @@ in
     };
   };
 
-
   # Passwordless sudo for nixos-rebuild (allows Claude Code to switch)
   security.sudo.extraRules = [{
     users = [ "shane" ];
@@ -219,6 +251,13 @@ in
       options = [ "NOPASSWD" ];
     }];
   }];
+
+  # Use Hyprland as the greeter compositor — proper monitor config, centers correctly
+  # This is independent of the user's session compositor (can be Hyprland, niri, etc.)
+  services.greetd.settings.default_session = {
+    command = lib.mkForce "${pkgs.dbus}/bin/dbus-run-session ${lib.getExe pkgs.hyprland} -c ${greeterHyprlandConfig}";
+    user = "greeter";
+  };
 
   systemd.services.greetd = {
     serviceConfig = {

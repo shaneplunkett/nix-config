@@ -22,6 +22,116 @@ let
     exec ${pkgs.python3}/bin/python3 ${./vex-statusline.py}
   '';
 
+  # Settings as a Nix store JSON file — deployed as a mutable copy by activation
+  # so Claude Code can write runtime changes (thinking level, etc.)
+  settingsJson = pkgs.writeText "claude-code-settings.json" (builtins.toJSON ({
+    "$schema" = "https://json.schemastore.org/claude-code-settings.json";
+    theme = "dark-ansi";
+
+    permissions.allow =
+      # MCP — MCPHub smart routing (memory, todoist, context7, github, etc.)
+      [
+        "mcp__claude_ai_MCPHub__search_tools"
+        "mcp__claude_ai_MCPHub__describe_tool"
+        "mcp__claude_ai_MCPHub__call_tool"
+      ]
+      ++
+        # Bash — git (read-only)
+        [
+          "Bash(git log:*)"
+          "Bash(git status:*)"
+          "Bash(git diff:*)"
+          "Bash(git show:*)"
+          "Bash(git branch:*)"
+          "Bash(git remote:*)"
+          "Bash(git fetch:*)"
+          "Bash(git rev-parse:*)"
+        ]
+      ++
+        # Bash — filesystem (read-only)
+        [
+          "Bash(ls:*)"
+          "Bash(cat:*)"
+          "Bash(head:*)"
+          "Bash(tail:*)"
+          "Bash(readlink:*)"
+          "Bash(echo:*)"
+          "Bash(which:*)"
+          "Bash(file:*)"
+          "Bash(wc:*)"
+        ]
+      ++
+        # Bash — nix (non-destructive)
+        [
+          "Bash(nix eval:*)"
+          "Bash(nix build:*)"
+          "Bash(nix-shell:*)"
+          "Bash(nix flake:*)"
+          "Bash(nixos-rebuild build:*)"
+          "Bash(nh home:*)"
+        ]
+      ++
+        # Bash — tools
+        [
+          "Bash(TZ='Australia/Melbourne' date:*)"
+          "Bash(python3:*)"
+          "Bash(node:*)"
+          "Bash(npx:*)"
+          "Bash(claude:*)"
+          "Bash(curl:*)"
+          "Bash(gh api:*)"
+          "Bash(gh repo:*)"
+          "Bash(gh release:*)"
+        ]
+      ++
+        # Web
+        [
+          "WebSearch"
+          "WebFetch"
+        ];
+
+    disabledMcpjsonServers = [
+      "posthog"
+    ];
+
+    statusLine = {
+      type = "command";
+      command = "${vex-statusline}/bin/vex-statusline";
+    };
+
+    hooks = {
+      PreCompact = [
+        {
+          hooks = [
+            {
+              type = "command";
+              command = "cat ${config.age.secrets.vex-compaction.path}";
+            }
+          ];
+        }
+      ];
+      SessionStart = [
+        {
+          hooks = [
+            {
+              type = "command";
+              command = "cat ${config.age.secrets.vex-session-start.path}";
+            }
+          ];
+        }
+        {
+          matcher = "compact";
+          hooks = [
+            {
+              type = "command";
+              command = "cat ${config.age.secrets.vex-session-reload.path} && echo \"Git branch: $(git branch --show-current 2>/dev/null || echo N/A)\" && echo 'Recent commits:' && git log --oneline -5 2>/dev/null || true && echo 'Modified files:' && git diff --name-only 2>/dev/null || true";
+            }
+          ];
+        }
+      ];
+    };
+  }));
+
   claude-code-vex = pkgs.claude-code.overrideAttrs (old: {
     nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ tweakcc ];
     postInstall = old.postInstall + ''
@@ -47,114 +157,14 @@ in
   programs.claude-code = {
     enable = true;
     package = claude-code-vex;
-
-    settings = {
-      theme = "dark-ansi";
-
-      permissions.allow =
-        # MCP — MCPHub smart routing (memory, todoist, context7, github, etc.)
-        [
-          "mcp__claude_ai_MCPHub__search_tools"
-          "mcp__claude_ai_MCPHub__describe_tool"
-          "mcp__claude_ai_MCPHub__call_tool"
-        ]
-        ++
-          # Bash — git (read-only)
-          [
-            "Bash(git log:*)"
-            "Bash(git status:*)"
-            "Bash(git diff:*)"
-            "Bash(git show:*)"
-            "Bash(git branch:*)"
-            "Bash(git remote:*)"
-            "Bash(git fetch:*)"
-            "Bash(git rev-parse:*)"
-          ]
-        ++
-          # Bash — filesystem (read-only)
-          [
-            "Bash(ls:*)"
-            "Bash(cat:*)"
-            "Bash(head:*)"
-            "Bash(tail:*)"
-            "Bash(readlink:*)"
-            "Bash(echo:*)"
-            "Bash(which:*)"
-            "Bash(file:*)"
-            "Bash(wc:*)"
-          ]
-        ++
-          # Bash — nix (non-destructive)
-          [
-            "Bash(nix eval:*)"
-            "Bash(nix build:*)"
-            "Bash(nix-shell:*)"
-            "Bash(nix flake:*)"
-            "Bash(nixos-rebuild build:*)"
-            "Bash(nh home:*)"
-          ]
-        ++
-          # Bash — tools
-          [
-            "Bash(TZ='Australia/Melbourne' date:*)"
-            "Bash(python3:*)"
-            "Bash(node:*)"
-            "Bash(npx:*)"
-            "Bash(claude:*)"
-            "Bash(curl:*)"
-            "Bash(gh api:*)"
-            "Bash(gh repo:*)"
-            "Bash(gh release:*)"
-          ]
-        ++
-          # Web
-          [
-            "WebSearch"
-            "WebFetch"
-          ];
-
-      disabledMcpjsonServers = [
-        "posthog"
-      ];
-
-      statusLine = {
-        type = "command";
-        command = "${vex-statusline}/bin/vex-statusline";
-      };
-
-      hooks = {
-        PreCompact = [
-          {
-            hooks = [
-              {
-                type = "command";
-                command = "cat ${config.age.secrets.vex-compaction.path}";
-              }
-            ];
-          }
-        ];
-        SessionStart = [
-          {
-            hooks = [
-              {
-                type = "command";
-                command = "cat ${config.age.secrets.vex-session-start.path}";
-              }
-            ];
-          }
-          {
-            matcher = "compact";
-            hooks = [
-              {
-                type = "command";
-                command = "cat ${config.age.secrets.vex-session-reload.path} && echo \"Git branch: $(git branch --show-current 2>/dev/null || echo N/A)\" && echo 'Recent commits:' && git log --oneline -5 2>/dev/null || true && echo 'Modified files:' && git diff --name-only 2>/dev/null || true";
-              }
-            ];
-          }
-        ];
-      };
-    };
+    # settings intentionally omitted — deployed as mutable copy below
   };
+
+  # Deploy settings.json as a mutable copy (not a symlink) so CC can write
+  # runtime changes like thinking level. Nix content resets on each rebuild.
+  home.activation.claudeCodeSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    $DRY_RUN_CMD install -m 644 ${settingsJson} "$HOME/.claude/settings.json"
+  '';
 
   home.file.".claude/CLAUDE.md".text = ''
     # Vex

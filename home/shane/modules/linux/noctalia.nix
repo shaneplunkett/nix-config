@@ -5,7 +5,7 @@ let
   hex = v: "#${v}";
 in
 {
-  imports = [ ./vex-timer-plugin.nix ./vex-agenda-plugin.nix ];
+  imports = [ ./vex-timer-plugin.nix ./vex-agenda-plugin.nix ./vex-todoist-plugin.nix ];
   programs.noctalia-shell = {
     enable = true;
 
@@ -186,6 +186,9 @@ in
             }
             {
               id = "plugin:vex-agenda";
+            }
+            {
+              id = "plugin:vex-todoist";
             }
             {
               id = "NotificationHistory";
@@ -645,6 +648,7 @@ in
     states = {
       vex-timer = { enabled = true; sourceUrl = "local"; };
       vex-agenda = { enabled = true; sourceUrl = "local"; };
+      vex-todoist = { enabled = true; sourceUrl = "local"; };
     };
   };
 

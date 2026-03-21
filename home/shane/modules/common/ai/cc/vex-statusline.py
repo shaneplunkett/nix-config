@@ -2,6 +2,7 @@
 """Vex status line for Claude Code."""
 
 import json
+import os
 import subprocess
 import sys
 
@@ -10,6 +11,7 @@ import sys
 MAUVE = (203, 166, 247)      # model
 TEAL = (148, 226, 213)       # context
 BLUE = (137, 180, 250)       # git branch
+FLAMINGO = (242, 205, 205)   # effort level
 SUBTEXT0 = (166, 173, 200)   # muted — duration
 OVERLAY0 = (108, 112, 134)   # separators
 GREEN = (166, 227, 161)      # diff add
@@ -102,6 +104,25 @@ def ctx_colour(pct):
     return TEAL
 
 
+def get_effort_level():
+    """Read effortLevel from settings.json or settings.local.json."""
+    claude_dir = os.path.expanduser("~/.claude")
+    # local overrides base
+    for fname in ("settings.local.json", "settings.json"):
+        path = os.path.join(claude_dir, fname)
+        try:
+            with open(path) as f:
+                val = json.load(f).get("effortLevel")
+                if val:
+                    return val
+        except Exception:
+            continue
+    return None
+
+
+EFFORT_ICONS = {"low": "⚡", "medium": "⚖", "high": "🧠"}
+
+
 def model_short(display_name, model_id):
     name = display_name or model_id or "?"
     # "Opus 4.6 (1M context)" → "Opus 4.6 (1M)"
@@ -126,6 +147,12 @@ def main():
     model = data.get("model", {})
     name = model_short(model.get("display_name"), model.get("id"))
     parts.append(f"{fg(*MAUVE)}{name}{reset()}")
+
+    # Effort level
+    effort = get_effort_level()
+    if effort:
+        icon = EFFORT_ICONS.get(effort, "")
+        parts.append(f"{fg(*FLAMINGO)}{icon} {effort}{reset()}")
 
     # Context
     ctx = data.get("context_window", {})
