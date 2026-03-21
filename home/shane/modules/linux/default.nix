@@ -9,6 +9,7 @@
     ./webapps
     ./claude-desktop.nix
     ./heroic.nix
+    ./librepods.nix
     ./vesktop.nix
 
   ]
