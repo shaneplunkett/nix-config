@@ -33,14 +33,4 @@ in
     iconColor = "secondary";
   };
 
-  # ── Register plugin as enabled ──
-  xdg.configFile."noctalia/plugins.json".text = builtins.toJSON {
-    version = 2;
-    sources = [
-      { name = "Noctalia Plugins"; url = "https://github.com/noctalia-dev/noctalia-plugins"; enabled = true; }
-    ];
-    states = {
-      vex-timer = { enabled = true; sourceUrl = "local"; };
-    };
-  };
 }

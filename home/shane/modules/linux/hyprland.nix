@@ -69,7 +69,6 @@ in
         "$mod, V, exec, noctalia-shell ipc call launcher clipboard"
         "$mod, N, exec, noctalia-shell ipc call controlCenter toggle"
         "$mod SHIFT, L, exec, noctalia-shell ipc call lockScreen lock"
-        "$mod SHIFT, T, exec, noctalia-shell ipc call plugin:vex-timer toggle"
       ];
 
       bindm = [
@@ -157,6 +156,10 @@ in
         "col.active_border" = "rgba(${colours.mauve}ff) rgba(${colours.lavender}ff) 45deg";
         "col.inactive_border" = "rgba(${colours.surface2}ff)";
       };
+
+      env = [
+        "STEAM_FORCE_DESKTOPUI_SCALING,1.2"
+      ];
 
       group = {
         "col.border_active" = "rgba(${colours.green}ff)";

@@ -21,4 +21,6 @@ in
   "vex-session-reload.age".publicKeys = [ shane ];
   "langsmith-api.age".publicKeys = [ shane ];
   "restic-password.age".publicKeys = [ shane ];
+  "google-calendar-personal.age".publicKeys = [ shane ];
+  "google-calendar-work.age".publicKeys = [ shane ];
 }

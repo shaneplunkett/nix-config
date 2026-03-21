@@ -10,6 +10,13 @@
       tfa = "terraform apply";
       tfaa = "terraform apply -auto-approve";
       nvl = "nvim --listen /tmp/nvim";
+
+      # Claude Code
+      cc = "claude";
+      ccr = "claude --resume";
+      ccd = "claude --resume --dangerously-skip-permissions";
+      ccc = "claude --continue";
+      cccd = "claude --continue --dangerously-skip-permissions";
     };
     functions = {
       nrs = ''

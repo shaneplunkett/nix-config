@@ -46,6 +46,11 @@
       url = "github:kavishdevar/librepods/linux/rust";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    gws = {
+      url = "github:googleworkspace/cli";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

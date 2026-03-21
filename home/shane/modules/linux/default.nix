@@ -6,6 +6,7 @@
     # Always loaded
     ./theme.nix
     ./packages.nix
+    ./calendar.nix
     ./webapps
     ./claude-desktop.nix
     ./heroic.nix

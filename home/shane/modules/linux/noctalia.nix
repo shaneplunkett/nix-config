@@ -5,7 +5,7 @@ let
   hex = v: "#${v}";
 in
 {
-  imports = [ ./vex-timer-plugin.nix ];
+  imports = [ ./vex-timer-plugin.nix ./vex-agenda-plugin.nix ];
   programs.noctalia-shell = {
     enable = true;
 
@@ -44,9 +44,9 @@ in
         showCapsule = true;
         capsuleOpacity = 0.65;
         capsuleColorKey = "none";
-        widgetSpacing = 3;
-        contentPadding = 15;
-        fontScale = 1.3;
+        widgetSpacing = 5;
+        contentPadding = 2;
+        fontScale = 1;
         enableExclusionZoneInset = true;
         backgroundOpacity = 0.93;
         useSeparateOpacity = false;
@@ -185,13 +185,7 @@ in
               id = "plugin:vex-timer";
             }
             {
-              id = "Clock";
-              clockColor = "tertiary";
-              customFont = "";
-              formatHorizontal = "HH:mm ddd, MMM dd";
-              formatVertical = "HH mm - dd MM";
-              tooltipFormat = "HH:mm ddd, MMM dd";
-              useCustomFont = false;
+              id = "plugin:vex-agenda";
             }
             {
               id = "NotificationHistory";
@@ -639,6 +633,18 @@ in
         gridSnapScale = false;
         monitorWidgets = [ ];
       };
+    };
+  };
+
+  # Register all plugins as enabled
+  xdg.configFile."noctalia/plugins.json".text = builtins.toJSON {
+    version = 2;
+    sources = [
+      { name = "Noctalia Plugins"; url = "https://github.com/noctalia-dev/noctalia-plugins"; enabled = true; }
+    ];
+    states = {
+      vex-timer = { enabled = true; sourceUrl = "local"; };
+      vex-agenda = { enabled = true; sourceUrl = "local"; };
     };
   };
 

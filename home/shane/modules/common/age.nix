@@ -54,6 +54,12 @@
       langsmith-api = {
         file = ../../../../secrets/langsmith-api.age;
       };
+      google-calendar-personal = {
+        file = ../../../../secrets/google-calendar-personal.age;
+      };
+      google-calendar-work = {
+        file = ../../../../secrets/google-calendar-work.age;
+      };
     };
 
   };

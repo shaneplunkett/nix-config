@@ -1,5 +1,6 @@
 {
   pkgs,
+  inputs,
   ...
 }:
 let
@@ -47,5 +48,6 @@ in
     yt-dlp
     google-chrome
     qalculate-qt
+    inputs.gws.packages.${pkgs.system}.default
   ];
 }
