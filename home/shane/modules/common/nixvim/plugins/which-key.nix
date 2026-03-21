@@ -38,6 +38,10 @@
             group = "UI Toggles";
           }
           {
+            __unkeyed-1 = "<leader>b";
+            group = "Buffer";
+          }
+          {
             __unkeyed-1 = "<leader>X";
             group = "Xcode";
           }

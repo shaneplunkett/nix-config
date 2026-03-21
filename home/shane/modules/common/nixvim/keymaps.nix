@@ -21,9 +21,9 @@
     }
     {
       mode = "n";
-      key = "gl";
+      key = "<leader>cl";
       action.__raw = "function() vim.diagnostic.open_float() end";
-      options.desc = "Line diagnostics";
+      options.desc = "Line Diagnostics";
     }
   ];
 

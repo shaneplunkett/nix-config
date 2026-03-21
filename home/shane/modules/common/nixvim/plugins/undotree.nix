@@ -12,9 +12,9 @@
   keymaps = [
     {
       mode = "n";
-      key = "<leader>u";
+      key = "<leader>du";
       action = "<cmd>UndotreeToggle<CR>";
-      options.desc = "Toggle Undotree";
+      options.desc = "Undotree";
     }
   ];
 }

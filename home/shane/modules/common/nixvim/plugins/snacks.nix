@@ -106,33 +106,33 @@
     # --- LSP Integration (Kickstart.nvim style) ---
     {
       mode = "n";
-      key = "gd";
+      key = "<leader>cd";
       action.__raw = ''
         function()
           Snacks.picker.lsp_definitions()
         end
       '';
-      options.desc = "Goto Definition";
+      options.desc = "Definition";
     }
     {
       mode = "n";
-      key = "grr";
+      key = "<leader>cR";
       action.__raw = ''
         function()
           Snacks.picker.lsp_references()
         end
       '';
-      options.desc = "Goto References";
+      options.desc = "References";
     }
     {
       mode = "n";
-      key = "gI";
+      key = "<leader>ci";
       action.__raw = ''
         function()
           Snacks.picker.lsp_implementations()
         end
       '';
-      options.desc = "Goto Implementation";
+      options.desc = "Implementation";
     }
     {
       mode = "n";

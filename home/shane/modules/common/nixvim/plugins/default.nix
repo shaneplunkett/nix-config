@@ -12,6 +12,7 @@
     ./lsp.nix
     ./lualine.nix
     ./luasnip.nix
+    ./markview.nix
     ./mini.nix
     ./neotree.nix
     ./noice.nix

@@ -1,8 +1,11 @@
 { ... }:
+let
+  cheatsheet = ../cheatsheet.md;
+in
 {
   extraConfigLua = ''
     local function show_cheatsheet()
-      local path = vim.fn.expand("~/.vim-cheatsheet.md")
+      local path = "${cheatsheet}"
       local lines = {}
 
       local file = io.open(path, "r")
@@ -12,7 +15,7 @@
         end
         file:close()
       else
-        lines = { "No cheatsheet found at ~/.vim-cheatsheet.md" }
+        lines = { "No cheatsheet found" }
       end
 
       Snacks.win({
