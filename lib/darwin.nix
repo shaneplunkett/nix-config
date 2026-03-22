@@ -23,11 +23,11 @@ in
       extraModules ? [ ],
     }:
     nix-darwin.lib.darwinSystem {
-      inherit system;
       specialArgs = { inherit inputs; };
       modules = [
         # Hostname injection + custom packages overlay
         {
+          nixpkgs.hostPlatform = system;
           networking.hostName = hostname;
           nixpkgs.overlays = [
             (final: prev: import (rootPath + /pkgs) { pkgs = final; })

@@ -21,11 +21,11 @@ in
       extraModules ? [ ],
     }:
     nixpkgs.lib.nixosSystem {
-      inherit system;
       specialArgs = { inherit inputs compositor shell; };
       modules = [
         # Hostname injection + custom packages overlay
         {
+          nixpkgs.hostPlatform = system;
           networking.hostName = hostname;
           nixpkgs.overlays = [
             (final: prev: import (rootPath + /pkgs) { pkgs = final; })

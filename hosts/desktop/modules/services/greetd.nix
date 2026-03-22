@@ -1,11 +1,10 @@
 {
   pkgs,
   lib,
-  compositor,
   ...
 }:
 let
-  colours = import ../../../home/shane/modules/common/theme/colours.nix;
+  colours = import ../../../../home/shane/modules/common/theme/colours.nix;
 
   greeterBackground = toString ../assets/greeter-bg.jpg;
 

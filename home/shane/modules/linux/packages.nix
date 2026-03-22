@@ -48,6 +48,6 @@ in
     yt-dlp
     google-chrome
     qalculate-qt
-    inputs.gws.packages.${pkgs.system}.default
+    inputs.gws.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 }

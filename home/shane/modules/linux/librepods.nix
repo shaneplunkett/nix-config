@@ -1,6 +1,6 @@
 { inputs, pkgs, ... }:
 let
-  librepods = inputs.librepods.packages.${pkgs.system}.default;
+  librepods = inputs.librepods.packages.${pkgs.stdenv.hostPlatform.system}.default;
   librepodsSrc = inputs.librepods;
 in
 {
