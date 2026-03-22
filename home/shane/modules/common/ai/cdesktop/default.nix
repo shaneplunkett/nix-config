@@ -14,7 +14,6 @@ in
 {
   desktopMcpServers = {
     neovim = shared.mcpServers.neovim;
-    supermemory = shared.mcpServers.supermemory;
   };
 
   packages = shared.packages;

@@ -19,15 +19,6 @@ let
         NVIM_SOCKET_PATH = "/tmp/nvim";
       };
     };
-
-    supermemory = {
-      command = "${claudeNodejs}/bin/npx";
-      args = [
-        "-y"
-        "mcp-remote@latest"
-        "https://mcp.supermemory.ai/mcp"
-      ];
-    };
   };
 
 in

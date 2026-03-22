@@ -12,7 +12,10 @@ in
   "google-oauth-client-secret.age".publicKeys = [ shane ];
   "tailscale-api.age".publicKeys = [ shane ];
   "tailscale-tailnet.age".publicKeys = [ shane ];
-  "tailscale-authkey.age".publicKeys = [ shane hetzvps ];
+  "tailscale-authkey.age".publicKeys = [
+    shane
+    hetzvps
+  ];
   "gemini.age".publicKeys = [ shane ];
   "posthog.age".publicKeys = [ shane ];
   "vex-core.age".publicKeys = [ shane ];
