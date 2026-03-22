@@ -18,10 +18,6 @@ in
   ];
   "gemini.age".publicKeys = [ shane ];
   "posthog.age".publicKeys = [ shane ];
-  "vex-core.age".publicKeys = [ shane ];
-  "vex-session-start.age".publicKeys = [ shane ];
-  "vex-compaction.age".publicKeys = [ shane ];
-  "vex-session-reload.age".publicKeys = [ shane ];
   "langsmith-api.age".publicKeys = [ shane ];
   "restic-password.age".publicKeys = [ shane ];
   "google-calendar-personal.age".publicKeys = [ shane ];

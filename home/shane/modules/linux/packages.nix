@@ -7,7 +7,11 @@ let
   electronFlags = ''
     --ozone-platform-hint=auto
     --enable-features=WaylandWindowDecorations
-    --force-device-scale-factor=1.2
+    --force-device-scale-factor=1.5
+  '';
+  chromeFlags = ''
+    --ozone-platform-hint=auto
+    --enable-features=WaylandWindowDecorations
   '';
 in
 {
@@ -16,7 +20,8 @@ in
   xdg.configFile."electron32-flags.conf".text = electronFlags;
   xdg.configFile."electron33-flags.conf".text = electronFlags;
   xdg.configFile."electron34-flags.conf".text = electronFlags;
-  xdg.configFile."chrome-flags.conf".text = electronFlags;
+  # Chrome handles fractional scaling natively via Wayland protocol — no force flag
+  xdg.configFile."chrome-flags.conf".text = chromeFlags;
 
   home.packages = with pkgs; [
     zip

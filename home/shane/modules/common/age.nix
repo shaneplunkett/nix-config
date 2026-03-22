@@ -24,18 +24,6 @@
       google-oauth-client-secret = {
         file = ../../../../secrets/google-oauth-client-secret.age;
       };
-      vex-core = {
-        file = ../../../../secrets/vex-core.age;
-      };
-      vex-session-start = {
-        file = ../../../../secrets/vex-session-start.age;
-      };
-      vex-compaction = {
-        file = ../../../../secrets/vex-compaction.age;
-      };
-      vex-session-reload = {
-        file = ../../../../secrets/vex-session-reload.age;
-      };
       mcphub-bearer = {
         file = ../../../../secrets/mcphub-bearer.age;
       };

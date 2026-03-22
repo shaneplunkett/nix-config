@@ -110,7 +110,7 @@ in
       ];
 
       monitor = [
-        "DP-2,3840x2160@240,0x0,1.2,vrr,2"
+        "DP-2,3840x2160@240,0x0,1.5,vrr,2"
         "HDMI-A-1, 2560x1440@60, -3000x0, 1, transform, 3"
       ];
 
@@ -158,8 +158,14 @@ in
       };
 
       env = [
-        "STEAM_FORCE_DESKTOPUI_SCALING,1.2"
+        "STEAM_FORCE_DESKTOPUI_SCALING,1.25"
+        "GDK_SCALE,2"
+        "XCURSOR_SIZE,48"
       ];
+
+      xwayland = {
+        force_zero_scaling = true;
+      };
 
       group = {
         "col.border_active" = "rgba(${colours.green}ff)";

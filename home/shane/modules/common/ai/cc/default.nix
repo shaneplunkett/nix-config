@@ -27,6 +27,7 @@ let
   settingsJson = pkgs.writeText "claude-code-settings.json" (builtins.toJSON ({
     "$schema" = "https://json.schemastore.org/claude-code-settings.json";
     theme = "dark-ansi";
+    outputStyle = "vex";
 
     permissions.allow =
       # MCP — MCPHub smart routing (memory, todoist, context7, github, etc.)
@@ -84,6 +85,18 @@ let
           "Bash(gh release:*)"
         ]
       ++
+        # Bash — Google Workspace (read-only)
+        [
+          "Bash(gws gmail +triage:*)"
+          "Bash(gws gmail +read:*)"
+          "Bash(gws gmail users messages list:*)"
+          "Bash(gws gmail users messages get:*)"
+          "Bash(gws gmail users threads get:*)"
+          "Bash(gws gmail users labels list:*)"
+          "Bash(gws calendar:*)"
+          "Bash(gws drive files list:*)"
+        ]
+      ++
         # Web
         [
           "WebSearch"
@@ -105,7 +118,7 @@ let
           hooks = [
             {
               type = "command";
-              command = "cat ${config.age.secrets.vex-compaction.path}";
+              command = "cat $HOME/ai-skills/vex/hooks/compaction.md";
             }
           ];
         }
@@ -115,7 +128,7 @@ let
           hooks = [
             {
               type = "command";
-              command = "cat ${config.age.secrets.vex-session-start.path}";
+              command = "cat $HOME/ai-skills/vex/hooks/session-start.md";
             }
           ];
         }
@@ -124,7 +137,7 @@ let
           hooks = [
             {
               type = "command";
-              command = "cat ${config.age.secrets.vex-session-reload.path} && echo \"Git branch: $(git branch --show-current 2>/dev/null || echo N/A)\" && echo 'Recent commits:' && git log --oneline -5 2>/dev/null || true && echo 'Modified files:' && git diff --name-only 2>/dev/null || true";
+              command = "cat $HOME/ai-skills/vex/hooks/session-reload.md && echo \"Git branch: $(git branch --show-current 2>/dev/null || echo N/A)\" && echo 'Recent commits:' && git log --oneline -5 2>/dev/null || true && echo 'Modified files:' && git diff --name-only 2>/dev/null || true";
             }
           ];
         }
@@ -171,13 +184,33 @@ in
     @vex/core.md
   '';
 
-  home.activation.vexPersona = lib.hm.dag.entryAfter [ "writeBoundary" "agenixInstall" ] ''
+  # Deploy Vex persona core from ai-skills repo
+  home.activation.vexPersona = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     $DRY_RUN_CMD mkdir -p "$HOME/.claude/vex"
-    if [[ -n "''${XDG_RUNTIME_DIR:-}" && -f "${config.age.secrets.vex-core.path}" ]]; then
-      $DRY_RUN_CMD install -m 600 ${config.age.secrets.vex-core.path} "$HOME/.claude/vex/core.md"
-    else
-      _iNote "Skipping vexPersona: agenix secrets not yet available"
-    fi
+    $DRY_RUN_CMD install -m 600 "$HOME/ai-skills/vex/core.md" "$HOME/.claude/vex/core.md"
+  '';
+
+  # Deploy Vex output style, rules, and agents from ai-skills repo
+  home.activation.vexConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    # Output style
+    $DRY_RUN_CMD mkdir -p "$HOME/.claude/output-styles"
+    $DRY_RUN_CMD install -m 644 "$HOME/ai-skills/vex/output-style.md" "$HOME/.claude/output-styles/vex.md"
+
+    # Rules (prefixed with vex- for namespacing)
+    $DRY_RUN_CMD mkdir -p "$HOME/.claude/rules"
+    for rule in "$HOME/ai-skills/vex/rules"/*.md; do
+      [ -f "$rule" ] || continue
+      name=$(basename "$rule")
+      $DRY_RUN_CMD install -m 644 "$rule" "$HOME/.claude/rules/vex-$name"
+    done
+
+    # Agents
+    $DRY_RUN_CMD mkdir -p "$HOME/.claude/agents"
+    for agent in "$HOME/ai-skills/vex/agents"/*.md; do
+      [ -f "$agent" ] || continue
+      name=$(basename "$agent")
+      $DRY_RUN_CMD install -m 644 "$agent" "$HOME/.claude/agents/$name"
+    done
   '';
 
   # Deploy all MCPs to ~/.claude.json (user-level, available everywhere)

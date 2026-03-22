@@ -46,7 +46,7 @@ in
         capsuleColorKey = "none";
         widgetSpacing = 5;
         contentPadding = 2;
-        fontScale = 1;
+        fontScale = 0.85;
         enableExclusionZoneInset = true;
         backgroundOpacity = 0.93;
         useSeparateOpacity = false;
@@ -217,7 +217,7 @@ in
         dimmerOpacity = 0.2;
         showScreenCorners = false;
         forceBlackScreenCorners = false;
-        scaleRatio = 1.25;
+        scaleRatio = 1.0;
         radiusRatio = 1;
         iRadiusRatio = 1;
         boxRadiusRatio = 1;
@@ -265,7 +265,7 @@ in
       ui = {
         fontDefault = "Mononoki Nerd Font";
         fontFixed = "monospace";
-        fontDefaultScale = 0.85;
+        fontDefaultScale = 1.0;
         fontFixedScale = 0.95;
         tooltipsEnabled = true;
         scrollbarAlwaysVisible = true;
