@@ -1,4 +1,9 @@
-{ lib, compositor, shell, ... }:
+{
+  lib,
+  compositor,
+  shell,
+  ...
+}:
 {
 
   imports = [
@@ -6,11 +11,9 @@
     # Always loaded
     ./theme.nix
     ./packages.nix
-    ./calendar.nix
     ./webapps
     ./claude-desktop.nix
     ./heroic.nix
-    ./librepods.nix
     ./vesktop.nix
 
   ]

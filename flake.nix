@@ -42,11 +42,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    librepods = {
-      url = "github:kavishdevar/librepods/linux/rust";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     gws = {
       url = "github:googleworkspace/cli";
       inputs.nixpkgs.follows = "nixpkgs";
