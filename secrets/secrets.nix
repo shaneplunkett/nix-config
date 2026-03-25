@@ -22,4 +22,5 @@ in
   "restic-password.age".publicKeys = [ shane ];
   "google-calendar-personal.age".publicKeys = [ shane ];
   "google-calendar-work.age".publicKeys = [ shane ];
+  "anthropic-key.age".publicKeys = [ shane ];
 }

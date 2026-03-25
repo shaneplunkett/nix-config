@@ -52,6 +52,7 @@ in
     megacmd
     yt-dlp
     google-chrome
+    slack
     qalculate-qt
     inputs.gws.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];

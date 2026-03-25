@@ -72,15 +72,8 @@ in
     SKILLS_TARGET=$($DRY_RUN_CMD find "$PLUGIN_BASE" -name "skills" -type d 2>/dev/null | head -1)
 
     if [ -n "$SKILLS_TARGET" ]; then
-      # Symlink personal skills
+      # Symlink personal skills (work skills installed separately via ag-ai-skills/install.sh)
       for skill in "$HOME/ai-skills/personal"/*/; do
-        [ -d "$skill" ] || continue
-        name=$(basename "$skill")
-        $DRY_RUN_CMD ln -sfn "$skill" "$SKILLS_TARGET/$name"
-      done
-
-      # Symlink work skills
-      for skill in "$HOME/ai-skills/work"/*/; do
         [ -d "$skill" ] || continue
         name=$(basename "$skill")
         $DRY_RUN_CMD ln -sfn "$skill" "$SKILLS_TARGET/$name"
@@ -90,7 +83,7 @@ in
       MANIFEST="$(dirname "$SKILLS_TARGET")/manifest.json"
       if [ -f "$MANIFEST" ]; then
         # Build JSON entries for each skill from SKILL.md frontmatter
-        for skill in "$HOME/ai-skills/personal"/*/ "$HOME/ai-skills/work"/*/; do
+        for skill in "$HOME/ai-skills/personal"/*/; do
           [ -d "$skill" ] || continue
           name=$(basename "$skill")
           SKILL_FILE="$skill/SKILL.md"

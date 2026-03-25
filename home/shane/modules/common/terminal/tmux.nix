@@ -72,6 +72,8 @@ in
 
       set -g default-terminal "screen-256color"
       set -g terminal-features ",xterm-256color:RGB"
+      set -g allow-passthrough on
+      set -ga terminal-overrides ',xterm-ghostty:Tc'
 
       # Mouse works as expected
       set-option -g mouse on

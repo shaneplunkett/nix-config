@@ -28,13 +28,6 @@ let
 in
 {
   xdg.desktopEntries = {
-    slack = mkWebApp {
-      name = "Slack";
-      url = "https://autograb.slack.com";
-      profile = "work";
-      icon = ./icons/slack.png;
-      categories = [ "Office" ];
-    };
     chatgpt = mkWebApp {
       name = "ChatGPT";
       url = "https://chat.openai.com";

@@ -123,6 +123,16 @@ let
           ];
         }
       ];
+      SessionEnd = [
+        {
+          hooks = [
+            {
+              type = "command";
+              command = "cat $HOME/ai-skills/vex/hooks/session-end.md";
+            }
+          ];
+        }
+      ];
       SessionStart = [
         {
           hooks = [
@@ -231,23 +241,17 @@ in
       rm -f "$HOME/.mcp.json"
     '';
 
-  # Symlink skills from ~/ai-skills/ into ~/.claude/skills/
+  # Symlink personal skills from ~/ai-skills/ into ~/.claude/skills/
+  # Work skills are installed separately via ~/projects/work/ag-ai-skills/install.sh
   home.activation.claudeCodeSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     SKILLS_DIR="$HOME/.claude/skills"
     $DRY_RUN_CMD mkdir -p "$SKILLS_DIR"
 
-    # Clean existing skill symlinks (managed by this activation)
+    # Clean existing personal skill symlinks (managed by this activation)
     $DRY_RUN_CMD find "$SKILLS_DIR" -maxdepth 1 -type l -delete 2>/dev/null || true
 
     # Symlink personal skills
     for skill in "$HOME/ai-skills/personal"/*/; do
-      [ -d "$skill" ] || continue
-      name=$(basename "$skill")
-      $DRY_RUN_CMD ln -sfn "$skill" "$SKILLS_DIR/$name"
-    done
-
-    # Symlink work skills
-    for skill in "$HOME/ai-skills/work"/*/; do
       [ -d "$skill" ] || continue
       name=$(basename "$skill")
       $DRY_RUN_CMD ln -sfn "$skill" "$SKILLS_DIR/$name"
