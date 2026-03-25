@@ -48,6 +48,9 @@
       google-calendar-work = {
         file = ../../../../secrets/google-calendar-work.age;
       };
+      anthropic-key = {
+        file = ../../../../secrets/anthropic-key.age;
+      };
     };
 
   };
