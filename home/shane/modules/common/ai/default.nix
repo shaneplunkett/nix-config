@@ -3,6 +3,5 @@
   imports = [
     ./cc
     ./gemini
-    ./opencode
   ];
 }

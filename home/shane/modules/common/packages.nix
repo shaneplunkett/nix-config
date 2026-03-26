@@ -10,7 +10,6 @@
     lazydocker
     google-cloud-sdk
     terraform
-    opencode
     ripgrep
     tealdeer
     zoxide
