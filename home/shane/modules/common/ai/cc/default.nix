@@ -22,12 +22,21 @@ let
     exec ${pkgs.python3}/bin/python3 ${./vex-statusline.py}
   '';
 
+  # PreToolUse hook: nudge Claude to use nix-shell when a binary isn't on PATH
+  nix-shell-check = pkgs.writeShellScriptBin "cc-nix-shell-check" ''
+    export PATH="${pkgs.jq}/bin:${pkgs.gawk}/bin:${pkgs.gnused}/bin:${pkgs.gnugrep}/bin:${pkgs.coreutils}/bin:$PATH"
+    exec ${pkgs.bash}/bin/bash ${./nix-shell-check.sh}
+  '';
+
   # Settings as a Nix store JSON file — deployed as a mutable copy by activation
   # so Claude Code can write runtime changes (thinking level, etc.)
   settingsJson = pkgs.writeText "claude-code-settings.json" (builtins.toJSON ({
     "$schema" = "https://json.schemastore.org/claude-code-settings.json";
     theme = "dark-ansi";
     outputStyle = "vex";
+    skipDangerousModePermissionPrompt = true;
+    spinnerTipsEnabled = false;
+    feedbackSurveyRate = 0;
 
     permissions.allow =
       # MCP — MCPHub smart routing (memory, todoist, context7, github, etc.)
@@ -113,6 +122,17 @@ let
     };
 
     hooks = {
+      PreToolUse = [
+        {
+          matcher = "Bash";
+          hooks = [
+            {
+              type = "command";
+              command = "${nix-shell-check}/bin/cc-nix-shell-check";
+            }
+          ];
+        }
+      ];
       PreCompact = [
         {
           hooks = [
@@ -155,6 +175,9 @@ let
     };
   }));
 
+  # All config directories to deploy to (personal + work accounts)
+  configDirs = [ "$HOME/.claude" "$HOME/.claude-work" ];
+
   claude-code-vex = pkgs.claude-code.overrideAttrs (old: {
     nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ tweakcc ];
     postInstall = old.postInstall + ''
@@ -186,7 +209,10 @@ in
   # Deploy settings.json as a mutable copy (not a symlink) so CC can write
   # runtime changes like thinking level. Nix content resets on each rebuild.
   home.activation.claudeCodeSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    $DRY_RUN_CMD install -m 644 ${settingsJson} "$HOME/.claude/settings.json"
+    for dir in ${lib.concatStringsSep " " configDirs}; do
+      $DRY_RUN_CMD mkdir -p "$dir"
+      $DRY_RUN_CMD install -m 644 ${settingsJson} "$dir/settings.json"
+    done
   '';
 
   home.file.".claude/CLAUDE.md".text = ''
@@ -194,32 +220,45 @@ in
     @vex/core.md
   '';
 
+  # Deploy CLAUDE.md to work config dir (personal is handled by home.file above)
+  home.activation.claudeCodeWorkClaude = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    $DRY_RUN_CMD mkdir -p "$HOME/.claude-work"
+    cat > "$HOME/.claude-work/CLAUDE.md" << 'CLAUDEMD'
+    # Vex
+    @vex/core.md
+    CLAUDEMD
+  '';
+
   # Deploy Vex persona core from ai-skills repo
   home.activation.vexPersona = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    $DRY_RUN_CMD mkdir -p "$HOME/.claude/vex"
-    $DRY_RUN_CMD install -m 600 "$HOME/ai-skills/vex/core.md" "$HOME/.claude/vex/core.md"
+    for dir in ${lib.concatStringsSep " " configDirs}; do
+      $DRY_RUN_CMD mkdir -p "$dir/vex"
+      $DRY_RUN_CMD install -m 600 "$HOME/ai-skills/vex/core.md" "$dir/vex/core.md"
+    done
   '';
 
   # Deploy Vex output style, rules, and agents from ai-skills repo
   home.activation.vexConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    # Output style
-    $DRY_RUN_CMD mkdir -p "$HOME/.claude/output-styles"
-    $DRY_RUN_CMD install -m 644 "$HOME/ai-skills/vex/output-style.md" "$HOME/.claude/output-styles/vex.md"
+    for dir in ${lib.concatStringsSep " " configDirs}; do
+      # Output style
+      $DRY_RUN_CMD mkdir -p "$dir/output-styles"
+      $DRY_RUN_CMD install -m 644 "$HOME/ai-skills/vex/output-style.md" "$dir/output-styles/vex.md"
 
-    # Rules (prefixed with vex- for namespacing)
-    $DRY_RUN_CMD mkdir -p "$HOME/.claude/rules"
-    for rule in "$HOME/ai-skills/vex/rules"/*.md; do
-      [ -f "$rule" ] || continue
-      name=$(basename "$rule")
-      $DRY_RUN_CMD install -m 644 "$rule" "$HOME/.claude/rules/vex-$name"
-    done
+      # Rules (prefixed with vex- for namespacing)
+      $DRY_RUN_CMD mkdir -p "$dir/rules"
+      for rule in "$HOME/ai-skills/vex/rules"/*.md; do
+        [ -f "$rule" ] || continue
+        name=$(basename "$rule")
+        $DRY_RUN_CMD install -m 644 "$rule" "$dir/rules/vex-$name"
+      done
 
-    # Agents
-    $DRY_RUN_CMD mkdir -p "$HOME/.claude/agents"
-    for agent in "$HOME/ai-skills/vex/agents"/*.md; do
-      [ -f "$agent" ] || continue
-      name=$(basename "$agent")
-      $DRY_RUN_CMD install -m 644 "$agent" "$HOME/.claude/agents/$name"
+      # Agents
+      $DRY_RUN_CMD mkdir -p "$dir/agents"
+      for agent in "$HOME/ai-skills/vex/agents"/*.md; do
+        [ -f "$agent" ] || continue
+        name=$(basename "$agent")
+        $DRY_RUN_CMD install -m 644 "$agent" "$dir/agents/$name"
+      done
     done
   '';
 
@@ -241,20 +280,22 @@ in
       rm -f "$HOME/.mcp.json"
     '';
 
-  # Symlink personal skills from ~/ai-skills/ into ~/.claude/skills/
+  # Symlink personal skills from ~/ai-skills/ into all config dirs
   # Work skills are installed separately via ~/projects/work/ag-ai-skills/install.sh
   home.activation.claudeCodeSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    SKILLS_DIR="$HOME/.claude/skills"
-    $DRY_RUN_CMD mkdir -p "$SKILLS_DIR"
+    for dir in ${lib.concatStringsSep " " configDirs}; do
+      SKILLS_DIR="$dir/skills"
+      $DRY_RUN_CMD mkdir -p "$SKILLS_DIR"
 
-    # Clean existing personal skill symlinks (managed by this activation)
-    $DRY_RUN_CMD find "$SKILLS_DIR" -maxdepth 1 -type l -delete 2>/dev/null || true
+      # Clean existing personal skill symlinks (managed by this activation)
+      $DRY_RUN_CMD find "$SKILLS_DIR" -maxdepth 1 -type l -delete 2>/dev/null || true
 
-    # Symlink personal skills
-    for skill in "$HOME/ai-skills/personal"/*/; do
-      [ -d "$skill" ] || continue
-      name=$(basename "$skill")
-      $DRY_RUN_CMD ln -sfn "$skill" "$SKILLS_DIR/$name"
+      # Symlink personal skills
+      for skill in "$HOME/ai-skills/personal"/*/; do
+        [ -d "$skill" ] || continue
+        name=$(basename "$skill")
+        $DRY_RUN_CMD ln -sfn "$skill" "$SKILLS_DIR/$name"
+      done
     done
   '';
 }

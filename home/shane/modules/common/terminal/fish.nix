@@ -11,12 +11,13 @@
       tfaa = "terraform apply -auto-approve";
       nvl = "nvim --listen /tmp/nvim";
 
-      # Claude Code
-      cc = "claude";
-      ccr = "claude --resume";
-      ccd = "claude --resume --dangerously-skip-permissions";
-      ccc = "claude --continue";
-      cccd = "claude --continue --dangerously-skip-permissions";
+      # Claude Code — personal account
+      cc = "claude --allow-dangerously-skip-permissions";
+      ccr = "claude --resume --allow-dangerously-skip-permissions";
+
+      # Claude Code — work account
+      ccw = "CLAUDE_CONFIG_DIR=$HOME/.claude-work claude --allow-dangerously-skip-permissions";
+      ccwr = "CLAUDE_CONFIG_DIR=$HOME/.claude-work claude --resume --allow-dangerously-skip-permissions";
     };
     functions = {
       nrs = ''
