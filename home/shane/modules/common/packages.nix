@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 {
   home.packages = with pkgs; [
     jq
@@ -15,5 +15,6 @@
     tealdeer
     zoxide
     fzf
+    inputs.gws.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 }

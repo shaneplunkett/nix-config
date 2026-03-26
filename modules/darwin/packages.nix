@@ -9,7 +9,6 @@
     raycast
     ytmdesktop
     google-chrome
-    signal-desktop-bin
     gh
     jankyborders
   ];

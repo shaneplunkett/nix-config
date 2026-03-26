@@ -22,6 +22,7 @@
       "gcloud-cli"
       "teamviewer"
       "todoist-app"
+      "signal"
     ];
 
     brews = [

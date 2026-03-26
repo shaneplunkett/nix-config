@@ -54,6 +54,5 @@ in
     google-chrome
     slack
     qalculate-qt
-    inputs.gws.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 }

@@ -49,7 +49,7 @@
   };
 
   outputs =
-    { self, nixpkgs, ... }@inputs:
+    { ... }@inputs:
     let
       lib = import ./lib {
         inherit inputs;
