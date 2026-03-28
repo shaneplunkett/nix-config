@@ -5,7 +5,7 @@
 **NixOS (desktop):**
 
 ```bash
-nixos-rebuild build --flake .#desktop    # test build only
+nios-rebuild build --flake .#desktop    # test build only
 sudo nixos-rebuild switch --flake .#desktop  # build and activate
 ```
 
