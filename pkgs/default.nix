@@ -6,4 +6,5 @@
 
   youtui = pkgs.callPackage ./youtui/youtui.nix { };
 
+  endfield = pkgs.callPackage ./endfield { };
 }

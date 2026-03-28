@@ -1,4 +1,7 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
+let
+  nix-gaming = inputs.nix-gaming.packages.${pkgs.stdenv.hostPlatform.system};
+in
 {
   programs.steam = {
     enable = true;
@@ -10,5 +13,9 @@
     mangohud
     lutris
     heroic
+    nix-gaming.wine-ge
+    nix-gaming.umu-launcher-git
+    nix-gaming.winetricks-git
+    pkgs.endfield
   ];
 }

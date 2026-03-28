@@ -13,7 +13,9 @@
   home.homeDirectory = "/home/shane";
   xdg = {
     userDirs = {
+      enable = true;
       createDirectories = true;
+      setSessionVariables = true;
       documents = "${config.home.homeDirectory}/documents";
       download = "${config.home.homeDirectory}/downloads";
       music = "${config.home.homeDirectory}/music";
@@ -21,7 +23,7 @@
       videos = "${config.home.homeDirectory}/videos";
       templates = "${config.home.homeDirectory}/templates";
       extraConfig = {
-        XDG_SCREENSHOTS_DIR = "${config.home.homeDirectory}/screenshots";
+        SCREENSHOTS = "${config.home.homeDirectory}/screenshots";
       };
     };
   };
