@@ -8,9 +8,11 @@
 
   environment.systemPackages = with pkgs; [
     mangohud
-    lutris
     heroic
     wineWow64Packages.stagingFull
     winetricks
+    protontricks
+    bottles
+    umu-launcher
   ];
 }

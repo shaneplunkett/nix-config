@@ -15,6 +15,7 @@
     ./claude-desktop.nix
     ./heroic.nix
     ./vesktop.nix
+    ./lutris.nix
 
   ]
 

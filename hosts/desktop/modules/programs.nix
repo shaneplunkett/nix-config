@@ -3,6 +3,7 @@
   programs.neovim.defaultEditor = true;
   programs.hyprland = {
     enable = (compositor == "hyprland");
+    xwayland.enable = true;
   };
 
   #Hyprland sessionVariables
@@ -18,7 +19,6 @@
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
     configPackages = [ pkgs.hyprland ];
   };
-
 
   programs.appimage = {
     enable = true;
