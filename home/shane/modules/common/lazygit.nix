@@ -27,6 +27,8 @@ in
           - '#${colours.yellow}'
       authorColors:
         '*': '#${colours.lavender}'
+    git:
+      overrideGpg: true
     customCommands:
       - key: "<c-a>"
         description: "AI commit message"
