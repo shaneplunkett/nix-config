@@ -51,6 +51,13 @@
 
     umu-launcher.url = "github:Open-Wine-Components/umu-launcher?dir=packaging/nix";
     umu-launcher.inputs.nixpkgs.follows = "nixpkgs";
+
+    dw-proton.url = "github:imaviso/dwproton-flake";
+
+    aagl = {
+      url = "github:ezKEa/aagl-gtk-on-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

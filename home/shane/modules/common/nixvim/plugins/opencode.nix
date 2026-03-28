@@ -3,7 +3,7 @@
   plugins = {
     opencode = {
 
-      enable = true;
+      enable = false;
     };
   };
 

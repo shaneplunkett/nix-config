@@ -1,8 +1,19 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 {
+  imports = [ inputs.aagl.nixosModules.default ];
+
+  nix.settings = inputs.aagl.nixConfig;
+
+  programs.sleepy-launcher.enable = true; # Zenless Zone Zero
+  programs.anime-game-launcher.enable = true; # Genshin Impact
+  programs.wavey-launcher.enable = true; # Wuthering Waves
+
   programs.steam = {
     enable = true;
     gamescopeSession.enable = true;
+    extraCompatPackages = [
+      inputs.dw-proton.packages.${pkgs.system}.dw-proton
+    ];
   };
   programs.gamemode.enable = true;
 

@@ -11,8 +11,8 @@
   ];
 
   programs.opencode = {
-    enable = true;
-    web.enable = true;
+    enable = false;
+    web.enable = false;
   };
 
   programs.opencode.settings.server = {
