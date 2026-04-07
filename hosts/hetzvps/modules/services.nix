@@ -30,6 +30,10 @@
     '';
   };
 
+  # Allow PAM password auth for sshd (needed for SFTP upload user;
+  # sshd Match block restricts which users can actually use it)
+  security.pam.services.sshd.unixAuth = true;
+
   security.sudo.wheelNeedsPassword = false;
 
   users.users.shane = {
@@ -44,7 +48,7 @@
 
   users.users.upload = {
     isNormalUser = true;
-    shell = "/run/current-system/sw/bin/nologin";
+    shell = "/bin/sh"; # PAM rejects nologin; ForceCommand internal-sftp prevents shell access
     home = "/home/upload";
     hashedPassword = "$6$VFRZaNQTiTcWSyiz$9Tcpv81djDZ4iVIQAV9oXKOtg19j7s21HSPp7c77tXkbYdbjU0s1IGK47DpumnEZDv1AluJ0XDrX9s.whfKDk.";
   };
