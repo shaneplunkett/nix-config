@@ -20,6 +20,14 @@
       PasswordAuthentication = false;
       PermitRootLogin = "no";
     };
+    extraConfig = ''
+      Match User upload
+        ForceCommand internal-sftp
+        ChrootDirectory /home/upload
+        PasswordAuthentication yes
+        AllowTcpForwarding no
+        X11Forwarding no
+    '';
   };
 
   security.sudo.wheelNeedsPassword = false;
@@ -33,4 +41,20 @@
     ];
     openssh.authorizedKeys.keyFiles = [ ../../../authorized-keys ];
   };
+
+  users.users.upload = {
+    isNormalUser = true;
+    shell = "/run/current-system/sw/bin/nologin";
+    home = "/home/upload";
+    hashedPassword = "$6$VFRZaNQTiTcWSyiz$9Tcpv81djDZ4iVIQAV9oXKOtg19j7s21HSPp7c77tXkbYdbjU0s1IGK47DpumnEZDv1AluJ0XDrX9s.whfKDk.";
+  };
+
+  # Set upload user password and chroot directory structure
+  system.activationScripts.sftpUpload = ''
+    mkdir -p /home/upload/uploads
+    chown root:root /home/upload
+    chmod 755 /home/upload
+    chown upload:users /home/upload/uploads
+    chmod 755 /home/upload/uploads
+  '';
 }

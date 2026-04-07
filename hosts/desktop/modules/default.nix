@@ -10,6 +10,7 @@
     ./programs.nix
     ./services
     ./vr.nix
+    ./waydroid.nix
 
   ];
 

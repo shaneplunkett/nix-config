@@ -16,6 +16,7 @@
     ./heroic.nix
     ./vesktop.nix
     ./lutris.nix
+    ./waydroid.nix
 
   ]
 
