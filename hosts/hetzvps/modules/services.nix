@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, lib, ... }:
 {
   services.tailscale = {
     enable = true;
@@ -32,7 +32,7 @@
 
   # Allow PAM password auth for sshd (needed for SFTP upload user;
   # sshd Match block restricts which users can actually use it)
-  security.pam.services.sshd.unixAuth = true;
+  security.pam.services.sshd.unixAuth = lib.mkForce true;
 
   security.sudo.wheelNeedsPassword = false;
 
