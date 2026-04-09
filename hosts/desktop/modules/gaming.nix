@@ -12,7 +12,7 @@
     enable = true;
     gamescopeSession.enable = true;
     extraCompatPackages = [
-      inputs.dw-proton.packages.${pkgs.system}.dw-proton
+      inputs.dw-proton.packages.${pkgs.stdenv.hostPlatform.system}.dw-proton
     ];
   };
   programs.gamemode.enable = true;
