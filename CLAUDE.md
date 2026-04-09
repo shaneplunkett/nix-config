@@ -53,6 +53,20 @@ AI tool configs live under `home/shane/modules/common/ai/`:
 - `cdesktop/` — shared Claude Desktop MCP selection; platform-specific wrappers remain in `modules/linux/claude-desktop.nix` and `modules/macos/claude.nix`
 - `gemini/` — Gemini CLI settings and theme
 
+## Updating tweakcc
+
+tweakcc (Vex theme for Claude Code TUI) lives at `home/shane/modules/common/ai/cc/tweakcc.nix`. The upstream repo is `Piebald-AI/tweakcc`.
+
+Update steps:
+
+1. Get the latest commit: `curl -s https://api.github.com/repos/Piebald-AI/tweakcc/commits/main | jq -r '.sha'`
+2. Update `rev` in `tweakcc.nix`, set `hash` to empty string `""`, build to get the correct hash from the error output.
+3. **Regenerate the lockfile** — upstream frequently adds deps to `package.json` without committing an updated `package-lock.json`. Download the source, run `npm install --package-lock-only --legacy-peer-deps --ignore-scripts` (ignore-scripts dodges their husky hook), and copy the result to `tweakcc-package-lock.json`.
+4. Set `npmDepsHash` to empty string `""`, build to get the correct hash, then set it.
+5. Test build with `nixos-rebuild build --flake .#desktop` — the build will fail with "patches are stale" if the tweakcc version doesn't match the Claude Code CLI version in nixpkgs.
+
+The package uses `npmDepsFetcherVersion = 2` for reliable dependency resolution.
+
 ## Git Hygiene
 
 When creating new files (secrets, modules, configs), always `git add` them before building. Nix flakes only see files tracked by git — untracked files are invisible to the build and will cause confusing errors.
