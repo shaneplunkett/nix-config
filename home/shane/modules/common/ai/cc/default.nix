@@ -38,6 +38,15 @@ let
     spinnerTipsEnabled = false;
     feedbackSurveyRate = 0;
 
+    env = {
+      CLAUDE_CODE_ENABLE_TELEMETRY = "1";
+      OTEL_METRICS_EXPORTER = "otlp";
+      OTEL_LOGS_EXPORTER = "otlp";
+      OTEL_EXPORTER_OTLP_ENDPOINT = "https://claude-telemetry.internal.agnelpu.com";
+      OTEL_EXPORTER_OTLP_PROTOCOL = "http/json";
+      OTEL_RESOURCE_ATTRIBUTES = "user.email=shane@autograb.com.au,team=engineering";
+    };
+
     permissions.allow =
       # MCP — MCPHub smart routing (memory, todoist, context7, github, etc.)
       [
