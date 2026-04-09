@@ -7,6 +7,7 @@ let
     agenix
     catppuccin
     noctalia
+    claude-desktop
     ;
 in
 {
@@ -29,6 +30,7 @@ in
           networking.hostName = hostname;
           nixpkgs.overlays = [
             (final: prev: import (rootPath + /pkgs) { pkgs = final; })
+            claude-desktop.overlays.default
           ];
         }
 
@@ -49,7 +51,8 @@ in
               nixvim.homeModules.nixvim
               agenix.homeManagerModules.default
               catppuccin.homeModules.catppuccin
-            ] ++ nixpkgs.lib.optionals (shell == "noctalia") [
+            ]
+            ++ nixpkgs.lib.optionals (shell == "noctalia") [
               noctalia.homeModules.default
             ];
           };
