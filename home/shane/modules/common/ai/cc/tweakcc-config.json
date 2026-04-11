@@ -120,7 +120,7 @@
       "fitBoxToContent": false
     },
     "inputBox": {
-      "removeBorder": true
+      "removeBorder": false
     },
     "misc": {
       "showTweakccVersion": false,
@@ -129,7 +129,7 @@
       "enableConversationTitle": true,
       "hideStartupBanner": false,
       "hideCtrlGToEdit": false,
-      "hideStartupClawd": true,
+      "hideStartupClawd": false,
       "increaseFileReadLimit": false,
       "suppressLineNumbers": false,
       "suppressRateLimitOptions": false,

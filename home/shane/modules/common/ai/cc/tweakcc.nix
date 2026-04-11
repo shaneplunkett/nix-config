@@ -5,13 +5,13 @@
 }:
 buildNpmPackage {
   pname = "tweakcc";
-  version = "4.0.11-unstable-2026-04-09";
+  version = "4.0.11-unstable-2026-04-10";
 
   src = fetchFromGitHub {
     owner = "Piebald-AI";
     repo = "tweakcc";
-    rev = "b7f26eb9c545a26ef4c9a561d5b6fb6ff4b7039d";
-    hash = "sha256-ylYVWoBaPnGcUIMTpRC3wKUq4oiHqAy9on2PT69df8U=";
+    rev = "5c3784d5fb1516640311c3ee9ab907a6dbf90499";
+    hash = "sha256-TPduX4WaCEYZhO3h/3yxfddW2NOzP1VHGlfpBZpDoFg=";
   };
 
   postPatch = ''
