@@ -40,6 +40,7 @@
         glsl
         prisma
         go
+        graphql
         swift
 
       ];
