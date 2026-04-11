@@ -22,10 +22,10 @@ let
     exec ${pkgs.python3}/bin/python3 ${./vex-statusline.py}
   '';
 
-  # PreToolUse hook: nudge Claude to use nix-shell when a binary isn't on PATH
-  nix-shell-check = pkgs.writeShellScriptBin "cc-nix-shell-check" ''
-    export PATH="${pkgs.jq}/bin:${pkgs.gawk}/bin:${pkgs.gnused}/bin:${pkgs.gnugrep}/bin:${pkgs.coreutils}/bin:$PATH"
-    exec ${pkgs.bash}/bin/bash ${./nix-shell-check.sh}
+  # SessionStart/CwdChanged hook: load direnv environment into CLAUDE_ENV_FILE
+  cc-direnv-load = pkgs.writeShellScriptBin "cc-direnv-load" ''
+    export PATH="${pkgs.direnv}/bin:$PATH"
+    exec ${pkgs.bash}/bin/bash ${./cc-direnv-load.sh}
   '';
 
   # Settings as a Nix store JSON file — deployed as a mutable copy by activation
@@ -131,17 +131,6 @@ let
     };
 
     hooks = {
-      PreToolUse = [
-        {
-          matcher = "Bash";
-          hooks = [
-            {
-              type = "command";
-              command = "${nix-shell-check}/bin/cc-nix-shell-check";
-            }
-          ];
-        }
-      ];
       PreCompact = [
         {
           hooks = [
@@ -167,6 +156,11 @@ let
           hooks = [
             {
               type = "command";
+              command = "${cc-direnv-load}/bin/cc-direnv-load";
+              timeout = 10;
+            }
+            {
+              type = "command";
               command = "cat $HOME/ai-skills/vex/hooks/session-start.md";
             }
           ];
@@ -176,7 +170,23 @@ let
           hooks = [
             {
               type = "command";
+              command = "${cc-direnv-load}/bin/cc-direnv-load";
+              timeout = 10;
+            }
+            {
+              type = "command";
               command = "cat $HOME/ai-skills/vex/hooks/session-reload.md && echo \"Git branch: $(git branch --show-current 2>/dev/null || echo N/A)\" && echo 'Recent commits:' && git log --oneline -5 2>/dev/null || true && echo 'Modified files:' && git diff --name-only 2>/dev/null || true";
+            }
+          ];
+        }
+      ];
+      CwdChanged = [
+        {
+          hooks = [
+            {
+              type = "command";
+              command = "${cc-direnv-load}/bin/cc-direnv-load";
+              timeout = 10;
             }
           ];
         }
