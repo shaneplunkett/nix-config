@@ -4,13 +4,14 @@
 # for plugin changes — just clear QML cache + bounce noctalia).
 { pkgs, lib, config, ... }:
 let
-  soundDir = "${config.home.homeDirectory}/.local/share/vex-timer/sounds";
   pluginDir = "${config.home.homeDirectory}/projects/personal/noctalia-plugins/vex-timer";
 in
 {
   # ── Sound file — nix manages the store path ──
-  home.file.".local/share/vex-timer/sounds/complete.oga".source =
-    "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/complete.oga";
+  home.file.".local/share/vex-timer/sounds/complete-chime.oga".source =
+    "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/dialog-information.oga";
+  home.file.".local/share/vex-timer/sounds/notification.oga".source =
+    "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo/window-attention.oga";
 
   # ── Symlink plugin dir → repo for live editing ──
   # Also substitutes the sound path in Main.qml since that's the only nix-specific bit
@@ -23,8 +24,6 @@ in
     # Symlink to repo
     ln -sfn "${pluginDir}" "$PLUGIN_DEST"
 
-    # Substitute sound path in Main.qml (in-place in the repo)
-    ${pkgs.gnused}/bin/sed -i 's|%SOUND_DIR%|${soundDir}|g' "${pluginDir}/Main.qml"
   '';
 
   # ── Plugin default settings ──

@@ -56,6 +56,9 @@ in
     fi
   '';
 
+  home.file.".local/share/icons/hicolor/256x256/apps/claude-desktop.png".source =
+    "${pkgs.claude-desktop}/share/icons/hicolor/256x256/apps/claude-desktop.png";
+
   home.file.".local/share/applications/claude-desktop.desktop".text = ''
     [Desktop Entry]
     Name=Claude Desktop
@@ -63,6 +66,7 @@ in
     Icon=claude-desktop
     Type=Application
     Categories=Development;Utility;
+    StartupWMClass=electron
   '';
 
   # Symlink skills from ~/ai-skills/ into Desktop's skills-plugin directory

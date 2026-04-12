@@ -55,6 +55,16 @@ in
     platformTheme.name = "gtk";
   };
 
+  xdg.desktopEntries.plex-desktop = {
+    name = "Plex";
+    exec = "plex-desktop";
+    icon = "plex-desktop";
+    terminal = false;
+    type = "Application";
+    categories = [ "AudioVideo" ];
+    settings.StartupWMClass = "tv.plex.Plex";
+  };
+
   xdg.desktopEntries.nemo = {
     name = "Files";
     comment = "Access and organise files";
