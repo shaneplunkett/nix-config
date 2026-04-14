@@ -30,172 +30,177 @@ let
 
   # Settings as a Nix store JSON file — deployed as a mutable copy by activation
   # so Claude Code can write runtime changes (thinking level, etc.)
-  settingsJson = pkgs.writeText "claude-code-settings.json" (builtins.toJSON ({
-    "$schema" = "https://json.schemastore.org/claude-code-settings.json";
-    theme = "dark-ansi";
-    outputStyle = "vex";
-    skipDangerousModePermissionPrompt = true;
-    spinnerTipsEnabled = false;
-    feedbackSurveyRate = 0;
+  settingsJson = pkgs.writeText "claude-code-settings.json" (
+    builtins.toJSON ({
+      "$schema" = "https://json.schemastore.org/claude-code-settings.json";
+      theme = "dark-ansi";
+      outputStyle = "vex";
+      skipDangerousModePermissionPrompt = true;
+      spinnerTipsEnabled = false;
+      feedbackSurveyRate = 0;
 
-    env = {
-      CLAUDE_CODE_ENABLE_TELEMETRY = "1";
-      OTEL_METRICS_EXPORTER = "otlp";
-      OTEL_LOGS_EXPORTER = "otlp";
-      OTEL_EXPORTER_OTLP_ENDPOINT = "https://claude-telemetry.internal.agnelpu.com";
-      OTEL_EXPORTER_OTLP_PROTOCOL = "http/json";
-      OTEL_RESOURCE_ATTRIBUTES = "user.email=shane@autograb.com.au,team=engineering";
-    };
+      env = {
+        CLAUDE_CODE_ENABLE_TELEMETRY = "1";
+        OTEL_METRICS_EXPORTER = "otlp";
+        OTEL_LOGS_EXPORTER = "otlp";
+        OTEL_EXPORTER_OTLP_ENDPOINT = "https://claude-telemetry.internal.agnelpu.com";
+        OTEL_EXPORTER_OTLP_PROTOCOL = "http/json";
+        OTEL_RESOURCE_ATTRIBUTES = "autograb_user=shane@autograb.com.au,team=engineering";
+      };
 
-    permissions.allow =
-      # MCP — MCPHub smart routing (memory, todoist, context7, github, etc.)
-      [
-        "mcp__claude_ai_MCPHub__search_tools"
-        "mcp__claude_ai_MCPHub__describe_tool"
-        "mcp__claude_ai_MCPHub__call_tool"
-      ]
-      ++
-        # Bash — git (read-only)
+      permissions.allow =
+        # MCP — MCPHub smart routing (memory, todoist, context7, github, etc.)
         [
-          "Bash(git log:*)"
-          "Bash(git status:*)"
-          "Bash(git diff:*)"
-          "Bash(git show:*)"
-          "Bash(git branch:*)"
-          "Bash(git remote:*)"
-          "Bash(git fetch:*)"
-          "Bash(git rev-parse:*)"
+          "mcp__claude_ai_MCPHub__search_tools"
+          "mcp__claude_ai_MCPHub__describe_tool"
+          "mcp__claude_ai_MCPHub__call_tool"
         ]
-      ++
-        # Bash — filesystem (read-only)
-        [
-          "Bash(ls:*)"
-          "Bash(cat:*)"
-          "Bash(head:*)"
-          "Bash(tail:*)"
-          "Bash(readlink:*)"
-          "Bash(echo:*)"
-          "Bash(which:*)"
-          "Bash(file:*)"
-          "Bash(wc:*)"
-        ]
-      ++
-        # Bash — nix (non-destructive)
-        [
-          "Bash(nix eval:*)"
-          "Bash(nix build:*)"
-          "Bash(nix-shell:*)"
-          "Bash(nix flake:*)"
-          "Bash(nixos-rebuild build:*)"
-          "Bash(nh home:*)"
-        ]
-      ++
-        # Bash — tools
-        [
-          "Bash(TZ='Australia/Melbourne' date:*)"
-          "Bash(python3:*)"
-          "Bash(node:*)"
-          "Bash(npx:*)"
-          "Bash(claude:*)"
-          "Bash(curl:*)"
-          "Bash(gh api:*)"
-          "Bash(gh repo:*)"
-          "Bash(gh release:*)"
-        ]
-      ++
-        # Bash — Google Workspace (read-only)
-        [
-          "Bash(gws gmail +triage:*)"
-          "Bash(gws gmail +read:*)"
-          "Bash(gws gmail users messages list:*)"
-          "Bash(gws gmail users messages get:*)"
-          "Bash(gws gmail users threads get:*)"
-          "Bash(gws gmail users labels list:*)"
-          "Bash(gws calendar:*)"
-          "Bash(gws drive files list:*)"
-        ]
-      ++
-        # Web
-        [
-          "WebSearch"
-          "WebFetch"
+        ++
+          # Bash — git (read-only)
+          [
+            "Bash(git log:*)"
+            "Bash(git status:*)"
+            "Bash(git diff:*)"
+            "Bash(git show:*)"
+            "Bash(git branch:*)"
+            "Bash(git remote:*)"
+            "Bash(git fetch:*)"
+            "Bash(git rev-parse:*)"
+          ]
+        ++
+          # Bash — filesystem (read-only)
+          [
+            "Bash(ls:*)"
+            "Bash(cat:*)"
+            "Bash(head:*)"
+            "Bash(tail:*)"
+            "Bash(readlink:*)"
+            "Bash(echo:*)"
+            "Bash(which:*)"
+            "Bash(file:*)"
+            "Bash(wc:*)"
+          ]
+        ++
+          # Bash — nix (non-destructive)
+          [
+            "Bash(nix eval:*)"
+            "Bash(nix build:*)"
+            "Bash(nix-shell:*)"
+            "Bash(nix flake:*)"
+            "Bash(nixos-rebuild build:*)"
+            "Bash(nh home:*)"
+          ]
+        ++
+          # Bash — tools
+          [
+            "Bash(TZ='Australia/Melbourne' date:*)"
+            "Bash(python3:*)"
+            "Bash(node:*)"
+            "Bash(npx:*)"
+            "Bash(claude:*)"
+            "Bash(curl:*)"
+            "Bash(gh api:*)"
+            "Bash(gh repo:*)"
+            "Bash(gh release:*)"
+          ]
+        ++
+          # Bash — Google Workspace (read-only)
+          [
+            "Bash(gws gmail +triage:*)"
+            "Bash(gws gmail +read:*)"
+            "Bash(gws gmail users messages list:*)"
+            "Bash(gws gmail users messages get:*)"
+            "Bash(gws gmail users threads get:*)"
+            "Bash(gws gmail users labels list:*)"
+            "Bash(gws calendar:*)"
+            "Bash(gws drive files list:*)"
+          ]
+        ++
+          # Web
+          [
+            "WebSearch"
+            "WebFetch"
+          ];
+
+      disabledMcpjsonServers = [
+        "posthog"
+      ];
+
+      statusLine = {
+        type = "command";
+        command = "${vex-statusline}/bin/vex-statusline";
+      };
+
+      hooks = {
+        PreCompact = [
+          {
+            hooks = [
+              {
+                type = "command";
+                command = "cat $HOME/ai-skills/vex/hooks/compaction.md";
+              }
+            ];
+          }
         ];
-
-    disabledMcpjsonServers = [
-      "posthog"
-    ];
-
-    statusLine = {
-      type = "command";
-      command = "${vex-statusline}/bin/vex-statusline";
-    };
-
-    hooks = {
-      PreCompact = [
-        {
-          hooks = [
-            {
-              type = "command";
-              command = "cat $HOME/ai-skills/vex/hooks/compaction.md";
-            }
-          ];
-        }
-      ];
-      SessionEnd = [
-        {
-          hooks = [
-            {
-              type = "command";
-              command = "cat $HOME/ai-skills/vex/hooks/session-end.md";
-            }
-          ];
-        }
-      ];
-      SessionStart = [
-        {
-          hooks = [
-            {
-              type = "command";
-              command = "${cc-direnv-load}/bin/cc-direnv-load";
-              timeout = 10;
-            }
-            {
-              type = "command";
-              command = "cat $HOME/ai-skills/vex/hooks/session-start.md";
-            }
-          ];
-        }
-        {
-          matcher = "compact";
-          hooks = [
-            {
-              type = "command";
-              command = "${cc-direnv-load}/bin/cc-direnv-load";
-              timeout = 10;
-            }
-            {
-              type = "command";
-              command = "cat $HOME/ai-skills/vex/hooks/session-reload.md && echo \"Git branch: $(git branch --show-current 2>/dev/null || echo N/A)\" && echo 'Recent commits:' && git log --oneline -5 2>/dev/null || true && echo 'Modified files:' && git diff --name-only 2>/dev/null || true";
-            }
-          ];
-        }
-      ];
-      CwdChanged = [
-        {
-          hooks = [
-            {
-              type = "command";
-              command = "${cc-direnv-load}/bin/cc-direnv-load";
-              timeout = 10;
-            }
-          ];
-        }
-      ];
-    };
-  }));
+        SessionEnd = [
+          {
+            hooks = [
+              {
+                type = "command";
+                command = "cat $HOME/ai-skills/vex/hooks/session-end.md";
+              }
+            ];
+          }
+        ];
+        SessionStart = [
+          {
+            hooks = [
+              {
+                type = "command";
+                command = "${cc-direnv-load}/bin/cc-direnv-load";
+                timeout = 10;
+              }
+              {
+                type = "command";
+                command = "cat $HOME/ai-skills/vex/hooks/session-start.md";
+              }
+            ];
+          }
+          {
+            matcher = "compact";
+            hooks = [
+              {
+                type = "command";
+                command = "${cc-direnv-load}/bin/cc-direnv-load";
+                timeout = 10;
+              }
+              {
+                type = "command";
+                command = "cat $HOME/ai-skills/vex/hooks/session-reload.md && echo \"Git branch: $(git branch --show-current 2>/dev/null || echo N/A)\" && echo 'Recent commits:' && git log --oneline -5 2>/dev/null || true && echo 'Modified files:' && git diff --name-only 2>/dev/null || true";
+              }
+            ];
+          }
+        ];
+        CwdChanged = [
+          {
+            hooks = [
+              {
+                type = "command";
+                command = "${cc-direnv-load}/bin/cc-direnv-load";
+                timeout = 10;
+              }
+            ];
+          }
+        ];
+      };
+    })
+  );
 
   # All config directories to deploy to (personal + work accounts)
-  configDirs = [ "$HOME/.claude" "$HOME/.claude-work" ];
+  configDirs = [
+    "$HOME/.claude"
+    "$HOME/.claude-work"
+  ];
 
   claude-code-vex = pkgs.claude-code.overrideAttrs (old: {
     nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ tweakcc ];
