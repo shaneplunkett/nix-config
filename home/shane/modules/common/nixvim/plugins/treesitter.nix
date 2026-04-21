@@ -1,21 +1,15 @@
-{ pkgs, ... }:
+{ config, ... }:
 {
 
   plugins = {
 
     treesitter = {
       enable = true;
-      settings = {
-        indent = {
-          enable = true;
-
-        };
-        highlight.enable = true;
-      };
-
+      highlight.enable = true;
+      indent.enable = true;
       nixvimInjections = true;
       nixGrammars = true;
-      grammarPackages = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
+      grammarPackages = with config.plugins.treesitter.package.builtGrammars; [
         css
         eex
         elixir
@@ -46,22 +40,11 @@
       ];
     };
 
-    treesitter-context = {
-      enable = true;
-    };
+    treesitter-context.enable = true;
 
     treesitter-textobjects = {
       enable = true;
-      settings = {
-        select = {
-          enable = true;
-          lookahead = true;
-        };
-      };
     };
-    extraConfigLua = ''
-      local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
-    '';
   };
 
 }
