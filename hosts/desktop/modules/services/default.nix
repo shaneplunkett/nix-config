@@ -13,6 +13,16 @@
   services.tumbler.enable = true;
   services.tailscale.enable = true;
 
+  services.openssh = {
+    enable = true;
+    settings = {
+      PasswordAuthentication = false;
+      PermitRootLogin = "no";
+    };
+  };
+
+  users.users.shane.openssh.authorizedKeys.keyFiles = [ ../../../../authorized-keys ];
+
   # Passwordless sudo for nixos-rebuild (allows Claude Code to switch)
   security.sudo.extraRules = [
     {
