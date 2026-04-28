@@ -25,6 +25,7 @@ in
   "anthropic-key.age".publicKeys = [ shane ];
   "atlassian-api-token.age".publicKeys = [ shane ];
   "compass-api-token.age".publicKeys = [ shane ];
+  "atlassian-ops-token.age".publicKeys = [ shane ];
   "slack-token.age".publicKeys = [ shane ];
   "slack-cookie-d.age".publicKeys = [ shane ];
 }

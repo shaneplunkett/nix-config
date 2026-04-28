@@ -17,6 +17,11 @@
     nemo-with-extensions
     file-roller
     openocd
+
+    # meeting transcription
+    ffmpeg
+    meetscribe
+    pulseaudio # provides pactl for meetscribe audio device introspection
   ];
 
 }

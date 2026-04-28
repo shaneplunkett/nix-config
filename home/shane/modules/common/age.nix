@@ -63,6 +63,9 @@
       compass-api-token = {
         file = ../../../../secrets/compass-api-token.age;
       };
+      atlassian-ops-key = {
+        file = ../../../../secrets/atlassian-ops-key.age;
+      };
     };
 
   };
