@@ -28,4 +28,5 @@ in
   "atlassian-ops-token.age".publicKeys = [ shane ];
   "slack-token.age".publicKeys = [ shane ];
   "slack-cookie-d.age".publicKeys = [ shane ];
+  "huggingface.age".publicKeys = [ shane ];
 }
