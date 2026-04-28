@@ -23,4 +23,8 @@ in
   "google-calendar-personal.age".publicKeys = [ shane ];
   "google-calendar-work.age".publicKeys = [ shane ];
   "anthropic-key.age".publicKeys = [ shane ];
+  "atlassian-api-token.age".publicKeys = [ shane ];
+  "compass-api-token.age".publicKeys = [ shane ];
+  "slack-token.age".publicKeys = [ shane ];
+  "slack-cookie-d.age".publicKeys = [ shane ];
 }

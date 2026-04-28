@@ -51,6 +51,18 @@
       anthropic-key = {
         file = ../../../../secrets/anthropic-key.age;
       };
+      atlassian-api-token = {
+        file = ../../../../secrets/atlassian-api-token.age;
+      };
+      slack-token = {
+        file = ../../../../secrets/slack-token.age;
+      };
+      slack-cookie-d = {
+        file = ../../../../secrets/slack-cookie-d.age;
+      };
+      compass-api-token = {
+        file = ../../../../secrets/compass-api-token.age;
+      };
     };
 
   };

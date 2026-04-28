@@ -126,6 +126,18 @@ let
         "posthog"
       ];
 
+      # Deny cloud MCP connectors that have been retired in favour of CLIs.
+      # These tools still appear in the deferred tool list (claude.ai-managed),
+      # but Claude Code blocks any attempt to call them.
+      permissions.deny = [
+        # Google Workspace → use `gws` CLI via google-workspace-agent
+        "mcp__claude_ai_Google_Drive"
+        # Atlassian → use `jira` / `confluence` CLIs (Compass: curl + GraphQL)
+        "mcp__claude_ai_Atlassian"
+        # Slack → use `agent-slack` CLI
+        "mcp__claude_ai_Slack"
+      ];
+
       statusLine = {
         type = "command";
         command = "${vex-statusline}/bin/vex-statusline";
