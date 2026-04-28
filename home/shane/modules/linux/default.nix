@@ -14,6 +14,7 @@
     ./webapps
     ./claude-desktop.nix
     ./heroic.nix
+    ./meetscribe.nix
     ./vesktop.nix
     ./lutris.nix
     ./waydroid.nix

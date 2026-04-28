@@ -8,6 +8,11 @@
     enable32Bit = true;
   };
 
+  # ROCm support for the 7900-series GPU — drives whisperx (via torch) and
+  # ollama-rocm. Nixpkgs honours `config.rocmSupport` for both torch builds
+  # (source and bin variants).
+  nixpkgs.config.rocmSupport = true;
+
   zramSwap.enable = true;
   zramSwap.memoryPercent = 50;
 

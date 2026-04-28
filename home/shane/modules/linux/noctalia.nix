@@ -5,7 +5,7 @@ let
   hex = v: "#${v}";
 in
 {
-  imports = [ ./vex-timer-plugin.nix ./vex-agenda-plugin.nix ./vex-todoist-plugin.nix ];
+  imports = [ ./vex-timer-plugin.nix ./vex-agenda-plugin.nix ./vex-todoist-plugin.nix ./vex-claude-usage-plugin.nix ];
   programs.noctalia-shell = {
     enable = true;
 
@@ -110,6 +110,9 @@ in
               textColor = "primary";
               useFixedWidth = false;
               visualizerType = "mirrored";
+            }
+            {
+              id = "plugin:vex-claude-usage";
             }
           ];
           center = [
@@ -649,6 +652,7 @@ in
       vex-timer = { enabled = true; sourceUrl = "local"; };
       vex-agenda = { enabled = true; sourceUrl = "local"; };
       vex-todoist = { enabled = true; sourceUrl = "local"; };
+      vex-claude-usage = { enabled = true; sourceUrl = "local"; };
     };
   };
 
