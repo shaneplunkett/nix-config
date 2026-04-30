@@ -70,6 +70,9 @@
       huggingface = {
         file = ../../../../secrets/huggingface.age;
       };
+      browserbase-api-key = {
+        file = ../../../../secrets/browserbase-api-key.age;
+      };
     };
 
   };

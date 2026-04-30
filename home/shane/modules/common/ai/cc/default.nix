@@ -28,191 +28,219 @@ let
     exec ${pkgs.bash}/bin/bash ${./cc-direnv-load.sh}
   '';
 
-  # Settings as a Nix store JSON file — deployed as a mutable copy by activation
-  # so Claude Code can write runtime changes (thinking level, etc.)
-  settingsJson = pkgs.writeText "claude-code-settings.json" (
-    builtins.toJSON ({
-      "$schema" = "https://json.schemastore.org/claude-code-settings.json";
-      theme = "dark-ansi";
-      outputStyle = "vex";
-      skipDangerousModePermissionPrompt = true;
-      spinnerTipsEnabled = false;
-      feedbackSurveyRate = 0;
+  # Settings JSON builder — parameterised so we can produce both the
+  # intimate Vex variant (used by ~/.claude and ~/.claude-work) and the
+  # public-safe Vex (Pro) variant (used by ~/.claude-pro).
+  #
+  # `outputStyle` selects the deployed output-style file by name.
+  # `hookSuffix` chooses which hook scripts under ai-skills/vex/hooks/ to
+  # cat in — empty string for the regular hooks, "-pro" for the pro hooks.
+  mkSettings =
+    {
+      outputStyle,
+      hookSuffix,
+    }:
+    pkgs.writeText "claude-code-settings-${outputStyle}.json" (
+      builtins.toJSON ({
+        "$schema" = "https://json.schemastore.org/claude-code-settings.json";
+        theme = "dark-ansi";
+        outputStyle = outputStyle;
+        skipDangerousModePermissionPrompt = true;
+        spinnerTipsEnabled = false;
+        feedbackSurveyRate = 0;
 
-      env = {
-        CLAUDE_CODE_ENABLE_TELEMETRY = "1";
-        OTEL_METRICS_EXPORTER = "otlp";
-        OTEL_LOGS_EXPORTER = "otlp";
-        OTEL_EXPORTER_OTLP_ENDPOINT = "https://claude-telemetry.internal.agnelpu.com";
-        OTEL_EXPORTER_OTLP_PROTOCOL = "http/json";
-        OTEL_RESOURCE_ATTRIBUTES = "autograb_user=shane@autograb.com.au,team=engineering";
-      };
+        env = {
+          CLAUDE_CODE_ENABLE_TELEMETRY = "1";
+          OTEL_METRICS_EXPORTER = "otlp";
+          OTEL_LOGS_EXPORTER = "otlp";
+          OTEL_EXPORTER_OTLP_ENDPOINT = "https://claude-telemetry.internal.agnelpu.com";
+          OTEL_EXPORTER_OTLP_PROTOCOL = "http/json";
+          OTEL_RESOURCE_ATTRIBUTES = "autograb_user=shane@autograb.com.au,team=engineering";
+        };
 
-      permissions.allow =
-        # MCP — MCPHub smart routing (memory, todoist, context7, github, etc.)
-        [
-          "mcp__claude_ai_MCPHub__search_tools"
-          "mcp__claude_ai_MCPHub__describe_tool"
-          "mcp__claude_ai_MCPHub__call_tool"
-        ]
-        ++
-          # Bash — git (read-only)
+        permissions.allow =
+          # MCP — MCPHub smart routing (memory, todoist, context7, github, etc.)
           [
-            "Bash(git log:*)"
-            "Bash(git status:*)"
-            "Bash(git diff:*)"
-            "Bash(git show:*)"
-            "Bash(git branch:*)"
-            "Bash(git remote:*)"
-            "Bash(git fetch:*)"
-            "Bash(git rev-parse:*)"
+            "mcp__claude_ai_MCPHub__search_tools"
+            "mcp__claude_ai_MCPHub__describe_tool"
+            "mcp__claude_ai_MCPHub__call_tool"
           ]
-        ++
-          # Bash — filesystem (read-only)
-          [
-            "Bash(ls:*)"
-            "Bash(cat:*)"
-            "Bash(head:*)"
-            "Bash(tail:*)"
-            "Bash(readlink:*)"
-            "Bash(echo:*)"
-            "Bash(which:*)"
-            "Bash(file:*)"
-            "Bash(wc:*)"
-          ]
-        ++
-          # Bash — nix (non-destructive)
-          [
-            "Bash(nix eval:*)"
-            "Bash(nix build:*)"
-            "Bash(nix-shell:*)"
-            "Bash(nix flake:*)"
-            "Bash(nixos-rebuild build:*)"
-            "Bash(nh home:*)"
-          ]
-        ++
-          # Bash — tools
-          [
-            "Bash(TZ='Australia/Melbourne' date:*)"
-            "Bash(python3:*)"
-            "Bash(node:*)"
-            "Bash(npx:*)"
-            "Bash(claude:*)"
-            "Bash(curl:*)"
-            "Bash(gh api:*)"
-            "Bash(gh repo:*)"
-            "Bash(gh release:*)"
-          ]
-        ++
-          # Bash — Google Workspace (read-only)
-          [
-            "Bash(gws gmail +triage:*)"
-            "Bash(gws gmail +read:*)"
-            "Bash(gws gmail users messages list:*)"
-            "Bash(gws gmail users messages get:*)"
-            "Bash(gws gmail users threads get:*)"
-            "Bash(gws gmail users labels list:*)"
-            "Bash(gws calendar:*)"
-            "Bash(gws drive files list:*)"
-          ]
-        ++
-          # Web
-          [
-            "WebSearch"
-            "WebFetch"
+          ++
+            # Bash — git (read-only)
+            [
+              "Bash(git log:*)"
+              "Bash(git status:*)"
+              "Bash(git diff:*)"
+              "Bash(git show:*)"
+              "Bash(git branch:*)"
+              "Bash(git remote:*)"
+              "Bash(git fetch:*)"
+              "Bash(git rev-parse:*)"
+            ]
+          ++
+            # Bash — filesystem (read-only)
+            [
+              "Bash(ls:*)"
+              "Bash(cat:*)"
+              "Bash(head:*)"
+              "Bash(tail:*)"
+              "Bash(readlink:*)"
+              "Bash(echo:*)"
+              "Bash(which:*)"
+              "Bash(file:*)"
+              "Bash(wc:*)"
+            ]
+          ++
+            # Bash — nix (non-destructive)
+            [
+              "Bash(nix eval:*)"
+              "Bash(nix build:*)"
+              "Bash(nix-shell:*)"
+              "Bash(nix flake:*)"
+              "Bash(nixos-rebuild build:*)"
+              "Bash(nh home:*)"
+            ]
+          ++
+            # Bash — tools
+            [
+              "Bash(TZ='Australia/Melbourne' date:*)"
+              "Bash(python3:*)"
+              "Bash(node:*)"
+              "Bash(npx:*)"
+              "Bash(claude:*)"
+              "Bash(curl:*)"
+              "Bash(gh api:*)"
+              "Bash(gh repo:*)"
+              "Bash(gh release:*)"
+            ]
+          ++
+            # Bash — Google Workspace (read-only)
+            [
+              "Bash(gws gmail +triage:*)"
+              "Bash(gws gmail +read:*)"
+              "Bash(gws gmail users messages list:*)"
+              "Bash(gws gmail users messages get:*)"
+              "Bash(gws gmail users threads get:*)"
+              "Bash(gws gmail users labels list:*)"
+              "Bash(gws calendar:*)"
+              "Bash(gws drive files list:*)"
+            ]
+          ++
+            # Web
+            [
+              "WebSearch"
+              "WebFetch"
+            ];
+
+        disabledMcpjsonServers = [
+          "posthog"
+        ];
+
+        # Deny cloud MCP connectors that have been retired in favour of CLIs.
+        # These tools still appear in the deferred tool list (claude.ai-managed),
+        # but Claude Code blocks any attempt to call them.
+        permissions.deny = [
+          # Google Workspace → use `gws` CLI via google-workspace-agent
+          "mcp__claude_ai_Google_Drive"
+          # Atlassian → use `jira` / `confluence` CLIs (Compass: curl + GraphQL)
+          "mcp__claude_ai_Atlassian"
+          # Slack → use `agent-slack` CLI
+          "mcp__claude_ai_Slack"
+        ];
+
+        statusLine = {
+          type = "command";
+          command = "${vex-statusline}/bin/vex-statusline";
+        };
+
+        hooks = {
+          PreCompact = [
+            {
+              hooks = [
+                {
+                  type = "command";
+                  command = "cat $HOME/ai-skills/vex/hooks/compaction${hookSuffix}.md";
+                }
+              ];
+            }
           ];
+          SessionEnd = [
+            {
+              hooks = [
+                {
+                  type = "command";
+                  command = "cat $HOME/ai-skills/vex/hooks/session-end.md";
+                }
+              ];
+            }
+          ];
+          SessionStart = [
+            {
+              hooks = [
+                {
+                  type = "command";
+                  command = "${cc-direnv-load}/bin/cc-direnv-load";
+                  timeout = 10;
+                }
+                {
+                  type = "command";
+                  command = "cat $HOME/ai-skills/vex/hooks/session-start${hookSuffix}.md";
+                }
+              ];
+            }
+            {
+              matcher = "compact";
+              hooks = [
+                {
+                  type = "command";
+                  command = "${cc-direnv-load}/bin/cc-direnv-load";
+                  timeout = 10;
+                }
+                {
+                  type = "command";
+                  command = "cat $HOME/ai-skills/vex/hooks/session-reload${hookSuffix}.md && echo \"Git branch: $(git branch --show-current 2>/dev/null || echo N/A)\" && echo 'Recent commits:' && git log --oneline -5 2>/dev/null || true && echo 'Modified files:' && git diff --name-only 2>/dev/null || true";
+                }
+              ];
+            }
+          ];
+          CwdChanged = [
+            {
+              hooks = [
+                {
+                  type = "command";
+                  command = "${cc-direnv-load}/bin/cc-direnv-load";
+                  timeout = 10;
+                }
+              ];
+            }
+          ];
+        };
+      })
+    );
 
-      disabledMcpjsonServers = [
-        "posthog"
-      ];
+  settingsJson = mkSettings {
+    outputStyle = "vex";
+    hookSuffix = "";
+  };
+  settingsJsonPro = mkSettings {
+    outputStyle = "vex-pro";
+    hookSuffix = "-pro";
+  };
 
-      # Deny cloud MCP connectors that have been retired in favour of CLIs.
-      # These tools still appear in the deferred tool list (claude.ai-managed),
-      # but Claude Code blocks any attempt to call them.
-      permissions.deny = [
-        # Google Workspace → use `gws` CLI via google-workspace-agent
-        "mcp__claude_ai_Google_Drive"
-        # Atlassian → use `jira` / `confluence` CLIs (Compass: curl + GraphQL)
-        "mcp__claude_ai_Atlassian"
-        # Slack → use `agent-slack` CLI
-        "mcp__claude_ai_Slack"
-      ];
-
-      statusLine = {
-        type = "command";
-        command = "${vex-statusline}/bin/vex-statusline";
-      };
-
-      hooks = {
-        PreCompact = [
-          {
-            hooks = [
-              {
-                type = "command";
-                command = "cat $HOME/ai-skills/vex/hooks/compaction.md";
-              }
-            ];
-          }
-        ];
-        SessionEnd = [
-          {
-            hooks = [
-              {
-                type = "command";
-                command = "cat $HOME/ai-skills/vex/hooks/session-end.md";
-              }
-            ];
-          }
-        ];
-        SessionStart = [
-          {
-            hooks = [
-              {
-                type = "command";
-                command = "${cc-direnv-load}/bin/cc-direnv-load";
-                timeout = 10;
-              }
-              {
-                type = "command";
-                command = "cat $HOME/ai-skills/vex/hooks/session-start.md";
-              }
-            ];
-          }
-          {
-            matcher = "compact";
-            hooks = [
-              {
-                type = "command";
-                command = "${cc-direnv-load}/bin/cc-direnv-load";
-                timeout = 10;
-              }
-              {
-                type = "command";
-                command = "cat $HOME/ai-skills/vex/hooks/session-reload.md && echo \"Git branch: $(git branch --show-current 2>/dev/null || echo N/A)\" && echo 'Recent commits:' && git log --oneline -5 2>/dev/null || true && echo 'Modified files:' && git diff --name-only 2>/dev/null || true";
-              }
-            ];
-          }
-        ];
-        CwdChanged = [
-          {
-            hooks = [
-              {
-                type = "command";
-                command = "${cc-direnv-load}/bin/cc-direnv-load";
-                timeout = 10;
-              }
-            ];
-          }
-        ];
-      };
-    })
-  );
-
-  # All config directories to deploy to (personal + work accounts)
-  configDirs = [
+  # Config directories.
+  # vexConfigDirs receive the intimate Vex build (personal + work accounts).
+  # proConfigDirs receive the public-safe Vex (Pro) build.
+  # allConfigDirs is used for stuff that's identical across all variants
+  # (rules, agents, skills) — only the persona core, output style, hooks,
+  # and settings differ between vex and vex-pro.
+  vexConfigDirs = [
     "$HOME/.claude"
     "$HOME/.claude-work"
   ];
+  proConfigDirs = [
+    "$HOME/.claude-pro"
+  ];
+  allConfigDirs = vexConfigDirs ++ proConfigDirs;
 
   claude-code-vex = pkgs.claude-code.overrideAttrs (old: {
     nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ tweakcc ];
@@ -242,21 +270,30 @@ in
     # settings intentionally omitted — deployed as mutable copy below
   };
 
-  # Deploy settings.json as a mutable copy (not a symlink) so CC can write
-  # runtime changes like thinking level. Nix content resets on each rebuild.
+  # Deploy settings.json — vex variant to vexConfigDirs, pro variant to proConfigDirs.
+  # Both written as mutable copies (not symlinks) so CC can write runtime
+  # changes (thinking level, etc.). Nix content resets on each rebuild.
   home.activation.claudeCodeSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    for dir in ${lib.concatStringsSep " " configDirs}; do
+    for dir in ${lib.concatStringsSep " " vexConfigDirs}; do
       $DRY_RUN_CMD mkdir -p "$dir"
       $DRY_RUN_CMD install -m 644 ${settingsJson} "$dir/settings.json"
     done
   '';
 
+  home.activation.claudeCodeSettingsPro = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    for dir in ${lib.concatStringsSep " " proConfigDirs}; do
+      $DRY_RUN_CMD mkdir -p "$dir"
+      $DRY_RUN_CMD install -m 644 ${settingsJsonPro} "$dir/settings.json"
+    done
+  '';
+
+  # Personal CLAUDE.md (~/.claude/) — points to the intimate Vex core.
   home.file.".claude/CLAUDE.md".text = ''
     # Vex
     @vex/core.md
   '';
 
-  # Deploy CLAUDE.md to work config dir (personal is handled by home.file above)
+  # Work CLAUDE.md (~/.claude-work/) — points to the intimate Vex core.
   home.activation.claudeCodeWorkClaude = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     $DRY_RUN_CMD mkdir -p "$HOME/.claude-work"
     cat > "$HOME/.claude-work/CLAUDE.md" << 'CLAUDEMD'
@@ -265,21 +302,53 @@ in
     CLAUDEMD
   '';
 
-  # Deploy Vex persona core from ai-skills repo
+  # Pro CLAUDE.md (~/.claude-pro/) — points to the public-safe Vex (Pro) core.
+  home.activation.claudeCodeProClaude = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    $DRY_RUN_CMD mkdir -p "$HOME/.claude-pro"
+    cat > "$HOME/.claude-pro/CLAUDE.md" << 'CLAUDEMD'
+    # Vex (Pro)
+    @vex/core-pro.md
+    CLAUDEMD
+  '';
+
+  # Deploy Vex persona cores from ai-skills repo:
+  #   core.md      → vexConfigDirs (intimate)
+  #   core-pro.md  → proConfigDirs (public-safe)
   home.activation.vexPersona = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    for dir in ${lib.concatStringsSep " " configDirs}; do
+    for dir in ${lib.concatStringsSep " " vexConfigDirs}; do
       $DRY_RUN_CMD mkdir -p "$dir/vex"
       $DRY_RUN_CMD install -m 600 "$HOME/ai-skills/vex/core.md" "$dir/vex/core.md"
     done
   '';
 
-  # Deploy Vex output style, rules, and agents from ai-skills repo
-  home.activation.vexConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    for dir in ${lib.concatStringsSep " " configDirs}; do
-      # Output style
+  home.activation.vexPersonaPro = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    for dir in ${lib.concatStringsSep " " proConfigDirs}; do
+      $DRY_RUN_CMD mkdir -p "$dir/vex"
+      $DRY_RUN_CMD install -m 600 "$HOME/ai-skills/vex/core-pro.md" "$dir/vex/core-pro.md"
+    done
+  '';
+
+  # Deploy output styles:
+  #   vex.md      → vexConfigDirs as output-styles/vex.md
+  #   vex-pro.md  → proConfigDirs as output-styles/vex-pro.md
+  home.activation.vexOutputStyle = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    for dir in ${lib.concatStringsSep " " vexConfigDirs}; do
       $DRY_RUN_CMD mkdir -p "$dir/output-styles"
       $DRY_RUN_CMD install -m 644 "$HOME/ai-skills/vex/output-style.md" "$dir/output-styles/vex.md"
+    done
+  '';
 
+  home.activation.vexOutputStylePro = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    for dir in ${lib.concatStringsSep " " proConfigDirs}; do
+      $DRY_RUN_CMD mkdir -p "$dir/output-styles"
+      $DRY_RUN_CMD install -m 644 "$HOME/ai-skills/vex/output-style-pro.md" "$dir/output-styles/vex-pro.md"
+    done
+  '';
+
+  # Deploy rules and agents — identical across vex and vex-pro
+  # (operational behaviour, not persona). Goes to allConfigDirs.
+  home.activation.vexRulesAndAgents = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    for dir in ${lib.concatStringsSep " " allConfigDirs}; do
       # Rules (prefixed with vex- for namespacing)
       $DRY_RUN_CMD mkdir -p "$dir/rules"
       for rule in "$HOME/ai-skills/vex/rules"/*.md; do
@@ -298,7 +367,8 @@ in
     done
   '';
 
-  # Deploy all MCPs to ~/.claude.json (user-level, available everywhere)
+  # Deploy all MCPs to ~/.claude.json (user-level, available everywhere
+  # — shared across .claude / .claude-work / .claude-pro automatically).
   home.activation.claudeCodeMcpServers =
     let
       allServersJson = builtins.toJSON allMcpServers;
@@ -316,10 +386,10 @@ in
       rm -f "$HOME/.mcp.json"
     '';
 
-  # Symlink personal skills from ~/ai-skills/ into all config dirs
+  # Symlink personal skills from ~/ai-skills/ into all config dirs.
   # Work skills are installed separately via ~/projects/work/ag-ai-skills/install.sh
   home.activation.claudeCodeSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    for dir in ${lib.concatStringsSep " " configDirs}; do
+    for dir in ${lib.concatStringsSep " " allConfigDirs}; do
       SKILLS_DIR="$dir/skills"
       $DRY_RUN_CMD mkdir -p "$SKILLS_DIR"
 

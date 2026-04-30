@@ -5,6 +5,7 @@
     ./age.nix
     ./ai
     ./atlassian.nix
+    ./browserbase.nix
     ./btop.nix
     ./git.nix
     ./langsmith.nix

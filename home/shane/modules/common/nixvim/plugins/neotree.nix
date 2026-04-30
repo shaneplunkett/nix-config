@@ -84,6 +84,9 @@
               staged = "󰱒";
             };
           };
+          symlink_target = {
+            enabled = true;
+          };
         };
       };
     };

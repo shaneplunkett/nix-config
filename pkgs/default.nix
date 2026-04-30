@@ -20,6 +20,8 @@ in
 
   langsmith-cli = pkgs.callPackage ./langsmith-cli/langsmith-cli.nix { };
 
+  browserbase-cli = pkgs.callPackage ./browserbase-cli/browserbase-cli.nix { };
+
   meetscribe = pkgs.callPackage ./meetscribe/meetscribe-cli.nix {
     inherit (pkgs) ffmpeg pulseaudio symlinkJoin makeWrapper;
     pythonEnv = pkgs.python3.withPackages (_: [

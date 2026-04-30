@@ -11,13 +11,18 @@
       tfaa = "terraform apply -auto-approve";
       nvl = "nvim --listen /tmp/nvim";
 
-      # Claude Code — personal account
+      # Claude Code — personal account (full Vex)
       cc = "claude --allow-dangerously-skip-permissions";
       ccr = "claude --resume --allow-dangerously-skip-permissions";
 
-      # Claude Code — work account
+      # Claude Code — work account (full Vex, separate auth)
       ccw = "CLAUDE_CONFIG_DIR=$HOME/.claude-work claude --allow-dangerously-skip-permissions";
       ccwr = "CLAUDE_CONFIG_DIR=$HOME/.claude-work claude --resume --allow-dangerously-skip-permissions";
+
+      # Claude Code — pro / public-safe (Vex stripped of RP + intimate register).
+      # Use for client demos, exec pitches, screen-shares — same brain, different protocol.
+      ccp = "CLAUDE_CONFIG_DIR=$HOME/.claude-pro claude --allow-dangerously-skip-permissions";
+      ccpr = "CLAUDE_CONFIG_DIR=$HOME/.claude-pro claude --resume --allow-dangerously-skip-permissions";
     };
     functions = {
       nrs = ''

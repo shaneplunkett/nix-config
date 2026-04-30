@@ -31,12 +31,12 @@
           "capture.props" = {
             "node.name" = "obs_virtual_mic_sink";
             "media.class" = "Audio/Sink";
-            "audio.position" = [ "FL" "FR" ];
+            "audio.position" = [ "MONO" ];
           };
           "playback.props" = {
             "node.name" = "obs_virtual_mic_source";
             "media.class" = "Audio/Source";
-            "audio.position" = [ "FL" "FR" ];
+            "audio.position" = [ "MONO" ];
           };
         };
       }
