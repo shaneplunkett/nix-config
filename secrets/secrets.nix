@@ -10,6 +10,8 @@ in
   "mcphub-bearer.age".publicKeys = [ shane ];
   "google-oauth-client-id.age".publicKeys = [ shane ];
   "google-oauth-client-secret.age".publicKeys = [ shane ];
+  "xero-client-id.age".publicKeys = [ shane ];
+  "xero-client-secret.age".publicKeys = [ shane ];
   "tailscale-api.age".publicKeys = [ shane ];
   "tailscale-tailnet.age".publicKeys = [ shane ];
   "tailscale-authkey.age".publicKeys = [

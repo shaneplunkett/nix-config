@@ -24,6 +24,12 @@
       google-oauth-client-secret = {
         file = ../../../../secrets/google-oauth-client-secret.age;
       };
+      xero-client-id = {
+        file = ../../../../secrets/xero-client-id.age;
+      };
+      xero-client-secret = {
+        file = ../../../../secrets/xero-client-secret.age;
+      };
       mcphub-bearer = {
         file = ../../../../secrets/mcphub-bearer.age;
       };
