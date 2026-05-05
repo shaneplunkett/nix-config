@@ -7,6 +7,7 @@
     ./atlassian.nix
     ./browserbase.nix
     ./btop.nix
+    ./coderabbit.nix
     ./git.nix
     ./langsmith.nix
     ./lazygit.nix

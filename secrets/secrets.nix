@@ -30,4 +30,6 @@ in
   "slack-cookie-d.age".publicKeys = [ shane ];
   "huggingface.age".publicKeys = [ shane ];
   "browserbase-api-key.age".publicKeys = [ shane ];
+  "vex-cli-cf-id.age".publicKeys = [ shane ];
+  "vex-cli-cf-secret.age".publicKeys = [ shane ];
 }

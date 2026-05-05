@@ -30,6 +30,8 @@ buildPythonPackage rec {
     numpy
   ];
 
+  patches = [ ./fix-pulse-channels.patch ];
+
   pythonImportsCheck = [ "meet_record" ];
 
   meta = {

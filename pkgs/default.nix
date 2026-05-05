@@ -22,6 +22,8 @@ in
 
   browserbase-cli = pkgs.callPackage ./browserbase-cli/browserbase-cli.nix { };
 
+  coderabbit-cli = pkgs.callPackage ./coderabbit-cli/coderabbit-cli.nix { };
+
   meetscribe = pkgs.callPackage ./meetscribe/meetscribe-cli.nix {
     inherit (pkgs) ffmpeg pulseaudio symlinkJoin makeWrapper;
     pythonEnv = pkgs.python3.withPackages (_: [
