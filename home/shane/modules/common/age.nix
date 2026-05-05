@@ -73,6 +73,12 @@
       browserbase-api-key = {
         file = ../../../../secrets/browserbase-api-key.age;
       };
+      vex-cli-cf-id = {
+        file = ../../../../secrets/vex-cli-cf-id.age;
+      };
+      vex-cli-cf-secret = {
+        file = ../../../../secrets/vex-cli-cf-secret.age;
+      };
     };
 
   };

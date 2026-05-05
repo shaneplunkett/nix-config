@@ -16,6 +16,7 @@
     ./slack.nix
     ./ssh.nix
     ./todoist.nix
+    ./vex-cli.nix
     ./terminal
     ./theme
     ./youtui
