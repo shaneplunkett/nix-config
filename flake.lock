@@ -1276,11 +1276,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1777975061,
-        "narHash": "sha256-Ju+d5H1j7o6pJ6NiqBb7aiVEiBBwL+2OpK41/NmhWgw=",
+        "lastModified": 1777978752,
+        "narHash": "sha256-oU7zBvKA3fw1h3/Lm0VGBORgKus16Z7LO8Oesu3Mt10=",
         "ref": "refs/heads/main",
-        "rev": "67f5790b4ecfd1621811659c3813685d069cb201",
-        "revCount": 2,
+        "rev": "d0698b4e43ce26d423d3f4ecbdcdadadde30f961",
+        "revCount": 3,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/vex-cli.git"
       },

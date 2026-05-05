@@ -60,4 +60,36 @@ in
     vexCliWrapped
     vexEnv
   ];
+
+  # systemd-user timer: hourly `vex sync-cc`. The wrapper exports the CF
+  # Access service token + endpoint from agenix before the binary runs, so
+  # the unit doesn't need to plumb credentials manually.
+  systemd.user.services.vex-sync-cc = {
+    Unit = {
+      Description = "Push new Claude Code sessions to vex-brain";
+      After = [ "network-online.target" ];
+      Wants = [ "network-online.target" ];
+    };
+    Service = {
+      Type = "oneshot";
+      ExecStart = "${vexCliWrapped}/bin/vex sync-cc";
+      # Don't blow up the timer history on transient network failures.
+      SuccessExitStatus = "0";
+    };
+  };
+
+  systemd.user.timers.vex-sync-cc = {
+    Unit = {
+      Description = "Hourly vex sync-cc";
+    };
+    Timer = {
+      OnBootSec = "5min";
+      OnUnitActiveSec = "1h";
+      # Catch up if the machine was asleep at the scheduled fire time.
+      Persistent = true;
+    };
+    Install = {
+      WantedBy = [ "timers.target" ];
+    };
+  };
 }
