@@ -259,6 +259,24 @@
         "type": "github"
       }
     },
+    "flake-utils_2": {
+      "inputs": {
+        "systems": "systems_7"
+      },
+      "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "gitignore": {
       "inputs": {
         "nixpkgs": [
@@ -1058,6 +1076,7 @@
         "noctalia": "noctalia",
         "noctalia-qs": "noctalia-qs_2",
         "umu-launcher": "umu-launcher",
+        "vex-cli": "vex-cli",
         "zen-browser": "zen-browser"
       }
     },
@@ -1169,6 +1188,21 @@
         "type": "github"
       }
     },
+    "systems_7": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
     "treefmt-nix": {
       "inputs": {
         "nixpkgs": [
@@ -1232,6 +1266,27 @@
         "owner": "Open-Wine-Components",
         "repo": "umu-launcher",
         "type": "github"
+      }
+    },
+    "vex-cli": {
+      "inputs": {
+        "flake-utils": "flake-utils_2",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1777973107,
+        "narHash": "sha256-m6S0Ur71Z6pAMVinlayIZLzbuAESaAM+lIJNARKO0Vk=",
+        "ref": "refs/heads/main",
+        "rev": "80594b2a32b578cc712b284cf1450a020e3bba1d",
+        "revCount": 1,
+        "type": "git",
+        "url": "ssh://git@github.com/shaneplunkett/vex-cli.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/shaneplunkett/vex-cli.git"
       }
     },
     "xdph": {

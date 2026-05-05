@@ -47,6 +47,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    vex-cli = {
+      url = "git+ssh://git@github.com/shaneplunkett/vex-cli.git";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
     umu-launcher.url = "github:Open-Wine-Components/umu-launcher?dir=packaging/nix";

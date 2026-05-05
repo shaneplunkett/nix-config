@@ -1,14 +1,15 @@
 {
   config,
   pkgs,
+  inputs,
   ...
 }:
 let
   idPath = config.age.secrets.vex-cli-cf-id.path;
   secretPath = config.age.secrets.vex-cli-cf-secret.path;
 
-  # Same pattern as atlassian.nix / langsmith.nix — when the Go `vex` CLI lands
-  # in this nix tree, swap `vexCliWrapped` in to wrap it with this loader.
+  vexCli = inputs.vex-cli.packages.${pkgs.stdenv.hostPlatform.system}.default;
+
   envLoader = ''
     --run '
     if [ -r "${idPath}" ] && [ -r "${secretPath}" ]; then
@@ -19,9 +20,22 @@ let
     '
   '';
 
+  vexCliWrapped = pkgs.symlinkJoin {
+    name = "vex-cli-wrapped-${vexCli.version or "0.1.0"}";
+    paths = [ vexCli ];
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+    postBuild = ''
+      rm $out/bin/vex
+      makeWrapper ${vexCli}/bin/vex $out/bin/vex ${envLoader}
+    '';
+    meta = (vexCli.meta or { }) // {
+      description = "vex Go CLI wrapped to auto-load CF Access service token from agenix";
+    };
+  };
+
   # `vex-env <cmd> [args...]` — exports the CF Access headers + endpoint and
-  # exec's the command. Useful as a stop-gap until the Go CLI ships, and as a
-  # primitive afterwards (e.g. `vex-env curl "$VEX_API_ENDPOINT/v1/recall"`).
+  # exec's the command. Useful as a primitive (e.g. `vex-env curl
+  # "$VEX_API_ENDPOINT/v1/recall"`) and for debugging the env plumbing.
   vexEnv = pkgs.writeShellScriptBin "vex-env" ''
     set -e
     if [ -r "${idPath}" ] && [ -r "${secretPath}" ]; then
@@ -40,40 +54,10 @@ let
     fi
     exec "$@"
   '';
-
-  # `vex` — convenience POST wrapper around the /v1/* RPC surface.
-  # Usage: vex <tool-name> [json-body]
-  #   vex boot
-  #   vex recall '{"query":"agenix wiring","limit":3}'
-  # Will be supplanted by the Go CLI but keeps the loop tight in the meantime.
-  vexHelper = pkgs.writeShellScriptBin "vex" ''
-    set -e
-    if [ $# -lt 1 ]; then
-      echo "usage: vex <tool-name> [json-body]" >&2
-      exit 2
-    fi
-    tool="$1"
-    body="''${2:-{\}}"
-    if [ -r "${idPath}" ] && [ -r "${secretPath}" ]; then
-      CF_ACCESS_CLIENT_ID="''${CF_ACCESS_CLIENT_ID:-$(<"${idPath}")}"
-      CF_ACCESS_CLIENT_SECRET="''${CF_ACCESS_CLIENT_SECRET:-$(<"${secretPath}")}"
-    else
-      echo "vex: agenix secrets unreadable" >&2
-      exit 1
-    fi
-    endpoint="''${VEX_API_ENDPOINT:-https://vex.shaneplunkett.dev}"
-    exec ${pkgs.curl}/bin/curl -sS \
-      -H "CF-Access-Client-Id: $CF_ACCESS_CLIENT_ID" \
-      -H "CF-Access-Client-Secret: $CF_ACCESS_CLIENT_SECRET" \
-      -H "content-type: application/json" \
-      -X POST \
-      --data "$body" \
-      "$endpoint/v1/$tool"
-  '';
 in
 {
   home.packages = [
+    vexCliWrapped
     vexEnv
-    vexHelper
   ];
 }
