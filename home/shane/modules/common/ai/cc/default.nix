@@ -244,21 +244,31 @@ let
 
   claude-code-vex = pkgs.claude-code.overrideAttrs (old: {
     nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ tweakcc ];
-    postInstall = old.postInstall + ''
+    postInstall = (old.postInstall or "") + ''
       export TWEAKCC_CONFIG_DIR=$(mktemp -d)
       cp ${tweakccConfig} $TWEAKCC_CONFIG_DIR/config.json
       chmod u+w $TWEAKCC_CONFIG_DIR/config.json
 
-      CLI=$out/lib/node_modules/@anthropic-ai/claude-code/cli.js
-      BEFORE=$(sha256sum "$CLI" | cut -d' ' -f1)
+      # claude-code is now a native (Bun-packed) binary install.  tweakcc
+      # resolves the Nix wrapper at $out/bin/claude through to the real
+      # binary at .claude-wrapped, extracts the embedded JS via node-lief,
+      # patches it, repacks, and ad-hoc re-signs on Apple Silicon.
+      #
+      # We need Apple's /usr/bin/codesign for the resign — nixpkgs's
+      # darwin.sigtool SIGABRTs on a 216MB Bun-packed Mach-O.  __noChroot is
+      # set on Darwin in the upstream derivation so /usr/bin is reachable.
+      BIN=$out/bin/.claude-wrapped
+      chmod u+w "$BIN"
+      BEFORE=$(sha256sum "$BIN" | cut -d' ' -f1)
 
-      TWEAKCC_CC_INSTALLATION_PATH="$CLI" tweakcc --apply
+      PATH="/usr/bin:$PATH" TWEAKCC_CC_INSTALLATION_PATH="$out/bin/claude" tweakcc --apply
 
-      AFTER=$(sha256sum "$CLI" | cut -d' ' -f1)
+      AFTER=$(sha256sum "$BIN" | cut -d' ' -f1)
       if [ "$BEFORE" = "$AFTER" ]; then
-        echo "ERROR: tweakcc --apply made no changes to cli.js — patches are stale"
+        echo "ERROR: tweakcc --apply made no changes — patches are stale"
         exit 1
       fi
+      chmod u-w "$BIN"
     '';
   });
 
