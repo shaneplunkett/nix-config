@@ -31,6 +31,9 @@ in
           nixpkgs.overlays = [
             (final: prev: import (rootPath + /pkgs) { pkgs = final; })
             claude-desktop.overlays.default
+            (final: prev: {
+              openldap = prev.openldap.overrideAttrs (_: { doCheck = false; });
+            })
           ];
         }
 

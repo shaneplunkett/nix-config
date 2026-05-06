@@ -26,11 +26,11 @@ in
   "google-calendar-work.age".publicKeys = [ shane ];
   "anthropic-key.age".publicKeys = [ shane ];
   "atlassian-api-token.age".publicKeys = [ shane ];
+  "atlassian-confluence-token.age".publicKeys = [ shane ];
   "compass-api-token.age".publicKeys = [ shane ];
   "atlassian-ops-token.age".publicKeys = [ shane ];
   "slack-token.age".publicKeys = [ shane ];
   "slack-cookie-d.age".publicKeys = [ shane ];
-  "huggingface.age".publicKeys = [ shane ];
   "browserbase-api-key.age".publicKeys = [ shane ];
   "vex-cli-cf-id.age".publicKeys = [ shane ];
   "vex-cli-cf-secret.age".publicKeys = [ shane ];

@@ -242,35 +242,74 @@ let
   ];
   allConfigDirs = vexConfigDirs ++ proConfigDirs;
 
-  claude-code-vex = pkgs.claude-code.overrideAttrs (old: {
-    nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ tweakcc ];
-    postInstall = (old.postInstall or "") + ''
-      export TWEAKCC_CONFIG_DIR=$(mktemp -d)
-      cp ${tweakccConfig} $TWEAKCC_CONFIG_DIR/config.json
-      chmod u+w $TWEAKCC_CONFIG_DIR/config.json
+  claude-code-vex = pkgs.claude-code.overrideAttrs (
+    old:
+    {
+      nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ tweakcc ];
+    }
+    //
+      # On Linux, tweakcc's repack changes the embedded JS enough that the
+      # binary's `claude --version` output no longer contains the literal
+      # version string, which trips upstream's versionCheckPhase. The patches
+      # otherwise apply cleanly. On Darwin we keep the check on so we can
+      # confirm the post-codesign binary still runs end-to-end.
+      lib.optionalAttrs pkgs.stdenv.isLinux {
+        doInstallCheck = false;
+      }
+    // {
+      postInstall = (old.postInstall or "") + ''
+        export TWEAKCC_CONFIG_DIR=$(mktemp -d)
+        cp ${tweakccConfig} $TWEAKCC_CONFIG_DIR/config.json
+        chmod u+w $TWEAKCC_CONFIG_DIR/config.json
 
-      # claude-code is now a native (Bun-packed) binary install.  tweakcc
-      # resolves the Nix wrapper at $out/bin/claude through to the real
-      # binary at .claude-wrapped, extracts the embedded JS via node-lief,
-      # patches it, repacks, and ad-hoc re-signs on Apple Silicon.
-      #
-      # We need Apple's /usr/bin/codesign for the resign — nixpkgs's
-      # darwin.sigtool SIGABRTs on a 216MB Bun-packed Mach-O.  __noChroot is
-      # set on Darwin in the upstream derivation so /usr/bin is reachable.
-      BIN=$out/bin/.claude-wrapped
-      chmod u+w "$BIN"
-      BEFORE=$(sha256sum "$BIN" | cut -d' ' -f1)
+        # claude-code is now a native (Bun-packed) binary install. tweakcc
+        # resolves the Nix wrapper at $out/bin/claude through to the real
+        # binary at .claude-wrapped, extracts the embedded JS via node-lief,
+        # patches it, repacks, and ad-hoc re-signs on Apple Silicon.
+        #
+        # Darwin: needs Apple's /usr/bin/codesign — nixpkgs's darwin.sigtool
+        # SIGABRTs on the 216MB Bun-packed Mach-O. __noChroot is set on
+        # Darwin in the upstream derivation so /usr/bin is reachable.
+        #
+        # Linux: node-lief's repack shifts the ELF section name offsets
+        # just enough that patchelf rejects the result with "section name
+        # offset out of bounds" — autoPatchelfHook silently fails in
+        # fixupPhase, and a manual patchelf invocation hits the same parse
+        # error. Workaround: don't try to patchelf the post-tweakcc binary
+        # at all. Move it aside as .claude-wrapped.real and replace
+        # .claude-wrapped with a thin shell wrapper that hands the real
+        # binary to ld-linux directly with an explicit --library-path.
+        BIN=$out/bin/.claude-wrapped
+        chmod u+w "$BIN"
+        BEFORE=$(sha256sum "$BIN" | cut -d' ' -f1)
 
-      PATH="/usr/bin:$PATH" TWEAKCC_CC_INSTALLATION_PATH="$out/bin/claude" tweakcc --apply
+        PATH="/usr/bin:$PATH" TWEAKCC_CC_INSTALLATION_PATH="$out/bin/claude" tweakcc --apply
 
-      AFTER=$(sha256sum "$BIN" | cut -d' ' -f1)
-      if [ "$BEFORE" = "$AFTER" ]; then
-        echo "ERROR: tweakcc --apply made no changes — patches are stale"
-        exit 1
-      fi
-      chmod u-w "$BIN"
-    '';
-  });
+        AFTER=$(sha256sum "$BIN" | cut -d' ' -f1)
+        if [ "$BEFORE" = "$AFTER" ]; then
+          echo "ERROR: tweakcc --apply made no changes — patches are stale"
+          exit 1
+        fi
+
+        ${lib.optionalString pkgs.stdenv.isLinux ''
+          INTERP="$(cat ${pkgs.stdenv.cc}/nix-support/dynamic-linker)"
+          LIBPATH="${
+            lib.makeLibraryPath [
+              pkgs.stdenv.cc.cc.lib
+              pkgs.glibc
+            ]
+          }"
+
+          mv "$BIN" "$BIN.real"
+          cat > "$BIN" <<WRAPPER_EOF
+          #!${pkgs.bash}/bin/bash
+          exec "$INTERP" --library-path "$LIBPATH" "\$(dirname "\$0")/.claude-wrapped.real" "\$@"
+          WRAPPER_EOF
+          chmod +x "$BIN"
+        ''}
+      '';
+    }
+  );
 
 in
 {

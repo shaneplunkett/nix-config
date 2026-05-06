@@ -72,10 +72,10 @@
       atlassian-ops-token = {
         file = ../../../../secrets/atlassian-ops-token.age;
       };
-
-      huggingface = {
-        file = ../../../../secrets/huggingface.age;
+      atlassian-confluence-token = {
+        file = ../../../../secrets/atlassian-confluence-token.age;
       };
+
       browserbase-api-key = {
         file = ../../../../secrets/browserbase-api-key.age;
       };

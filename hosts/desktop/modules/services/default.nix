@@ -4,7 +4,6 @@
   imports = [
 
     ./greetd.nix
-    ./ollama.nix
 
   ];
 
