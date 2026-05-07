@@ -13,9 +13,9 @@ let
 
   allMcpServers = shared.mcpServers;
 
-  # tweakcc — Claude Code TUI customisation
-  tweakcc = pkgs.callPackage ./tweakcc.nix { };
-  tweakccConfig = ./tweakcc-config.json;
+  # Native Claude Code custom theme (CC v2.1.118+ custom themes via
+  # ~/.claude/themes/*.json). Hot-reloads on file change.
+  vexThemeFile = ./vex-theme.json;
 
   # vex-statusline — themed status line
   vex-statusline = pkgs.writeShellScriptBin "vex-statusline" ''
@@ -43,10 +43,41 @@ let
     pkgs.writeText "claude-code-settings-${outputStyle}.json" (
       builtins.toJSON ({
         "$schema" = "https://json.schemastore.org/claude-code-settings.json";
-        theme = "dark-ansi";
+        theme = "custom:vex";
         outputStyle = outputStyle;
         skipDangerousModePermissionPrompt = true;
         spinnerTipsEnabled = false;
+        spinnerVerbs = {
+          mode = "replace";
+          verbs = [
+            "Brewing"
+            "Channelling"
+            "Conjuring"
+            "Contemplating"
+            "Crystallising"
+            "Distilling"
+            "Divining"
+            "Dreaming"
+            "Enchanting"
+            "Gathering"
+            "Gazing"
+            "Incanting"
+            "Kindling"
+            "Murmuring"
+            "Musing"
+            "Nurturing"
+            "Pondering"
+            "Scrying"
+            "Simmering"
+            "Steeping"
+            "Stirring"
+            "Summoning"
+            "Tending"
+            "Unravelling"
+            "Weaving"
+            "Whispering"
+          ];
+        };
         feedbackSurveyRate = 0;
 
         env = {
@@ -242,80 +273,10 @@ let
   ];
   allConfigDirs = vexConfigDirs ++ proConfigDirs;
 
-  claude-code-vex = pkgs.claude-code.overrideAttrs (
-    old:
-    {
-      nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ tweakcc ];
-    }
-    //
-      # On Linux, tweakcc's repack changes the embedded JS enough that the
-      # binary's `claude --version` output no longer contains the literal
-      # version string, which trips upstream's versionCheckPhase. The patches
-      # otherwise apply cleanly. On Darwin we keep the check on so we can
-      # confirm the post-codesign binary still runs end-to-end.
-      lib.optionalAttrs pkgs.stdenv.isLinux {
-        doInstallCheck = false;
-      }
-    // {
-      postInstall = (old.postInstall or "") + ''
-        export TWEAKCC_CONFIG_DIR=$(mktemp -d)
-        cp ${tweakccConfig} $TWEAKCC_CONFIG_DIR/config.json
-        chmod u+w $TWEAKCC_CONFIG_DIR/config.json
-
-        # claude-code is now a native (Bun-packed) binary install. tweakcc
-        # resolves the Nix wrapper at $out/bin/claude through to the real
-        # binary at .claude-wrapped, extracts the embedded JS via node-lief,
-        # patches it, repacks, and ad-hoc re-signs on Apple Silicon.
-        #
-        # Darwin: needs Apple's /usr/bin/codesign — nixpkgs's darwin.sigtool
-        # SIGABRTs on the 216MB Bun-packed Mach-O. __noChroot is set on
-        # Darwin in the upstream derivation so /usr/bin is reachable.
-        #
-        # Linux: node-lief's repack shifts the ELF section name offsets
-        # just enough that patchelf rejects the result with "section name
-        # offset out of bounds" — autoPatchelfHook silently fails in
-        # fixupPhase, and a manual patchelf invocation hits the same parse
-        # error. Workaround: don't try to patchelf the post-tweakcc binary
-        # at all. Move it aside as .claude-wrapped.real and replace
-        # .claude-wrapped with a thin shell wrapper that hands the real
-        # binary to ld-linux directly with an explicit --library-path.
-        BIN=$out/bin/.claude-wrapped
-        chmod u+w "$BIN"
-        BEFORE=$(sha256sum "$BIN" | cut -d' ' -f1)
-
-        PATH="/usr/bin:$PATH" TWEAKCC_CC_INSTALLATION_PATH="$out/bin/claude" tweakcc --apply
-
-        AFTER=$(sha256sum "$BIN" | cut -d' ' -f1)
-        if [ "$BEFORE" = "$AFTER" ]; then
-          echo "ERROR: tweakcc --apply made no changes — patches are stale"
-          exit 1
-        fi
-
-        ${lib.optionalString pkgs.stdenv.isLinux ''
-          INTERP="$(cat ${pkgs.stdenv.cc}/nix-support/dynamic-linker)"
-          LIBPATH="${
-            lib.makeLibraryPath [
-              pkgs.stdenv.cc.cc.lib
-              pkgs.glibc
-            ]
-          }"
-
-          mv "$BIN" "$BIN.real"
-          cat > "$BIN" <<WRAPPER_EOF
-          #!${pkgs.bash}/bin/bash
-          exec "$INTERP" --library-path "$LIBPATH" "\$(dirname "\$0")/.claude-wrapped.real" "\$@"
-          WRAPPER_EOF
-          chmod +x "$BIN"
-        ''}
-      '';
-    }
-  );
-
 in
 {
   programs.claude-code = {
     enable = true;
-    package = claude-code-vex;
     # settings intentionally omitted — deployed as mutable copy below
   };
 
@@ -333,6 +294,16 @@ in
     for dir in ${lib.concatStringsSep " " proConfigDirs}; do
       $DRY_RUN_CMD mkdir -p "$dir"
       $DRY_RUN_CMD install -m 644 ${settingsJsonPro} "$dir/settings.json"
+    done
+  '';
+
+  # Deploy native Vex theme to <dir>/themes/vex.json across all CC config
+  # dirs. Selected via theme = "custom:vex" in settings.json. CC watches
+  # the themes dir and hot-reloads on file change.
+  home.activation.claudeCodeVexTheme = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    for dir in ${lib.concatStringsSep " " allConfigDirs}; do
+      $DRY_RUN_CMD mkdir -p "$dir/themes"
+      $DRY_RUN_CMD install -m 644 ${vexThemeFile} "$dir/themes/vex.json"
     done
   '';
 

@@ -16,5 +16,6 @@ in
     warningThreshold = 0.7;
     criticalThreshold = 0.9;
     refreshIntervalSec = 300;
+    headlineAccount = "personal";
   };
 }
