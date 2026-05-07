@@ -4,16 +4,26 @@
   ...
 }:
 let
-  tokenPath = config.age.secrets.atlassian-api-token.path;
+  jiraTokenPath = config.age.secrets.atlassian-api-token.path;
+  confluenceTokenPath = config.age.secrets.atlassian-confluence-token.path;
 
-  envLoader = ''
+  jiraEnvLoader = ''
     --run '
-    if [ -r "${tokenPath}" ]; then
+    if [ -r "${jiraTokenPath}" ]; then
       export ATLASSIAN_EMAIL="''${ATLASSIAN_EMAIL:-shane@autograb.com.au}"
       export ATLASSIAN_DOMAIN="''${ATLASSIAN_DOMAIN:-autograb.atlassian.net}"
-      export JIRA_API_TOKEN="''${JIRA_API_TOKEN:-$(<"${tokenPath}")}"
+      export JIRA_API_TOKEN="''${JIRA_API_TOKEN:-$(<"${jiraTokenPath}")}"
       export JIRA_AUTH_TYPE="''${JIRA_AUTH_TYPE:-basic}"
-      export CONFLUENCE_API_TOKEN="''${CONFLUENCE_API_TOKEN:-$JIRA_API_TOKEN}"
+    fi
+    '
+  '';
+
+  confluenceEnvLoader = ''
+    --run '
+    if [ -r "${confluenceTokenPath}" ]; then
+      export ATLASSIAN_EMAIL="''${ATLASSIAN_EMAIL:-shane@autograb.com.au}"
+      export ATLASSIAN_DOMAIN="''${ATLASSIAN_DOMAIN:-autograb.atlassian.net}"
+      export CONFLUENCE_API_TOKEN="''${CONFLUENCE_API_TOKEN:-$(<"${confluenceTokenPath}")}"
       export CONFLUENCE_DOMAIN="''${CONFLUENCE_DOMAIN:-$ATLASSIAN_DOMAIN}"
       export CONFLUENCE_EMAIL="''${CONFLUENCE_EMAIL:-$ATLASSIAN_EMAIL}"
       export CONFLUENCE_AUTH_TYPE="''${CONFLUENCE_AUTH_TYPE:-basic}"
@@ -27,7 +37,7 @@ let
     nativeBuildInputs = [ pkgs.makeWrapper ];
     postBuild = ''
       rm $out/bin/jira
-      makeWrapper ${pkgs.jira-cli-go}/bin/jira $out/bin/jira ${envLoader}
+      makeWrapper ${pkgs.jira-cli-go}/bin/jira $out/bin/jira ${jiraEnvLoader}
     '';
     meta = pkgs.jira-cli-go.meta // {
       description = "jira-cli-go wrapped to auto-load Atlassian env from agenix";
@@ -42,7 +52,7 @@ let
       for bin in confluence confluence-cli; do
         if [ -e $out/bin/$bin ]; then
           rm $out/bin/$bin
-          makeWrapper ${pkgs.confluence-cli}/bin/$bin $out/bin/$bin ${envLoader}
+          makeWrapper ${pkgs.confluence-cli}/bin/$bin $out/bin/$bin ${confluenceEnvLoader}
         fi
       done
     '';
