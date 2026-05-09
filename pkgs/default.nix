@@ -15,4 +15,6 @@
   browserbase-cli = pkgs.callPackage ./browserbase-cli/browserbase-cli.nix { };
 
   coderabbit-cli = pkgs.callPackage ./coderabbit-cli/coderabbit-cli.nix { };
+
+  tavily-cli = pkgs.callPackage ./tavily-cli/tavily-cli.nix { };
 }

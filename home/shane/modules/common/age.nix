@@ -79,11 +79,23 @@
       browserbase-api-key = {
         file = ../../../../secrets/browserbase-api-key.age;
       };
+      tavily-api-key = {
+        file = ../../../../secrets/tavily-api-key.age;
+      };
       vex-cli-cf-id = {
         file = ../../../../secrets/vex-cli-cf-id.age;
       };
       vex-cli-cf-secret = {
         file = ../../../../secrets/vex-cli-cf-secret.age;
+      };
+      ing-cif = {
+        file = ../../../../secrets/ing-cif.age;
+      };
+      ing-access-code = {
+        file = ../../../../secrets/ing-access-code.age;
+      };
+      ing-account-number = {
+        file = ../../../../secrets/ing-account-number.age;
       };
     };
 

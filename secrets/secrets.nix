@@ -32,6 +32,10 @@ in
   "slack-token.age".publicKeys = [ shane ];
   "slack-cookie-d.age".publicKeys = [ shane ];
   "browserbase-api-key.age".publicKeys = [ shane ];
+  "tavily-api-key.age".publicKeys = [ shane ];
   "vex-cli-cf-id.age".publicKeys = [ shane ];
   "vex-cli-cf-secret.age".publicKeys = [ shane ];
+  "ing-cif.age".publicKeys = [ shane ];
+  "ing-access-code.age".publicKeys = [ shane ];
+  "ing-account-number.age".publicKeys = [ shane ];
 }
