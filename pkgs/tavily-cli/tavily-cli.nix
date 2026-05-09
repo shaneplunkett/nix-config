@@ -1,40 +1,70 @@
 {
   lib,
-  stdenvNoCC,
-  makeWrapper,
-  curl,
-  jq,
-  bash,
+  python3Packages,
+  fetchPypi,
 }:
-stdenvNoCC.mkDerivation {
+let
+  # tavily-python SDK is a runtime dep of tavily-cli but isn't in nixpkgs yet.
+  # Vendor the build here so the CLI derivation stays self-contained.
+  tavily-python = python3Packages.buildPythonPackage rec {
+    pname = "tavily-python";
+    version = "0.7.24";
+    pyproject = true;
+
+    src = fetchPypi {
+      pname = "tavily_python";
+      inherit version;
+      sha256 = "6c8954193c6472231e813fe50cbd07806bd86c7228957675eb45875a44d58296";
+    };
+
+    build-system = with python3Packages; [ setuptools ];
+
+    dependencies = with python3Packages; [
+      requests
+      tiktoken
+      httpx
+    ];
+
+    pythonImportsCheck = [ "tavily" ];
+
+    # Upstream ships no test suite in the sdist.
+    doCheck = false;
+
+    meta = {
+      description = "Python SDK for the Tavily search/extract API";
+      homepage = "https://github.com/tavily-ai/tavily-python";
+      license = lib.licenses.mit;
+    };
+  };
+in
+python3Packages.buildPythonApplication rec {
   pname = "tavily-cli";
-  version = "0.1.0";
+  version = "0.1.2";
+  pyproject = true;
 
-  src = ./.;
+  src = fetchPypi {
+    pname = "tavily_cli";
+    inherit version;
+    sha256 = "6f78e39551c4f82bb051d2d6f223e2ba303fe9b266cfe9d6bf4e2adcb93a1f53";
+  };
 
-  nativeBuildInputs = [ makeWrapper ];
+  build-system = with python3Packages; [ hatchling ];
 
-  dontConfigure = true;
-  dontBuild = true;
+  dependencies = with python3Packages; [
+    click
+    httpx
+    rich
+    tavily-python
+  ];
 
-  installPhase = ''
-    runHook preInstall
-    install -Dm755 tavily.sh "$out/bin/.tavily-unwrapped"
-    makeWrapper "$out/bin/.tavily-unwrapped" "$out/bin/tavily" \
-      --prefix PATH : ${
-        lib.makeBinPath [
-          curl
-          jq
-          bash
-        ]
-      }
-    runHook postInstall
-  '';
+  pythonImportsCheck = [ "tavily_cli" ];
+
+  doCheck = false;
 
   meta = {
-    description = "Tavily CLI — LLM-optimised web search and extraction (custom shell wrapper around the Tavily HTTP API)";
-    homepage = "https://tavily.com";
+    description = "Official Tavily CLI — search, extract, crawl, map, and research the web from the terminal (tvly)";
+    homepage = "https://github.com/tavily-ai/tavily-cli";
     license = lib.licenses.mit;
-    mainProgram = "tavily";
+    mainProgram = "tvly";
   };
 }

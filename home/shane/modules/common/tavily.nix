@@ -19,11 +19,11 @@ let
     paths = [ pkgs.tavily-cli ];
     nativeBuildInputs = [ pkgs.makeWrapper ];
     postBuild = ''
-      rm $out/bin/tavily
-      makeWrapper ${pkgs.tavily-cli}/bin/tavily $out/bin/tavily ${envLoader}
+      rm $out/bin/tvly
+      makeWrapper ${pkgs.tavily-cli}/bin/tvly $out/bin/tvly ${envLoader}
     '';
     meta = pkgs.tavily-cli.meta // {
-      description = "tavily-cli wrapped to auto-load TAVILY_API_KEY from agenix";
+      description = "tavily-cli (tvly) wrapped to auto-load TAVILY_API_KEY from agenix";
     };
   };
 in
