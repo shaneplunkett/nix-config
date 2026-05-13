@@ -27,9 +27,9 @@
     functions = {
       nrs = ''
         if test (uname) = Darwin
-          sudo darwin-rebuild switch --flake ~/nix-config
+          sudo darwin-rebuild switch --use-remote--sudo --flake ~/nix-config
         else
-          sudo nixos-rebuild switch --flake ~/nix-config
+          sudo nixos-rebuild switch --use-remote--sudo --flake ~/nix-config
         end
       '';
       prettyjson = ''
