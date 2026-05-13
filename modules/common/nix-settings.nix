@@ -8,6 +8,12 @@
       "nix-command"
       "flakes"
     ];
+    trusted-users = [
+      "root"
+      "alice"
+      "@wheel"
+      "shane"
+    ];
 
     substituters = [
       "https://cache.nixos.org/"

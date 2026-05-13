@@ -15,6 +15,7 @@
     tealdeer
     zoxide
     fzf
+    pre-commit
     inputs.gws.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 }
