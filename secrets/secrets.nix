@@ -38,4 +38,5 @@ in
   "ing-cif.age".publicKeys = [ shane ];
   "ing-access-code.age".publicKeys = [ shane ];
   "ing-account-number.age".publicKeys = [ shane ];
+  "vex-discord-token.age".publicKeys = [ shane ];
 }
