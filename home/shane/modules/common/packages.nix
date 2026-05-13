@@ -3,7 +3,6 @@
   home.packages = with pkgs; [
     jq
     fd
-    lazycommit
     lazygit
     obsidian
     go

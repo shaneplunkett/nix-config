@@ -1,7 +1,5 @@
 { pkgs, ... }:
 {
-  lazycommit = pkgs.callPackage ./lazycommit/lazycommit.nix { };
-
   youtui = pkgs.callPackage ./youtui/youtui.nix { };
 
   confluence-cli = pkgs.callPackage ./confluence-cli/confluence-cli.nix { };
