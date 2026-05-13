@@ -9,6 +9,7 @@
     ./btop.nix
     ./coderabbit.nix
     ./git.nix
+    ./himalaya.nix
     ./ing-probe.nix
     ./langsmith.nix
     ./lazygit.nix

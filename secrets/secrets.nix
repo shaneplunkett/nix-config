@@ -39,4 +39,5 @@ in
   "ing-access-code.age".publicKeys = [ shane ];
   "ing-account-number.age".publicKeys = [ shane ];
   "vex-discord-token.age".publicKeys = [ shane ];
+  "icloud-app-password.age".publicKeys = [ shane ];
 }

@@ -97,6 +97,9 @@
       ing-account-number = {
         file = ../../../../secrets/ing-account-number.age;
       };
+      icloud-app-password = {
+        file = ../../../../secrets/icloud-app-password.age;
+      };
     };
 
   };
