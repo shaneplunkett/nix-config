@@ -1,15 +1,13 @@
 {
-  config,
   pkgs,
   ...
 }:
 let
-  tokenPath = config.age.secrets.langsmith-api.path;
-
   envLoader = ''
     --run '
-    if [ -r "${tokenPath}" ]; then
-      export LANGSMITH_API_KEY="''${LANGSMITH_API_KEY:-$(<"${tokenPath}")}"
+    if [ -z "''${LANGSMITH_API_KEY:-}" ]; then
+      LANGSMITH_API_KEY="$(${pkgs.rbw}/bin/rbw get langsmith-api-key 2>/dev/null)"
+      [ -n "$LANGSMITH_API_KEY" ] && export LANGSMITH_API_KEY
     fi
     export LANGSMITH_ENDPOINT="''${LANGSMITH_ENDPOINT:-https://api.smith.langchain.com}"
     '
@@ -24,7 +22,7 @@ let
       makeWrapper ${pkgs.langsmith-cli}/bin/langsmith $out/bin/langsmith ${envLoader}
     '';
     meta = pkgs.langsmith-cli.meta // {
-      description = "langsmith-cli wrapped to auto-load LANGSMITH_API_KEY from agenix";
+      description = "langsmith-cli wrapped to auto-load LANGSMITH_API_KEY from rbw";
     };
   };
 in

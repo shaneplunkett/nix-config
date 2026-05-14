@@ -6,16 +6,19 @@
   ...
 }:
 let
-  idPath = config.age.secrets.vex-cli-cf-id.path;
-  secretPath = config.age.secrets.vex-cli-cf-secret.path;
+  rbw = "${pkgs.rbw}/bin/rbw";
 
   vexCli = inputs.vex-cli.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
   envLoader = ''
     --run '
-    if [ -r "${idPath}" ] && [ -r "${secretPath}" ]; then
-      export CF_ACCESS_CLIENT_ID="''${CF_ACCESS_CLIENT_ID:-$(<"${idPath}")}"
-      export CF_ACCESS_CLIENT_SECRET="''${CF_ACCESS_CLIENT_SECRET:-$(<"${secretPath}")}"
+    if [ -z "''${CF_ACCESS_CLIENT_ID:-}" ]; then
+      CF_ACCESS_CLIENT_ID="$(${rbw} get vex-cli-cf-id 2>/dev/null)"
+      [ -n "$CF_ACCESS_CLIENT_ID" ] && export CF_ACCESS_CLIENT_ID
+    fi
+    if [ -z "''${CF_ACCESS_CLIENT_SECRET:-}" ]; then
+      CF_ACCESS_CLIENT_SECRET="$(${rbw} get vex-cli-cf-secret 2>/dev/null)"
+      [ -n "$CF_ACCESS_CLIENT_SECRET" ] && export CF_ACCESS_CLIENT_SECRET
     fi
     export VEX_API_ENDPOINT="''${VEX_API_ENDPOINT:-https://vex.shaneplunkett.dev}"
     '
@@ -30,22 +33,19 @@ let
       makeWrapper ${vexCli}/bin/vex $out/bin/vex ${envLoader}
     '';
     meta = (vexCli.meta or { }) // {
-      description = "vex Go CLI wrapped to auto-load CF Access service token from agenix";
+      description = "vex Go CLI wrapped to auto-load CF Access service token from rbw";
     };
   };
 
-  # `vex-env <cmd> [args...]` — exports the CF Access headers + endpoint and
-  # exec's the command. Useful as a primitive (e.g. `vex-env curl
-  # "$VEX_API_ENDPOINT/v1/recall"`) and for debugging the env plumbing.
   vexEnv = pkgs.writeShellScriptBin "vex-env" ''
     set -e
-    if [ -r "${idPath}" ] && [ -r "${secretPath}" ]; then
-      export CF_ACCESS_CLIENT_ID="''${CF_ACCESS_CLIENT_ID:-$(<"${idPath}")}"
-      export CF_ACCESS_CLIENT_SECRET="''${CF_ACCESS_CLIENT_SECRET:-$(<"${secretPath}")}"
-    else
-      echo "vex-env: agenix secrets unreadable (id=${idPath} secret=${secretPath})" >&2
+    CF_ACCESS_CLIENT_ID="$(${rbw} get vex-cli-cf-id 2>/dev/null)"
+    CF_ACCESS_CLIENT_SECRET="$(${rbw} get vex-cli-cf-secret 2>/dev/null)"
+    if [ -z "$CF_ACCESS_CLIENT_ID" ] || [ -z "$CF_ACCESS_CLIENT_SECRET" ]; then
+      echo "vex-env: unable to fetch CF Access creds from rbw (is the agent unlocked?)" >&2
       exit 1
     fi
+    export CF_ACCESS_CLIENT_ID CF_ACCESS_CLIENT_SECRET
     export VEX_API_ENDPOINT="''${VEX_API_ENDPOINT:-https://vex.shaneplunkett.dev}"
 
     if [ $# -eq 0 ]; then
@@ -64,7 +64,9 @@ in
 
   # Hourly `vex sync-cc` — Linux uses systemd-user timer, Darwin uses
   # launchd. Both call the same wrapped binary, which exports the CF
-  # Access service token + endpoint from agenix before invoking vex.
+  # Access service token + endpoint from rbw before invoking vex.
+  # NOTE: rbw agent must be unlocked for the timer to succeed; on a fresh
+  # boot the first hourly fire will fail silently until `rbw unlock` runs.
 
   systemd.user.services = lib.mkIf pkgs.stdenv.isLinux {
     vex-sync-cc = {
@@ -89,7 +91,6 @@ in
       Timer = {
         OnBootSec = "5min";
         OnUnitActiveSec = "1h";
-        # Catch up if the machine was asleep at the scheduled fire time.
         Persistent = true;
       };
       Install = {
@@ -107,9 +108,7 @@ in
           "${vexCliWrapped}/bin/vex"
           "sync-cc"
         ];
-        # Hourly cadence; launchd will fire missed runs after wake.
         StartInterval = 3600;
-        # Don't fire immediately at agent load — give the network a moment.
         RunAtLoad = false;
         StandardOutPath = "${config.home.homeDirectory}/Library/Logs/vex-sync-cc.log";
         StandardErrorPath = "${config.home.homeDirectory}/Library/Logs/vex-sync-cc.log";

@@ -1,27 +1,28 @@
 {
-  config,
   pkgs,
   ...
 }:
 let
-  cifPath = config.age.secrets.ing-cif.path;
-  codePath = config.age.secrets.ing-access-code.path;
-  acctPath = config.age.secrets.ing-account-number.path;
+  rbw = "${pkgs.rbw}/bin/rbw";
 
-  # `ing-env [cmd args...]` — exports ING_CIF / ING_ACCESS_CODE /
-  # ING_ACCOUNT_NUMBER from agenix and exec's the command. With no args,
-  # prints the env vars (redacted) so you can sanity-check the plumbing.
-  ingEnv = pkgs.writeShellScriptBin "ing-env" ''
-    set -e
-    if [ -r "${cifPath}" ] && [ -r "${codePath}" ] && [ -r "${acctPath}" ]; then
-      export ING_CIF="''${ING_CIF:-$(<"${cifPath}")}"
-      export ING_ACCESS_CODE="''${ING_ACCESS_CODE:-$(<"${codePath}")}"
-      export ING_ACCOUNT_NUMBER="''${ING_ACCOUNT_NUMBER:-$(<"${acctPath}")}"
-    else
-      echo "ing-env: agenix secrets unreadable (cif=${cifPath} code=${codePath} acct=${acctPath})" >&2
+  # ING creds live in the existing `www.ing.com.au` Bitwarden entry as:
+  #   username = CIF
+  #   password = access-code
+  #   notes    = account-number
+  loadEnv = ''
+    ING_CIF="$(${rbw} get --field username www.ing.com.au 2>/dev/null)"
+    ING_ACCESS_CODE="$(${rbw} get www.ing.com.au 2>/dev/null)"
+    ING_ACCOUNT_NUMBER="$(${rbw} get --raw www.ing.com.au 2>/dev/null | ${pkgs.jq}/bin/jq -r '.notes // empty')"
+    if [ -z "$ING_CIF" ] || [ -z "$ING_ACCESS_CODE" ] || [ -z "$ING_ACCOUNT_NUMBER" ]; then
+      echo "ing: unable to fetch ING creds from rbw (is the agent unlocked?)" >&2
       exit 1
     fi
+    export ING_CIF ING_ACCESS_CODE ING_ACCOUNT_NUMBER
+  '';
 
+  ingEnv = pkgs.writeShellScriptBin "ing-env" ''
+    set -e
+    ${loadEnv}
     if [ $# -eq 0 ]; then
       printf 'ING_CIF=%s***\nING_ACCESS_CODE=****\nING_ACCOUNT_NUMBER=%s***\n' \
         "''${ING_CIF:0:2}" "''${ING_ACCOUNT_NUMBER:0:2}"
@@ -30,9 +31,6 @@ let
     exec "$@"
   '';
 
-  # `ing-probe` — runs the puppeteer login + ExportTransactions probe
-  # at ~/projects/personal/ing-probe/probe.mjs with creds from agenix.
-  # Exits non-zero if creds are unreadable or the probe directory is missing.
   ingProbe = pkgs.writeShellScriptBin "ing-probe" ''
     set -e
     PROBE_DIR="$HOME/projects/personal/ing-probe"
@@ -40,14 +38,7 @@ let
       echo "ing-probe: $PROBE_DIR/probe.mjs not found" >&2
       exit 1
     fi
-    if [ -r "${cifPath}" ] && [ -r "${codePath}" ] && [ -r "${acctPath}" ]; then
-      export ING_CIF="$(<"${cifPath}")"
-      export ING_ACCESS_CODE="$(<"${codePath}")"
-      export ING_ACCOUNT_NUMBER="$(<"${acctPath}")"
-    else
-      echo "ing-probe: agenix secrets unreadable" >&2
-      exit 1
-    fi
+    ${loadEnv}
     cd "$PROBE_DIR"
     exec ${pkgs.nodejs}/bin/node probe.mjs
   '';

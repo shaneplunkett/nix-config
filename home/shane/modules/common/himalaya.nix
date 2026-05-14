@@ -1,11 +1,10 @@
 {
-  config,
   pkgs,
   ...
 }:
 let
-  tokenPath = config.age.secrets.icloud-app-password.path;
   email = "shanemplunkett@icloud.com";
+  rbw = "${pkgs.rbw}/bin/rbw";
 in
 {
   home.packages = [ pkgs.himalaya ];
@@ -34,7 +33,7 @@ in
 
     [accounts.icloud.backend.auth]
     type = "password"
-    cmd = "cat ${tokenPath}"
+    cmd = "${rbw} get icloud-app-password"
 
     [accounts.icloud.message.send.backend]
     type = "smtp"
@@ -47,6 +46,6 @@ in
 
     [accounts.icloud.message.send.backend.auth]
     type = "password"
-    cmd = "cat ${tokenPath}"
+    cmd = "${rbw} get icloud-app-password"
   '';
 }

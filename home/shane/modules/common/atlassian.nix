@@ -1,33 +1,31 @@
 {
-  config,
   pkgs,
   ...
 }:
 let
-  jiraTokenPath = config.age.secrets.atlassian-api-token.path;
-  confluenceTokenPath = config.age.secrets.atlassian-confluence-token.path;
-
   jiraEnvLoader = ''
     --run '
-    if [ -r "${jiraTokenPath}" ]; then
-      export ATLASSIAN_EMAIL="''${ATLASSIAN_EMAIL:-shane@autograb.com.au}"
-      export ATLASSIAN_DOMAIN="''${ATLASSIAN_DOMAIN:-autograb.atlassian.net}"
-      export JIRA_API_TOKEN="''${JIRA_API_TOKEN:-$(<"${jiraTokenPath}")}"
-      export JIRA_AUTH_TYPE="''${JIRA_AUTH_TYPE:-basic}"
+    export ATLASSIAN_EMAIL="''${ATLASSIAN_EMAIL:-shane@autograb.com.au}"
+    export ATLASSIAN_DOMAIN="''${ATLASSIAN_DOMAIN:-autograb.atlassian.net}"
+    if [ -z "''${JIRA_API_TOKEN:-}" ]; then
+      JIRA_API_TOKEN="$(${pkgs.rbw}/bin/rbw get atlassian-api-token 2>/dev/null)"
+      export JIRA_API_TOKEN
     fi
+    export JIRA_AUTH_TYPE="''${JIRA_AUTH_TYPE:-basic}"
     '
   '';
 
   confluenceEnvLoader = ''
     --run '
-    if [ -r "${confluenceTokenPath}" ]; then
-      export ATLASSIAN_EMAIL="''${ATLASSIAN_EMAIL:-shane@autograb.com.au}"
-      export ATLASSIAN_DOMAIN="''${ATLASSIAN_DOMAIN:-autograb.atlassian.net}"
-      export CONFLUENCE_API_TOKEN="''${CONFLUENCE_API_TOKEN:-$(<"${confluenceTokenPath}")}"
-      export CONFLUENCE_DOMAIN="''${CONFLUENCE_DOMAIN:-$ATLASSIAN_DOMAIN}"
-      export CONFLUENCE_EMAIL="''${CONFLUENCE_EMAIL:-$ATLASSIAN_EMAIL}"
-      export CONFLUENCE_AUTH_TYPE="''${CONFLUENCE_AUTH_TYPE:-basic}"
+    export ATLASSIAN_EMAIL="''${ATLASSIAN_EMAIL:-shane@autograb.com.au}"
+    export ATLASSIAN_DOMAIN="''${ATLASSIAN_DOMAIN:-autograb.atlassian.net}"
+    if [ -z "''${CONFLUENCE_API_TOKEN:-}" ]; then
+      CONFLUENCE_API_TOKEN="$(${pkgs.rbw}/bin/rbw get atlassian-api-token 2>/dev/null)"
+      export CONFLUENCE_API_TOKEN
     fi
+    export CONFLUENCE_DOMAIN="''${CONFLUENCE_DOMAIN:-$ATLASSIAN_DOMAIN}"
+    export CONFLUENCE_EMAIL="''${CONFLUENCE_EMAIL:-$ATLASSIAN_EMAIL}"
+    export CONFLUENCE_AUTH_TYPE="''${CONFLUENCE_AUTH_TYPE:-basic}"
     '
   '';
 
@@ -40,7 +38,7 @@ let
       makeWrapper ${pkgs.jira-cli-go}/bin/jira $out/bin/jira ${jiraEnvLoader}
     '';
     meta = pkgs.jira-cli-go.meta // {
-      description = "jira-cli-go wrapped to auto-load Atlassian env from agenix";
+      description = "jira-cli-go wrapped to auto-load Atlassian env from rbw";
     };
   };
 
@@ -57,7 +55,7 @@ let
       done
     '';
     meta = pkgs.confluence-cli.meta // {
-      description = "confluence-cli wrapped to auto-load Atlassian env from agenix";
+      description = "confluence-cli wrapped to auto-load Atlassian env from rbw";
     };
   };
 in
@@ -67,7 +65,6 @@ in
     confluenceCliWrapped
   ];
 
-  # jira-cli-go config — declarative so `jira init` is never needed.
   home.file.".config/.jira/.config.yml".text = ''
     installation: cloud
     server: https://autograb.atlassian.net

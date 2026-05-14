@@ -1,15 +1,13 @@
 {
-  config,
   pkgs,
   ...
 }:
 let
-  tokenPath = config.age.secrets.browserbase-api-key.path;
-
   envLoader = ''
     --run '
-    if [ -r "${tokenPath}" ]; then
-      export BROWSERBASE_API_KEY="''${BROWSERBASE_API_KEY:-$(<"${tokenPath}")}"
+    if [ -z "''${BROWSERBASE_API_KEY:-}" ]; then
+      BROWSERBASE_API_KEY="$(${pkgs.rbw}/bin/rbw get browserbase-api-key 2>/dev/null)"
+      [ -n "$BROWSERBASE_API_KEY" ] && export BROWSERBASE_API_KEY
     fi
     '
   '';
@@ -23,7 +21,7 @@ let
       makeWrapper ${pkgs.browserbase-cli}/bin/bb $out/bin/bb ${envLoader}
     '';
     meta = pkgs.browserbase-cli.meta // {
-      description = "browserbase-cli wrapped to auto-load BROWSERBASE_API_KEY from agenix";
+      description = "browserbase-cli wrapped to auto-load BROWSERBASE_API_KEY from rbw";
     };
   };
 in
