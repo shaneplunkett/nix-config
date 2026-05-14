@@ -100,6 +100,9 @@
       icloud-app-password = {
         file = ../../../../secrets/icloud-app-password.age;
       };
+      aikido-token = {
+        file = ../../../../secrets/aikido-token.age;
+      };
     };
 
   };
