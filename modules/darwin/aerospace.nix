@@ -1,5 +1,4 @@
-_:
-{
+_: {
 
   services.aerospace = {
     enable = true;
@@ -10,13 +9,16 @@ _:
       default-root-container-layout = "tiles";
       automatically-unhide-macos-hidden-apps = true;
       gaps = {
-        outer.left = 20;
-        outer.right = 20;
-        outer.top = 20;
-        outer.bottom = 20;
-        inner.horizontal = 20;
-        inner.vertical = 20;
-
+        outer = {
+          left = 20;
+          right = 20;
+          top = 20;
+          bottom = 20;
+        };
+        inner = {
+          horizontal = 20;
+          vertical = 20;
+        };
       };
       workspace-to-monitor-force-assignment = {
         "1" = "main";

@@ -1,5 +1,4 @@
-_:
-{
+_: {
   programs.sesh = {
     enable = true;
     settings = {

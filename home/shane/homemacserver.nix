@@ -12,8 +12,10 @@
     ./modules/common/terminal/yazi.nix
   ];
 
-  home.username = "shane";
-  home.homeDirectory = "/Users/shane";
-  home.stateVersion = "24.11";
+  home = {
+    username = "shane";
+    homeDirectory = "/Users/shane";
+    stateVersion = "24.11";
+  };
   programs.home-manager.enable = true;
 }

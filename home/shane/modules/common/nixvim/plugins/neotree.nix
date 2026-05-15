@@ -1,5 +1,4 @@
-_:
-{
+_: {
   plugins = {
     neo-tree = {
       enable = true;

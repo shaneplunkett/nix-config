@@ -55,37 +55,41 @@ in
     platformTheme.name = "gtk";
   };
 
-  xdg.desktopEntries.plex-desktop = {
-    name = "Plex";
-    exec = "plex-desktop";
-    icon = "plex-desktop";
-    terminal = false;
-    type = "Application";
-    categories = [ "AudioVideo" ];
-    settings.StartupWMClass = "tv.plex.Plex";
-  };
+  xdg = {
+    desktopEntries = {
+      plex-desktop = {
+        name = "Plex";
+        exec = "plex-desktop";
+        icon = "plex-desktop";
+        terminal = false;
+        type = "Application";
+        categories = [ "AudioVideo" ];
+        settings.StartupWMClass = "tv.plex.Plex";
+      };
 
-  xdg.desktopEntries.nemo = {
-    name = "Files";
-    comment = "Access and organise files";
-    exec = "nemo %U";
-    icon = "nemo";
-    terminal = false;
-    type = "Application";
-    categories = [
-      "GNOME"
-      "GTK"
-      "Utility"
-      "Core"
-      "FileManager"
-    ];
-    mimeType = [ "inode/directory" ];
-  };
+      nemo = {
+        name = "Files";
+        comment = "Access and organise files";
+        exec = "nemo %U";
+        icon = "nemo";
+        terminal = false;
+        type = "Application";
+        categories = [
+          "GNOME"
+          "GTK"
+          "Utility"
+          "Core"
+          "FileManager"
+        ];
+        mimeType = [ "inode/directory" ];
+      };
+    };
 
-  xdg.mimeApps = {
-    enable = true;
-    defaultApplications = {
-      "inode/directory" = "nemo.desktop";
+    mimeApps = {
+      enable = true;
+      defaultApplications = {
+        "inode/directory" = "nemo.desktop";
+      };
     };
   };
 }

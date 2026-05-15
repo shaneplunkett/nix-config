@@ -1,5 +1,4 @@
-_:
-{
+_: {
   programs.nixvim = {
     enable = true;
     defaultEditor = true;

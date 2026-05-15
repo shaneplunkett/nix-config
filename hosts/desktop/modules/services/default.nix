@@ -7,17 +7,19 @@
 
   ];
 
-  services.xserver.videoDrivers = [ "amdgpu" ];
-  services.flatpak.enable = true;
-  services.gvfs.enable = true;
-  services.tumbler.enable = true;
-  services.tailscale.enable = true;
+  services = {
+    xserver.videoDrivers = [ "amdgpu" ];
+    flatpak.enable = true;
+    gvfs.enable = true;
+    tumbler.enable = true;
+    tailscale.enable = true;
 
-  services.openssh = {
-    enable = true;
-    settings = {
-      PasswordAuthentication = false;
-      PermitRootLogin = "no";
+    openssh = {
+      enable = true;
+      settings = {
+        PasswordAuthentication = false;
+        PermitRootLogin = "no";
+      };
     };
   };
 

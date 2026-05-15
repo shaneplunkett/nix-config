@@ -24,38 +24,39 @@ in
         };
       } themeConfig.theme;
 
-      bar.layouts = {
-        "DP-2" = {
-          left = [
-            "cpu"
-            "ram"
-            "cava"
-          ];
-          middle = [
-            "workspaces"
-            "windowtitle"
-          ];
-          right = [
-            "custom/wallpaper"
-            "systray"
-            "volume"
-            "network"
-            "bluetooth"
-            "clock"
-            "notifications"
-            "dashboard"
-          ];
-        };
-        "HDMI-A-1" = {
-          left = [ ];
-          middle = [ ];
-          right = [ ];
+      bar = {
+        layouts = {
+          "DP-2" = {
+            left = [
+              "cpu"
+              "ram"
+              "cava"
+            ];
+            middle = [
+              "workspaces"
+              "windowtitle"
+            ];
+            right = [
+              "custom/wallpaper"
+              "systray"
+              "volume"
+              "network"
+              "bluetooth"
+              "clock"
+              "notifications"
+              "dashboard"
+            ];
+          };
+          "HDMI-A-1" = {
+            left = [ ];
+            middle = [ ];
+            right = [ ];
+          };
         };
 
+        launcher.autoDetectIcon = true;
+        workspaces.show_icons = true;
       };
-
-      bar.launcher.autoDetectIcon = true;
-      bar.workspaces.show_icons = true;
 
       menus.clock = {
         time = {

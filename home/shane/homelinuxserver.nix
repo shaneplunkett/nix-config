@@ -12,8 +12,10 @@
     vimAlias = true;
   };
 
-  home.username = "shane";
-  home.homeDirectory = "/home/shane";
-  home.stateVersion = "24.11";
+  home = {
+    username = "shane";
+    homeDirectory = "/home/shane";
+    stateVersion = "24.11";
+  };
   programs.home-manager.enable = true;
 }

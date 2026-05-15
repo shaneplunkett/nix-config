@@ -1,5 +1,4 @@
-_:
-{
+_: {
   programs.vesktop = {
     enable = true;
     settings = {

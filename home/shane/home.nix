@@ -9,8 +9,14 @@
     ./modules/linux
   ];
 
-  home.username = "shane";
-  home.homeDirectory = "/home/shane";
+  home = {
+    username = "shane";
+    homeDirectory = "/home/shane";
+    stateVersion = "24.11";
+    sessionVariables = {
+      STEAM_EXTRA_COMPAT_TOOLS_PATHS = "\${HOME}/.steam/root/compatibilitytools.d";
+    };
+  };
   xdg = {
     userDirs = {
       enable = true;
@@ -27,11 +33,5 @@
       };
     };
   };
-  home.stateVersion = "24.11";
   programs.home-manager.enable = true;
-
-  home.sessionVariables = {
-    STEAM_EXTRA_COMPAT_TOOLS_PATHS = "\${HOME}/.steam/root/compatibilitytools.d";
-  };
-
 }

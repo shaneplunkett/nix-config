@@ -1,5 +1,4 @@
-_:
-{
+_: {
 
   #Homebrew
   homebrew = {
@@ -29,9 +28,11 @@ _:
     masApps = {
       "Xcode" = 497799835;
     };
-    onActivation.cleanup = "zap";
-    onActivation.autoUpdate = true;
-    onActivation.upgrade = true;
+    onActivation = {
+      cleanup = "zap";
+      autoUpdate = true;
+      upgrade = true;
+    };
 
   };
 }

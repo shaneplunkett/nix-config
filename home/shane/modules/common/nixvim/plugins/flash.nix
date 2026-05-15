@@ -1,5 +1,4 @@
-_:
-{
+_: {
   plugins = {
     flash = {
       enable = true;

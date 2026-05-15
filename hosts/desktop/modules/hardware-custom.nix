@@ -1,15 +1,20 @@
 { pkgs, lib, ... }:
 {
-  hardware.bluetooth.enable = true;
-  hardware.bluetooth.powerOnBoot = true;
-
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
+  hardware = {
+    bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+    };
+    graphics = {
+      enable = true;
+      enable32Bit = true;
+    };
   };
 
-  zramSwap.enable = true;
-  zramSwap.memoryPercent = 50;
+  zramSwap = {
+    enable = true;
+    memoryPercent = 50;
+  };
 
   # Disable USB autosuspend for Elgato Wave:3 (0fd9:0070) — prevents timeout errors
   # through the monitor hub chain

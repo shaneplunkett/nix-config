@@ -1,5 +1,4 @@
-_:
-{
+_: {
   opts = {
     number = true;
     relativenumber = true;

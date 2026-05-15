@@ -1,5 +1,4 @@
-_:
-{
+_: {
   plugins = {
     trouble = {
       enable = true;

@@ -1,5 +1,4 @@
-_:
-{
+_: {
   plugins.undotree = {
     enable = true;
     settings = {

@@ -1,9 +1,15 @@
 { pkgs, compositor, ... }:
 {
-  programs.neovim.defaultEditor = true;
-  programs.hyprland = {
-    enable = compositor == "hyprland";
-    xwayland.enable = true;
+  programs = {
+    neovim.defaultEditor = true;
+    hyprland = {
+      enable = compositor == "hyprland";
+      xwayland.enable = true;
+    };
+    appimage = {
+      enable = true;
+      binfmt = true;
+    };
   };
 
   #Hyprland sessionVariables
@@ -18,10 +24,5 @@
     enable = true;
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
     configPackages = [ pkgs.hyprland ];
-  };
-
-  programs.appimage = {
-    enable = true;
-    binfmt = true;
   };
 }

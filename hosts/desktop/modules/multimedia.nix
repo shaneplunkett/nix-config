@@ -1,13 +1,15 @@
 { config, pkgs, ... }:
 {
   # v4l2loopback — creates a virtual camera device that OBS can output to
-  boot.extraModulePackages = [
-    config.boot.kernelPackages.v4l2loopback
-  ];
-  boot.kernelModules = [ "v4l2loopback" ];
-  boot.extraModprobeConfig = ''
-    options v4l2loopback devices=1 video_nr=10 card_label="OBS Virtual Camera" exclusive_caps=1
-  '';
+  boot = {
+    extraModulePackages = [
+      config.boot.kernelPackages.v4l2loopback
+    ];
+    kernelModules = [ "v4l2loopback" ];
+    extraModprobeConfig = ''
+      options v4l2loopback devices=1 video_nr=10 card_label="OBS Virtual Camera" exclusive_caps=1
+    '';
+  };
 
   environment.systemPackages = [
     # OBS with background removal plugin

@@ -1,5 +1,4 @@
-_:
-{
+_: {
 
   users.users.shane = {
     isNormalUser = true;
