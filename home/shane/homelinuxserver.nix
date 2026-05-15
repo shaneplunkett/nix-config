@@ -1,16 +1,10 @@
 { ... }:
 {
   imports = [
-    ./modules/common/btop.nix
-    ./modules/common/git.nix
-    ./modules/common/ssh.nix
-    ./modules/common/terminal/direnv.nix
-    ./modules/common/terminal/fish.nix
-    ./modules/common/terminal/sesh.nix
-    ./modules/common/terminal/starship.nix
-    ./modules/common/terminal/tmux.nix
+    ./modules/common/server-profile.nix
   ];
 
+  # Linux servers ship raw neovim (no nixvim — keeps the closure tiny).
   programs.neovim = {
     enable = true;
     defaultEditor = true;

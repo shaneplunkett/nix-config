@@ -58,143 +58,32 @@ in
       };
     };
 
-    extraCss = ''
-      @define-color base #${colours.base};
-      @define-color mantle #${colours.mantle};
-      @define-color crust #${colours.crust};
-      @define-color surface0 #${colours.surface0};
-      @define-color surface1 #${colours.surface1};
-      @define-color surface2 #${colours.surface2};
-      @define-color overlay0 #${colours.overlay0};
-      @define-color overlay1 #${colours.overlay1};
-      @define-color text #${colours.text};
-      @define-color subtext0 #${colours.subtext0};
-      @define-color lavender #${colours.lavender};
-      @define-color mauve #${colours.mauve};
-      @define-color maroon #${colours.maroon};
-      @define-color red #${colours.red};
-
-      window {
-        background-color: transparent;
-      }
-
-      headerbar, .titlebar, windowhandle {
-        min-height: 0;
-        background-color: transparent;
-        background-image: none;
-        box-shadow: none;
-        border: none;
-      }
-
-      label {
-        color: @text;
-        font-family: "Mononoki Nerd Font", monospace;
-      }
-
-      #message_label {
-        font-size: 16px;
-        margin-bottom: 8px;
-      }
-
-      #clock_frame {
-        background-color: transparent;
-        background-image: none;
-        border: none;
-        box-shadow: none;
-      }
-
-      #clock_frame label {
-        color: @lavender;
-        font-size: 48px;
-        font-weight: 300;
-        letter-spacing: 2px;
-      }
-
-      entry {
-        background-color: @surface0;
-        background-image: none;
-        color: @text;
-        border: 1px solid transparent;
-        border-radius: 8px;
-        padding: 10px 14px;
-        font-family: "Mononoki Nerd Font", monospace;
-        font-size: 14px;
-        caret-color: @mauve;
-        min-height: 20px;
-        transition: border-color 200ms ease-in-out;
-      }
-
-      entry:focus {
-        border-color: @mauve;
-        box-shadow: 0 0 0 2px alpha(@mauve, 0.15);
-      }
-
-      button {
-        background-image: none;
-        border-radius: 8px;
-        font-family: "Mononoki Nerd Font", monospace;
-        min-height: 20px;
-        transition: background-color 200ms ease-in-out;
-      }
-
-      button.suggested-action {
-        background-color: @mauve;
-        color: @crust;
-        border: none;
-        padding: 10px 20px;
-        font-size: 14px;
-        font-weight: 600;
-        letter-spacing: 1px;
-      }
-
-      button.suggested-action:hover {
-        background-color: @lavender;
-      }
-
-      button.destructive-action {
-        background-color: transparent;
-        background-image: none;
-        color: @overlay1;
-        border: none;
-        padding: 8px 12px;
-        font-size: 12px;
-      }
-
-      button.destructive-action:hover {
-        color: @maroon;
-        background-color: alpha(@surface1, 0.4);
-      }
-
-      combobox button {
-        background-color: @surface0;
-        background-image: none;
-        color: @subtext0;
-        border: 1px solid transparent;
-        border-radius: 8px;
-        padding: 8px 12px;
-        min-height: 20px;
-      }
-
-      combobox button:hover {
-        background-color: @surface1;
-        color: @text;
-      }
-
-      window.popup > contents {
-        background-color: @surface0;
-        border: 1px solid @surface1;
-        border-radius: 8px;
-      }
-
-      #error_info {
-        background-color: alpha(@red, 0.15);
-        border-radius: 8px;
-      }
-
-      #error_label {
-        color: @red;
-      }
-    '';
+    extraCss =
+      let
+        # Inject the Catppuccin palette as GTK @define-color directives,
+        # then prepend to the static stylesheet — keeps CSS editable in a
+        # real .css file (syntax highlighting, no Nix interpolation noise).
+        paletteVars = [
+          "base"
+          "mantle"
+          "crust"
+          "surface0"
+          "surface1"
+          "surface2"
+          "overlay0"
+          "overlay1"
+          "text"
+          "subtext0"
+          "lavender"
+          "mauve"
+          "maroon"
+          "red"
+        ];
+        defineColors = lib.concatMapStringsSep "\n" (
+          v: "@define-color ${v} #${colours.${v}};"
+        ) paletteVars;
+      in
+      defineColors + "\n\n" + builtins.readFile ./greetd-theme.css;
 
     theme = {
       package = pkgs.adw-gtk3;

@@ -1,17 +1,14 @@
 { inputs, rootPath }:
 let
   inherit (inputs)
-    nixpkgs
     nix-darwin
     home-manager
-    nixvim
     nix-homebrew
     homebrew-core
     homebrew-cask
     agenix
-    catppuccin
-    vex-tooling
     ;
+  common = import ./common.nix { inherit inputs rootPath; };
 in
 {
   mkDarwinSystem =
@@ -26,13 +23,10 @@ in
     nix-darwin.lib.darwinSystem {
       specialArgs = { inherit inputs; };
       modules = [
-        # Hostname injection + custom packages overlay
         {
           nixpkgs.hostPlatform = system;
           networking.hostName = hostname;
-          nixpkgs.overlays = [
-            (final: prev: import (rootPath + /pkgs) { pkgs = final; })
-            vex-tooling.overlays.default
+          nixpkgs.overlays = common.mkOverlays [
             (final: prev: {
               yt-dlp = prev.yt-dlp.overridePythonAttrs (old: {
                 dependencies = prev.lib.concatAttrValues (
@@ -48,20 +42,7 @@ in
         home-manager.darwinModules.home-manager
         agenix.darwinModules.default
 
-        {
-          home-manager = {
-            useGlobalPkgs = true;
-            useUserPackages = true;
-            extraSpecialArgs = { inherit inputs; };
-            users.shane = import homeConfig;
-            sharedModules = [
-              nixvim.homeModules.nixvim
-              agenix.homeManagerModules.default
-              catppuccin.homeModules.catppuccin
-              vex-tooling.homeManagerModules.default
-            ];
-          };
-        }
+        (common.mkHomeManagerModule { inherit homeConfig; })
       ]
       ++ (
         if enableHomebrew then
