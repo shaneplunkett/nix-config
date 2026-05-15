@@ -133,7 +133,16 @@
         bashls.enable = true;
         astro.enable = true;
         dockerls.enable = true;
-        terraformls.enable = true;
+        terraformls = {
+          enable = true;
+          extraOptions = {
+            init_options = {
+              experimentalFeatures = {
+                prefillRequiredFields = true;
+              };
+            };
+          };
+        };
         jsonls.enable = true;
         eslint.enable = false;
         yamlls.enable = true;

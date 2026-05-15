@@ -2,6 +2,7 @@
 {
   extraPackages = with pkgs; [
     shellcheck
+    tflint
   ];
 
   plugins.lint = {
@@ -9,6 +10,9 @@
     lintersByFt = {
       sh = [ "shellcheck" ];
       bash = [ "shellcheck" ];
+      terraform = [ "tflint" ];
+      hcl = [ "tflint" ];
+      tf = [ "tflint" ];
     };
     autoCmd = {
       event = [ "BufWritePost" "InsertLeave" ];

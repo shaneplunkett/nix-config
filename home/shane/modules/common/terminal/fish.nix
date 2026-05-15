@@ -32,6 +32,19 @@
           sudo nixos-rebuild switch --sudo --flake ~/nix-config
         end
       '';
+      tfplan = ''
+        set -l plan_file (mktemp -u --suffix=.tfplan)
+        set -l plan_json (mktemp -u --suffix=.json)
+
+        if terraform plan -out=$plan_file $argv
+          terraform show -json $plan_file > $plan_json
+          echo
+          echo "── Cost impact ──────────────────────────────────"
+          infracost diff --path $plan_json
+        end
+
+        rm -f $plan_file $plan_json
+      '';
       prettyjson = ''
         jq -R -r '. as $line | try (fromjson | 
             "\u001b[36m\(.level | ascii_upcase)\u001b[0m \u001b[35m[\(.module // "unknown")]\u001b[0m \(.message) \(if .operation_name then "\u001b[33m(\(.operation_name))\u001b[0m" else "" end)" + 
