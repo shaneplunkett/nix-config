@@ -59,14 +59,6 @@
           enable = true;
           settings.telemetry.enable = false;
         };
-        # Disable ts_ls in favor of vtsls
-        ts_ls = {
-          enable = false;
-        };
-        # Experimental microsoft Go implementation - disabled for stability
-        tsgo = {
-          enable = false;
-        };
         # High performance Typescript LSP (wrapper around VSCode's TS service)
         vtsls = {
           enable = true;
@@ -144,7 +136,6 @@
           };
         };
         jsonls.enable = true;
-        eslint.enable = false;
         yamlls.enable = true;
         phpactor.enable = true;
         ruby_lsp.enable = true;

@@ -1,4 +1,18 @@
 { ... }:
+let
+  shaneHost = {
+    user = "shane";
+    identityFile = "~/.ssh/id_ed25519";
+  };
+  laptopHost = shaneHost // {
+    serverAliveInterval = 60;
+    serverAliveCountMax = 3;
+    extraOptions = {
+      RequestTTY = "yes";
+      RemoteCommand = "fish -l";
+    };
+  };
+in
 {
   programs.ssh = {
     enable = true;
@@ -17,47 +31,11 @@
         identitiesOnly = true;
       };
 
-      "pve" = {
-        hostname = "pve";
-        user = "shane";
-        identityFile = "~/.ssh/id_ed25519";
-      };
-
-      "cube" = {
-        hostname = "cube";
-        user = "shane";
-        identityFile = "~/.ssh/id_ed25519";
-      };
-
-      "desktop" = {
-        hostname = "desktop";
-        user = "shane";
-        identityFile = "~/.ssh/id_ed25519";
-      };
-
-      "mbp" = {
-        hostname = "shanes-macbook-pro";
-        user = "shane";
-        identityFile = "~/.ssh/id_ed25519";
-        serverAliveInterval = 60;
-        serverAliveCountMax = 3;
-        extraOptions = {
-          RequestTTY = "yes";
-          RemoteCommand = "fish -l";
-        };
-      };
-
-      "wmbp" = {
-        hostname = "shanes-work-macbook-pro";
-        user = "shane";
-        identityFile = "~/.ssh/id_ed25519";
-        serverAliveInterval = 60;
-        serverAliveCountMax = 3;
-        extraOptions = {
-          RequestTTY = "yes";
-          RemoteCommand = "fish -l";
-        };
-      };
+      "pve"     = shaneHost  // { hostname = "pve"; };
+      "cube"    = shaneHost  // { hostname = "cube"; };
+      "desktop" = shaneHost  // { hostname = "desktop"; };
+      "mbp"     = laptopHost // { hostname = "shanes-macbook-pro"; };
+      "wmbp"    = laptopHost // { hostname = "shanes-work-macbook-pro"; };
     };
   };
 }

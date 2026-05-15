@@ -6,26 +6,20 @@
     ./conform.nix
     ./flash.nix
     ./gitblame.nix
-    ./lazydev.nix
-    ./lazygit.nix
     ./lint.nix
     ./lsp.nix
-    ./lualine.nix
-    ./luasnip.nix
     ./markview.nix
     ./mini.nix
     ./neotree.nix
     ./noice.nix
-    ./nui.nix
-    ./notify.nix
     ./snacks.nix
     ./telescope.nix
     ./tmux-navigator.nix
     ./todo-comments.nix
     ./treesitter.nix
+    ./trivial.nix
     ./trouble.nix
     ./undotree.nix
-    ./web-devicons.nix
     ./which-key.nix
     ./xcodebuild.nix
   ];

@@ -1,8 +1,0 @@
-{ ... }:
-{
-  plugins = {
-    lazydev = {
-      enable = true;
-    };
-  };
-}

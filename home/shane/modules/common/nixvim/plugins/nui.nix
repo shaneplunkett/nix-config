@@ -1,9 +1,0 @@
-{ ... }:
-{
-  plugins = {
-    nui = {
-
-      enable = true;
-    };
-  };
-}

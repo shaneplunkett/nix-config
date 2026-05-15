@@ -9,7 +9,6 @@
     ./locale.nix
     ./maintenance.nix
     ./user.nix
-
   ];
 
 }

@@ -1,9 +1,0 @@
-{ ... }:
-{
-  plugins = {
-    notify = {
-
-      enable = true;
-    };
-  };
-}

@@ -10,7 +10,6 @@
     ];
     trusted-users = [
       "root"
-      "alice"
       "@wheel"
       "shane"
     ];
