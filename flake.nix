@@ -48,9 +48,10 @@
     };
 
     # Private companion repo — values that mustn't appear in the public flake
-    # (work-internal URLs, work-email attributes). Currently a local git+file
-    # checkout; swap to git+ssh once pushed to github.com/shaneplunkett/nix-config-private.
-    nix-config-private.url = "git+file:///home/shane/projects/personal/nix-config-private?ref=main";
+    # (work-internal URLs, work-email attributes). `nrs-iter` overrides this
+    # input to the local checkout for live iteration; default URL is the
+    # pinned GitHub remote so the public flake is reproducible.
+    nix-config-private.url = "git+ssh://git@github.com/shaneplunkett/nix-config-private.git";
 
     # AutoGrab work skills — baked in via flake input so .claude/skills is
     # declaratively managed. For active iteration use `nrs-iter` which

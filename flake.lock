@@ -784,16 +784,15 @@
       "locked": {
         "lastModified": 1778827525,
         "narHash": "sha256-28K/zm8dJOf3BqgeqKu/0rOuLCdF40H9vk80V8xeWis=",
-        "ref": "main",
+        "ref": "refs/heads/main",
         "rev": "ff47bf2ef0f458eb4f6b9797eef08fca98ea83c8",
         "revCount": 1,
         "type": "git",
-        "url": "file:///home/shane/projects/personal/nix-config-private"
+        "url": "ssh://git@github.com/shaneplunkett/nix-config-private.git"
       },
       "original": {
-        "ref": "main",
         "type": "git",
-        "url": "file:///home/shane/projects/personal/nix-config-private"
+        "url": "ssh://git@github.com/shaneplunkett/nix-config-private.git"
       }
     },
     "nix-darwin": {
