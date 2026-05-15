@@ -37,6 +37,7 @@
     ignores = [
       ".direnv/"
       ".go/"
+      ".gcloud/"
     ];
     includes = [
       {
