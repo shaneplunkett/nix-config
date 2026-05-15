@@ -16,7 +16,6 @@
     ./rbw.nix
     ./ssh.nix
     ./terraform.nix
-    # ./vex-reports.nix  # decommissioned 2026-05-15 — bucket deleted, see SCALE-603 for redesign
     ./terminal
     ./theme
     ./youtui

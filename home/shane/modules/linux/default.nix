@@ -33,7 +33,6 @@
     ./hyprpanel
     ./hyprpaper.nix
     ./rofi/rofi.nix
-    ./wallpaper.nix
   ]
   ++ lib.optionals (shell == "noctalia") [
     ./noctalia.nix
