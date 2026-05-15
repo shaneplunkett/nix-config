@@ -12,51 +12,67 @@ let
     let
       stateDir = "/var/lib/mcp-servers/${name}";
 
-      setupScript = pkgs.writeShellScript "${name}-setup" ''
-        set -euo pipefail
-        REPO_DIR="${stateDir}/repo"
+      setupScript = pkgs.writeShellApplication {
+        name = "${name}-setup";
+        runtimeInputs =
+          [
+            pkgs.git
+            pkgs.coreutils
+          ]
+          ++ (if runtime == "python" then [ pkgs.uv pkgs.python312 ] else [ pkgs.nodejs ]);
+        text = ''
+          REPO_DIR="${stateDir}/repo"
 
-        mkdir -p "${stateDir}"
+          mkdir -p "${stateDir}"
 
-        # Clone or update
-        if [ ! -d "$REPO_DIR/.git" ]; then
-          ${pkgs.git}/bin/git clone ${repoUrl} "$REPO_DIR"
-        else
-          cd "$REPO_DIR"
-          ${pkgs.git}/bin/git checkout -- . 2>/dev/null || true
-          ${pkgs.git}/bin/git pull --ff-only || true
-        fi
-
-        cd "$REPO_DIR"
-
-        ${if runtime == "python" then ''
-          ${pkgs.uv}/bin/uv sync --python ${pkgs.python312}/bin/python3
-        '' else ''
-          ${pkgs.nodejs}/bin/npm install
-          if [ -f package.json ] && grep -q '"build"' package.json; then
-            ${pkgs.nodejs}/bin/npm run build
+          # Clone or update
+          if [ ! -d "$REPO_DIR/.git" ]; then
+            git clone ${repoUrl} "$REPO_DIR"
+          else
+            cd "$REPO_DIR"
+            git checkout -- . 2>/dev/null || true
+            git pull --ff-only || true
           fi
-        ''}
 
-        chown -R shane:staff "${stateDir}"
-      '';
+          cd "$REPO_DIR"
 
-      startScript = pkgs.writeShellScript "${name}-start" ''
-        set -euo pipefail
-        ${setupScript}
-        cd ${stateDir}/repo
-        exec ${pkgs.nodejs}/bin/npx -y supergateway \
-          --stdio "${stdioCmd stateDir}" \
-          --port ${toString port} \
-          --baseUrl /mcp \
-          --outputTransport streamableHttp
-      '';
+          ${
+            if runtime == "python" then
+              ''
+                uv sync --python python3
+              ''
+            else
+              ''
+                npm install
+                if [ -f package.json ] && grep -q '"build"' package.json; then
+                  npm run build
+                fi
+              ''
+          }
+
+          chown -R shane:staff "${stateDir}"
+        '';
+      };
+
+      startScript = pkgs.writeShellApplication {
+        name = "${name}-start";
+        runtimeInputs = [ pkgs.nodejs ];
+        text = ''
+          ${setupScript}/bin/${name}-setup
+          cd ${stateDir}/repo
+          exec npx -y supergateway \
+            --stdio "${stdioCmd stateDir}" \
+            --port ${toString port} \
+            --baseUrl /mcp \
+            --outputTransport streamableHttp
+        '';
+      };
     in
     {
       launchd.daemons."mcp-${name}" = {
         serviceConfig = {
           Label = "com.mcp.${name}";
-          ProgramArguments = [ "${startScript}" ];
+          ProgramArguments = [ "${startScript}/bin/${name}-start" ];
           RunAtLoad = true;
           KeepAlive = true;
           UserName = "shane";

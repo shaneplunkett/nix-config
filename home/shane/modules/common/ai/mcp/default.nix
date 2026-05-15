@@ -7,11 +7,19 @@
 let
   claudeNodejs = pkgs.nodejs;
 
-  xero-wrapper = pkgs.writeShellScript "xero-mcp-wrapper" ''
-    export XERO_CLIENT_ID=$(${pkgs.rbw}/bin/rbw get xero-client-id 2>/dev/null)
-    export XERO_CLIENT_SECRET=$(${pkgs.rbw}/bin/rbw get xero-client-secret 2>/dev/null)
-    exec ${claudeNodejs}/bin/npx -y @xeroapi/xero-mcp-server@latest
-  '';
+  xeroWrapper = pkgs.writeShellApplication {
+    name = "xero-mcp-wrapper";
+    runtimeInputs = [
+      pkgs.rbw
+      claudeNodejs
+    ];
+    text = ''
+      XERO_CLIENT_ID="$(rbw get xero-client-id 2>/dev/null)"
+      XERO_CLIENT_SECRET="$(rbw get xero-client-secret 2>/dev/null)"
+      export XERO_CLIENT_ID XERO_CLIENT_SECRET
+      exec npx -y @xeroapi/xero-mcp-server@latest
+    '';
+  };
 
   mcpServers = {
 
@@ -28,7 +36,7 @@ let
     };
 
     xero = {
-      command = "${xero-wrapper}";
+      command = "${xeroWrapper}/bin/xero-mcp-wrapper";
       args = [ ];
     };
   };

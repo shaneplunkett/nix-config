@@ -11,29 +11,32 @@ let
 
   desktopMcpServers = shared.desktopMcpServers;
 
-  claude-desktop-wrapped = pkgs.writeShellScriptBin "claude-desktop" ''
-    EMPTY_WORKSPACE="$HOME/.cache/claude-empty-workspace"
-    WORKSPACE_LINK="$HOME/.config/claude/current-workspace"
+  claude-desktop-wrapped = pkgs.writeShellApplication {
+    name = "claude-desktop";
+    runtimeInputs = [ pkgs.claude-desktop ];
+    text = ''
+      EMPTY_WORKSPACE="$HOME/.cache/claude-empty-workspace"
+      WORKSPACE_LINK="$HOME/.config/claude/current-workspace"
 
-    mkdir -p "$HOME/.config/claude"
+      mkdir -p "$HOME/.config/claude"
 
-    # Use current directory if in a project, otherwise empty
-    if [ "$PWD" != "$HOME" ] && [ "$PWD" != "/" ]; then
-      ln -sfn "$PWD" "$WORKSPACE_LINK"
-      echo "✓ Workspace: $PWD"
-    else
-      rm -rf "$EMPTY_WORKSPACE"
-      mkdir -p "$EMPTY_WORKSPACE"
-      ln -sfn "$EMPTY_WORKSPACE" "$WORKSPACE_LINK"
-      echo "✓ Using empty workspace"
-    fi
+      # Use current directory if in a project, otherwise empty
+      if [ "$PWD" != "$HOME" ] && [ "$PWD" != "/" ]; then
+        ln -sfn "$PWD" "$WORKSPACE_LINK"
+        echo "✓ Workspace: $PWD"
+      else
+        rm -rf "$EMPTY_WORKSPACE"
+        mkdir -p "$EMPTY_WORKSPACE"
+        ln -sfn "$EMPTY_WORKSPACE" "$WORKSPACE_LINK"
+        echo "✓ Using empty workspace"
+      fi
 
-    nohup ${pkgs.claude-desktop}/bin/claude-desktop \
-      "$@" > /dev/null 2>&1 &
+      nohup claude-desktop "$@" > /dev/null 2>&1 &
 
-    disown
-    echo "Claude Desktop started (PID: $!)"
-  '';
+      disown
+      echo "Claude Desktop started (PID: $!)"
+    '';
+  };
 in
 {
   home.packages = [ claude-desktop-wrapped ] ++ shared.packages;

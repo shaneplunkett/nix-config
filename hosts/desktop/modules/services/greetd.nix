@@ -9,11 +9,18 @@ let
   greeterBackground = toString ../assets/greeter-bg.jpg;
 
   # Wrapper script: disable HDMI-A-1 inside cage, then run regreet
-  greeterCmd = pkgs.writeShellScript "regreet-wrapper" ''
-    ${pkgs.wlr-randr}/bin/wlr-randr --output HDMI-A-1 --off &
-    sleep 0.5
-    ${lib.getExe pkgs.regreet}
-  '';
+  greeterCmd = pkgs.writeShellApplication {
+    name = "regreet-wrapper";
+    runtimeInputs = [
+      pkgs.wlr-randr
+      pkgs.regreet
+    ];
+    text = ''
+      wlr-randr --output HDMI-A-1 --off &
+      sleep 0.5
+      exec regreet
+    '';
+  };
 in
 {
   programs.regreet = {
@@ -213,7 +220,7 @@ in
 
   # Override cage command to use wrapper that disables HDMI-A-1
   services.greetd.settings.default_session.command =
-    lib.mkForce "${pkgs.dbus}/bin/dbus-run-session ${pkgs.cage}/bin/cage -s -- ${greeterCmd}";
+    lib.mkForce "${pkgs.dbus}/bin/dbus-run-session ${pkgs.cage}/bin/cage -s -- ${greeterCmd}/bin/regreet-wrapper";
 
   systemd.services.greetd = {
     serviceConfig = {
