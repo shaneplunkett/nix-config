@@ -7,7 +7,6 @@
 let
   inherit (inputs)
     nixvim
-    agenix
     catppuccin
     vex-tooling
     ;
@@ -38,7 +37,6 @@ in
         users.shane = import homeConfig;
         sharedModules = [
           nixvim.homeModules.nixvim
-          agenix.homeManagerModules.default
           catppuccin.homeModules.catppuccin
           vex-tooling.homeManagerModules.default
         ]

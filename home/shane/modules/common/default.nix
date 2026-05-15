@@ -1,7 +1,6 @@
 { ... }:
 {
   imports = [
-    ./age.nix
     ./ai
     ./btop.nix
     ./git.nix

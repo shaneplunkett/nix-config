@@ -2,7 +2,6 @@
 {
   imports = [
     ./modules/common/server-profile.nix
-    ./modules/common/age.nix
     ./modules/common/nixvim
     # macOS servers also get the GUI-leaning terminal tooling so an
     # interactive ssh session feels like the laptop config.

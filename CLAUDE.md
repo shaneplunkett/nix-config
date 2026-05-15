@@ -42,28 +42,30 @@ No rebuild required.
   block. If the agent is locked or the entry is missing, the env var
   stays unset rather than erroring — let the downstream tool complain.
 
-**Secondary path: agenix for deployment / server-side / file-shaped
-secrets that don't fit the rbw model.** Encrypted `.age` files live in
-`secrets/`. Public keys and secret declarations are in:
+**Secondary path: agenix for deployment / server-side secrets that can't
+talk to the rbw agent.** Currently used only by the hetzvps host —
+no home-manager-scope agenix secrets remain. Encrypted `.age` files live
+in `secrets/`. Public keys and secret declarations are in:
 
 - `secrets/secrets.nix` — maps `.age` files to authorised public keys
-- `home/shane/modules/common/age.nix` — declares secrets for home-manager
-  to decrypt at runtime
+- Per-host nix modules consume them via `config.age.secrets.<name>.path`
+  (e.g. `hosts/hetzvps/modules/services.nix` for tailscale-authkey)
 
 What still lives in agenix:
 
+- `tailscale-authkey`, `restic-password` — hetzvps deployment secrets
 - `vex-core`, `vex-compaction`, `vex-session-start`, `vex-session-reload`,
-  `vex-discord-token` — hetzvps deployment secrets (consumed server-side)
-- `gemini` — system-prompt file (file-shaped, not a credential)
-- Anything stable enough that "edit-and-rebuild" is fine
+  `vex-discord-token` — hetzvps vex-brain secrets (consumed server-side)
 
 When adding a new credential, default to rbw. Only reach for agenix if
 the secret is consumed by a non-interactive system service that can't
-talk to the rbw agent, or if it's file-shaped rather than a single
-string value.
+talk to the rbw agent.
 
-When removing a secret: remove from all three locations (`.age` file,
-`secrets.nix`, `age.nix`) and any references in nix modules.
+When removing a secret: remove the `.age` file, the `secrets.nix` entry,
+and any module references. If a new home-manager-scope file-shaped secret
+is ever needed, re-add `agenix.homeManagerModules.default` to
+`lib/common.nix` sharedModules (removed when gemini was last HM agenix
+consumer).
 
 ## NixVim
 
@@ -79,10 +81,9 @@ Neovim is configured declaratively via [NixVim](https://nix-community.github.io/
 
 AI tool configs live under `home/shane/modules/common/ai/`:
 
-- `mcp/` — shared MCP server definitions (neovim, obsidian, posthog), imported by Claude Code, Claude Desktop, and Gemini. The xero-mcp wrapper pulls `XERO_CLIENT_ID`/`XERO_CLIENT_SECRET` from rbw.
-- `cc/` — Claude Code: settings, permissions, hooks, native custom theme (`vex-theme.json`)
+- `mcp/` — shared MCP server definitions (neovim, xero), imported by Claude Code and Claude Desktop. The xero-mcp wrapper pulls `XERO_CLIENT_ID`/`XERO_CLIENT_SECRET` from rbw.
+- `cc/` — Claude Code: settings, permissions, hooks, native custom theme (`vex-theme.json`), plugins + marketplaces via `programs.claude-code` module
 - `cdesktop/` — shared Claude Desktop MCP selection; platform-specific wrappers remain in `modules/linux/claude-desktop.nix` and `modules/macos/claude.nix`
-- `gemini/` — Gemini CLI settings and theme. Still references `config.age.secrets.gemini.path` because the secret is a system-prompt *file*, not a credential string.
 
 ## Git Hygiene
 

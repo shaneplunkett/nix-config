@@ -26,7 +26,6 @@
     ];
 
     brews = [
-      "gemini-cli"
       "xcode-build-server"
     ];
 
