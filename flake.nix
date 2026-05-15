@@ -69,8 +69,6 @@
       flake = false;
     };
 
-    zen-browser.url = "github:0xc000022070/zen-browser-flake";
-
     umu-launcher.url = "github:Open-Wine-Components/umu-launcher?dir=packaging/nix";
     umu-launcher.inputs.nixpkgs.follows = "nixpkgs";
 

@@ -6,7 +6,6 @@
     enable = true;
 
     casks = [
-      "zen"
       "ghostty"
       "postman"
       "elgato-camera-hub"
@@ -17,7 +16,6 @@
       "ferdium"
       "hammerspoon"
       "docker-desktop"
-      "chatgpt"
       "claude"
       "gcloud-cli"
       "teamviewer"
