@@ -2,39 +2,55 @@
   pkgs,
   lib,
   config,
+  inputs,
   ...
 }:
 let
-  # MCP server definitions (MCPHub local docker compose + direct local servers)
   shared = import ../mcp {
     inherit pkgs config;
     homeDirectory = config.home.homeDirectory;
   };
-
   allMcpServers = shared.mcpServers;
 
-  # Native Claude Code custom theme (CC v2.1.118+ custom themes via
-  # ~/.claude/themes/*.json). Hot-reloads on file change.
+  # Private values (work URLs / email attributes) live in the companion
+  # nix-config-private flake input. The public flake stays clean.
+  priv = inputs.nix-config-private.values;
+
+  # Symlink-to-mutable-path helper for everything sourced from ~/ai-skills/.
+  # Files propagate live without rebuild — edit core.md, hot-reload in CC.
+  # Note: flake eval is pure, so we cannot pathExists-guard external paths.
+  # If ~/ai-skills/ is missing on a fresh machine the symlinks will be broken
+  # until the repo is cloned — CC tolerates this gracefully.
+  link = config.lib.file.mkOutOfStoreSymlink;
+  homeDir = config.home.homeDirectory;
+  aiSkills = "${homeDir}/ai-skills";
+
   vexThemeFile = ./vex-theme.json;
 
-  # vex-statusline — themed status line
-  vex-statusline = pkgs.writeShellScriptBin "vex-statusline" ''
-    exec ${pkgs.python3}/bin/python3 ${./vex-statusline.py}
-  '';
+  # Themed status line — invoked by CC via settings.json statusLine.command.
+  vex-statusline = pkgs.writeShellApplication {
+    name = "vex-statusline";
+    runtimeInputs = [ pkgs.python3 ];
+    text = ''
+      exec python3 ${./vex-statusline.py}
+    '';
+  };
 
-  # SessionStart/CwdChanged hook: load direnv environment into CLAUDE_ENV_FILE
-  cc-direnv-load = pkgs.writeShellScriptBin "cc-direnv-load" ''
-    export PATH="${pkgs.direnv}/bin:$PATH"
-    exec ${pkgs.bash}/bin/bash ${./cc-direnv-load.sh}
-  '';
+  # SessionStart / CwdChanged hook: load direnv environment into CLAUDE_ENV_FILE.
+  cc-direnv-load = pkgs.writeShellApplication {
+    name = "cc-direnv-load";
+    runtimeInputs = [
+      pkgs.direnv
+      pkgs.bash
+    ];
+    text = ''
+      exec bash ${./cc-direnv-load.sh}
+    '';
+  };
 
-  # Settings JSON builder — parameterised so we can produce both the
-  # intimate Vex variant (used by ~/.claude and ~/.claude-work) and the
-  # public-safe Vex (Pro) variant (used by ~/.claude-pro).
-  #
-  # `outputStyle` selects the deployed output-style file by name.
-  # `hookSuffix` chooses which hook scripts under ai-skills/vex/hooks/ to
-  # cat in — empty string for the regular hooks, "-pro" for the pro hooks.
+  # Settings JSON builder — parameterised so we produce both the intimate Vex
+  # variant (used by ~/.claude and ~/.claude-work) and the public-safe Vex (Pro)
+  # variant (used by ~/.claude-pro).
   mkSettings =
     {
       outputStyle,
@@ -84,13 +100,13 @@ let
           CLAUDE_CODE_ENABLE_TELEMETRY = "1";
           OTEL_METRICS_EXPORTER = "otlp";
           OTEL_LOGS_EXPORTER = "otlp";
-          OTEL_EXPORTER_OTLP_ENDPOINT = "https://claude-telemetry.internal.agnelpu.com";
+          OTEL_EXPORTER_OTLP_ENDPOINT = priv.otelEndpoint;
           OTEL_EXPORTER_OTLP_PROTOCOL = "http/json";
-          OTEL_RESOURCE_ATTRIBUTES = "autograb_user=shane@autograb.com.au,team=engineering";
+          OTEL_RESOURCE_ATTRIBUTES = "autograb_user=${priv.autograbUser},team=${priv.autograbTeam}";
         };
 
         permissions.allow =
-          # MCP — MCPHub smart routing (memory, todoist, context7, github, etc.)
+          # MCP — MCPHub smart routing
           [
             "mcp__claude_ai_MCPHub__search_tools"
             "mcp__claude_ai_MCPHub__describe_tool"
@@ -163,19 +179,14 @@ let
               "WebFetch"
             ];
 
-        disabledMcpjsonServers = [
-          "posthog"
-        ];
+        disabledMcpjsonServers = [ "posthog" ];
 
-        # Deny cloud MCP connectors that have been retired in favour of CLIs.
-        # These tools still appear in the deferred tool list (claude.ai-managed),
-        # but Claude Code blocks any attempt to call them.
+        # Deny cloud MCP connectors retired in favour of CLIs. The tools still
+        # appear in the deferred tool list (claude.ai-managed), but Claude Code
+        # blocks any attempt to call them.
         permissions.deny = [
-          # Google Workspace → use `gws` CLI via google-workspace-agent
           "mcp__claude_ai_Google_Drive"
-          # Atlassian → use `jira` / `confluence` CLIs (Compass: curl + GraphQL)
           "mcp__claude_ai_Atlassian"
-          # Slack → use `agent-slack` CLI
           "mcp__claude_ai_Slack"
         ];
 
@@ -258,170 +269,146 @@ let
     hookSuffix = "-pro";
   };
 
-  # Config directories.
-  # vexConfigDirs receive the intimate Vex build (personal + work accounts).
-  # proConfigDirs receive the public-safe Vex (Pro) build.
-  # allConfigDirs is used for stuff that's identical across all variants
-  # (rules, agents, skills) — only the persona core, output style, hooks,
-  # and settings differ between vex and vex-pro.
   vexConfigDirs = [
-    "$HOME/.claude"
-    "$HOME/.claude-work"
+    ".claude"
+    ".claude-work"
   ];
   proConfigDirs = [
-    "$HOME/.claude-pro"
+    ".claude-pro"
   ];
   allConfigDirs = vexConfigDirs ++ proConfigDirs;
 
+  # ─── ag-ai-skills bake-in ──────────────────────────────────────────────
+  # install.sh resolves shared_refs from SKILL.md frontmatter into per-skill
+  # references/ dirs. We run it once at build time inside a derivation; the
+  # resulting per-skill subdirs are then symlinked into each CC config dir
+  # via home.file below.
+  agSkillsSrc = inputs.ag-ai-skills;
+  # install.sh isn't committed to ag-ai-skills upstream yet — vendor a copy
+  # alongside this module. Once upstream commits it, we can drop the cp and
+  # use the in-tree script directly.
+  agSkillsInstallScript = ./install-ag-ai-skills.sh;
+  agSkillsBuilt = pkgs.stdenv.mkDerivation {
+    pname = "ag-ai-skills-built";
+    version = "0";
+    src = agSkillsSrc;
+    nativeBuildInputs = [
+      pkgs.yq-go
+      pkgs.bash
+    ];
+    dontConfigure = true;
+    dontInstall = true;
+    buildPhase = ''
+      runHook preBuild
+      cp ${agSkillsInstallScript} ./install.sh
+      mkdir -p $out
+      bash ./install.sh "$out"
+      runHook postBuild
+    '';
+  };
+  workSkillNames = lib.attrNames (
+    lib.filterAttrs (_: t: t == "directory") (builtins.readDir "${agSkillsSrc}/skills")
+  );
+
+  # ─── home.file generator per config dir + variant ──────────────────────
+  filesForDir =
+    {
+      dir,
+      variant,
+    }:
+    let
+      isVex = variant == "vex";
+      settingsSrc = if isVex then settingsJson else settingsJsonPro;
+      personaPath = if isVex then "${aiSkills}/vex/core.md" else "${aiSkills}/vex/core-pro.md";
+      personaTarget = if isVex then "vex/core.md" else "vex/core-pro.md";
+      stylePath =
+        if isVex then "${aiSkills}/vex/output-style.md" else "${aiSkills}/vex/output-style-pro.md";
+      styleTarget = if isVex then "output-styles/vex.md" else "output-styles/vex-pro.md";
+      claudeMd = if isVex then "# Vex\n@vex/core.md\n" else "# Vex (Pro)\n@vex/core-pro.md\n";
+    in
+    # Static files (independent of ai-skills clone state)
+    {
+      "${dir}/settings.json".source = settingsSrc;
+      "${dir}/themes/vex.json".source = vexThemeFile;
+      "${dir}/CLAUDE.md".text = claudeMd;
+    }
+    # Personal vex content — live-symlinks to ~/ai-skills/vex/ (mutable repo).
+    # Single-symlink for rules/ + agents/ dirs (no per-file iteration needed,
+    # CC walks the symlinked dir at runtime).
+    // {
+      "${dir}/${personaTarget}".source = link personaPath;
+      "${dir}/${styleTarget}".source = link stylePath;
+      "${dir}/rules".source = link "${aiSkills}/vex/rules";
+      "${dir}/agents".source = link "${aiSkills}/vex/agents";
+    }
+    # Work skills — baked via install.sh derivation (shared_refs resolved),
+    # symlinked per-skill from the nix store path
+    // lib.listToAttrs (
+      map (name: {
+        name = "${dir}/skills/${name}";
+        value = {
+          source = "${agSkillsBuilt}/${name}";
+          recursive = true;
+        };
+      }) workSkillNames
+    );
 in
 {
-  programs.claude-code = {
-    enable = true;
-    # settings intentionally omitted — deployed as mutable copy below
-  };
+  programs.claude-code.enable = true;
 
-  # Deploy settings.json — vex variant to vexConfigDirs, pro variant to proConfigDirs.
-  # Both written as mutable copies (not symlinks) so CC can write runtime
-  # changes (thinking level, etc.). Nix content resets on each rebuild.
-  home.activation.claudeCodeSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    for dir in ${lib.concatStringsSep " " vexConfigDirs}; do
-      $DRY_RUN_CMD mkdir -p "$dir"
-      $DRY_RUN_CMD install -m 644 ${settingsJson} "$dir/settings.json"
-    done
-  '';
+  home.file = lib.foldl' lib.recursiveUpdate { } (
+    (map (
+      dir:
+      filesForDir {
+        inherit dir;
+        variant = "vex";
+      }
+    ) vexConfigDirs)
+    ++ (map (
+      dir:
+      filesForDir {
+        inherit dir;
+        variant = "vex-pro";
+      }
+    ) proConfigDirs)
+  );
 
-  home.activation.claudeCodeSettingsPro = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    for dir in ${lib.concatStringsSep " " proConfigDirs}; do
-      $DRY_RUN_CMD mkdir -p "$dir"
-      $DRY_RUN_CMD install -m 644 ${settingsJsonPro} "$dir/settings.json"
-    done
-  '';
-
-  # Deploy native Vex theme to <dir>/themes/vex.json across all CC config
-  # dirs. Selected via theme = "custom:vex" in settings.json. CC watches
-  # the themes dir and hot-reloads on file change.
-  home.activation.claudeCodeVexTheme = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    for dir in ${lib.concatStringsSep " " allConfigDirs}; do
-      $DRY_RUN_CMD mkdir -p "$dir/themes"
-      $DRY_RUN_CMD install -m 644 ${vexThemeFile} "$dir/themes/vex.json"
-    done
-  '';
-
-  # Personal CLAUDE.md (~/.claude/) — points to the intimate Vex core.
-  home.file.".claude/CLAUDE.md".text = ''
-    # Vex
-    @vex/core.md
-  '';
-
-  # Work CLAUDE.md (~/.claude-work/) — points to the intimate Vex core.
-  home.activation.claudeCodeWorkClaude = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    $DRY_RUN_CMD mkdir -p "$HOME/.claude-work"
-    cat > "$HOME/.claude-work/CLAUDE.md" << 'CLAUDEMD'
-    # Vex
-    @vex/core.md
-    CLAUDEMD
-  '';
-
-  # Pro CLAUDE.md (~/.claude-pro/) — points to the public-safe Vex (Pro) core.
-  home.activation.claudeCodeProClaude = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    $DRY_RUN_CMD mkdir -p "$HOME/.claude-pro"
-    cat > "$HOME/.claude-pro/CLAUDE.md" << 'CLAUDEMD'
-    # Vex (Pro)
-    @vex/core-pro.md
-    CLAUDEMD
-  '';
-
-  # Deploy Vex persona cores from ai-skills repo:
-  #   core.md      → vexConfigDirs (intimate)
-  #   core-pro.md  → proConfigDirs (public-safe)
-  home.activation.vexPersona = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    for dir in ${lib.concatStringsSep " " vexConfigDirs}; do
-      $DRY_RUN_CMD mkdir -p "$dir/vex"
-      $DRY_RUN_CMD install -m 600 "$HOME/ai-skills/vex/core.md" "$dir/vex/core.md"
-    done
-  '';
-
-  home.activation.vexPersonaPro = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    for dir in ${lib.concatStringsSep " " proConfigDirs}; do
-      $DRY_RUN_CMD mkdir -p "$dir/vex"
-      $DRY_RUN_CMD install -m 600 "$HOME/ai-skills/vex/core-pro.md" "$dir/vex/core-pro.md"
-    done
-  '';
-
-  # Deploy output styles:
-  #   vex.md      → vexConfigDirs as output-styles/vex.md
-  #   vex-pro.md  → proConfigDirs as output-styles/vex-pro.md
-  home.activation.vexOutputStyle = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    for dir in ${lib.concatStringsSep " " vexConfigDirs}; do
-      $DRY_RUN_CMD mkdir -p "$dir/output-styles"
-      $DRY_RUN_CMD install -m 644 "$HOME/ai-skills/vex/output-style.md" "$dir/output-styles/vex.md"
-    done
-  '';
-
-  home.activation.vexOutputStylePro = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    for dir in ${lib.concatStringsSep " " proConfigDirs}; do
-      $DRY_RUN_CMD mkdir -p "$dir/output-styles"
-      $DRY_RUN_CMD install -m 644 "$HOME/ai-skills/vex/output-style-pro.md" "$dir/output-styles/vex-pro.md"
-    done
-  '';
-
-  # Deploy rules and agents — identical across vex and vex-pro
-  # (operational behaviour, not persona). Goes to allConfigDirs.
-  home.activation.vexRulesAndAgents = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    for dir in ${lib.concatStringsSep " " allConfigDirs}; do
-      # Rules (prefixed with vex- for namespacing)
-      $DRY_RUN_CMD mkdir -p "$dir/rules"
-      for rule in "$HOME/ai-skills/vex/rules"/*.md; do
-        [ -f "$rule" ] || continue
-        name=$(basename "$rule")
-        $DRY_RUN_CMD install -m 644 "$rule" "$dir/rules/vex-$name"
+  # Personal skills — per-name symlinks to ~/ai-skills/personal/<name> alongside
+  # the work skills deployed via home.file. Kept as activation because we need
+  # to iterate at runtime (mutable dir, fresh-machine-tolerant) and they share
+  # the .claude/skills/ namespace with home-manager-managed work skills.
+  home.activation.claudeCodePersonalSkills =
+    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      for dir in ${lib.concatStringsSep " " (map (d: "$HOME/${d}") allConfigDirs)}; do
+        SKILLS_DIR="$dir/skills"
+        $DRY_RUN_CMD mkdir -p "$SKILLS_DIR"
+        if [ -d "$HOME/ai-skills/personal" ]; then
+          for skill in "$HOME/ai-skills/personal"/*/; do
+            [ -d "$skill" ] || continue
+            name=$(basename "$skill")
+            $DRY_RUN_CMD ln -sfn "$skill" "$SKILLS_DIR/$name"
+          done
+        fi
       done
+    '';
 
-      # Agents
-      $DRY_RUN_CMD mkdir -p "$dir/agents"
-      for agent in "$HOME/ai-skills/vex/agents"/*.md; do
-        [ -f "$agent" ] || continue
-        name=$(basename "$agent")
-        $DRY_RUN_CMD install -m 644 "$agent" "$dir/agents/$name"
-      done
-    done
-  '';
-
-  # Deploy all MCPs to ~/.claude.json (user-level, available everywhere
-  # — shared across .claude / .claude-work / .claude-pro automatically).
+  # ~/.claude.json is mutable runtime state (auth tokens, recent sessions, …).
+  # We merge our mcpServers attrset into it via jq, preserving everything else.
+  # The other legitimately-shell-shaped activation that survives the refactor.
   home.activation.claudeCodeMcpServers =
     let
       allServersJson = builtins.toJSON allMcpServers;
+      defaultJson = builtins.toJSON { mcpServers = allMcpServers; };
     in
     lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       CLAUDE_JSON="$HOME/.claude.json"
       if [ -f "$CLAUDE_JSON" ]; then
-        $DRY_RUN_CMD ${pkgs.jq}/bin/jq --argjson servers '${allServersJson}' '.mcpServers = $servers' "$CLAUDE_JSON" > "$CLAUDE_JSON.tmp" \
+        $DRY_RUN_CMD ${pkgs.jq}/bin/jq --argjson servers '${allServersJson}' \
+          '.mcpServers = $servers' "$CLAUDE_JSON" > "$CLAUDE_JSON.tmp" \
           && $DRY_RUN_CMD mv "$CLAUDE_JSON.tmp" "$CLAUDE_JSON"
       else
-        $DRY_RUN_CMD echo '${builtins.toJSON { mcpServers = allMcpServers; }}' > "$CLAUDE_JSON"
+        $DRY_RUN_CMD echo '${defaultJson}' > "$CLAUDE_JSON"
       fi
-
-      # Clean up old home-project MCP config if it exists
       rm -f "$HOME/.mcp.json"
     '';
-
-  # Symlink personal skills from ~/ai-skills/ into all config dirs.
-  # Work skills are installed separately via ~/projects/work/ag-ai-skills/install.sh
-  home.activation.claudeCodeSkills = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    for dir in ${lib.concatStringsSep " " allConfigDirs}; do
-      SKILLS_DIR="$dir/skills"
-      $DRY_RUN_CMD mkdir -p "$SKILLS_DIR"
-
-      # Clean existing personal skill symlinks (managed by this activation)
-      $DRY_RUN_CMD find "$SKILLS_DIR" -maxdepth 1 -type l -delete 2>/dev/null || true
-
-      # Symlink personal skills
-      for skill in "$HOME/ai-skills/personal"/*/; do
-        [ -d "$skill" ] || continue
-        name=$(basename "$skill")
-        $DRY_RUN_CMD ln -sfn "$skill" "$SKILLS_DIR/$name"
-      done
-    done
-  '';
 }
