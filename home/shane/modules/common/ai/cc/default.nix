@@ -65,6 +65,16 @@ let
     hash = "sha256-tukG/k82QKFe0ruGVkIXZpt2qXs1KMz5mnyXnflJo8I=";
   };
 
+  # Single source of truth for CC plugins — used to derive both
+  # programs.claude-code.plugins (--plugin-dir wrapper args) AND
+  # settings.json#enabledPlugins (marketplace registry state, so `claude plugin
+  # list` shows them as enabled). Add a new plugin here and both surfaces update.
+  ccPlugins = {
+    "aikido@claude-plugins-official" = aikidoPlugin;
+    "discord@claude-plugins-official" = "${claudePluginsMarketplace}/external_plugins/discord";
+    "frontend-design@claude-plugins-official" = "${claudePluginsMarketplace}/plugins/frontend-design";
+  };
+
   # ─── ag-ai-skills bake-in ──────────────────────────────────────────────
   # install.sh resolves shared_refs from SKILL.md frontmatter into per-skill
   # references/ dirs. We run it once at build time inside a derivation; the
@@ -148,6 +158,10 @@ let
         ];
       };
       feedbackSurveyRate = 0;
+
+      # Marketplace registry state — without this, plugins loaded via
+      # --plugin-dir show as 'disabled' in `claude plugin list`.
+      enabledPlugins = lib.mapAttrs (_: _: true) ccPlugins;
 
       env = {
         CLAUDE_CODE_ENABLE_TELEMETRY = "1";
@@ -393,12 +407,8 @@ in
 
     # Plugins — wrapped binary auto-loads each via --plugin-dir. discord and
     # frontend-design live inside the marketplace clone; aikido is its own
-    # upstream repo.
-    plugins = [
-      aikidoPlugin
-      "${claudePluginsMarketplace}/external_plugins/discord"
-      "${claudePluginsMarketplace}/plugins/frontend-design"
-    ];
+    # upstream repo. See `ccPlugins` above for the single source of truth.
+    plugins = lib.attrValues ccPlugins;
 
     # Work skills — module symlinks each into .claude/skills/<name>/.
     skills = workSkillsAttrs;
