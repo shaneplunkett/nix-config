@@ -3,42 +3,18 @@ let
   hetzvps = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZsq1NuUb93XrV2+aX6ztiSOpvh2Ym/u8ssrxY44p+h";
 in
 {
-  "context7.age".publicKeys = [ shane ];
-  "github.age".publicKeys = [ shane ];
-  "todoist.age".publicKeys = [ shane ];
-  "openai.age".publicKeys = [ shane ];
-  "mcphub-bearer.age".publicKeys = [ shane ];
-  "google-oauth-client-id.age".publicKeys = [ shane ];
-  "google-oauth-client-secret.age".publicKeys = [ shane ];
-  "xero-client-id.age".publicKeys = [ shane ];
-  "xero-client-secret.age".publicKeys = [ shane ];
-  "tailscale-api.age".publicKeys = [ shane ];
-  "tailscale-tailnet.age".publicKeys = [ shane ];
+  # Gemini system-prompt (file-shaped, can't be in rbw)
+  "gemini.age".publicKeys = [ shane ];
+
+  # Hetzner VPS — tailscale auth + restic backup password + persistent vex-brain secrets
   "tailscale-authkey.age".publicKeys = [
     shane
     hetzvps
   ];
-  "gemini.age".publicKeys = [ shane ];
-  "posthog.age".publicKeys = [ shane ];
-  "langsmith-api.age".publicKeys = [ shane ];
   "restic-password.age".publicKeys = [ shane ];
-  "google-calendar-personal.age".publicKeys = [ shane ];
-  "google-calendar-work.age".publicKeys = [ shane ];
-  "anthropic-key.age".publicKeys = [ shane ];
-  "atlassian-api-token.age".publicKeys = [ shane ];
-  "atlassian-confluence-token.age".publicKeys = [ shane ];
-  "compass-api-token.age".publicKeys = [ shane ];
-  "atlassian-ops-token.age".publicKeys = [ shane ];
-  "slack-token.age".publicKeys = [ shane ];
-  "slack-cookie-d.age".publicKeys = [ shane ];
-  "browserbase-api-key.age".publicKeys = [ shane ];
-  "tavily-api-key.age".publicKeys = [ shane ];
-  "vex-cli-cf-id.age".publicKeys = [ shane ];
-  "vex-cli-cf-secret.age".publicKeys = [ shane ];
-  "ing-cif.age".publicKeys = [ shane ];
-  "ing-access-code.age".publicKeys = [ shane ];
-  "ing-account-number.age".publicKeys = [ shane ];
+  "vex-core.age".publicKeys = [ shane ];
+  "vex-compaction.age".publicKeys = [ shane ];
+  "vex-session-start.age".publicKeys = [ shane ];
+  "vex-session-reload.age".publicKeys = [ shane ];
   "vex-discord-token.age".publicKeys = [ shane ];
-  "icloud-app-password.age".publicKeys = [ shane ];
-  "aikido-token.age".publicKeys = [ shane ];
 }
