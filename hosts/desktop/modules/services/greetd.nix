@@ -79,9 +79,7 @@ in
           "maroon"
           "red"
         ];
-        defineColors = lib.concatMapStringsSep "\n" (
-          v: "@define-color ${v} #${colours.${v}};"
-        ) paletteVars;
+        defineColors = lib.concatMapStringsSep "\n" (v: "@define-color ${v} #${colours.${v}};") paletteVars;
       in
       defineColors + "\n\n" + builtins.readFile ./greetd-theme.css;
 

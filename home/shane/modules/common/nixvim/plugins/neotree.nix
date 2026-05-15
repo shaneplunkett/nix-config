@@ -9,7 +9,13 @@
           "buffers"
           "git_status"
         ];
-        open_files_do_not_replace_types = [ "terminal" "Trouble" "trouble" "qf" "Outline" ];
+        open_files_do_not_replace_types = [
+          "terminal"
+          "Trouble"
+          "trouble"
+          "qf"
+          "Outline"
+        ];
 
         filesystem = {
           filtered_items = {
@@ -25,7 +31,9 @@
             never_show = [ ];
           };
           bind_to_cwd = false;
-          follow_current_file = { enabled = true; };
+          follow_current_file = {
+            enabled = true;
+          };
           use_libuv_file_watcher = true;
         };
 
@@ -55,7 +63,9 @@
             };
             "P" = {
               __unkeyed-1 = "toggle_preview";
-              config = { use_float = false; };
+              config = {
+                use_float = false;
+              };
             };
           };
         };

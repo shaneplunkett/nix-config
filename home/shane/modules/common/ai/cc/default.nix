@@ -183,66 +183,65 @@ let
         OTEL_RESOURCE_ATTRIBUTES = "autograb_user=${priv.autograbUser},team=${priv.autograbTeam}";
       };
 
-      permissions.allow =
-        [
-          "mcp__claude_ai_MCPHub__search_tools"
-          "mcp__claude_ai_MCPHub__describe_tool"
-          "mcp__claude_ai_MCPHub__call_tool"
-        ]
-        ++ [
-          "Bash(git log:*)"
-          "Bash(git status:*)"
-          "Bash(git diff:*)"
-          "Bash(git show:*)"
-          "Bash(git branch:*)"
-          "Bash(git remote:*)"
-          "Bash(git fetch:*)"
-          "Bash(git rev-parse:*)"
-        ]
-        ++ [
-          "Bash(ls:*)"
-          "Bash(cat:*)"
-          "Bash(head:*)"
-          "Bash(tail:*)"
-          "Bash(readlink:*)"
-          "Bash(echo:*)"
-          "Bash(which:*)"
-          "Bash(file:*)"
-          "Bash(wc:*)"
-        ]
-        ++ [
-          "Bash(nix eval:*)"
-          "Bash(nix build:*)"
-          "Bash(nix-shell:*)"
-          "Bash(nix flake:*)"
-          "Bash(nixos-rebuild build:*)"
-          "Bash(nh home:*)"
-        ]
-        ++ [
-          "Bash(TZ='Australia/Melbourne' date:*)"
-          "Bash(python3:*)"
-          "Bash(node:*)"
-          "Bash(npx:*)"
-          "Bash(claude:*)"
-          "Bash(curl:*)"
-          "Bash(gh api:*)"
-          "Bash(gh repo:*)"
-          "Bash(gh release:*)"
-        ]
-        ++ [
-          "Bash(gws gmail +triage:*)"
-          "Bash(gws gmail +read:*)"
-          "Bash(gws gmail users messages list:*)"
-          "Bash(gws gmail users messages get:*)"
-          "Bash(gws gmail users threads get:*)"
-          "Bash(gws gmail users labels list:*)"
-          "Bash(gws calendar:*)"
-          "Bash(gws drive files list:*)"
-        ]
-        ++ [
-          "WebSearch"
-          "WebFetch"
-        ];
+      permissions.allow = [
+        "mcp__claude_ai_MCPHub__search_tools"
+        "mcp__claude_ai_MCPHub__describe_tool"
+        "mcp__claude_ai_MCPHub__call_tool"
+      ]
+      ++ [
+        "Bash(git log:*)"
+        "Bash(git status:*)"
+        "Bash(git diff:*)"
+        "Bash(git show:*)"
+        "Bash(git branch:*)"
+        "Bash(git remote:*)"
+        "Bash(git fetch:*)"
+        "Bash(git rev-parse:*)"
+      ]
+      ++ [
+        "Bash(ls:*)"
+        "Bash(cat:*)"
+        "Bash(head:*)"
+        "Bash(tail:*)"
+        "Bash(readlink:*)"
+        "Bash(echo:*)"
+        "Bash(which:*)"
+        "Bash(file:*)"
+        "Bash(wc:*)"
+      ]
+      ++ [
+        "Bash(nix eval:*)"
+        "Bash(nix build:*)"
+        "Bash(nix-shell:*)"
+        "Bash(nix flake:*)"
+        "Bash(nixos-rebuild build:*)"
+        "Bash(nh home:*)"
+      ]
+      ++ [
+        "Bash(TZ='Australia/Melbourne' date:*)"
+        "Bash(python3:*)"
+        "Bash(node:*)"
+        "Bash(npx:*)"
+        "Bash(claude:*)"
+        "Bash(curl:*)"
+        "Bash(gh api:*)"
+        "Bash(gh repo:*)"
+        "Bash(gh release:*)"
+      ]
+      ++ [
+        "Bash(gws gmail +triage:*)"
+        "Bash(gws gmail +read:*)"
+        "Bash(gws gmail users messages list:*)"
+        "Bash(gws gmail users messages get:*)"
+        "Bash(gws gmail users threads get:*)"
+        "Bash(gws gmail users labels list:*)"
+        "Bash(gws calendar:*)"
+        "Bash(gws drive files list:*)"
+      ]
+      ++ [
+        "WebSearch"
+        "WebFetch"
+      ];
 
       disabledMcpjsonServers = [ "posthog" ];
 
@@ -438,23 +437,26 @@ in
   # Two things the module doesn't expose options for, kept as raw home.file:
   # - themes/vex.json (no themes option in the module)
   # - vex/core.md at a custom path (referenced from CLAUDE.md as @vex/core.md)
-  home.file = lib.foldl' lib.recursiveUpdate {
-    ".claude/themes/vex.json".source = vexThemeFile;
-    ".claude/vex/core.md".source = "${aiSkills}/vex/core.md";
-  } (
-    (map (
-      dir:
-      filesForVariant {
-        inherit dir;
-        variant = "vex";
+  home.file =
+    lib.foldl' lib.recursiveUpdate
+      {
+        ".claude/themes/vex.json".source = vexThemeFile;
+        ".claude/vex/core.md".source = "${aiSkills}/vex/core.md";
       }
-    ) vexVariantDirs)
-    ++ (map (
-      dir:
-      filesForVariant {
-        inherit dir;
-        variant = "vex-pro";
-      }
-    ) proVariantDirs)
-  );
+      (
+        (map (
+          dir:
+          filesForVariant {
+            inherit dir;
+            variant = "vex";
+          }
+        ) vexVariantDirs)
+        ++ (map (
+          dir:
+          filesForVariant {
+            inherit dir;
+            variant = "vex-pro";
+          }
+        ) proVariantDirs)
+      );
 }

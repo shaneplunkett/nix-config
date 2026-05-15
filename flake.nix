@@ -83,14 +83,42 @@
   };
 
   outputs =
-    { ... }@inputs:
+    { nixpkgs, ... }@inputs:
     let
       lib = import ./lib {
         inherit inputs;
         rootPath = ./.;
       };
+      forAllSystems = nixpkgs.lib.genAttrs [
+        "x86_64-linux"
+        "aarch64-linux"
+        "x86_64-darwin"
+        "aarch64-darwin"
+      ];
     in
     {
+      # `nix fmt` from anywhere in the tree → nixfmt-rfc-style on every tracked
+      # (or staged-but-untracked) .nix file. Excludes .gitignored paths automatically.
+      # Forwards extra args: `nix fmt -- --check` for diff-only.
+      formatter = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        pkgs.writeShellApplication {
+          name = "format-nix";
+          runtimeInputs = [
+            pkgs.nixfmt
+            pkgs.git
+          ];
+          text = ''
+            cd "$(git rev-parse --show-toplevel)"
+            git ls-files --cached --others --exclude-standard -z '*.nix' \
+              | xargs -0 -r nixfmt "$@"
+          '';
+        }
+      );
+
       darwinConfigurations = {
         "Shanes-MacBook-Pro" = lib.mkDarwinSystem {
           hostname = "Shanes-MacBook-Pro";

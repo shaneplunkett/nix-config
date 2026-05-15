@@ -33,7 +33,10 @@ in
       home-manager = {
         useGlobalPkgs = true;
         useUserPackages = true;
-        extraSpecialArgs = { inherit inputs; } // extraSpecialArgs;
+        extraSpecialArgs = {
+          inherit inputs;
+        }
+        // extraSpecialArgs;
         users.shane = import homeConfig;
         sharedModules = [
           nixvim.homeModules.nixvim

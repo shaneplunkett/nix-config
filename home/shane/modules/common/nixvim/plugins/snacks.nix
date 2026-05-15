@@ -174,51 +174,51 @@
       '';
       options.desc = "Code Action";
     }
-          {
-            mode = "n";
-            key = "K";
-            action.__raw = ''
-              function()
-                vim.lsp.buf.hover()
-              end
-            '';
-            options.desc = "Hover";
-          }
-          {
-            mode = "n";
-            key = "<leader>xx";
-            action.__raw = ''
-              function()
-                Snacks.picker.diagnostics()
-              end
-            '';
-            options.desc = "Diagnostics (Snacks)";
-          }
-      {
-        mode = "n";
-        key = "<leader>xX";
-        action.__raw = ''
-          function()
-            Snacks.picker.diagnostics_buffer()
-          end
-        '';
-        options.desc = "Buffer Diagnostics (Snacks)";
-      }
+    {
+      mode = "n";
+      key = "K";
+      action.__raw = ''
+        function()
+          vim.lsp.buf.hover()
+        end
+      '';
+      options.desc = "Hover";
+    }
+    {
+      mode = "n";
+      key = "<leader>xx";
+      action.__raw = ''
+        function()
+          Snacks.picker.diagnostics()
+        end
+      '';
+      options.desc = "Diagnostics (Snacks)";
+    }
+    {
+      mode = "n";
+      key = "<leader>xX";
+      action.__raw = ''
+        function()
+          Snacks.picker.diagnostics_buffer()
+        end
+      '';
+      options.desc = "Buffer Diagnostics (Snacks)";
+    }
 
-      # --- Git Integration ---
-      {
-        mode = [
-          "n"
-          "v"
-        ];
-        key = "<leader>gB";
-        action.__raw = ''
-          function()
-            Snacks.gitbrowse()
-          end
-        '';
-        options.desc = "Git Browse";
-      }
+    # --- Git Integration ---
+    {
+      mode = [
+        "n"
+        "v"
+      ];
+      key = "<leader>gB";
+      action.__raw = ''
+        function()
+          Snacks.gitbrowse()
+        end
+      '';
+      options.desc = "Git Browse";
+    }
     {
       mode = "n";
       key = "<leader>gg";

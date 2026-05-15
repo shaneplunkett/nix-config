@@ -31,11 +31,21 @@ in
         identitiesOnly = true;
       };
 
-      "pve"     = shaneHost  // { hostname = "pve"; };
-      "cube"    = shaneHost  // { hostname = "cube"; };
-      "desktop" = shaneHost  // { hostname = "desktop"; };
-      "mbp"     = laptopHost // { hostname = "shanes-macbook-pro"; };
-      "wmbp"    = laptopHost // { hostname = "shanes-work-macbook-pro"; };
+      "pve" = shaneHost // {
+        hostname = "pve";
+      };
+      "cube" = shaneHost // {
+        hostname = "cube";
+      };
+      "desktop" = shaneHost // {
+        hostname = "desktop";
+      };
+      "mbp" = laptopHost // {
+        hostname = "shanes-macbook-pro";
+      };
+      "wmbp" = laptopHost // {
+        hostname = "shanes-work-macbook-pro";
+      };
     };
   };
 }

@@ -14,12 +14,19 @@ let
 
       setupScript = pkgs.writeShellApplication {
         name = "${name}-setup";
-        runtimeInputs =
-          [
-            pkgs.git
-            pkgs.coreutils
-          ]
-          ++ (if runtime == "python" then [ pkgs.uv pkgs.python312 ] else [ pkgs.nodejs ]);
+        runtimeInputs = [
+          pkgs.git
+          pkgs.coreutils
+        ]
+        ++ (
+          if runtime == "python" then
+            [
+              pkgs.uv
+              pkgs.python312
+            ]
+          else
+            [ pkgs.nodejs ]
+        );
         text = ''
           REPO_DIR="${stateDir}/repo"
 
@@ -81,13 +88,16 @@ let
           StandardErrorPath = "/var/log/mcp/${name}.err";
           EnvironmentVariables = {
             HOME = "/Users/shane";
-            PATH = "${lib.makeBinPath [
-              pkgs.nodejs
-              pkgs.python312
-              pkgs.uv
-              pkgs.git
-            ]}:/usr/bin:/bin:/usr/sbin:/sbin";
-          } // extraEnv;
+            PATH = "${
+              lib.makeBinPath [
+                pkgs.nodejs
+                pkgs.python312
+                pkgs.uv
+                pkgs.git
+              ]
+            }:/usr/bin:/bin:/usr/sbin:/sbin";
+          }
+          // extraEnv;
         };
       };
     };

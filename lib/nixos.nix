@@ -30,7 +30,9 @@ in
           nixpkgs.overlays = common.mkOverlays [
             claude-desktop.overlays.default
             (_final: prev: {
-              openldap = prev.openldap.overrideAttrs (_: { doCheck = false; });
+              openldap = prev.openldap.overrideAttrs (_: {
+                doCheck = false;
+              });
             })
           ];
         }

@@ -61,7 +61,7 @@
         };
       };
     };
-    
+
     cmp-nvim-lsp-signature-help.enable = true;
     cmp-cmdline.enable = true;
 
@@ -77,10 +77,10 @@
       };
     };
   };
-  
+
   extraConfigLua = ''
     local cmp = require('cmp')
-    
+
     -- Setup completion for search
     cmp.setup.cmdline('/', {
       mapping = cmp.mapping.preset.cmdline(),
@@ -88,7 +88,7 @@
         { name = 'buffer' },
       },
     })
-    
+
     -- Setup completion for commands
     cmp.setup.cmdline(':', {
       mapping = cmp.mapping.preset.cmdline(),

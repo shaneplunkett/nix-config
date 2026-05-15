@@ -5,14 +5,44 @@
     settings = {
       markdown = {
         headings = {
-          heading_1 = { style = "icon"; icon = "◈ "; sign = false; };
-          heading_2 = { style = "icon"; icon = "◆ "; sign = false; };
-          heading_3 = { style = "icon"; icon = "◇ "; sign = false; };
-          heading_4 = { style = "icon"; icon = "○ "; sign = false; };
-          heading_5 = { style = "icon"; icon = "• "; sign = false; };
-          heading_6 = { style = "icon"; icon = "· "; sign = false; };
-          setext_1 = { style = "decorated"; sign = false; };
-          setext_2 = { style = "decorated"; sign = false; };
+          heading_1 = {
+            style = "icon";
+            icon = "◈ ";
+            sign = false;
+          };
+          heading_2 = {
+            style = "icon";
+            icon = "◆ ";
+            sign = false;
+          };
+          heading_3 = {
+            style = "icon";
+            icon = "◇ ";
+            sign = false;
+          };
+          heading_4 = {
+            style = "icon";
+            icon = "○ ";
+            sign = false;
+          };
+          heading_5 = {
+            style = "icon";
+            icon = "• ";
+            sign = false;
+          };
+          heading_6 = {
+            style = "icon";
+            icon = "· ";
+            sign = false;
+          };
+          setext_1 = {
+            style = "decorated";
+            sign = false;
+          };
+          setext_2 = {
+            style = "decorated";
+            sign = false;
+          };
         };
         code_blocks = {
           sign = false;

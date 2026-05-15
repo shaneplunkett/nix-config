@@ -72,7 +72,13 @@ in
     icon = "nemo";
     terminal = false;
     type = "Application";
-    categories = [ "GNOME" "GTK" "Utility" "Core" "FileManager" ];
+    categories = [
+      "GNOME"
+      "GTK"
+      "Utility"
+      "Core"
+      "FileManager"
+    ];
     mimeType = [ "inode/directory" ];
   };
 

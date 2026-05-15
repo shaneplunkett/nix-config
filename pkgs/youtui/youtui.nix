@@ -22,8 +22,14 @@ rustPlatform.buildRustPackage {
 
   cargoHash = "sha256-HF2ahqCJldZgWjA+PMnS3dHUGlLM43WlnN88Xgij6KM=";
 
-  cargoBuildFlags = [ "-p" "youtui" ];
-  cargoTestFlags = [ "-p" "youtui" ];
+  cargoBuildFlags = [
+    "-p"
+    "youtui"
+  ];
+  cargoTestFlags = [
+    "-p"
+    "youtui"
+  ];
 
   nativeBuildInputs = [
     pkg-config

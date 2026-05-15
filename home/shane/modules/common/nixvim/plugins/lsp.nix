@@ -26,7 +26,10 @@
 
         nixd = {
           enable = true;
-          cmd = [ "nixd" "--log=error" ];
+          cmd = [
+            "nixd"
+            "--log=error"
+          ];
           settings = {
             formatting.command = [ "nixfmt" ];
             nixpkgs.expr = "import <nixpkgs> {}";

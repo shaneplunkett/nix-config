@@ -47,9 +47,9 @@ in
           ];
         };
         "HDMI-A-1" = {
-          left = [];
-          middle = [];
-          right = [];
+          left = [ ];
+          middle = [ ];
+          right = [ ];
         };
 
       };

@@ -43,7 +43,11 @@
         # - Type ')' inside '()' -> just moves cursor past ')'
         # - Backspace '(' -> deletes both '()'
         pairs = {
-          modes = { insert = true; command = false; terminal = false; };
+          modes = {
+            insert = true;
+            command = false;
+            terminal = false;
+          };
         };
       };
     };

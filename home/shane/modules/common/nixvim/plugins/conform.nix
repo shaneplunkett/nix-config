@@ -1,24 +1,27 @@
 { pkgs, lib, ... }:
 {
-  extraPackages = with pkgs; [
-    prettier
-    biome
-    black
-    ruff
-    shfmt
-    stylua
-    rustfmt
-    sqlfluff
-    nixfmt
-    hadolint
-    rubocop
-    gofumpt
-    gotools
-    terraform-ls
-  ] ++ lib.optionals pkgs.stdenv.isDarwin [
-    swiftformat
-    swiftlint
-  ];
+  extraPackages =
+    with pkgs;
+    [
+      prettier
+      biome
+      black
+      ruff
+      shfmt
+      stylua
+      rustfmt
+      sqlfluff
+      nixfmt
+      hadolint
+      rubocop
+      gofumpt
+      gotools
+      terraform-ls
+    ]
+    ++ lib.optionals pkgs.stdenv.isDarwin [
+      swiftformat
+      swiftlint
+    ];
 
   plugins = {
 

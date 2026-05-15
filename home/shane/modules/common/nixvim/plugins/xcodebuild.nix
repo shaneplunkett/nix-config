@@ -14,9 +14,12 @@
     })
   ];
 
-  extraPackages = lib.mkIf pkgs.stdenv.isDarwin (with pkgs; [
-    xcbeautify
-  ]);
+  extraPackages = lib.mkIf pkgs.stdenv.isDarwin (
+    with pkgs;
+    [
+      xcbeautify
+    ]
+  );
 
   extraConfigLua = lib.mkIf pkgs.stdenv.isDarwin ''
     require("xcodebuild").setup({})

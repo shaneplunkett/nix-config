@@ -39,12 +39,9 @@ let
         clockFormat = "HH:mm ddd, MMM dd";
       };
       extraFiles = {
-        ".local/share/vex-icons/calendar.svg".source =
-          "${papirusIcons}/apps/alarm-clock.svg";
-        ".local/share/vex-icons/heart.svg".source =
-          "${papirusIcons}/emblems/emblem-favorite.svg";
-        ".local/share/vex-icons/todo.svg".source =
-          "${papirusIcons}/apps/korg-todo.svg";
+        ".local/share/vex-icons/calendar.svg".source = "${papirusIcons}/apps/alarm-clock.svg";
+        ".local/share/vex-icons/heart.svg".source = "${papirusIcons}/emblems/emblem-favorite.svg";
+        ".local/share/vex-icons/todo.svg".source = "${papirusIcons}/apps/korg-todo.svg";
       };
     };
 
@@ -79,15 +76,14 @@ in
   # symlink replaces (rather than collides with) the per-plugin settings.json
   # home-manager would otherwise install there. Pure home.file mkOutOfStoreSymlink
   # fights noctalia-shell's pluginSettings module — see refactor notes.
-  home.activation.noctaliaPluginSymlinks =
-    lib.hm.dag.entryAfter [ "writeBoundary" ] (
-      lib.concatStringsSep "\n" (
-        map (name: ''
-          $DRY_RUN_CMD rm -rf "${homeDir}/.config/noctalia/plugins/${name}"
-          $DRY_RUN_CMD ln -sfn "${pluginRoot}/${name}" "${homeDir}/.config/noctalia/plugins/${name}"
-        '') (lib.attrNames plugins)
-      )
-    );
+  home.activation.noctaliaPluginSymlinks = lib.hm.dag.entryAfter [ "writeBoundary" ] (
+    lib.concatStringsSep "\n" (
+      map (name: ''
+        $DRY_RUN_CMD rm -rf "${homeDir}/.config/noctalia/plugins/${name}"
+        $DRY_RUN_CMD ln -sfn "${pluginRoot}/${name}" "${homeDir}/.config/noctalia/plugins/${name}"
+      '') (lib.attrNames plugins)
+    )
+  );
 
   # Re-exported so noctalia.nix can derive its `plugins.json` state map
   # from the same attrset (no drift between symlinks + registration).

@@ -15,7 +15,10 @@
       tf = [ "tflint" ];
     };
     autoCmd = {
-      event = [ "BufWritePost" "InsertLeave" ];
+      event = [
+        "BufWritePost"
+        "InsertLeave"
+      ];
       callback.__raw = ''
         function()
           require("lint").try_lint()
