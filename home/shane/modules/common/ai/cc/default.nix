@@ -6,10 +6,7 @@
   ...
 }:
 let
-  shared = import ../mcp {
-    inherit pkgs config;
-    homeDirectory = config.home.homeDirectory;
-  };
+  shared = import ../mcp { inherit pkgs; };
   allMcpServers = shared.mcpServers;
 
   # Private values (work URLs / email attributes) live in the companion
@@ -128,7 +125,8 @@ let
 
   # ─── Settings content ──────────────────────────────────────────────────
   # Shape parameterised so we produce both the intimate Vex variant (canonical
-  # .claude + .claude-work) and the public-safe Vex (Pro) variant (.claude-pro).
+  # ~/.claude managed by programs.claude-code module + ~/.claude-work variant)
+  # and the public-safe Vex (Pro) variant (~/.claude-pro).
   mkSettingsContent =
     {
       outputStyle,
