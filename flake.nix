@@ -47,6 +47,19 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Private companion repo — values that mustn't appear in the public flake
+    # (work-internal URLs, work-email attributes). Currently a local git+file
+    # checkout; swap to git+ssh once pushed to github.com/shaneplunkett/nix-config-private.
+    nix-config-private.url = "git+file:///home/shane/projects/personal/nix-config-private?ref=main";
+
+    # AutoGrab work skills — baked in via flake input so .claude/skills is
+    # declaratively managed. For active iteration use `nrs-iter` which
+    # `--override-input`s this to the local checkout.
+    ag-ai-skills = {
+      url = "git+ssh://git@github.com/autograb/ag-ai-skills.git";
+      flake = false;
+    };
+
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
     umu-launcher.url = "github:Open-Wine-Components/umu-launcher?dir=packaging/nix";

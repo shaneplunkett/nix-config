@@ -22,6 +22,22 @@
         "type": "github"
       }
     },
+    "ag-ai-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1778633545,
+        "narHash": "sha256-TTbBmKf/OvU9u3OsYBSn6eIRxlGxypME3cQ9x7fEQBw=",
+        "ref": "refs/heads/main",
+        "rev": "147aad5d13a31dd973ee5be46910433746be1e90",
+        "revCount": 13,
+        "type": "git",
+        "url": "ssh://git@github.com/autograb/ag-ai-skills.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/autograb/ag-ai-skills.git"
+      }
+    },
     "agenix": {
       "inputs": {
         "darwin": "darwin",
@@ -764,6 +780,22 @@
         "type": "github"
       }
     },
+    "nix-config-private": {
+      "locked": {
+        "lastModified": 1778827525,
+        "narHash": "sha256-28K/zm8dJOf3BqgeqKu/0rOuLCdF40H9vk80V8xeWis=",
+        "ref": "main",
+        "rev": "ff47bf2ef0f458eb4f6b9797eef08fca98ea83c8",
+        "revCount": 1,
+        "type": "git",
+        "url": "file:///home/shane/projects/personal/nix-config-private"
+      },
+      "original": {
+        "ref": "main",
+        "type": "git",
+        "url": "file:///home/shane/projects/personal/nix-config-private"
+      }
+    },
     "nix-darwin": {
       "inputs": {
         "nixpkgs": [
@@ -1044,6 +1076,7 @@
     "root": {
       "inputs": {
         "aagl": "aagl",
+        "ag-ai-skills": "ag-ai-skills",
         "agenix": "agenix",
         "catppuccin": "catppuccin",
         "claude-desktop": "claude-desktop",
@@ -1053,6 +1086,7 @@
         "homebrew-core": "homebrew-core",
         "hyprland": "hyprland",
         "hyprland-plugins": "hyprland-plugins",
+        "nix-config-private": "nix-config-private",
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
         "nixpkgs": "nixpkgs_6",
