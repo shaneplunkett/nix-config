@@ -3,7 +3,6 @@
 
   imports = [
     ./modules/common
-    ./modules/macos
   ];
 
   home.username = "shane";

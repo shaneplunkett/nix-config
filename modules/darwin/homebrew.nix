@@ -16,7 +16,6 @@
       "ferdium"
       "hammerspoon"
       "docker-desktop"
-      "claude"
       "gcloud-cli"
       "teamviewer"
       "todoist-app"

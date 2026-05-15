@@ -12,7 +12,6 @@
     ./theme.nix
     ./packages.nix
     ./webapps
-    ./claude-desktop.nix
     ./heroic.nix
     ./vesktop.nix
     ./lutris.nix

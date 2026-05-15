@@ -74,8 +74,6 @@
 
     dw-proton.url = "github:imaviso/dwproton-flake";
 
-    claude-desktop.url = "github:aaddrick/claude-desktop-debian";
-
     aagl = {
       url = "github:ezKEa/aagl-gtk-on-nix";
       inputs.nixpkgs.follows = "nixpkgs";

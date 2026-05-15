@@ -81,9 +81,8 @@ Neovim is configured declaratively via [NixVim](https://nix-community.github.io/
 
 AI tool configs live under `home/shane/modules/common/ai/`:
 
-- `mcp/` — shared MCP server definitions (neovim, xero), imported by Claude Code and Claude Desktop. The xero-mcp wrapper pulls `XERO_CLIENT_ID`/`XERO_CLIENT_SECRET` from rbw.
+- `mcp/` — shared MCP server definitions (neovim, xero), imported by Claude Code. The xero-mcp wrapper pulls `XERO_CLIENT_ID`/`XERO_CLIENT_SECRET` from rbw.
 - `cc/` — Claude Code: settings, permissions, hooks, native custom theme (`vex-theme.json`), plugins + marketplaces via `programs.claude-code` module
-- `cdesktop/` — shared Claude Desktop MCP selection; platform-specific wrappers remain in `modules/linux/claude-desktop.nix` and `modules/macos/claude.nix`
 
 ## Git Hygiene
 

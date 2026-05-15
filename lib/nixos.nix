@@ -6,7 +6,6 @@ let
     agenix
     catppuccin
     noctalia
-    claude-desktop
     ;
   common = import ./common.nix { inherit inputs rootPath; };
 in
@@ -28,7 +27,6 @@ in
           nixpkgs.hostPlatform = system;
           networking.hostName = hostname;
           nixpkgs.overlays = common.mkOverlays [
-            claude-desktop.overlays.default
             (_final: prev: {
               openldap = prev.openldap.overrideAttrs (_: {
                 doCheck = false;
