@@ -1,11 +1,11 @@
 # Noctalia shell — replaces hyprpanel, rofi, swaync, hyprpaper
-{ config, lib, ... }:
+{ config, lib, noctaliaVexPlugins, ... }:
 let
   c = import ../common/theme/colours.nix;
   hex = v: "#${v}";
 in
 {
-  imports = [ ./vex-timer-plugin.nix ./vex-agenda-plugin.nix ./vex-todoist-plugin.nix ./vex-claude-usage-plugin.nix ];
+  imports = [ ./noctalia-plugins.nix ];
   programs.noctalia-shell = {
     enable = true;
 
@@ -642,18 +642,17 @@ in
     };
   };
 
-  # Register all plugins as enabled
+  # Register all plugins as enabled — states derived from noctaliaVexPlugins
+  # (set by noctalia-plugins.nix via _module.args, single source of truth).
   xdg.configFile."noctalia/plugins.json".text = builtins.toJSON {
     version = 2;
     sources = [
       { name = "Noctalia Plugins"; url = "https://github.com/noctalia-dev/noctalia-plugins"; enabled = true; }
     ];
-    states = {
-      vex-timer = { enabled = true; sourceUrl = "local"; };
-      vex-agenda = { enabled = true; sourceUrl = "local"; };
-      vex-todoist = { enabled = true; sourceUrl = "local"; };
-      vex-claude-usage = { enabled = true; sourceUrl = "local"; };
-    };
+    states = lib.listToAttrs (map (name: {
+      inherit name;
+      value = { enabled = true; sourceUrl = "local"; };
+    }) noctaliaVexPlugins);
   };
 
   # Launch via compositor exec-once (systemd launch is deprecated)
