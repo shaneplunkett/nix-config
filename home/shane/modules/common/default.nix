@@ -1,28 +1,22 @@
 { ... }:
 {
   imports = [
+    # CLI wrappers (aikido, atlassian, browserbase, coderabbit, gws,
+    # himalaya, langsmith, slack, tavily, todoist, unifi, vex-cli) now
+    # live in vex-tooling and arrive via home-manager `sharedModules`.
 
     ./age.nix
     ./ai
-    ./aikido.nix
-    ./atlassian.nix
-    ./browserbase.nix
     ./btop.nix
-    ./coderabbit.nix
     ./git.nix
-    ./himalaya.nix
     ./ing-probe.nix
-    ./langsmith.nix
     ./lazygit.nix
     ./nixvim
     ./packages.nix
     ./rbw.nix
-    ./slack.nix
     ./ssh.nix
-    ./tavily.nix
-    ./todoist.nix
-    ./vex-cli.nix
-    ./vex-reports.nix
+    ./terraform.nix
+    # ./vex-reports.nix  # decommissioned 2026-05-15 — bucket deleted, see SCALE-603 for redesign
     ./terminal
     ./theme
     ./youtui

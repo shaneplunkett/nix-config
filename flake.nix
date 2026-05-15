@@ -42,13 +42,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    gws = {
-      url = "github:googleworkspace/cli";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    vex-cli = {
-      url = "git+ssh://git@github.com/shaneplunkett/vex-cli.git";
+    vex-tooling = {
+      url = "git+ssh://git@github.com/shaneplunkett/vex-tooling.git";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

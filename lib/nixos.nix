@@ -8,6 +8,7 @@ let
     catppuccin
     noctalia
     claude-desktop
+    vex-tooling
     ;
 in
 {
@@ -30,6 +31,7 @@ in
           networking.hostName = hostname;
           nixpkgs.overlays = [
             (final: prev: import (rootPath + /pkgs) { pkgs = final; })
+            vex-tooling.overlays.default
             claude-desktop.overlays.default
             (final: prev: {
               openldap = prev.openldap.overrideAttrs (_: { doCheck = false; });
@@ -54,6 +56,7 @@ in
               nixvim.homeModules.nixvim
               agenix.homeManagerModules.default
               catppuccin.homeModules.catppuccin
+              vex-tooling.homeManagerModules.default
             ]
             ++ nixpkgs.lib.optionals (shell == "noctalia") [
               noctalia.homeModules.default

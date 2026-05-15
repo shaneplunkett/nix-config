@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }:
+{ pkgs, ... }:
 {
   home.packages = with pkgs; [
     jq
@@ -10,11 +10,15 @@
     (google-cloud-sdk.withExtraComponents [ google-cloud-sdk.components.gke-gcloud-auth-plugin ])
     kubectx # ships kubectx + kubens binaries together
     terraform
+    tflint
+    tftui
+    terraform-docs
+    infracost
     ripgrep
     tealdeer
     zoxide
     fzf
     pre-commit
-    inputs.gws.packages.${pkgs.stdenv.hostPlatform.system}.default
+    # gws now arrives via vex-tooling's homeManagerModule.
   ];
 }

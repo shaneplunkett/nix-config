@@ -10,6 +10,7 @@ let
     homebrew-cask
     agenix
     catppuccin
+    vex-tooling
     ;
 in
 {
@@ -31,6 +32,7 @@ in
           networking.hostName = hostname;
           nixpkgs.overlays = [
             (final: prev: import (rootPath + /pkgs) { pkgs = final; })
+            vex-tooling.overlays.default
             (final: prev: {
               yt-dlp = prev.yt-dlp.overridePythonAttrs (old: {
                 dependencies = prev.lib.concatAttrValues (
@@ -56,6 +58,7 @@ in
               nixvim.homeModules.nixvim
               agenix.homeManagerModules.default
               catppuccin.homeModules.catppuccin
+              vex-tooling.homeManagerModules.default
             ];
           };
         }

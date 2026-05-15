@@ -243,7 +243,7 @@
     },
     "flake-utils": {
       "inputs": {
-        "systems": "systems_2"
+        "systems": "systems_6"
       },
       "locked": {
         "lastModified": 1731533236,
@@ -303,6 +303,7 @@
       "inputs": {
         "flake-utils": "flake-utils",
         "nixpkgs": [
+          "vex-tooling",
           "nixpkgs"
         ]
       },
@@ -485,7 +486,7 @@
         "hyprwire": "hyprwire",
         "nixpkgs": "nixpkgs_5",
         "pre-commit-hooks": "pre-commit-hooks",
-        "systems": "systems_3",
+        "systems": "systems_2",
         "xdph": "xdph"
       },
       "locked": {
@@ -935,7 +936,7 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "systems": "systems_4"
+        "systems": "systems_3"
       },
       "locked": {
         "lastModified": 1777991353,
@@ -978,7 +979,7 @@
           "noctalia",
           "nixpkgs"
         ],
-        "systems": "systems_5",
+        "systems": "systems_4",
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
@@ -1000,7 +1001,7 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "systems": "systems_6",
+        "systems": "systems_5",
         "treefmt-nix": "treefmt-nix_2"
       },
       "locked": {
@@ -1047,7 +1048,6 @@
         "catppuccin": "catppuccin",
         "claude-desktop": "claude-desktop",
         "dw-proton": "dw-proton",
-        "gws": "gws",
         "home-manager": "home-manager_2",
         "homebrew-cask": "homebrew-cask",
         "homebrew-core": "homebrew-core",
@@ -1060,7 +1060,7 @@
         "noctalia": "noctalia",
         "noctalia-qs": "noctalia-qs_2",
         "umu-launcher": "umu-launcher",
-        "vex-cli": "vex-cli",
+        "vex-tooling": "vex-tooling",
         "zen-browser": "zen-browser"
       }
     },
@@ -1102,21 +1102,6 @@
     },
     "systems_2": {
       "locked": {
-        "lastModified": 1681028828,
-        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
-        "owner": "nix-systems",
-        "repo": "default",
-        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-systems",
-        "repo": "default",
-        "type": "github"
-      }
-    },
-    "systems_3": {
-      "locked": {
         "lastModified": 1689347949,
         "narHash": "sha256-12tWmuL2zgBgZkdoB6qXZsgJEH9LR3oUgpaQq2RbI80=",
         "owner": "nix-systems",
@@ -1130,7 +1115,7 @@
         "type": "github"
       }
     },
-    "systems_4": {
+    "systems_3": {
       "locked": {
         "lastModified": 1681028828,
         "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
@@ -1142,6 +1127,21 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "systems_4": {
+      "locked": {
+        "lastModified": 1689347949,
+        "narHash": "sha256-12tWmuL2zgBgZkdoB6qXZsgJEH9LR3oUgpaQq2RbI80=",
+        "owner": "nix-systems",
+        "repo": "default-linux",
+        "rev": "31732fcf5e8fea42e59c2488ad31a0e651500f68",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default-linux",
         "type": "github"
       }
     },
@@ -1162,16 +1162,16 @@
     },
     "systems_6": {
       "locked": {
-        "lastModified": 1689347949,
-        "narHash": "sha256-12tWmuL2zgBgZkdoB6qXZsgJEH9LR3oUgpaQq2RbI80=",
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
         "owner": "nix-systems",
-        "repo": "default-linux",
-        "rev": "31732fcf5e8fea42e59c2488ad31a0e651500f68",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
         "type": "github"
       },
       "original": {
         "owner": "nix-systems",
-        "repo": "default-linux",
+        "repo": "default",
         "type": "github"
       }
     },
@@ -1259,6 +1259,7 @@
       "inputs": {
         "flake-utils": "flake-utils_2",
         "nixpkgs": [
+          "vex-tooling",
           "nixpkgs"
         ]
       },
@@ -1274,6 +1275,28 @@
       "original": {
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/vex-cli.git"
+      }
+    },
+    "vex-tooling": {
+      "inputs": {
+        "gws": "gws",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "vex-cli": "vex-cli"
+      },
+      "locked": {
+        "lastModified": 1778817544,
+        "narHash": "sha256-v3d0K+RQWTthX6vWy1pd/kQs6eAAeun1wQ6bDdle/Tk=",
+        "ref": "refs/heads/main",
+        "rev": "5541ce19eb1598b295531f0470cfa900153415a3",
+        "revCount": 2,
+        "type": "git",
+        "url": "ssh://git@github.com/shaneplunkett/vex-tooling.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/shaneplunkett/vex-tooling.git"
       }
     },
     "xdph": {
