@@ -2,7 +2,7 @@
 {
   programs.neovim.defaultEditor = true;
   programs.hyprland = {
-    enable = (compositor == "hyprland");
+    enable = compositor == "hyprland";
     xwayland.enable = true;
   };
 

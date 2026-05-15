@@ -1,4 +1,4 @@
-{ ... }:
+_:
 {
   # Catppuccin Mocha Mauve theme for Heroic Games Launcher
   # In Heroic: Accessibility → Custom Themes Path → ~/.config/heroic/catppuccin

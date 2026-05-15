@@ -133,7 +133,7 @@ let
     }:
     {
       theme = "custom:vex";
-      outputStyle = outputStyle;
+      inherit outputStyle;
       skipDangerousModePermissionPrompt = true;
       spinnerTipsEnabled = false;
       spinnerVerbs = {

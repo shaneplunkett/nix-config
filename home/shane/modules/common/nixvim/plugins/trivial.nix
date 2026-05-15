@@ -1,4 +1,4 @@
-{ ... }:
+_:
 {
   # Plugins that only need `enable = true` — collapsed here to avoid
   # 8-line-per-file proliferation. Move out into a dedicated file the

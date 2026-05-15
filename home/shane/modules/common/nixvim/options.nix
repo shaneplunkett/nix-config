@@ -1,4 +1,4 @@
-{ ... }:
+_:
 {
   opts = {
     number = true;

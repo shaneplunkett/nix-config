@@ -1,6 +1,6 @@
 { pkgs, lib, ... }:
 let
-  isDarwin = pkgs.stdenv.isDarwin;
+  inherit (pkgs.stdenv) isDarwin;
 in
 {
   programs.ghostty = {

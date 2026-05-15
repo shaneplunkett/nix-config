@@ -9,7 +9,7 @@ let
 in
 {
   wayland.windowManager.hyprland = {
-    enable = (compositor == "hyprland");
+    enable = compositor == "hyprland";
     settings = {
       "$mod" = "SUPER";
       "$terminal" = "ghostty";
