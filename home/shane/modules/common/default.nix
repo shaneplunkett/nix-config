@@ -6,6 +6,7 @@
     ./git.nix
     ./ing-probe.nix
     ./lazygit.nix
+    ./nh.nix
     ./nixvim
     ./packages.nix
     ./rbw.nix

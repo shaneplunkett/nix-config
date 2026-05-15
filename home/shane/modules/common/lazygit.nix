@@ -1,4 +1,4 @@
-{ ... }:
+_:
 let
   colours = import ./theme/colours.nix;
 in

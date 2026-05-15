@@ -27,7 +27,7 @@ in
           nixpkgs.hostPlatform = system;
           networking.hostName = hostname;
           nixpkgs.overlays = common.mkOverlays [
-            (final: prev: {
+            (_final: prev: {
               yt-dlp = prev.yt-dlp.overridePythonAttrs (old: {
                 dependencies = prev.lib.concatAttrValues (
                   builtins.removeAttrs old.optional-dependencies [ "secretstorage" ]

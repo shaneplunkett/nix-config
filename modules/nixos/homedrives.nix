@@ -1,4 +1,4 @@
-{ ... }:
+_:
 {
   fileSystems."home/shane/unraid/programs" = {
     device = "//192.168.1.132/Programs";

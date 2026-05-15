@@ -5,7 +5,7 @@
   # NixOS 6.18+ doesn't ship legacy iptables kernel modules, so waydroid's
   # net script must use nftables. Patch the hardcoded LXC_USE_NFT="false".
   nixpkgs.overlays = [
-    (final: prev: {
+    (_final: prev: {
       waydroid = prev.waydroid.overrideAttrs (old: {
         postPatch = (old.postPatch or "") + ''
           substituteInPlace data/scripts/waydroid-net.sh \

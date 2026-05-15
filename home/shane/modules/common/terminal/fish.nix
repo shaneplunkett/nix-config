@@ -25,25 +25,29 @@
       ccpr = "CLAUDE_CONFIG_DIR=$HOME/.claude-pro claude --resume --allow-dangerously-skip-permissions";
     };
     functions = {
+      # nh wraps nixos-rebuild / darwin-rebuild / home-manager switch with
+      # a prettier `nom` build view + nvd version diff. Flake path is picked up
+      # from NH_FLAKE (set by programs.nh.flake in nh.nix).
       nrs = ''
         if test (uname) = Darwin
-          sudo darwin-rebuild switch --sudo --flake ~/nix-config
+          nh darwin switch
         else
-          sudo nixos-rebuild switch --sudo --flake ~/nix-config
+          nh os switch
         end
       '';
       # Same as nrs but with the private flake inputs overridden to point at
       # local checkouts. Use while iterating on ag-ai-skills, ai-skills, or
       # nix-config-private so changes apply without push+pull+update.
+      # `--` separates nh's own args from the underlying rebuild's args.
       nrs-iter = ''
         set -l overrides \
           --override-input ag-ai-skills "git+file://$HOME/projects/work/ag-ai-skills?ref=HEAD" \
           --override-input ai-skills "git+file://$HOME/ai-skills?ref=HEAD" \
           --override-input nix-config-private "git+file://$HOME/projects/personal/nix-config-private?ref=HEAD"
         if test (uname) = Darwin
-          sudo darwin-rebuild switch --sudo --flake ~/nix-config $overrides
+          nh darwin switch -- $overrides
         else
-          sudo nixos-rebuild switch --sudo --flake ~/nix-config $overrides
+          nh os switch -- $overrides
         end
       '';
       tfplan = ''
