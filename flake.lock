@@ -59,6 +59,22 @@
         "type": "github"
       }
     },
+    "ai-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1778765223,
+        "narHash": "sha256-zDEQDx00aRtTNyDy2MBMaiDgxU6oBpFUm64dlpvcylo=",
+        "ref": "refs/heads/main",
+        "rev": "895323dd9a7695cb3485db74b7b9c59a2ac65fa0",
+        "revCount": 29,
+        "type": "git",
+        "url": "ssh://git@github.com/shaneplunkett/ai-skills.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/shaneplunkett/ai-skills.git"
+      }
+    },
     "aquamarine": {
       "inputs": {
         "hyprutils": [
@@ -1077,6 +1093,7 @@
         "aagl": "aagl",
         "ag-ai-skills": "ag-ai-skills",
         "agenix": "agenix",
+        "ai-skills": "ai-skills",
         "catppuccin": "catppuccin",
         "claude-desktop": "claude-desktop",
         "dw-proton": "dw-proton",

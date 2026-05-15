@@ -16,14 +16,11 @@ let
   # nix-config-private flake input. The public flake stays clean.
   priv = inputs.nix-config-private.values;
 
-  # Symlink-to-mutable-path helper for everything sourced from ~/ai-skills/.
-  # Files propagate live without rebuild — edit core.md, hot-reload in CC.
-  # Note: flake eval is pure, so we cannot pathExists-guard external paths.
-  # If ~/ai-skills/ is missing on a fresh machine the symlinks will be broken
-  # until the repo is cloned — CC tolerates this gracefully.
-  link = config.lib.file.mkOutOfStoreSymlink;
-  homeDir = config.home.homeDirectory;
-  aiSkills = "${homeDir}/ai-skills";
+  # Vex persona + personal skills come from the ai-skills flake input (private
+  # GitHub repo). Edits go via: change ai-skills repo → commit → nix flake
+  # update ai-skills → rebuild. For active iteration use `nrs-iter` which
+  # `--override-input`s this to ~/ai-skills (commits not even required).
+  aiSkills = inputs.ai-skills;
 
   vexThemeFile = ./vex-theme.json;
 
@@ -112,6 +109,22 @@ let
       value = "${agSkillsBuilt}/${name}";
     }) workSkillNames
   );
+
+  # ─── ai-skills (personal skills + vex persona) ─────────────────────────
+  # Personal skills are directories under ai-skills/personal/. Enumerated at
+  # eval time from the flake input — replaces the runtime-iteration activation
+  # script that used to walk ~/ai-skills/personal/ at switch time.
+  personalSkillNames = lib.attrNames (
+    lib.filterAttrs (_: t: t == "directory") (builtins.readDir "${aiSkills}/personal")
+  );
+  personalSkillsAttrs = lib.listToAttrs (
+    map (name: {
+      inherit name;
+      value = "${aiSkills}/personal/${name}";
+    }) personalSkillNames
+  );
+
+  allSkillsAttrs = workSkillsAttrs // personalSkillsAttrs;
 
   # ─── Settings content ──────────────────────────────────────────────────
   # Shape parameterised so we produce both the intimate Vex variant (canonical
@@ -252,7 +265,7 @@ let
             hooks = [
               {
                 type = "command";
-                command = "cat $HOME/ai-skills/vex/hooks/compaction${hookSuffix}.md";
+                command = "cat ${aiSkills}/vex/hooks/compaction${hookSuffix}.md";
               }
             ];
           }
@@ -262,7 +275,7 @@ let
             hooks = [
               {
                 type = "command";
-                command = "cat $HOME/ai-skills/vex/hooks/session-end.md";
+                command = "cat ${aiSkills}/vex/hooks/session-end.md";
               }
             ];
           }
@@ -277,7 +290,7 @@ let
               }
               {
                 type = "command";
-                command = "cat $HOME/ai-skills/vex/hooks/session-start${hookSuffix}.md";
+                command = "cat ${aiSkills}/vex/hooks/session-start${hookSuffix}.md";
               }
             ];
           }
@@ -291,7 +304,7 @@ let
               }
               {
                 type = "command";
-                command = "cat $HOME/ai-skills/vex/hooks/session-reload${hookSuffix}.md && echo \"Git branch: $(git branch --show-current 2>/dev/null || echo N/A)\" && echo 'Recent commits:' && git log --oneline -5 2>/dev/null || true && echo 'Modified files:' && git diff --name-only 2>/dev/null || true";
+                command = "cat ${aiSkills}/vex/hooks/session-reload${hookSuffix}.md && echo \"Git branch: $(git branch --show-current 2>/dev/null || echo N/A)\" && echo 'Recent commits:' && git log --oneline -5 2>/dev/null || true && echo 'Modified files:' && git diff --name-only 2>/dev/null || true";
               }
             ];
           }
@@ -330,10 +343,6 @@ let
   # CLAUDE_CONFIG_DIR=$HOME/.claude-work claude (see fish.nix aliases).
   vexVariantDirs = [ ".claude-work" ];
   proVariantDirs = [ ".claude-pro" ];
-  variantConfigDirs = vexVariantDirs ++ proVariantDirs;
-  # Personal skills go into all dirs including canonical — activation script
-  # handles the runtime iteration of ~/ai-skills/personal/.
-  allConfigDirs = [ ".claude" ] ++ variantConfigDirs;
 
   # ─── home.file generator for variant dirs only ─────────────────────────
   filesForVariant =
@@ -354,10 +363,7 @@ let
             outputStyle = "vex-pro";
             hookSuffix = "-pro";
           };
-      personaPath = if isVex then "${aiSkills}/vex/core.md" else "${aiSkills}/vex/core-pro.md";
       personaTarget = if isVex then "vex/core.md" else "vex/core-pro.md";
-      stylePath =
-        if isVex then "${aiSkills}/vex/output-style.md" else "${aiSkills}/vex/output-style-pro.md";
       styleTarget = if isVex then "output-styles/vex.md" else "output-styles/vex-pro.md";
       claudeMd = if isVex then "# Vex\n@vex/core.md\n" else "# Vex (Pro)\n@vex/core-pro.md\n";
     in
@@ -367,19 +373,27 @@ let
       "${dir}/CLAUDE.md".text = claudeMd;
     }
     // {
-      "${dir}/${personaTarget}".source = link personaPath;
-      "${dir}/${styleTarget}".source = link stylePath;
-      "${dir}/rules".source = link "${aiSkills}/vex/rules";
-      "${dir}/agents".source = link "${aiSkills}/vex/agents";
+      "${dir}/${personaTarget}".source = "${aiSkills}/${personaTarget}";
+      "${dir}/${styleTarget}".source =
+        if isVex then "${aiSkills}/vex/output-style.md" else "${aiSkills}/vex/output-style-pro.md";
+      "${dir}/rules".source = "${aiSkills}/vex/rules";
+      "${dir}/agents".source = "${aiSkills}/vex/agents";
     }
     // lib.listToAttrs (
-      map (name: {
+      (map (name: {
         name = "${dir}/skills/${name}";
         value = {
           source = "${agSkillsBuilt}/${name}";
           recursive = true;
         };
-      }) workSkillNames
+      }) workSkillNames)
+      ++ (map (name: {
+        name = "${dir}/skills/${name}";
+        value = {
+          source = "${aiSkills}/personal/${name}";
+          recursive = true;
+        };
+      }) personalSkillNames)
     );
 
 in
@@ -410,20 +424,25 @@ in
     # upstream repo. See `ccPlugins` above for the single source of truth.
     plugins = lib.attrValues ccPlugins;
 
-    # Work skills — module symlinks each into .claude/skills/<name>/.
-    skills = workSkillsAttrs;
+    # Skills — work (from ag-ai-skills) + personal (from ai-skills/personal/).
+    # Module symlinks each into .claude/skills/<name>/.
+    skills = allSkillsAttrs;
+
+    # Vex output style — module writes ~/.claude/output-styles/vex.md.
+    outputStyles.vex = "${aiSkills}/vex/output-style.md";
+
+    # Rules + agents dirs — module symlinks ~/.claude/{rules,agents}
+    # recursively from the flake-input source.
+    rulesDir = "${aiSkills}/vex/rules";
+    agentsDir = "${aiSkills}/vex/agents";
   };
 
-  # Live-symlinked persona content for ~/.claude — module's settings/context
-  # paths get nix-store-copied; we need mkOutOfStoreSymlink so edits to
-  # ~/ai-skills/vex/{core.md,output-style.md,rules,agents} hot-reload in CC.
-  # Theme also lives here (module doesn't expose a themes option).
+  # Two things the module doesn't expose options for, kept as raw home.file:
+  # - themes/vex.json (no themes option in the module)
+  # - vex/core.md at a custom path (referenced from CLAUDE.md as @vex/core.md)
   home.file = lib.foldl' lib.recursiveUpdate {
     ".claude/themes/vex.json".source = vexThemeFile;
-    ".claude/vex/core.md".source = link "${aiSkills}/vex/core.md";
-    ".claude/output-styles/vex.md".source = link "${aiSkills}/vex/output-style.md";
-    ".claude/rules".source = link "${aiSkills}/vex/rules";
-    ".claude/agents".source = link "${aiSkills}/vex/agents";
+    ".claude/vex/core.md".source = "${aiSkills}/vex/core.md";
   } (
     (map (
       dir:
@@ -440,22 +459,4 @@ in
       }
     ) proVariantDirs)
   );
-
-  # Personal skills — runtime iteration of ~/ai-skills/personal/ which can't
-  # be enumerated at eval time. Shares .claude/skills/ with module-managed
-  # work skills; names don't collide (work uses ag-* prefix).
-  home.activation.claudeCodePersonalSkills =
-    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      for dir in ${lib.concatStringsSep " " (map (d: "$HOME/${d}") allConfigDirs)}; do
-        SKILLS_DIR="$dir/skills"
-        $DRY_RUN_CMD mkdir -p "$SKILLS_DIR"
-        if [ -d "$HOME/ai-skills/personal" ]; then
-          for skill in "$HOME/ai-skills/personal"/*/; do
-            [ -d "$skill" ] || continue
-            name=$(basename "$skill")
-            $DRY_RUN_CMD ln -sfn "$skill" "$SKILLS_DIR/$name"
-          done
-        fi
-      done
-    '';
 }

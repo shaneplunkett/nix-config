@@ -61,6 +61,14 @@
       flake = false;
     };
 
+    # Personal skills + Vex persona content (rules, agents, core.md,
+    # output-style, hooks). Private repo so it's safe for credential-shaped
+    # files. `nrs-iter` overrides to ~/ai-skills for live iteration.
+    ai-skills = {
+      url = "git+ssh://git@github.com/shaneplunkett/ai-skills.git";
+      flake = false;
+    };
+
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
     umu-launcher.url = "github:Open-Wine-Components/umu-launcher?dir=packaging/nix";

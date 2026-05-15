@@ -32,12 +32,13 @@
           sudo nixos-rebuild switch --sudo --flake ~/nix-config
         end
       '';
-      # Same as nrs but with the two private flake inputs overridden to point at
-      # local checkouts. Use while iterating on ag-ai-skills or nix-config-private
-      # so changes apply without push+pull+update.
+      # Same as nrs but with the private flake inputs overridden to point at
+      # local checkouts. Use while iterating on ag-ai-skills, ai-skills, or
+      # nix-config-private so changes apply without push+pull+update.
       nrs-iter = ''
         set -l overrides \
           --override-input ag-ai-skills "git+file://$HOME/projects/work/ag-ai-skills?ref=HEAD" \
+          --override-input ai-skills "git+file://$HOME/ai-skills?ref=HEAD" \
           --override-input nix-config-private "git+file://$HOME/projects/personal/nix-config-private?ref=HEAD"
         if test (uname) = Darwin
           sudo darwin-rebuild switch --sudo --flake ~/nix-config $overrides
