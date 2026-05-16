@@ -130,6 +130,55 @@ def model_short(display_name, model_id):
     return name
 
 
+# Auto-compaction threshold — CC defaults to ~95% of model max before triggering
+# a /compact pass. Expose as a constant so the denominator stays explicit.
+COMPACT_THRESHOLD_FRAC = 0.95
+
+
+def model_context_limit(model_data):
+    """Best-guess model max context window. Falls back to 200k for unknown."""
+    display = (model_data.get("display_name") or "").lower()
+    if "1m" in display:
+        return 1_000_000
+    return 200_000
+
+
+def context_from_transcript(transcript_path):
+    """Walk the CC transcript JSONL backwards, find the last assistant entry
+    with a usage block, return cumulative context tokens (input + cache
+    create + cache read). This is more accurate than CC's reported
+    `context_window.used_percentage` which is known to lag and be wrong
+    (anthropics/claude-code#12510). Returns None if anything goes sideways
+    so the fallback path can take over."""
+    if not transcript_path:
+        return None
+    try:
+        with open(transcript_path) as f:
+            lines = f.readlines()
+    except (OSError, FileNotFoundError):
+        return None
+
+    for line in reversed(lines):
+        try:
+            entry = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if entry.get("type") != "assistant":
+            continue
+        # Some CC versions put usage at top-level, others nest under .message
+        usage = entry.get("message", {}).get("usage") or entry.get("usage")
+        if not usage:
+            continue
+        total = (
+            usage.get("input_tokens", 0)
+            + usage.get("cache_creation_input_tokens", 0)
+            + usage.get("cache_read_input_tokens", 0)
+        )
+        if total > 0:
+            return total
+    return None
+
+
 def main():
     raw = sys.stdin.read().strip()
     if not raw:
@@ -154,17 +203,31 @@ def main():
         icon = EFFORT_ICONS.get(effort, "")
         parts.append(f"{fg(*FLAMINGO)}{icon} {effort}{reset()}")
 
-    # Context
-    ctx = data.get("context_window", {})
-    pct = ctx.get("used_percentage")
-    total_in = ctx.get("total_input_tokens")
-    colour = ctx_colour(pct)
-    if pct is not None:
-        tok_str = format_tokens(total_in)
-        ctx_text = f"{pct}%"
-        if tok_str:
-            ctx_text += f" ({tok_str})"
-        parts.append(f"{fg(*colour)}{ctx_text}{reset()}")
+    # Context — transcript-parsed (accurate) with CC-JSON fallback.
+    # Denominator is the compact threshold, not absolute model max, so the
+    # % maps directly to "how close to auto-/compact". 100% = compacting.
+    model_max = model_context_limit(model)
+    compact_at = int(model_max * COMPACT_THRESHOLD_FRAC)
+    used = context_from_transcript(data.get("transcript_path"))
+
+    if used is not None:
+        pct = int((used / compact_at) * 100)
+        colour = ctx_colour(pct)
+        parts.append(
+            f"{fg(*colour)}{format_tokens(used)}/{format_tokens(compact_at)} {pct}%{reset()}"
+        )
+    else:
+        # Fallback — CC's reported numbers if transcript unreadable
+        ctx = data.get("context_window", {})
+        pct = ctx.get("used_percentage")
+        total_in = ctx.get("total_input_tokens")
+        if pct is not None:
+            colour = ctx_colour(pct)
+            tok_str = format_tokens(total_in)
+            ctx_text = f"{pct}%"
+            if tok_str:
+                ctx_text = f"{tok_str} {pct}%"
+            parts.append(f"{fg(*colour)}{ctx_text}{reset()}")
 
     # Duration
     cost_data = data.get("cost", {})
