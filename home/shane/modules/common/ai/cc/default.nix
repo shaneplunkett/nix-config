@@ -260,14 +260,20 @@ let
         OTEL_RESOURCE_ATTRIBUTES = "autograb_user=${priv.autograbUser},team=${priv.autograbTeam}";
       };
 
-      # Permission settings — defaultMode + prompt-skip + allow/deny rules.
+      # skipDangerousModePermissionPrompt is a TOP-LEVEL state flag per the
+      # official schema at json.schemastore.org/claude-code-settings.json —
+      # "Whether the user has accepted the bypass permissions mode dialog.
+      # Typically managed by the CLI rather than set by hand." Pre-setting
+      # it to true skips the prompt forever. NOT under permissions — CC
+      # silently ignores it there.
+      skipDangerousModePermissionPrompt = outputStyle != "vex-pro";
+
+      # Permission settings — defaultMode + allow/deny rules.
       # Doc: code.claude.com/docs/en/permission-modes. `bypassPermissions`
       # starts every session without prompts; the pro variant stays in
-      # `default` for screen-share safety. `skipDangerousModePermissionPrompt`
-      # skips the one-time "are you sure" prompt on first bypass entry.
+      # `default` for screen-share safety.
       permissions = {
         defaultMode = if outputStyle == "vex-pro" then "default" else "bypassPermissions";
-        skipDangerousModePermissionPrompt = true;
 
         allow = [
           "mcp__claude_ai_MCPHub__search_tools"
