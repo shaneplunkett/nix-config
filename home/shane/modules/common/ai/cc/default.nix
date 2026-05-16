@@ -20,42 +20,56 @@ let
 
   vexThemeFile = ./vex-theme.json;
 
+  # ─── Helper: wrap a bash script as a writeShellApplication binary. ─────
+  # All shell-script-shaped hooks + the claude-restart wrapper share this
+  # shape — keeps each call site to a one-liner. Always passes "$@" so the
+  # script receives any positional args (hooks ignore them, the wrapper
+  # uses them for CLI passthrough).
+  mkBashHook =
+    {
+      name,
+      runtimeInputs ? [ ],
+      script,
+    }:
+    pkgs.writeShellApplication {
+      inherit name;
+      runtimeInputs = [
+        pkgs.bash
+        pkgs.coreutils
+      ]
+      ++ runtimeInputs;
+      text = ''exec bash ${script} "$@"'';
+    };
+
   # Themed status line — invoked by CC via settings.json statusLine.command.
+  # Stays on writeShellApplication rather than writers.writePython3Bin
+  # because the latter runs pycodestyle and our script (intentionally) has
+  # long lines and a non-PEP8 shebang-as-comment.
   vex-statusline = pkgs.writeShellApplication {
     name = "vex-statusline";
     runtimeInputs = [ pkgs.python3 ];
-    text = ''
-      exec python3 ${./vex-statusline.py}
-    '';
+    text = ''exec python3 ${./vex-statusline.py}'';
   };
 
   # SessionStart / CwdChanged hook: load direnv environment into CLAUDE_ENV_FILE.
-  cc-direnv-load = pkgs.writeShellApplication {
+  cc-direnv-load = mkBashHook {
     name = "cc-direnv-load";
-    runtimeInputs = [
-      pkgs.direnv
-      pkgs.bash
-    ];
-    text = ''
-      exec bash ${./cc-direnv-load.sh}
-    '';
+    runtimeInputs = [ pkgs.direnv ];
+    script = ./cc-direnv-load.sh;
   };
 
   # PostToolUse hook: lint .nix files after every Edit/Write/MultiEdit and
   # surface findings to the agent as feedback. The shell script reads the
   # tool payload as JSON on stdin and exits 2 with statix/deadnix output
   # when anything's off.
-  cc-nix-lint = pkgs.writeShellApplication {
+  cc-nix-lint = mkBashHook {
     name = "cc-nix-lint";
     runtimeInputs = [
       pkgs.jq
       pkgs.statix
       pkgs.deadnix
-      pkgs.bash
     ];
-    text = ''
-      exec bash ${./nix-lint-hook.sh}
-    '';
+    script = ./nix-lint-hook.sh;
   };
 
   # ─── claude-restart — restart Claude Code in-place ─────────────────────
@@ -69,30 +83,18 @@ let
   # route through it. Inside the wrapper, `command -v claude` resolves to
   # the home-manager-wrapped binary cleanly (fish function shadowing
   # doesn't propagate to bash).
-  claude-restart = pkgs.writeShellApplication {
+  claude-restart = mkBashHook {
     name = "claude-restart";
-    runtimeInputs = [
-      pkgs.bash
-      pkgs.coreutils
-    ];
-    text = ''
-      exec bash ${./claude-restart-wrapper.sh} "$@"
-    '';
+    script = ./claude-restart-wrapper.sh;
   };
 
   # UserPromptSubmit hook for claude-restart: intercepts the literal word
   # `restart` (trimmed, case-insensitive), touches the per-wrapper flag,
   # SIGTERMs claude, and blocks the prompt from reaching the model.
-  cc-restart-hook = pkgs.writeShellApplication {
+  cc-restart-hook = mkBashHook {
     name = "cc-restart-hook";
-    runtimeInputs = [
-      pkgs.jq
-      pkgs.bash
-      pkgs.coreutils
-    ];
-    text = ''
-      exec bash ${./restart-hook.sh}
-    '';
+    runtimeInputs = [ pkgs.jq ];
+    script = ./restart-hook.sh;
   };
 
   # ─── Plugin / marketplace pins ─────────────────────────────────────────
@@ -150,31 +152,30 @@ let
       runHook postBuild
     '';
   };
-  workSkillNames = lib.attrNames (
-    lib.filterAttrs (_: t: t == "directory") (builtins.readDir "${agSkillsSrc}/skills")
-  );
-  workSkillsAttrs = lib.listToAttrs (
-    map (name: {
-      inherit name;
-      value = "${agSkillsBuilt}/${name}";
-    }) workSkillNames
-  );
-
   # ─── ai-skills (personal skills + vex persona) ─────────────────────────
   # Personal skills are directories under ai-skills/personal/. Enumerated at
   # eval time from the flake input — replaces the runtime-iteration activation
   # script that used to walk ~/ai-skills/personal/ at switch time.
-  personalSkillNames = lib.attrNames (
-    lib.filterAttrs (_: t: t == "directory") (builtins.readDir "${aiSkills}/personal")
-  );
-  personalSkillsAttrs = lib.listToAttrs (
-    map (name: {
-      inherit name;
-      value = "${aiSkills}/personal/${name}";
-    }) personalSkillNames
-  );
+  #
+  # Helper: enumerate subdirectory names in `enumSrc` and map each to a
+  # value under `valueRoot`. Used for both work skills (enum source =
+  # ag-ai-skills source, value root = the post-install derivation) and
+  # personal skills (enum source = value root = the personal/ dir).
+  mkSkillsAttrs =
+    enumSrc: valueRoot:
+    lib.listToAttrs (
+      map (name: {
+        inherit name;
+        value = "${valueRoot}/${name}";
+      }) (lib.attrNames (lib.filterAttrs (_: t: t == "directory") (builtins.readDir enumSrc)))
+    );
 
+  workSkillsAttrs = mkSkillsAttrs "${agSkillsSrc}/skills" agSkillsBuilt;
+  personalSkillsAttrs = mkSkillsAttrs "${aiSkills}/personal" "${aiSkills}/personal";
   allSkillsAttrs = workSkillsAttrs // personalSkillsAttrs;
+
+  workSkillNames = lib.attrNames workSkillsAttrs;
+  personalSkillNames = lib.attrNames personalSkillsAttrs;
 
   # ─── claude-code-patched ───────────────────────────────────────────────
   # pkgs.claude-code with tweakcc-fixed applied at build time + skrabe's

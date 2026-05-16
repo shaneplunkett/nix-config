@@ -31,7 +31,21 @@ let
     rev = "4bb5dbb81d743107da5abadd026691c9d226bc02";
     hash = "sha256-uU8wRE3NwK9LFu8UG2kkwAU9/xM/0IbRbAacRlYRTXc=";
   };
+
+  # tweakcc-fixed's regex patches are pinned to specific CC minified shapes
+  # (see tweakcc-fixed.nix — regex updates land per CC version). If
+  # nixpkgs's claude-code drifts ahead of the ccVersion captured in
+  # config.json, the patch step can silently produce a partial-patch
+  # binary. Fail at eval time to force a deliberate ccVersion bump.
+  configCcVersion = (builtins.fromJSON (builtins.readFile tweakccConfig)).ccVersion;
 in
+assert lib.assertMsg (configCcVersion == claude-code.version) ''
+  claude-code-patched: ccVersion drift.
+    config.json ccVersion: ${configCcVersion}
+    pkgs.claude-code:      ${claude-code.version}
+  Update config.json#ccVersion and verify tweakcc-fixed regex patches still
+  apply for the new CC version (see skrabe/tweakcc-fixed CHANGELOG).
+'';
 claude-code.overrideAttrs (prev: {
   pname = "claude-code-patched";
 
