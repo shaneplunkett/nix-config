@@ -26,16 +26,19 @@
   users.users.shane.openssh.authorizedKeys.keyFiles = [ ../../../../authorized-keys ];
 
   # Passwordless sudo for system activation — lets Claude Code complete
-  # `nh os switch` without prompting. Three rules because nh doesn't shell
-  # out to `nixos-rebuild`; it invokes the activation script directly and
-  # then sets the system profile:
+  # `nh os switch` (and the legacy `nixos-rebuild switch` fallback) without
+  # prompting.
   #
-  #   sudo /nix/store/<hash>-nixos-system-*/bin/switch-to-configuration switch
-  #   sudo nix-env -p /nix/var/nix/profiles/system --set /nix/store/<hash>-...
+  # nh's actual invocation (verified via `nh os switch -v`):
+  #   /run/wrappers/bin/sudo env PATH=<long> \
+  #     NIX_PATH=<...> USER=shane LOCALE_ARCHIVE=<...> \
+  #     /nix/store/<hash>-nixos-system-<host>-<ver>/bin/switch-to-configuration <action>
   #
-  # The first command is the old `nixos-rebuild` fallback in case anything
-  # still reaches for it. SETENV on the activation script so nh can pass
-  # NIXOS_INSTALL_BOOTLOADER / LOCALE_ARCHIVE through.
+  # From sudo's POV argv[0] is `env`, not the activation script — so a rule
+  # matching switch-to-configuration alone never fires. The env-prefixed
+  # entry below is what nh actually needs. Action verb `*` covers
+  # switch/boot/test/dry-activate. SETENV on every rule so nh can pass
+  # NIXOS_INSTALL_BOOTLOADER and friends through.
   security.sudo.extraRules = [
     {
       users = [ "shane" ];
@@ -46,6 +49,13 @@
         }
         {
           command = "/nix/store/*-nixos-system-*/bin/switch-to-configuration";
+          options = [
+            "NOPASSWD"
+            "SETENV"
+          ];
+        }
+        {
+          command = "/run/current-system/sw/bin/env PATH=* NIX_PATH=* USER=shane LOCALE_ARCHIVE=* /nix/store/*-nixos-system-*/bin/switch-to-configuration *";
           options = [
             "NOPASSWD"
             "SETENV"

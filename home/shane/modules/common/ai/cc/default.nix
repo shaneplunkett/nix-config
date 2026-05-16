@@ -192,6 +192,15 @@ let
 
   allSkillsAttrs = workSkillsAttrs // personalSkillsAttrs;
 
+  # ─── claude-code-patched ───────────────────────────────────────────────
+  # pkgs.claude-code with tweakcc-fixed applied at build time + skrabe's
+  # lobotomized-claude-code system-prompt overrides baked in. The patched
+  # binary is its own /nix/store derivation — survives GC, no sudo/re-apply
+  # dance, nh switch re-derives when either input bumps. Knobs in
+  # packages/claude-code-patched/config.json.
+  tweakcc-fixed = pkgs.callPackage ./packages/tweakcc-fixed.nix { };
+  claude-code-patched = pkgs.callPackage ./packages/claude-code-patched { inherit tweakcc-fixed; };
+
   # ─── Settings content ──────────────────────────────────────────────────
   # Shape parameterised so we produce both the intimate Vex variant (canonical
   # ~/.claude managed by programs.claude-code module + ~/.claude-work variant)
@@ -500,6 +509,10 @@ in
   # ─── Canonical ~/.claude — home-manager module owns it ─────────────────
   programs.claude-code = {
     enable = true;
+
+    # claude-code with tweakcc-fixed + lobotomized-claude-code system-prompt
+    # overrides baked in at build time. See ./packages/claude-code-patched/.
+    package = claude-code-patched;
 
     settings = mkSettingsContent {
       outputStyle = "vex";
