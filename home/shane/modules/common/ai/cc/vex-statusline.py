@@ -104,14 +104,15 @@ def ctx_colour(pct):
     return TEAL
 
 
-def get_effort_level():
+def get_effort_level(model_id):
     """Resolve the effective effort level.
 
     Order of precedence (matches CC's own runtime resolution):
       1. CLAUDE_CODE_EFFORT_LEVEL env var (one-session override)
       2. settings.json/settings.local.json `effortLevel` key (set via /effort)
-      3. Our tweakcc maxEffortDefault patch — for Opus 4.7 that's "max"
-         even when settings.json says null
+      3. Our tweakcc maxEffortDefault patch — but only Opus 4.7 has variable
+         effort. Sonnet / Haiku / other models don't, so we skip the segment
+         for them rather than misreporting "max".
 
     CC does not pipe the live effort value to the statusline command (open
     feature ask), so we mirror its resolution from disk + env."""
@@ -128,8 +129,11 @@ def get_effort_level():
                     return val
         except Exception:
             continue
-    # tweakcc maxEffortDefault is on → CC starts Opus 4.7 at "max"
-    return "max"
+    # tweakcc maxEffortDefault → CC starts Opus 4.7 at "max". Other models
+    # don't have variable effort, so we omit the segment entirely.
+    if "opus-4-7" in (model_id or "").lower():
+        return "max"
+    return None
 
 
 def model_short(display_name, model_id):
@@ -152,21 +156,10 @@ def model_context_limit(model_data):
     return 200_000
 
 
-def context_from_transcript(transcript_path):
-    """Walk the CC transcript JSONL backwards, find the last assistant entry
-    with a usage block, return cumulative context tokens (input + cache
-    create + cache read). This is more accurate than CC's reported
-    `context_window.used_percentage` which is known to lag and be wrong
-    (anthropics/claude-code#12510). Returns None if anything goes sideways
-    so the fallback path can take over."""
-    if not transcript_path:
-        return None
-    try:
-        with open(transcript_path) as f:
-            lines = f.readlines()
-    except (OSError, FileNotFoundError):
-        return None
+TAIL_WINDOW_BYTES = 256 * 1024  # 256 KiB — enough for ~50–100 recent entries
 
+
+def _scan_lines_for_usage(lines):
     for line in reversed(lines):
         try:
             entry = json.loads(line)
@@ -188,6 +181,49 @@ def context_from_transcript(transcript_path):
     return None
 
 
+def context_from_transcript(transcript_path):
+    """Walk the CC transcript JSONL backwards, find the last assistant entry
+    with a usage block, return cumulative context tokens (input + cache
+    create + cache read). More accurate than CC's reported
+    `context_window.used_percentage` which is known to lag and be wrong
+    (anthropics/claude-code#12510).
+
+    For long sessions, slurping the whole JSONL on every statusline render
+    is wasteful. We seek to the last TAIL_WINDOW_BYTES and scan that window
+    first — for any plausible recent session this contains the last
+    assistant entry. Only when the tail window doesn't find a usage block
+    do we fall back to a full read."""
+    if not transcript_path:
+        return None
+    try:
+        size = os.path.getsize(transcript_path)
+    except OSError:
+        return None
+
+    try:
+        with open(transcript_path, "rb") as f:
+            if size > TAIL_WINDOW_BYTES:
+                f.seek(size - TAIL_WINDOW_BYTES)
+                # Drop the leading partial line — first newline marks a real boundary
+                f.readline()
+            tail = f.read().decode("utf-8", errors="replace").splitlines()
+    except (OSError, FileNotFoundError):
+        return None
+
+    total = _scan_lines_for_usage(tail)
+    if total is not None:
+        return total
+
+    # Tail window had no usage block — read full file as fallback
+    if size <= TAIL_WINDOW_BYTES:
+        return None
+    try:
+        with open(transcript_path) as f:
+            return _scan_lines_for_usage(f.readlines())
+    except (OSError, FileNotFoundError):
+        return None
+
+
 def main():
     raw = sys.stdin.read().strip()
     if not raw:
@@ -206,8 +242,10 @@ def main():
     name = model_short(model.get("display_name"), model.get("id"))
     parts.append(f"{fg(*MAUVE)}{name}{reset()}")
 
-    # Effort level — no icon, keeps visual consistency with other segments
-    effort = get_effort_level()
+    # Effort level — no icon, keeps visual consistency with other segments.
+    # Only shown for models with variable effort (Opus 4.7); skipped for
+    # Sonnet/Haiku which don't expose the knob.
+    effort = get_effort_level(model.get("id"))
     if effort:
         parts.append(f"{fg(*FLAMINGO)}{effort}{reset()}")
 
@@ -219,7 +257,7 @@ def main():
     used = context_from_transcript(data.get("transcript_path"))
 
     if used is not None:
-        pct = int((used / compact_at) * 100)
+        pct = min(int((used / compact_at) * 100), 100)
         colour = ctx_colour(pct)
         parts.append(
             f"{fg(*colour)}{format_tokens(used)}/{format_tokens(compact_at)} {pct}%{reset()}"
