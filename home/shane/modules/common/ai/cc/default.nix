@@ -61,44 +61,28 @@ let
   # ─── claude-restart — restart Claude Code in-place ─────────────────────
   # Type `restart` in the prompt → UserPromptSubmit hook intercepts before
   # the model runs (zero tokens) → claude exits → wrapper respawns it with
-  # --resume <session-id>. Vendored & adapted from yacb2/claude-restart (MIT),
+  # --continue. Vendored & adapted from yacb2/claude-restart (MIT),
   # restart-only (handoff machinery dropped), nix-native install.
   #
   # The wrapper takes the user's invocation; fish.nix defines a `claude`
   # function that calls this binary, so `cc`/`ccr`/`ccw`/`ccp` abbrs all
   # route through it. Inside the wrapper, `command -v claude` resolves to
   # the home-manager-wrapped binary cleanly (fish function shadowing
-  # doesn't propagate to /bin/sh).
+  # doesn't propagate to bash).
   claude-restart = pkgs.writeShellApplication {
     name = "claude-restart";
     runtimeInputs = [
       pkgs.bash
       pkgs.coreutils
-      pkgs.findutils
     ];
     text = ''
       exec bash ${./claude-restart-wrapper.sh} "$@"
     '';
   };
 
-  # SessionStart hook for claude-restart: captures the session ID per
-  # wrapper instance (scoped via CLAUDE_RESTART_ID env var) so the wrapper
-  # knows what to --resume.
-  cc-capture-session-id = pkgs.writeShellApplication {
-    name = "cc-capture-session-id";
-    runtimeInputs = [
-      pkgs.jq
-      pkgs.bash
-      pkgs.coreutils
-    ];
-    text = ''
-      exec bash ${./capture-session-id.sh}
-    '';
-  };
-
   # UserPromptSubmit hook for claude-restart: intercepts the literal word
   # `restart` (trimmed, case-insensitive), touches the per-wrapper flag,
-  # SIGTERMs the wrapper, and blocks the prompt from reaching the model.
+  # SIGTERMs claude, and blocks the prompt from reaching the model.
   cc-restart-hook = pkgs.writeShellApplication {
     name = "cc-restart-hook";
     runtimeInputs = [
@@ -377,11 +361,6 @@ let
                 type = "command";
                 command = "${cc-direnv-load}/bin/cc-direnv-load";
                 timeout = 10;
-              }
-              {
-                type = "command";
-                command = "${cc-capture-session-id}/bin/cc-capture-session-id";
-                timeout = 5;
               }
               {
                 type = "command";

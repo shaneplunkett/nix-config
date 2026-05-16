@@ -1,9 +1,15 @@
 #!/bin/sh
 # UserPromptSubmit hook — intercepts the literal word `restart` (trimmed,
-# case-insensitive). Touches restart-flag-<id>, signals SIGTERM to the
-# wrapper ($PPID = the claude-restart-wrapper.sh process), and outputs
-# `{"decision":"block"}` so Claude Code never forwards the prompt to the
-# model. ZERO tokens consumed.
+# case-insensitive). Prints {"decision":"block"} so Claude Code drops the
+# prompt without forwarding to the model, touches restart-flag-<id> for the
+# wrapper to read, then SIGTERMs the parent claude-code process — its exit
+# unblocks the wrapper's synchronous foreground call, and the wrapper's loop
+# sees the flag and respawns claude with --continue. ZERO tokens consumed.
+#
+# Note: $PPID here is the claude-code bun process (claude spawns hooks
+# directly as child subprocesses), NOT the wrapper. Killing claude is
+# sufficient — the wrapper is the grandparent and only needs claude to
+# exit for its `"$CLAUDE_BIN" "$@"` foreground call to return.
 
 set -u
 
@@ -18,8 +24,8 @@ if [ "$PROMPT_NORM" != "restart" ]; then
   exit 0
 fi
 
-# Need wrapper context — without it there's no flag-file scope, no $PPID
-# pointing at the right wrapper, and the kill would target the wrong process.
+# Need wrapper context — without it there's no flag-file scope and the
+# wrapper can't see the restart signal.
 if [ -z "${CLAUDE_RESTART_ID-}" ]; then
   echo "restart: not running inside claude-restart wrapper — open a new fish terminal" >&2
   exit 2
@@ -30,7 +36,12 @@ RESTART_FLAG="${CLAUDE_TMP_DIR}/restart-flag-${CLAUDE_RESTART_ID}"
 
 mkdir -p "$CLAUDE_TMP_DIR"
 touch "$RESTART_FLAG"
-kill -TERM "$PPID" 2>/dev/null || true
 
-# Tell Claude Code to drop this prompt entirely — model is never woken
-printf '{"decision":"block","reason":"Restart initiated via hook"}'
+# Order matters: print the block decision FIRST, force-close stdout so CC
+# consumes the buffer, THEN signal SIGTERM. Sending the kill before the
+# decision JSON risks claude exiting before reading stdout — and the block
+# decision is the safety net for cases where the kill silently fails (wrong
+# PPID, claude trapping TERM, etc.).
+printf '{"decision":"block","reason":"Restart initiated via hook"}\n'
+exec 1>&-
+kill -TERM "$PPID" 2>/dev/null || true
