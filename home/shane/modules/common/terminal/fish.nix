@@ -25,6 +25,14 @@ _: {
         ccpr = "CLAUDE_CONFIG_DIR=$HOME/.claude-pro claude --resume --allow-dangerously-skip-permissions";
       };
       functions = {
+        # Shadow the bare `claude` binary with the claude-restart wrapper —
+        # type `restart` in any Claude Code prompt and the session restarts
+        # in-place with fresh hooks/plugins/binary, zero tokens. All cc/ccr/
+        # ccw/ccp abbreviations expand to `claude ...` and pick this up.
+        # Wrapper itself runs in /bin/sh where fish functions don't apply,
+        # so its internal `command -v claude` resolves to the real binary
+        # cleanly (no recursion).
+        claude = "claude-restart $argv";
         # nh wraps nixos-rebuild / darwin-rebuild / home-manager switch with
         # a prettier `nom` build view + nvd version diff. Flake path is picked up
         # from NH_FLAKE (set by programs.nh.flake in nh.nix).

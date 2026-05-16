@@ -9,6 +9,7 @@ let
     nixvim
     catppuccin
     vex-tooling
+    nix-index-database
     ;
 in
 {
@@ -42,6 +43,7 @@ in
           nixvim.homeModules.nixvim
           catppuccin.homeModules.catppuccin
           vex-tooling.homeManagerModules.default
+          nix-index-database.homeModules.nix-index
         ]
         ++ extraSharedModules;
       };

@@ -1,89 +1,77 @@
-# Nix Config
+# nix-config
 
-## Build Commands
+## Build
 
-**NixOS (desktop):**
+| Host | System | Command |
+|---|---|---|
+| `desktop` | x86_64-linux | `nh os switch . -H desktop` |
+| `Shanes-MacBook-Pro` | aarch64-darwin | `nh darwin switch . -H Shanes-MacBook-Pro` |
+| `Shanes-Work-MacBook-Pro` | aarch64-darwin | `nh darwin switch . -H Shanes-Work-MacBook-Pro` |
+| `hetzvps` | aarch64-linux | deploy-rs (server, not local) |
 
-```bash
-nixos-rebuild build --flake .#desktop    # test build only
-sudo nixos-rebuild switch --flake .#desktop  # build and activate
-```
+Build only (no activation): `nh {os,darwin} build . -H <host>`. Live-iterate a flake input: `nrs-iter`.
 
-**Darwin (personal):**
+## Research — don't rely on training data alone
 
-```bash
-darwin-rebuild build --flake .#Shanes-MacBook-Pro
-darwin-rebuild switch --flake .#Shanes-MacBook-Pro
-```
+- **Library shapes, derivation patterns, home-manager / nixpkgs options** → Context7 via MCPHub. Search: `mcp__claude_ai_MCPHub__search_tools` for "context7", then `call_tool` to fetch live docs.
+- **Current state of the world, unknown tools, comparisons** → tavily (`tvly search "..."`, or `tvly research "..."` for deeper synthesis with citations).
+- Default to checking. Nix QoL tools (`nh`, `nurl`, `nix-init`, `nix-locate`, `manix`, `comma-with-db`) are 2025+; training data is stale.
 
-**Darwin (work):**
+## Nix idioms — DEFAULT
 
-```bash
-darwin-rebuild build --flake .#Shanes-Work-MacBook-Pro
-darwin-rebuild switch --flake .#Shanes-Work-MacBook-Pro
-```
+**Nix > bash.** Shell only when the shape is genuinely shell (mutating external state, runtime iter outside the store, JSON merges preserving runtime-only fields).
 
-## Secrets Management
+Prefer:
+- `home.file` + `mkOutOfStoreSymlink` over activation scripts
+- `writeShellApplication { name; runtimeInputs; text }` over `writeShellScriptBin`
+- `lib.mapAttrs'` + `nameValuePair` over copy-paste blocks
+- `stdenv.mkDerivation` over activation-time jq merges
+- Verify shape via Context7 (home-manager / nixpkgs source) before committing
+- Collapse repeated keys via nested attrset (statix W20)
 
-**Primary path: rbw (Bitwarden CLI) for all day-to-day API tokens and
-credentials.** Every CLI wrapper in `home/shane/modules/common/` reads from
-rbw at invocation time. Rotation flow: edit the Bitwarden entry in the
-web/desktop UI → `rbw sync` → next CLI invocation picks up the new value.
-No rebuild required.
+## Tooling — use THESE
 
-- `home/shane/modules/common/rbw.nix` — declares `programs.rbw` with
-  `email`, `lock_timeout`, and platform-aware `pinentry`
-  (`pinentry-curses` on Linux, `pinentry_mac` on Darwin)
-- One-time setup per machine: `rbw unlock` (master password + 2FA)
-  unlocks the agent for the lifetime of the boot session
-  (`lock_timeout = 604800`)
-- Wrapper pattern: each CLI wrapper shells out to
-  `${pkgs.rbw}/bin/rbw get <entry-name>` inside a `makeWrapper --run`
-  block. If the agent is locked or the entry is missing, the env var
-  stays unset rather than erroring — let the downstream tool complain.
+| Task | Use | NOT |
+|---|---|---|
+| Build / switch | `nh os switch . -H <host>` | `nixos-rebuild switch --flake ...` |
+| Hash + fetcher block | `nurl <url> <rev>` | `nix-prefetch-url --unpack` + `nix-hash --to-sri` |
+| Find pkg by binary | `nix-locate -w -t x --minimal bin/<cmd>` | `nh search` for known bins |
+| Remote pkg search | `nh search <q>` | `nix search nixpkgs` |
+| Local options / docs | `manix <opt>` | grep nixpkgs |
+| New package draft | `nix-init <url>` | hand-write `buildNpmPackage` / `buildGoModule` |
+| Run-once no-install | `, <cmd>` | `nix shell nixpkgs#<pkg> -c` |
+| Lint | `statix check <p>` then `statix fix <p>` | manual review |
+| Dead code | `deadnix <p>` | manual review |
+| Format | `nix fmt` (nixfmt-rfc-style, tracked + staged) | manual |
 
-**Secondary path: agenix for deployment / server-side secrets that can't
-talk to the rbw agent.** Currently used only by the hetzvps host —
-no home-manager-scope agenix secrets remain. Encrypted `.age` files live
-in `secrets/`. Public keys and secret declarations are in:
+## Done criteria for a nix edit
 
-- `secrets/secrets.nix` — maps `.age` files to authorised public keys
-- Per-host nix modules consume them via `config.age.secrets.<name>.path`
-  (e.g. `hosts/hetzvps/modules/services.nix` for tailscale-authkey)
+1. `git add` new files — flakes ignore untracked
+2. `statix check <changed>` clean
+3. `deadnix <changed>` empty
+4. `nh {os,darwin} build . -H <host>` green
+5. `nix flake check` green
 
-What still lives in agenix:
+A PostToolUse hook auto-runs `statix` + `deadnix` after every `.nix` edit and surfaces findings as feedback. Don't ignore them.
 
-- `tailscale-authkey`, `restic-password` — hetzvps deployment secrets
-- `vex-core`, `vex-compaction`, `vex-session-start`, `vex-session-reload`,
-  `vex-discord-token` — hetzvps vex-brain secrets (consumed server-side)
+## Secrets
 
-When adding a new credential, default to rbw. Only reach for agenix if
-the secret is consumed by a non-interactive system service that can't
-talk to the rbw agent.
+**rbw (Bitwarden)** — default. CLI wrappers in `home/shane/modules/common/` shell out to `rbw get <entry>` at invocation. Rotate via Bitwarden UI → `rbw sync` → next call picks it up. No rebuild.
 
-When removing a secret: remove the `.age` file, the `secrets.nix` entry,
-and any module references. If a new home-manager-scope file-shaped secret
-is ever needed, re-add `agenix.homeManagerModules.default` to
-`lib/common.nix` sharedModules (removed when gemini was last HM agenix
-consumer).
+**agenix** — server-side only. `secrets/*.age` declared in `secrets/secrets.nix`, consumed via `config.age.secrets.<name>.path`. Currently only `hetzvps` (tailscale-authkey, restic-password, vex-* server secrets). New creds → rbw, unless a non-interactive system service can't talk to the rbw agent.
 
 ## NixVim
 
-Neovim is configured declaratively via [NixVim](https://nix-community.github.io/nixvim/) at `home/shane/modules/common/nixvim/`.
+`home/shane/modules/common/nixvim/`. `default.nix` enables + imports. `plugins/default.nix` aggregates. Each plugin = own file `plugins/<name>.nix`.
 
-- `default.nix` — main entry point, enables nixvim with aliases and imports
-- `plugins/default.nix` — aggregator that imports all individual plugin modules
-- Each plugin is a self-contained module in `plugins/<name>.nix`
+Darwin-only packages (`xcbeautify`, `swiftformat`, `swiftlint`, `sourcekit`) → guard with `lib.mkIf pkgs.stdenv.isDarwin` or `lib.optionals pkgs.stdenv.isDarwin`.
 
-**Platform-specific packages:** Some plugins reference Darwin-only packages (e.g. `xcbeautify`, `swiftformat`, `swiftlint`, `sourcekit`). Guard these with `lib.mkIf pkgs.stdenv.isDarwin` or `lib.optionals pkgs.stdenv.isDarwin` to prevent Linux build failures.
+## AI modules
 
-## AI Modules
+`home/shane/modules/common/ai/`:
+- `mcp/` — shared MCP server defs (neovim, xero). xero wrapper pulls creds from rbw.
+- `cc/` — Claude Code. Settings, hooks, theme, plugins via `programs.claude-code` module. Private values (work URLs, work email) come from `inputs.nix-config-private`.
 
-AI tool configs live under `home/shane/modules/common/ai/`:
+## Git
 
-- `mcp/` — shared MCP server definitions (neovim, xero), imported by Claude Code. The xero-mcp wrapper pulls `XERO_CLIENT_ID`/`XERO_CLIENT_SECRET` from rbw.
-- `cc/` — Claude Code: settings, permissions, hooks, native custom theme (`vex-theme.json`), plugins + marketplaces via `programs.claude-code` module
-
-## Git Hygiene
-
-When creating new files (secrets, modules, configs), always `git add` them before building. Nix flakes only see files tracked by git — untracked files are invisible to the build and will cause confusing errors.
+Flakes only see git-tracked files. `git add` new files BEFORE building. Untracked → invisible to the build → confusing errors.

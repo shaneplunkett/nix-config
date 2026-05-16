@@ -13,6 +13,14 @@
 
     agenix.url = "github:ryantm/agenix";
 
+    # Pre-computed weekly index of every binary in nixpkgs. Powers
+    # `nix-locate` and `command-not-found`, and lets `,` resolve commands
+    # against a local DB instead of evaluating the nixpkgs flake live.
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     hyprland.url = "github:hyprwm/Hyprland";
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";

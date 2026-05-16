@@ -41,6 +41,76 @@ let
     '';
   };
 
+  # PostToolUse hook: lint .nix files after every Edit/Write/MultiEdit and
+  # surface findings to the agent as feedback. The shell script reads the
+  # tool payload as JSON on stdin and exits 2 with statix/deadnix output
+  # when anything's off.
+  cc-nix-lint = pkgs.writeShellApplication {
+    name = "cc-nix-lint";
+    runtimeInputs = [
+      pkgs.jq
+      pkgs.statix
+      pkgs.deadnix
+      pkgs.bash
+    ];
+    text = ''
+      exec bash ${./nix-lint-hook.sh}
+    '';
+  };
+
+  # ─── claude-restart — restart Claude Code in-place ─────────────────────
+  # Type `restart` in the prompt → UserPromptSubmit hook intercepts before
+  # the model runs (zero tokens) → claude exits → wrapper respawns it with
+  # --resume <session-id>. Vendored & adapted from yacb2/claude-restart (MIT),
+  # restart-only (handoff machinery dropped), nix-native install.
+  #
+  # The wrapper takes the user's invocation; fish.nix defines a `claude`
+  # function that calls this binary, so `cc`/`ccr`/`ccw`/`ccp` abbrs all
+  # route through it. Inside the wrapper, `command -v claude` resolves to
+  # the home-manager-wrapped binary cleanly (fish function shadowing
+  # doesn't propagate to /bin/sh).
+  claude-restart = pkgs.writeShellApplication {
+    name = "claude-restart";
+    runtimeInputs = [
+      pkgs.bash
+      pkgs.coreutils
+      pkgs.findutils
+    ];
+    text = ''
+      exec bash ${./claude-restart-wrapper.sh} "$@"
+    '';
+  };
+
+  # SessionStart hook for claude-restart: captures the session ID per
+  # wrapper instance (scoped via CLAUDE_RESTART_ID env var) so the wrapper
+  # knows what to --resume.
+  cc-capture-session-id = pkgs.writeShellApplication {
+    name = "cc-capture-session-id";
+    runtimeInputs = [
+      pkgs.jq
+      pkgs.bash
+      pkgs.coreutils
+    ];
+    text = ''
+      exec bash ${./capture-session-id.sh}
+    '';
+  };
+
+  # UserPromptSubmit hook for claude-restart: intercepts the literal word
+  # `restart` (trimmed, case-insensitive), touches the per-wrapper flag,
+  # SIGTERMs the wrapper, and blocks the prompt from reaching the model.
+  cc-restart-hook = pkgs.writeShellApplication {
+    name = "cc-restart-hook";
+    runtimeInputs = [
+      pkgs.jq
+      pkgs.bash
+      pkgs.coreutils
+    ];
+    text = ''
+      exec bash ${./restart-hook.sh}
+    '';
+  };
+
   # ─── Plugin / marketplace pins ─────────────────────────────────────────
   # Marketplace clone — discord, frontend-design live inside it as subdirs.
   # Bump rev + hash to update. nix-prefetch-url --unpack <tarball> gives the
@@ -286,6 +356,11 @@ let
               }
               {
                 type = "command";
+                command = "${cc-capture-session-id}/bin/cc-capture-session-id";
+                timeout = 5;
+              }
+              {
+                type = "command";
                 command = "cat ${aiSkills}/vex/hooks/session-start${hookSuffix}.md";
               }
             ];
@@ -312,6 +387,29 @@ let
                 type = "command";
                 command = "${cc-direnv-load}/bin/cc-direnv-load";
                 timeout = 10;
+              }
+            ];
+          }
+        ];
+        PostToolUse = [
+          {
+            matcher = "Edit|Write|MultiEdit";
+            hooks = [
+              {
+                type = "command";
+                command = "${cc-nix-lint}/bin/cc-nix-lint";
+                timeout = 30;
+              }
+            ];
+          }
+        ];
+        UserPromptSubmit = [
+          {
+            hooks = [
+              {
+                type = "command";
+                command = "${cc-restart-hook}/bin/cc-restart-hook";
+                timeout = 5;
               }
             ];
           }
@@ -394,6 +492,11 @@ let
 
 in
 {
+  # claude-restart on PATH so the fish `claude` function (see fish.nix) can
+  # find it, plus making it directly invokable as `claude-restart` for
+  # debugging or use outside fish.
+  home.packages = [ claude-restart ];
+
   # ─── Canonical ~/.claude — home-manager module owns it ─────────────────
   programs.claude-code = {
     enable = true;
