@@ -105,9 +105,20 @@ def ctx_colour(pct):
 
 
 def get_effort_level():
-    """Read effortLevel from settings.json or settings.local.json."""
+    """Resolve the effective effort level.
+
+    Order of precedence (matches CC's own runtime resolution):
+      1. CLAUDE_CODE_EFFORT_LEVEL env var (one-session override)
+      2. settings.json/settings.local.json `effortLevel` key (set via /effort)
+      3. Our tweakcc maxEffortDefault patch — for Opus 4.7 that's "max"
+         even when settings.json says null
+
+    CC does not pipe the live effort value to the statusline command (open
+    feature ask), so we mirror its resolution from disk + env."""
+    env_val = os.environ.get("CLAUDE_CODE_EFFORT_LEVEL")
+    if env_val:
+        return env_val
     claude_dir = os.path.expanduser("~/.claude")
-    # local overrides base
     for fname in ("settings.local.json", "settings.json"):
         path = os.path.join(claude_dir, fname)
         try:
@@ -117,10 +128,8 @@ def get_effort_level():
                     return val
         except Exception:
             continue
-    return None
-
-
-EFFORT_ICONS = {"low": "⚡", "medium": "⚖", "high": "🧠"}
+    # tweakcc maxEffortDefault is on → CC starts Opus 4.7 at "max"
+    return "max"
 
 
 def model_short(display_name, model_id):
@@ -197,11 +206,10 @@ def main():
     name = model_short(model.get("display_name"), model.get("id"))
     parts.append(f"{fg(*MAUVE)}{name}{reset()}")
 
-    # Effort level
+    # Effort level — no icon, keeps visual consistency with other segments
     effort = get_effort_level()
     if effort:
-        icon = EFFORT_ICONS.get(effort, "")
-        parts.append(f"{fg(*FLAMINGO)}{icon} {effort}{reset()}")
+        parts.append(f"{fg(*FLAMINGO)}{effort}{reset()}")
 
     # Context — transcript-parsed (accurate) with CC-JSON fallback.
     # Denominator is the compact threshold, not absolute model max, so the
