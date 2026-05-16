@@ -77,7 +77,11 @@ while [ -f "$RESTART_FLAG" ]; do
     echo
     echo "  ↻ Restarting Claude Code — resuming session ${SESSION_ID%%-*}…"
     echo
-    "$CLAUDE_BIN" --resume "$SESSION_ID" "$@"
+    # Use --resume=<id> form (not "--resume <id>") so commander binds the
+    # UUID to the option rather than treating it as the positional [prompt]
+    # arg — the latter causes the picker to open AND the UUID to land in
+    # the chat input on launch.
+    "$CLAUDE_BIN" "--resume=$SESSION_ID" "$@"
     RESUME_EXIT=$?
     if [ "$RESUME_EXIT" -ne 0 ] && [ ! -f "$RESTART_FLAG" ]; then
       echo
