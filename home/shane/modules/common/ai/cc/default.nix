@@ -213,7 +213,6 @@ let
     {
       theme = "custom:vex";
       inherit outputStyle;
-      skipDangerousModePermissionPrompt = true;
       spinnerTipsEnabled = false;
       spinnerVerbs = {
         mode = "replace";
@@ -261,73 +260,83 @@ let
         OTEL_RESOURCE_ATTRIBUTES = "autograb_user=${priv.autograbUser},team=${priv.autograbTeam}";
       };
 
-      permissions.allow = [
-        "mcp__claude_ai_MCPHub__search_tools"
-        "mcp__claude_ai_MCPHub__describe_tool"
-        "mcp__claude_ai_MCPHub__call_tool"
-      ]
-      ++ [
-        "Bash(git log:*)"
-        "Bash(git status:*)"
-        "Bash(git diff:*)"
-        "Bash(git show:*)"
-        "Bash(git branch:*)"
-        "Bash(git remote:*)"
-        "Bash(git fetch:*)"
-        "Bash(git rev-parse:*)"
-      ]
-      ++ [
-        "Bash(ls:*)"
-        "Bash(cat:*)"
-        "Bash(head:*)"
-        "Bash(tail:*)"
-        "Bash(readlink:*)"
-        "Bash(echo:*)"
-        "Bash(which:*)"
-        "Bash(file:*)"
-        "Bash(wc:*)"
-      ]
-      ++ [
-        "Bash(nix eval:*)"
-        "Bash(nix build:*)"
-        "Bash(nix-shell:*)"
-        "Bash(nix flake:*)"
-        "Bash(nixos-rebuild build:*)"
-        "Bash(nh home:*)"
-      ]
-      ++ [
-        "Bash(TZ='Australia/Melbourne' date:*)"
-        "Bash(python3:*)"
-        "Bash(node:*)"
-        "Bash(npx:*)"
-        "Bash(claude:*)"
-        "Bash(curl:*)"
-        "Bash(gh api:*)"
-        "Bash(gh repo:*)"
-        "Bash(gh release:*)"
-      ]
-      ++ [
-        "Bash(gws gmail +triage:*)"
-        "Bash(gws gmail +read:*)"
-        "Bash(gws gmail users messages list:*)"
-        "Bash(gws gmail users messages get:*)"
-        "Bash(gws gmail users threads get:*)"
-        "Bash(gws gmail users labels list:*)"
-        "Bash(gws calendar:*)"
-        "Bash(gws drive files list:*)"
-      ]
-      ++ [
-        "WebSearch"
-        "WebFetch"
-      ];
+      # Permission settings — defaultMode + prompt-skip + allow/deny rules.
+      # Doc: code.claude.com/docs/en/permission-modes. `bypassPermissions`
+      # starts every session without prompts; the pro variant stays in
+      # `default` for screen-share safety. `skipDangerousModePermissionPrompt`
+      # skips the one-time "are you sure" prompt on first bypass entry.
+      permissions = {
+        defaultMode = if outputStyle == "vex-pro" then "default" else "bypassPermissions";
+        skipDangerousModePermissionPrompt = true;
+
+        allow = [
+          "mcp__claude_ai_MCPHub__search_tools"
+          "mcp__claude_ai_MCPHub__describe_tool"
+          "mcp__claude_ai_MCPHub__call_tool"
+        ]
+        ++ [
+          "Bash(git log:*)"
+          "Bash(git status:*)"
+          "Bash(git diff:*)"
+          "Bash(git show:*)"
+          "Bash(git branch:*)"
+          "Bash(git remote:*)"
+          "Bash(git fetch:*)"
+          "Bash(git rev-parse:*)"
+        ]
+        ++ [
+          "Bash(ls:*)"
+          "Bash(cat:*)"
+          "Bash(head:*)"
+          "Bash(tail:*)"
+          "Bash(readlink:*)"
+          "Bash(echo:*)"
+          "Bash(which:*)"
+          "Bash(file:*)"
+          "Bash(wc:*)"
+        ]
+        ++ [
+          "Bash(nix eval:*)"
+          "Bash(nix build:*)"
+          "Bash(nix-shell:*)"
+          "Bash(nix flake:*)"
+          "Bash(nixos-rebuild build:*)"
+          "Bash(nh home:*)"
+        ]
+        ++ [
+          "Bash(TZ='Australia/Melbourne' date:*)"
+          "Bash(python3:*)"
+          "Bash(node:*)"
+          "Bash(npx:*)"
+          "Bash(claude:*)"
+          "Bash(curl:*)"
+          "Bash(gh api:*)"
+          "Bash(gh repo:*)"
+          "Bash(gh release:*)"
+        ]
+        ++ [
+          "Bash(gws gmail +triage:*)"
+          "Bash(gws gmail +read:*)"
+          "Bash(gws gmail users messages list:*)"
+          "Bash(gws gmail users messages get:*)"
+          "Bash(gws gmail users threads get:*)"
+          "Bash(gws gmail users labels list:*)"
+          "Bash(gws calendar:*)"
+          "Bash(gws drive files list:*)"
+        ]
+        ++ [
+          "WebSearch"
+          "WebFetch"
+        ];
+
+        deny = [
+          "mcp__claude_ai_Google_Drive"
+          "mcp__claude_ai_Atlassian"
+          "mcp__claude_ai_Slack"
+        ];
+      };
 
       disabledMcpjsonServers = [ "posthog" ];
-
-      permissions.deny = [
-        "mcp__claude_ai_Google_Drive"
-        "mcp__claude_ai_Atlassian"
-        "mcp__claude_ai_Slack"
-      ];
 
       statusLine = {
         type = "command";

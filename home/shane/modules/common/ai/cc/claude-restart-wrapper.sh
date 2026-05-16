@@ -49,7 +49,10 @@ rm -f "$RESTART_FLAG" "$SESSION_FILE"
 # `CLAUDE_CONFIG_DIR=$HOME/.claude-work claude` etc. all still work)
 "$CLAUDE_BIN" "$@"
 
-# Restart loop — re-spawns claude as long as the flag is set after each exit
+# Restart loop — re-spawns claude with the original flags after each exit so
+# `claude --allow-dangerously-skip-permissions` (and any other CLI flags) is
+# preserved across restarts. If `$@` contained `--resume <id>` the resume call
+# below will duplicate it, but CC's last-wins parsing handles that fine.
 while [ -f "$RESTART_FLAG" ]; do
   rm -f "$RESTART_FLAG"
 
@@ -74,7 +77,7 @@ while [ -f "$RESTART_FLAG" ]; do
     echo
     echo "  ↻ Restarting Claude Code — resuming session ${SESSION_ID%%-*}…"
     echo
-    "$CLAUDE_BIN" --resume "$SESSION_ID"
+    "$CLAUDE_BIN" --resume "$SESSION_ID" "$@"
     RESUME_EXIT=$?
     if [ "$RESUME_EXIT" -ne 0 ] && [ ! -f "$RESTART_FLAG" ]; then
       echo

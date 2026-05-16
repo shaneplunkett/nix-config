@@ -11,18 +11,22 @@ _: {
         tfaa = "terraform apply -auto-approve";
         nvl = "nvim --listen /tmp/nvim";
 
-        # Claude Code — personal account (full Vex)
-        cc = "claude --allow-dangerously-skip-permissions";
-        ccr = "claude --resume --allow-dangerously-skip-permissions";
+        # Claude Code — personal account (full Vex). Permission mode is set
+        # declaratively via settings.json#permissions.defaultMode in
+        # home/shane/modules/common/ai/cc/default.nix — no CLI flag needed.
+        cc = "claude";
+        ccr = "claude --resume";
 
         # Claude Code — work account (full Vex, separate auth)
-        ccw = "CLAUDE_CONFIG_DIR=$HOME/.claude-work claude --allow-dangerously-skip-permissions";
-        ccwr = "CLAUDE_CONFIG_DIR=$HOME/.claude-work claude --resume --allow-dangerously-skip-permissions";
+        ccw = "CLAUDE_CONFIG_DIR=$HOME/.claude-work claude";
+        ccwr = "CLAUDE_CONFIG_DIR=$HOME/.claude-work claude --resume";
 
         # Claude Code — pro / public-safe (Vex stripped of RP + intimate register).
-        # Use for client demos, exec pitches, screen-shares — same brain, different protocol.
-        ccp = "CLAUDE_CONFIG_DIR=$HOME/.claude-pro claude --allow-dangerously-skip-permissions";
-        ccpr = "CLAUDE_CONFIG_DIR=$HOME/.claude-pro claude --resume --allow-dangerously-skip-permissions";
+        # Use for client demos, exec pitches, screen-shares — same brain, different
+        # protocol. Pro variant's defaultMode stays "default" (prompts on) for
+        # safety during screen-share contexts.
+        ccp = "CLAUDE_CONFIG_DIR=$HOME/.claude-pro claude";
+        ccpr = "CLAUDE_CONFIG_DIR=$HOME/.claude-pro claude --resume";
       };
       functions = {
         # Shadow the bare `claude` binary with the claude-restart wrapper —
