@@ -1,0 +1,52 @@
+--- a/tui/src/markdown_render.rs
++++ b/tui/src/markdown_render.rs
+@@ -19,6 +19,7 @@
+ use pulldown_cmark::Parser;
+ use pulldown_cmark::Tag;
+ use pulldown_cmark::TagEnd;
++use ratatui::style::Color;
+ use ratatui::style::Style;
+ use ratatui::text::Line;
+ use ratatui::text::Span;
+@@ -50,21 +51,28 @@
+     fn default() -> Self {
+         use ratatui::style::Stylize;
+ 
++        const MAUVE: Color = Color::Rgb(203, 166, 247);
++        const LAVENDER: Color = Color::Rgb(180, 190, 254);
++        const SAPPHIRE: Color = Color::Rgb(116, 199, 236);
++        const SKY: Color = Color::Rgb(137, 220, 235);
++        const TEAL: Color = Color::Rgb(148, 226, 213);
++        const SUBTEXT_0: Color = Color::Rgb(166, 173, 200);
++
+         Self {
+-            h1: Style::new().bold().underlined(),
+-            h2: Style::new().bold(),
+-            h3: Style::new().bold().italic(),
+-            h4: Style::new().italic(),
+-            h5: Style::new().italic(),
+-            h6: Style::new().italic(),
+-            code: Style::new().cyan(),
+-            emphasis: Style::new().italic(),
+-            strong: Style::new().bold(),
++            h1: Style::new().fg(MAUVE).bold().underlined(),
++            h2: Style::new().fg(LAVENDER).bold(),
++            h3: Style::new().fg(MAUVE).bold().italic(),
++            h4: Style::new().fg(MAUVE).italic(),
++            h5: Style::new().fg(LAVENDER).italic(),
++            h6: Style::new().fg(SUBTEXT_0).italic(),
++            code: Style::new().fg(SKY),
++            emphasis: Style::new().fg(MAUVE).italic(),
++            strong: Style::new().fg(LAVENDER).bold(),
+             strikethrough: Style::new().crossed_out(),
+-            ordered_list_marker: Style::new().light_blue(),
+-            unordered_list_marker: Style::new(),
+-            link: Style::new().cyan().underlined(),
+-            blockquote: Style::new().green(),
++            ordered_list_marker: Style::new().fg(SAPPHIRE),
++            unordered_list_marker: Style::new().fg(SUBTEXT_0),
++            link: Style::new().fg(SAPPHIRE).underlined(),
++            blockquote: Style::new().fg(TEAL).italic(),
+         }
+     }
+ }

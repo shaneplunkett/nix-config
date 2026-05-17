@@ -133,6 +133,11 @@ let
   # unaffected and works regardless.
   enableLinuxGui = false;
   codexDesktopLinux = inputs.codex-desktop-linux.packages.${pkgs.system}.default;
+  codexPackage = pkgs.codex.overrideAttrs (oldAttrs: {
+    patches = (oldAttrs.patches or [ ]) ++ [
+      ./patches/codex-vex-markdown-colours.patch
+    ];
+  });
 
   codexConfigDir = ".codex";
   codexConfigPath = "${homeDirectory}/${codexConfigDir}/config.toml";
@@ -294,6 +299,7 @@ in
 
   programs.codex = {
     enable = true;
+    package = codexPackage;
 
     # ─── Persona ─────────────────────────────────────────────────────────
     # Single AGENTS.md concatenated from core.md + output-style + rules/.
