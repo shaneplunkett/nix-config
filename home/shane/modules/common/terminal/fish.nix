@@ -29,6 +29,11 @@ _: {
         # safety during screen-share contexts.
         ccp = "CLAUDE_CONFIG_DIR=$HOME/.claude-pro claude";
         ccpr = "CLAUDE_CONFIG_DIR=$HOME/.claude-pro claude --resume";
+
+        # Codex — personal account (full Vex). Trust, sandbox, and model
+        # defaults live in ~/.codex/config.toml seeded by the Codex module.
+        cx = "codex";
+        cxr = "codex resume --last";
       };
       functions = {
         # Shadow the bare `claude` binary with the claude-restart wrapper —
