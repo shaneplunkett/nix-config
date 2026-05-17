@@ -1,7 +1,7 @@
 {
   "ccVersion": "2.1.123",
   "ccInstallationPath": null,
-  "lastModified": "2026-05-16T05:00:00.000Z",
+  "lastModified": "2026-05-17T05:00:00.000Z",
   "changesApplied": false,
   "settings": {
     "themes": [
@@ -827,8 +827,8 @@
       "filterScrollEscapeSequences": false,
       "enableWorktreeMode": false,
       "allowCustomAgentModels": false,
-      "enableContextLimitOverride": false,
-      "enableModelCustomizations": false,
+      "enableContextLimitOverride": true,
+      "enableModelCustomizations": true,
       "enableVoiceMode": false,
       "enableVoiceConciseOutput": true,
       "enableChannelsMode": false,

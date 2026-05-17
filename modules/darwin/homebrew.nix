@@ -10,6 +10,7 @@ _: {
       "elgato-camera-hub"
       "tailscale-app"
       "chatgpt"
+      "codex-app"
       "plex"
       "hiddenbar"
       "ferdium"

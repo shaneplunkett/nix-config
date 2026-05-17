@@ -1,0 +1,74 @@
+# Codex prefix_rule allow-list — surfaces in CODEX_HOME/rules/default.rules.
+#
+# Mirrors the read-only / dev-tooling slice of permissions.allow from the CC
+# module so codex doesn't pause for approval on Shane's bread-and-butter
+# commands. Mutation-shaped commands (git commit/push, nix-prefetch, etc.) are
+# deliberately omitted — let the approval flow catch those.
+#
+# Syntax: Starlark. `decision` defaults to "allow" when omitted.
+
+# ─── git read ──────────────────────────────────────────────────────────────
+prefix_rule(pattern = ["git", "status"])
+prefix_rule(pattern = ["git", "log"])
+prefix_rule(pattern = ["git", "diff"])
+prefix_rule(pattern = ["git", "show"])
+prefix_rule(pattern = ["git", "branch"])
+prefix_rule(pattern = ["git", "remote"])
+prefix_rule(pattern = ["git", "fetch"])
+prefix_rule(pattern = ["git", "rev-parse"])
+
+# ─── filesystem read ───────────────────────────────────────────────────────
+prefix_rule(pattern = ["ls"])
+prefix_rule(pattern = ["cat"])
+prefix_rule(pattern = ["head"])
+prefix_rule(pattern = ["tail"])
+prefix_rule(pattern = ["readlink"])
+prefix_rule(pattern = ["echo"])
+prefix_rule(pattern = ["which"])
+prefix_rule(pattern = ["file"])
+prefix_rule(pattern = ["wc"])
+
+# ─── nix toolchain ─────────────────────────────────────────────────────────
+prefix_rule(pattern = ["nix", "eval"])
+prefix_rule(pattern = ["nix", "build"])
+prefix_rule(pattern = ["nix-shell"])
+prefix_rule(pattern = ["nix", "flake"])
+prefix_rule(pattern = ["nixos-rebuild", "build"])
+prefix_rule(pattern = ["nh", "home"])
+prefix_rule(pattern = ["nh", "os"])
+prefix_rule(pattern = ["nh", "darwin"])
+prefix_rule(pattern = ["statix", "check"])
+prefix_rule(pattern = ["deadnix"])
+
+# ─── language runtimes (read/exec, sandbox handles writes) ─────────────────
+prefix_rule(pattern = ["python3"])
+prefix_rule(pattern = ["node"])
+prefix_rule(pattern = ["npx"])
+prefix_rule(pattern = ["curl"])
+
+# ─── github (read) ─────────────────────────────────────────────────────────
+prefix_rule(pattern = ["gh", "api"])
+prefix_rule(pattern = ["gh", "repo"])
+prefix_rule(pattern = ["gh", "release"])
+prefix_rule(pattern = ["gh", "pr", "view"])
+prefix_rule(pattern = ["gh", "pr", "list"])
+prefix_rule(pattern = ["gh", "issue", "view"])
+prefix_rule(pattern = ["gh", "issue", "list"])
+
+# ─── google workspace (read) ───────────────────────────────────────────────
+prefix_rule(pattern = ["gws", "gmail"])
+prefix_rule(pattern = ["gws", "calendar"])
+prefix_rule(pattern = ["gws", "drive"])
+
+# ─── vex CLIs ──────────────────────────────────────────────────────────────
+prefix_rule(pattern = ["vex"])
+prefix_rule(pattern = ["td"])
+prefix_rule(pattern = ["jira"])
+prefix_rule(pattern = ["confluence"])
+prefix_rule(pattern = ["langsmith"])
+prefix_rule(pattern = ["tvly"])
+prefix_rule(pattern = ["bb"])
+prefix_rule(pattern = ["rbw", "get"])
+prefix_rule(pattern = ["rbw", "unlocked"])
+prefix_rule(pattern = ["agent-slack"])
+prefix_rule(pattern = ["himalaya"])

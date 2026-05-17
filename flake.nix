@@ -86,6 +86,16 @@
       url = "github:ezKEa/aagl-gtk-on-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Community Linux build of the official Codex desktop GUI. Extracts the
+    # macOS Codex.dmg from persistent.oaistatic.com and re-shims it as a
+    # Linux Electron app. NixOS-aware (patchelf'd Electron + LD_LIBRARY_PATH
+    # for dlopen'd GL/EGL libs). MIT licensed, ~840 stars, active maintainer.
+    # Consumed only by the NixOS desktop via `home/shane/modules/common/ai/codex/`.
+    codex-desktop-linux = {
+      url = "github:ilysenko/codex-desktop-linux";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

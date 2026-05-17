@@ -5,9 +5,6 @@
   ...
 }:
 let
-  shared = import ../mcp { inherit pkgs; };
-  allMcpServers = shared.mcpServers;
-
   # Private values (work URLs / email attributes) live in the companion
   # nix-config-private flake input. The public flake stays clean.
   priv = inputs.nix-config-private.values;
@@ -48,7 +45,7 @@ let
   vex-statusline = pkgs.writeShellApplication {
     name = "vex-statusline";
     runtimeInputs = [ pkgs.python3 ];
-    text = ''exec python3 ${./vex-statusline.py}'';
+    text = "exec python3 ${./vex-statusline.py}";
   };
 
   # SessionStart / CwdChanged hook: load direnv environment into CLAUDE_ENV_FILE.
@@ -243,6 +240,15 @@ let
         OTEL_EXPORTER_OTLP_ENDPOINT = priv.otelEndpoint;
         OTEL_EXPORTER_OTLP_PROTOCOL = "http/json";
         OTEL_RESOURCE_ATTRIBUTES = "autograb_user=${priv.autograbUser},team=${priv.autograbTeam}";
+
+        # Effective context-window cap consumed by the tweakcc-fixed
+        # `enableContextLimitOverride` patch (config.json#settings.misc).
+        # CC's auto-compact threshold is 75% of this value, and the plan-mode
+        # "% context used" gauge is calculated against it too. Opus 4.7 1M
+        # technically supports 1,000,000 tokens but starts degrading past
+        # ~350k — capping at 500k gives auto-compact ~375k headroom and keeps
+        # the % display honest. Bump if it compacts too aggressively.
+        CLAUDE_CODE_CONTEXT_LIMIT = "500000";
       };
 
       # skipDangerousModePermissionPrompt is a TOP-LEVEL state flag per the
@@ -516,9 +522,9 @@ in
 
     context = "# Vex\n@vex/core.md\n";
 
-    # MCP servers are bundled into a synthetic plugin dir + injected via
-    # --plugin-dir on the wrapped `claude` binary. Nothing touches ~/.claude.json.
-    mcpServers = allMcpServers;
+    # Shared MCP servers come from programs.mcp.servers and are translated
+    # into Claude Code's native mcpServers shape by the Home Manager module.
+    enableMcpIntegration = true;
 
     # Marketplaces — writes both settings.json#extraKnownMarketplaces and
     # ~/.claude/plugins/known_marketplaces.json declaratively.

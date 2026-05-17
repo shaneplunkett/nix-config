@@ -1,5 +1,4 @@
-_:
-{
+_: {
   # Pre-computed nixpkgs file-path index. Enables:
   # - `nix-locate -1 <bin>` for instant package lookup by binary name
   # - `command-not-found` shell hook: typing a missing command suggests

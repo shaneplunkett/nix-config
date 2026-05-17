@@ -69,8 +69,11 @@ Darwin-only packages (`xcbeautify`, `swiftformat`, `swiftlint`, `sourcekit`) →
 ## AI modules
 
 `home/shane/modules/common/ai/`:
-- `mcp/` — shared MCP server defs (neovim, xero). xero wrapper pulls creds from rbw.
+- `mcp/` — canonical `programs.mcp.servers` registry shared by Claude Code and Codex. Prefer pinned Nix packages for server binaries; runtime wrappers are only for secrets.
 - `cc/` — Claude Code. Settings, hooks, theme, plugins via `programs.claude-code` module. Private values (work URLs, work email) come from `inputs.nix-config-private`.
+- `codex/` — Codex CLI. Settings, hooks, skills, rules, and Vex AGENTS.md context via `programs.codex`.
+
+Claude Code uses tweakcc's `claudeMdAltNames` patch, with `AGENTS.md` as the first fallback when no project `CLAUDE.md` exists. Keep this root file as the shared project rules file unless there is a specific reason to split harness behaviour.
 
 ## Git
 

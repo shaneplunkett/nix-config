@@ -1,6 +1,8 @@
 { ... }:
 {
   imports = [
+    ./mcp
     ./cc
+    ./codex
   ];
 }
