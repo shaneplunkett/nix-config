@@ -177,6 +177,29 @@ let
     # the [hooks] block below is parsed but ignored.
     features.hooks = true;
 
+    # ─── TUI ───────────────────────────────────────────────────────────
+    # Codex's theme surface is syntax/diff highlighting, not a full
+    # chrome skin like Claude Code's custom:vex theme. Pin Catppuccin
+    # Mocha explicitly so terminals, NixVim, fzf, lazygit, tmux, and
+    # Codex all line up around the same dark mauve aesthetic.
+    tui = {
+      theme = "catppuccin-mocha";
+      status_line = [
+        "model-with-reasoning"
+        "project-name"
+        "git-branch"
+        "run-state"
+        "context-remaining"
+        "task-progress"
+      ];
+      terminal_title = [
+        "activity"
+        "project-name"
+        "git-branch"
+        "thread-title"
+      ];
+    };
+
     # ─── Subprocess environment inheritance ────────────────────────────
     # Codex defaults `shell_environment_policy.inherit = "core"` — a
     # minimal allow-list that strips XDG_RUNTIME_DIR, DBUS_SESSION_*,
