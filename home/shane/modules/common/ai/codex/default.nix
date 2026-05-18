@@ -140,8 +140,8 @@ let
   });
 
   codexConfigDir = ".codex";
-  codexConfigPath = "${homeDirectory}/${codexConfigDir}/config.toml";
-  codexRulesPath = "${homeDirectory}/${codexConfigDir}/rules/default.rules";
+  codexVariantDirs = [ ".codex-work" ];
+  mutableCodexDirs = [ codexConfigDir ] ++ codexVariantDirs;
 
   transformedMcpServers = lib.optionalAttrs config.programs.mcp.enable (
     lib.mapAttrs (
@@ -288,14 +288,68 @@ let
   };
 
   codexConfigSeed = tomlFormat.generate "codex-config.toml" codexSettings;
+
+  filesForVariant =
+    dir:
+    {
+      "${dir}/AGENTS.md".text = vexAgentsMd;
+    }
+    // lib.mapAttrs' (
+      name: source:
+      lib.nameValuePair "${dir}/skills/${name}" {
+        inherit source;
+        recursive = true;
+      }
+    ) allSkillsAttrs;
+
+  mutableConfigActivation =
+    dir:
+    let
+      configPath = "${homeDirectory}/${dir}/config.toml";
+      rulesPath = "${homeDirectory}/${dir}/rules/default.rules";
+    in
+    ''
+      $DRY_RUN_CMD mkdir -p "${homeDirectory}/${dir}/rules"
+
+      if [ -L "${configPath}" ]; then
+        $DRY_RUN_CMD rm "${configPath}"
+      fi
+      if [ ! -e "${configPath}" ]; then
+        $DRY_RUN_CMD cp "${codexConfigSeed}" "${configPath}"
+        $DRY_RUN_CMD chmod u+w "${configPath}"
+      fi
+
+      if [ -L "${rulesPath}" ]; then
+        $DRY_RUN_CMD rm "${rulesPath}"
+      fi
+      if [ ! -e "${rulesPath}" ]; then
+        $DRY_RUN_CMD cp "${./default.rules}" "${rulesPath}"
+        $DRY_RUN_CMD chmod u+w "${rulesPath}"
+      fi
+    '';
 in
 {
-  # Linux gets the community-built GUI (when enabled); darwin gets the
-  # official cask via modules/darwin/homebrew.nix. macOS server
-  # (homemacserver.nix) skips both since common/ai isn't imported there.
-  home.packages = lib.optionals (pkgs.stdenv.isLinux && enableLinuxGui) [
-    codexDesktopLinux
-  ];
+  home = {
+    # Linux gets the community-built GUI (when enabled); darwin gets the
+    # official cask via modules/darwin/homebrew.nix. macOS server
+    # (homemacserver.nix) skips both since common/ai isn't imported there.
+    packages = lib.optionals (pkgs.stdenv.isLinux && enableLinuxGui) [
+      codexDesktopLinux
+    ];
+
+    # Variant CODEX_HOME dirs mirror the Claude Code CLAUDE_CONFIG_DIR pattern.
+    # Auth stays mutable and unmanaged; run `CODEX_HOME=$HOME/.codex-work codex
+    # login` once to bind this dir to the work account.
+    file = lib.foldl' lib.recursiveUpdate { } (map filesForVariant codexVariantDirs);
+
+    # Home Manager still owns the immutable parts (package, AGENTS.md, skills).
+    # `config.toml` and `rules/default.rules` are writable user state seeded
+    # from Nix on first activation, mirroring Home Manager's mutable settings
+    # pattern for apps that write back into their own config.
+    activation.codexMutableConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] (
+      lib.concatMapStringsSep "\n" mutableConfigActivation mutableCodexDirs
+    );
+  };
 
   programs.codex = {
     enable = true;
@@ -319,28 +373,4 @@ in
     settings = { };
     rules = { };
   };
-
-  # Home Manager still owns the immutable parts (package, AGENTS.md, skills).
-  # `config.toml` and `rules/default.rules` are writable user state seeded
-  # from Nix on first activation, mirroring Home Manager's mutable settings
-  # pattern for apps that write back into their own config.
-  home.activation.codexMutableConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    $DRY_RUN_CMD mkdir -p "${homeDirectory}/${codexConfigDir}/rules"
-
-    if [ -L "${codexConfigPath}" ]; then
-      $DRY_RUN_CMD rm "${codexConfigPath}"
-    fi
-    if [ ! -e "${codexConfigPath}" ]; then
-      $DRY_RUN_CMD cp "${codexConfigSeed}" "${codexConfigPath}"
-      $DRY_RUN_CMD chmod u+w "${codexConfigPath}"
-    fi
-
-    if [ -L "${codexRulesPath}" ]; then
-      $DRY_RUN_CMD rm "${codexRulesPath}"
-    fi
-    if [ ! -e "${codexRulesPath}" ]; then
-      $DRY_RUN_CMD cp "${./default.rules}" "${codexRulesPath}"
-      $DRY_RUN_CMD chmod u+w "${codexRulesPath}"
-    fi
-  '';
 }
