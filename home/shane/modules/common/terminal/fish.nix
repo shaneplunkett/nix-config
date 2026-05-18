@@ -60,14 +60,15 @@ _: {
           end
         '';
         # Same as nrs but with the private flake inputs overridden to point at
-        # local checkouts. Use while iterating on ag-ai-skills, ai-skills, or
-        # nix-config-private so changes apply without push+pull+update.
+        # local checkouts. `path:` includes dirty working-tree edits, which is
+        # what we want while iterating on ag-ai-skills, ai-skills, or
+        # nix-config-private without push+pull+update.
         # `--` separates nh's own args from the underlying rebuild's args.
         nrs-iter = ''
           set -l overrides \
-            --override-input ag-ai-skills "git+file://$HOME/projects/work/ag-ai-skills?ref=HEAD" \
-            --override-input ai-skills "git+file://$HOME/ai-skills?ref=HEAD" \
-            --override-input nix-config-private "git+file://$HOME/projects/personal/nix-config-private?ref=HEAD"
+            --override-input ag-ai-skills "path:$HOME/projects/work/ag-ai-skills" \
+            --override-input ai-skills "path:$HOME/ai-skills" \
+            --override-input nix-config-private "path:$HOME/projects/personal/nix-config-private"
           if test (uname) = Darwin
             nh darwin switch $argv "$HOME/nix-config" -H (hostname -s) -- $overrides
           else
