@@ -11,6 +11,8 @@
 # Adapted from github.com/typedrat/nix-config/packages/claude-code-patched (MIT).
 {
   lib,
+  stdenv,
+  darwin,
   fetchFromGitHub,
   claude-code,
   tweakcc-fixed,
@@ -49,10 +51,17 @@ assert lib.assertMsg (configCcVersion == claude-code.version) ''
 claude-code.overrideAttrs (prev: {
   pname = "claude-code-patched";
 
+  # tweakcc rewrites bytes inside the signed Mach-O text/data segments;
+  # macOS then SIGKILLs the binary at launch because the signature no
+  # longer matches. autoSignDarwinBinariesHook registers a postFixupHook
+  # that re-signs every output file, running after our preFixup patch
+  # step lands. Without it, versionCheckPhase sees an empty `claude
+  # --version` (exit 137) and the build fails late.
   nativeBuildInputs = prev.nativeBuildInputs ++ [
     tweakcc-fixed
     jq
-  ];
+  ]
+  ++ lib.optional stdenv.hostPlatform.isDarwin darwin.autoSignDarwinBinariesHook;
 
   preFixup = (prev.preFixup or "") + ''
     # Stage tweakcc's expected HOME / config layout in the sandbox.
