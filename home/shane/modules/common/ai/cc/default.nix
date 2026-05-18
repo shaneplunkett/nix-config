@@ -323,13 +323,13 @@ let
         ]
         ++ [
           "WebSearch"
-          "WebFetch"
         ];
 
         deny = [
           "mcp__claude_ai_Google_Drive"
           "mcp__claude_ai_Atlassian"
           "mcp__claude_ai_Slack"
+          "WebFetch"
         ];
       };
 

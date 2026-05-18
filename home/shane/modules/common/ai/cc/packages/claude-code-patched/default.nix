@@ -77,6 +77,17 @@ claude-code.overrideAttrs (prev: {
     cp -RL ${promptOverrides}/system-reminders "$TWEAKCC_CONFIG_DIR/system-reminders"
     chmod -R u+w "$TWEAKCC_CONFIG_DIR/system-prompts" "$TWEAKCC_CONFIG_DIR/system-reminders"
 
+    # Local overrides — layered on top of labot for surgical changes (WebFetch
+    # redirect to bb, etc.). Same file naming as labot; clobbers wins.
+    if [ -d ${./overrides}/system-prompts ]; then
+      cp -RfL ${./overrides}/system-prompts/. "$TWEAKCC_CONFIG_DIR/system-prompts/"
+      chmod -R u+w "$TWEAKCC_CONFIG_DIR/system-prompts"
+    fi
+    if [ -d ${./overrides}/system-reminders ]; then
+      cp -RfL ${./overrides}/system-reminders/. "$TWEAKCC_CONFIG_DIR/system-reminders/"
+      chmod -R u+w "$TWEAKCC_CONFIG_DIR/system-reminders"
+    fi
+
     # Resolve ''${X_TOOL_NAME} template placeholders in lobotomized's prompts.
     # Upstream bug: lobotomized declares these as substitution variables in
     # frontmatter expecting tweakcc-fixed to resolve them at apply time, but
