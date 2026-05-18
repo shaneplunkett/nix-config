@@ -541,9 +541,6 @@ in
     # Module symlinks each into .claude/skills/<name>/.
     skills = allSkillsAttrs;
 
-    # Vex output style — module writes ~/.claude/output-styles/vex.md.
-    outputStyles.vex = "${aiSkills}/vex/output-style.md";
-
     # Rules + agents dirs — module symlinks ~/.claude/{rules,agents}
     # recursively from the flake-input source.
     rulesDir = "${aiSkills}/vex/rules";
@@ -552,11 +549,14 @@ in
 
   # Two things the module doesn't expose options for, kept as raw home.file:
   # - themes/vex.json (no themes option in the module)
+  # - output-styles/vex.md (programs.claude-code.outputStyles treats store-path
+  #   strings as inline text; raw home.file keeps it as a real source file)
   # - vex/core.md at a custom path (referenced from CLAUDE.md as @vex/core.md)
   home.file =
     lib.foldl' lib.recursiveUpdate
       {
         ".claude/themes/vex.json".source = vexThemeFile;
+        ".claude/output-styles/vex.md".source = "${aiSkills}/vex/output-style.md";
         ".claude/vex/core.md".source = "${aiSkills}/vex/core.md";
       }
       (
