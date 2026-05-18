@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+_:
 
 {
 
@@ -22,10 +22,14 @@
         AppleShowAllFiles = true;
         CreateDesktop = false;
         FXDefaultSearchScope = "SCcf";
+        FXEnableExtensionChangeWarning = false;
         FXPreferredViewStyle = "Nlsv";
+        FXRemoveOldTrashItems = true;
         ShowPathbar = true;
         ShowStatusBar = true;
         NewWindowTarget = "Home";
+        _FXShowPosixPathInTitle = true;
+        _FXSortFoldersFirst = true;
       };
 
       controlcenter = {
@@ -39,8 +43,12 @@
       };
 
       WindowManager = {
-        StandardHideDesktopIcons = true;
         EnableStandardClickToShowDesktop = false;
+        EnableTiledWindowMargins = false;
+        EnableTilingByEdgeDrag = false;
+        EnableTilingOptionAccelerator = false;
+        EnableTopTilingByEdgeDrag = false;
+        StandardHideDesktopIcons = true;
       };
 
       SoftwareUpdate = {
@@ -48,6 +56,20 @@
       };
 
       NSGlobalDomain = {
+        AppleICUForce24HourTime = true;
+        AppleKeyboardUIMode = 3;
+        InitialKeyRepeat = 15;
+        KeyRepeat = 2;
+        NSAutomaticCapitalizationEnabled = false;
+        NSAutomaticDashSubstitutionEnabled = false;
+        NSAutomaticInlinePredictionEnabled = false;
+        NSAutomaticPeriodSubstitutionEnabled = false;
+        NSAutomaticQuoteSubstitutionEnabled = false;
+        NSAutomaticSpellingCorrectionEnabled = false;
+        NSAutomaticWindowAnimationsEnabled = false;
+        NSDocumentSaveNewDocumentsToCloud = false;
+        NSNavPanelExpandedStateForSaveMode = true;
+        NSNavPanelExpandedStateForSaveMode2 = true;
         "com.apple.swipescrolldirection" = false;
       };
 
@@ -62,29 +84,17 @@
 
       screensaver = {
         askForPassword = true;
+        askForPasswordDelay = 0;
       };
     };
+  };
 
-    activationScripts.applications.text =
-      let
-        env = pkgs.buildEnv {
-          name = "system-applications";
-          paths = config.environment.systemPackages;
-          pathsToLink = [ "/Applications" ];
-        };
-      in
-      pkgs.lib.mkForce ''
-        # Set up applications.
-        echo "setting up /Applications..." >&2
-        rm -rf /Applications/Nix\ Apps
-        mkdir -p /Applications/Nix\ Apps
-        find ${env}/Applications -maxdepth 1 -type l -exec readlink '{}' + |
-        while read -r src; do
-          app_name=$(basename "$src")
-          echo "copying $src" >&2
-          ${pkgs.mkalias}/bin/mkalias "$src" "/Applications/Nix Apps/$app_name"
-        done
-      '';
+  networking.applicationFirewall = {
+    enable = true;
+    blockAllIncoming = false;
+    allowSigned = true;
+    allowSignedApp = true;
+    enableStealthMode = true;
   };
 
   # PAM configuration for sudo with Touch ID and Apple Watch

@@ -33,7 +33,7 @@ _: {
         "alt-shift-h" = "move left";
         "alt-shift-j" = "move down";
         "alt-shift-k" = "move up";
-        "alt-shift-l" = "move down";
+        "alt-shift-l" = "move right";
 
         "alt-minus" = "resize smart -50";
         "alt-equal" = "resize smart +50";

@@ -45,13 +45,14 @@ _: {
         # cleanly (no recursion).
         claude = "claude-restart $argv";
         # nh wraps nixos-rebuild / darwin-rebuild / home-manager switch with
-        # a prettier `nom` build view + nvd version diff. Flake path is picked up
-        # from NH_FLAKE (set by programs.nh.flake in nh.nix).
+        # a prettier `nom` build view + nvd version diff. Pass the flake path
+        # explicitly so this works even before NH_FLAKE is present in the
+        # current shell environment.
         nrs = ''
           if test (uname) = Darwin
-            nh darwin switch
+            nh darwin switch $argv "$HOME/nix-config" -H (hostname -s)
           else
-            nh os switch
+            nh os switch $argv "$HOME/nix-config" -H (hostname)
           end
         '';
         # Same as nrs but with the private flake inputs overridden to point at
@@ -64,9 +65,9 @@ _: {
             --override-input ai-skills "git+file://$HOME/ai-skills?ref=HEAD" \
             --override-input nix-config-private "git+file://$HOME/projects/personal/nix-config-private?ref=HEAD"
           if test (uname) = Darwin
-            nh darwin switch -- $overrides
+            nh darwin switch $argv "$HOME/nix-config" -H (hostname -s) -- $overrides
           else
-            nh os switch -- $overrides
+            nh os switch $argv "$HOME/nix-config" -H (hostname) -- $overrides
           end
         '';
         tfplan = ''

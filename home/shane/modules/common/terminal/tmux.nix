@@ -70,10 +70,11 @@ in
       unbind %
       bind r source-file ~/.config/tmux/tmux.conf \; display-message "Config reloaded!"
 
-      set -g default-terminal "screen-256color"
+      set -g default-terminal "tmux-256color"
       set -g terminal-features ",xterm-256color:RGB"
+      set -ga terminal-features ",xterm-ghostty:RGB,usstyle"
       set -g allow-passthrough on
-      set -ga terminal-overrides ',xterm-ghostty:Tc'
+      set -ga terminal-overrides ',xterm-ghostty:Tc:sitm=\E[3m:ritm=\E[23m'
 
       # Mouse works as expected
       set-option -g mouse on

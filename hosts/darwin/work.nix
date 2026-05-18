@@ -11,7 +11,6 @@
   ];
 
   homebrew.casks = lib.mkAfter [
-    "slack"
     "figma"
   ];
 
@@ -21,6 +20,7 @@
   };
 
   environment.systemPackages = lib.mkAfter [
+    pkgs.slack
     (pkgs.jetbrains.datagrip.overrideAttrs {
       version = "2024.3.5";
       src = pkgs.fetchurl {

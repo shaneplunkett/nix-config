@@ -6,23 +6,16 @@ _: {
 
     casks = [
       "ghostty"
-      "postman"
       "elgato-camera-hub"
       "tailscale-app"
-      "chatgpt"
-      "codex-app"
       "plex"
-      "hiddenbar"
       "ferdium"
       "hammerspoon"
-      "docker-desktop"
-      "gcloud-cli"
       "teamviewer"
-      "todoist-app"
-      "signal"
     ];
 
     brews = [
+      "mas"
       "xcode-build-server"
     ];
 
@@ -31,8 +24,8 @@ _: {
     };
     onActivation = {
       cleanup = "zap";
-      autoUpdate = true;
-      upgrade = true;
+      autoUpdate = false;
+      upgrade = false;
     };
 
   };
