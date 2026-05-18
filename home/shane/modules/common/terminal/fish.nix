@@ -34,6 +34,10 @@ _: {
         # defaults live in ~/.codex/config.toml seeded by the Codex module.
         cx = "codex";
         cxr = "codex resume --last";
+
+        # Codex — work account (full Vex, separate auth/state)
+        cxw = "CODEX_HOME=$HOME/.codex-work codex";
+        cxwr = "CODEX_HOME=$HOME/.codex-work codex resume --last";
       };
       functions = {
         # Shadow the bare `claude` binary with the claude-restart wrapper —
