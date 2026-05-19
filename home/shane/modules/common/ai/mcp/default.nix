@@ -5,6 +5,33 @@
 let
   inherit (pkgs) nodejs;
 
+  aikidoMcpServer = pkgs.buildNpmPackage rec {
+    pname = "aikido-mcp";
+    version = "1.0.7";
+
+    src = pkgs.fetchurl {
+      url = "https://registry.npmjs.org/@aikidosec/mcp/-/mcp-${version}.tgz";
+      hash = "sha256-/G9PY0526/r1kcapSgWK8FbpDAsodzm0OrrkfnL4MCY=";
+    };
+
+    sourceRoot = "package";
+    npmDepsHash = "sha256-V0RpcQJKHKsEF21NCBYDRud2wE+I7L7Gwpvb7u6WtTw=";
+    dontNpmBuild = true;
+  };
+
+  aikidoWrapper = pkgs.writeShellApplication {
+    name = "aikido-mcp-wrapper";
+    runtimeInputs = [
+      pkgs.rbw
+      aikidoMcpServer
+    ];
+    text = ''
+      AIKIDO_API_KEY="$(rbw get aikido-token 2>/dev/null)"
+      export AIKIDO_API_KEY
+      exec aikido-mcp
+    '';
+  };
+
   xeroMcpServer = pkgs.buildNpmPackage rec {
     pname = "xero-mcp-server";
     version = "0.0.16";
@@ -49,6 +76,11 @@ in
         env = {
           NVIM_SOCKET_PATH = "/tmp/nvim";
         };
+      };
+
+      aikido = {
+        command = "${aikidoWrapper}/bin/aikido-mcp-wrapper";
+        args = [ ];
       };
 
       xero = {

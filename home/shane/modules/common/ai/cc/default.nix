@@ -104,19 +104,12 @@ let
     rev = "1a2f18b05cf5652fd25403e8d229fc884fb84103";
     hash = "sha256-LjMusufv+H8+t2O9DJgRS9QOuHelepIWuWFqiK5y3UQ=";
   };
-  aikidoPlugin = pkgs.fetchFromGitHub {
-    owner = "AikidoSec";
-    repo = "aikido-claude-plugin";
-    rev = "5d9c13d367218e9b43a11d4502f623ab98859225";
-    hash = "sha256-tukG/k82QKFe0ruGVkIXZpt2qXs1KMz5mnyXnflJo8I=";
-  };
 
   # Single source of truth for CC plugins — used to derive both
   # programs.claude-code.plugins (--plugin-dir wrapper args) AND
   # settings.json#enabledPlugins (marketplace registry state, so `claude plugin
   # list` shows them as enabled). Add a new plugin here and both surfaces update.
   ccPlugins = {
-    "aikido@claude-plugins-official" = aikidoPlugin;
     "discord@claude-plugins-official" = "${claudePluginsMarketplace}/external_plugins/discord";
     "frontend-design@claude-plugins-official" = "${claudePluginsMarketplace}/plugins/frontend-design";
   };
@@ -533,8 +526,8 @@ in
     };
 
     # Plugins — wrapped binary auto-loads each via --plugin-dir. discord and
-    # frontend-design live inside the marketplace clone; aikido is its own
-    # upstream repo. See `ccPlugins` above for the single source of truth.
+    # frontend-design live inside the marketplace clone. See `ccPlugins` above
+    # for the single source of truth.
     plugins = lib.attrValues ccPlugins;
 
     # Skills — work (from ag-ai-skills) + personal (from ai-skills/personal/).
