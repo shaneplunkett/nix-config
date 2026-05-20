@@ -5,6 +5,15 @@
 let
   inherit (pkgs) nodejs;
 
+  rbwRuntimeEnv = ''
+    if [ -z "''${XDG_RUNTIME_DIR:-}" ]; then
+      runtime_dir="/run/user/$(${pkgs.coreutils}/bin/id -u)"
+      if [ -d "$runtime_dir" ]; then
+        export XDG_RUNTIME_DIR="$runtime_dir"
+      fi
+    fi
+  '';
+
   aikidoMcpServer = pkgs.buildNpmPackage rec {
     pname = "aikido-mcp";
     version = "1.0.7";
@@ -26,8 +35,10 @@ let
       aikidoMcpServer
     ];
     text = ''
+      ${rbwRuntimeEnv}
       AIKIDO_API_KEY="$(rbw get aikido-token 2>/dev/null)"
-      export AIKIDO_API_KEY
+      AIKIDO_MCP_ALL_TOOLS="''${AIKIDO_MCP_ALL_TOOLS:-true}"
+      export AIKIDO_API_KEY AIKIDO_MCP_ALL_TOOLS
       exec aikido-mcp
     '';
   };
@@ -53,10 +64,11 @@ let
       xeroMcpServer
     ];
     text = ''
+      ${rbwRuntimeEnv}
       XERO_CLIENT_ID="$(rbw get xero-client-id 2>/dev/null)"
       XERO_CLIENT_SECRET="$(rbw get xero-client-secret 2>/dev/null)"
       export XERO_CLIENT_ID XERO_CLIENT_SECRET
-      exec xero-mcp-server
+      exec ${xeroMcpServer}/bin/@xeroapi/xero-mcp-server
     '';
   };
 
@@ -81,6 +93,9 @@ in
       aikido = {
         command = "${aikidoWrapper}/bin/aikido-mcp-wrapper";
         args = [ ];
+        env = {
+          AIKIDO_MCP_ALL_TOOLS = "true";
+        };
       };
 
       xero = {

@@ -23,7 +23,7 @@
       createDirectories = true;
       setSessionVariables = true;
       documents = "${config.home.homeDirectory}/documents";
-      download = "${config.home.homeDirectory}/downloads";
+      download = "${config.home.homeDirectory}/Downloads";
       music = "${config.home.homeDirectory}/music";
       pictures = "${config.home.homeDirectory}/pictures";
       videos = "${config.home.homeDirectory}/videos";

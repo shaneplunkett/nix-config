@@ -145,7 +145,7 @@ let
 
   transformedMcpServers = lib.optionalAttrs config.programs.mcp.enable (
     lib.mapAttrs (
-      _name: server:
+      name: server:
       (lib.removeAttrs server [
         "disabled"
         "headers"
@@ -156,6 +156,10 @@ let
       // {
         enabled = !(server.disabled or false);
       }
+      // (lib.optionalAttrs (name == "aikido") {
+        startup_timeout_sec = 30;
+        tool_timeout_sec = 300;
+      })
     ) config.programs.mcp.servers
   );
 
@@ -288,6 +292,9 @@ let
   };
 
   codexConfigSeed = tomlFormat.generate "codex-config.toml" codexSettings;
+  codexMcpConfigSeed = tomlFormat.generate "codex-mcp-config.toml" {
+    mcp_servers = transformedMcpServers;
+  };
 
   filesForVariant =
     dir:
@@ -318,6 +325,24 @@ let
         $DRY_RUN_CMD cp "${codexConfigSeed}" "${configPath}"
         $DRY_RUN_CMD chmod u+w "${configPath}"
       fi
+      ${lib.optionalString (transformedMcpServers != { }) ''
+        if [ -e "${configPath}" ]; then
+          tmp="$(${pkgs.coreutils}/bin/mktemp)"
+          ${pkgs.gawk}/bin/awk '
+            /^\[mcp_servers(\.|])/{ skip = 1; next }
+            /^\[/{ skip = 0 }
+            !skip{ print }
+          ' "${configPath}" > "$tmp"
+          $DRY_RUN_CMD cp "$tmp" "${configPath}"
+          $DRY_RUN_CMD rm "$tmp"
+          if [ -z "''${DRY_RUN_CMD:-}" ]; then
+            printf '\n' >> "${configPath}"
+            cat "${codexMcpConfigSeed}" >> "${configPath}"
+          else
+            $DRY_RUN_CMD append managed mcp_servers to "${configPath}"
+          fi
+        fi
+      ''}
 
       if [ -L "${rulesPath}" ]; then
         $DRY_RUN_CMD rm "${rulesPath}"
