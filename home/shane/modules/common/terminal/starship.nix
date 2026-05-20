@@ -3,7 +3,6 @@ _: {
     enable = true;
     enableFishIntegration = true;
     settings = {
-      # Official catppuccin/starship character with cat paw
       character = {
         success_symbol = "[[󰄛](teal) ❯](mauve)";
         error_symbol = "[[󰄛](maroon) ❯](mauve)";

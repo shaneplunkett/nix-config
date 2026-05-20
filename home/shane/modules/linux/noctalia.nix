@@ -1,4 +1,3 @@
-# Noctalia shell — replaces hyprpanel, rofi, swaync, hyprpaper
 {
   config,
   lib,
@@ -14,8 +13,6 @@ in
   programs.noctalia-shell = {
     enable = true;
 
-    # ── Material Design 3 colour tokens mapped from Catppuccin Mocha ──
-    # Primary (lavender — soft), Secondary (teal), Tertiary (peach) — chill base, colourful accents
     colors = lib.mapAttrs (_: lib.mkForce) {
       mPrimary = hex c.lavender;
       mOnPrimary = hex c.crust;
@@ -35,11 +32,9 @@ in
       mOnHover = hex c.text;
     };
 
-    # ── Settings ──
     settings = {
       settingsVersion = 59;
 
-      # ── Bar ──
       bar = {
         barType = "simple";
         position = "top";
@@ -219,7 +214,6 @@ in
         };
       };
 
-      # ── General ──
       general = {
         avatarImage = "/home/shane/.face";
         dimmerOpacity = 0.2;
@@ -272,7 +266,6 @@ in
         reverseScroll = false;
       };
 
-      # ── UI ──
       ui = {
         fontDefault = "Mononoki Nerd Font";
         fontFixed = "monospace";
@@ -288,7 +281,6 @@ in
         settingsPanelSideBarCardStyle = false;
       };
 
-      # ── Location (Melbourne) ──
       location = {
         name = "Melbourne";
         weatherEnabled = true;
@@ -304,7 +296,6 @@ in
         hideWeatherCityName = false;
       };
 
-      # ── Calendar ──
       calendar = {
         cards = [
           {
@@ -322,7 +313,6 @@ in
         ];
       };
 
-      # ── Wallpaper ──
       wallpaper = {
         enabled = true;
         overviewEnabled = false;
@@ -376,7 +366,6 @@ in
         favorites = [ ];
       };
 
-      # ── App launcher ──
       appLauncher = {
         enableClipboardHistory = true;
         autoPasteClipboard = false;
@@ -405,7 +394,6 @@ in
         density = "comfortable";
       };
 
-      # ── Control center ──
       controlCenter = {
         position = "close_to_bar_button";
         diskPath = "/";
@@ -446,7 +434,6 @@ in
         ];
       };
 
-      # ── System monitor ──
       systemMonitor = {
         cpuWarningThreshold = 80;
         cpuCriticalThreshold = 90;
@@ -471,13 +458,11 @@ in
         externalMonitor = "resources || missioncenter || jdsystemmonitor || corestats || system-monitoring-center || gnome-system-monitor || plasma-systemmonitor || mate-system-monitor || ukui-system-monitor || deepin-system-monitor || pantheon-system-monitor";
       };
 
-      # ── Noctalia performance ──
       noctaliaPerformance = {
         disableWallpaper = true;
         disableDesktopWidgets = true;
       };
 
-      # ── Dock ──
       dock = {
         enabled = true;
         position = "bottom";
@@ -510,7 +495,6 @@ in
         indicatorOpacity = 0.6;
       };
 
-      # ── Network ──
       network = {
         wifiEnabled = true;
         airplaneModeEnabled = false;
@@ -524,7 +508,6 @@ in
         bluetoothAutoConnect = true;
       };
 
-      # ── Session menu ──
       sessionMenu = {
         enableCountdown = true;
         countdownDuration = 10000;
@@ -593,7 +576,6 @@ in
         ];
       };
 
-      # ── Notifications ──
       notifications = {
         enabled = true;
         enableMarkdown = false;
@@ -626,7 +608,6 @@ in
         enableBatteryToast = true;
       };
 
-      # ── OSD ──
       osd = {
         enabled = true;
         location = "top_right";
@@ -641,7 +622,6 @@ in
         monitors = [ ];
       };
 
-      # ── Audio ──
       audio = {
         volumeStep = 5;
         volumeOverdrive = false;
@@ -653,7 +633,6 @@ in
         volumeFeedbackSoundFile = "";
       };
 
-      # ── Brightness ──
       brightness = {
         brightnessStep = 5;
         enforceMinimum = true;
@@ -661,7 +640,6 @@ in
         backlightDeviceMappings = [ ];
       };
 
-      # ── Colour scheme ──
       colorSchemes = {
         useWallpaperColors = false;
         predefinedScheme = "Catppuccin";
@@ -673,13 +651,11 @@ in
         monitorForColors = "";
       };
 
-      # ── Templates ──
       templates = {
         activeTemplates = [ ];
         enableUserTheming = false;
       };
 
-      # ── Night light ──
       nightLight = {
         enabled = false;
         forced = false;
@@ -690,7 +666,6 @@ in
         manualSunset = "18:30";
       };
 
-      # ── Hooks ──
       hooks = {
         enabled = false;
         wallpaperChange = "";
@@ -704,13 +679,11 @@ in
         colorGeneration = "";
       };
 
-      # ── Plugins ──
       plugins = {
         autoUpdate = false;
         notifyUpdates = false;
       };
 
-      # ── Idle ──
       idle = {
         enabled = false;
         screenOffTimeout = 600;
@@ -726,7 +699,6 @@ in
         customCommands = "[]";
       };
 
-      # ── Desktop widgets ──
       desktopWidgets = {
         enabled = false;
         overviewEnabled = true;
@@ -737,8 +709,6 @@ in
     };
   };
 
-  # Register all plugins as enabled — states derived from noctaliaVexPlugins
-  # (set by noctalia-plugins.nix via _module.args, single source of truth).
   xdg.configFile."noctalia/plugins.json".text = builtins.toJSON {
     version = 2;
     sources = [
@@ -759,7 +729,6 @@ in
     );
   };
 
-  # Launch via compositor exec-once (systemd launch is deprecated)
   wayland.windowManager.hyprland.settings = {
     exec-once = [ "noctalia-shell" ];
   };

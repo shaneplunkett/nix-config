@@ -1,9 +1,6 @@
 { pkgs, ... }:
 {
   virtualisation.waydroid.enable = true;
-
-  # NixOS 6.18+ doesn't ship legacy iptables kernel modules, so waydroid's
-  # net script must use nftables. Patch the hardcoded LXC_USE_NFT="false".
   nixpkgs.overlays = [
     (_final: prev: {
       waydroid = prev.waydroid.overrideAttrs (old: {
@@ -18,6 +15,6 @@
   networking.nftables.enable = true;
 
   environment.systemPackages = with pkgs; [
-    wl-clipboard # clipboard sharing between host and waydroid
+    wl-clipboard
   ];
 }

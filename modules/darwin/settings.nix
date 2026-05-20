@@ -97,7 +97,6 @@ _:
     enableStealthMode = true;
   };
 
-  # PAM configuration for sudo with Touch ID and Apple Watch
   security.pam.services.sudo_local = {
     enable = true;
     reattach = true;

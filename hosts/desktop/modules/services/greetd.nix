@@ -7,8 +7,6 @@ let
   colours = import ../../../../home/shane/modules/common/theme/colours.nix;
 
   greeterBackground = toString ../assets/greeter-bg.jpg;
-
-  # Wrapper script: disable HDMI-A-1 inside cage, then run regreet
   greeterCmd = pkgs.writeShellApplication {
     name = "regreet-wrapper";
     runtimeInputs = [
@@ -60,9 +58,6 @@ in
 
     extraCss =
       let
-        # Inject the Catppuccin palette as GTK @define-color directives,
-        # then prepend to the static stylesheet — keeps CSS editable in a
-        # real .css file (syntax highlighting, no Nix interpolation noise).
         paletteVars = [
           "base"
           "mantle"
@@ -104,8 +99,6 @@ in
       size = 14;
     };
   };
-
-  # Override cage command to use wrapper that disables HDMI-A-1
   services.greetd.settings.default_session.command =
     lib.mkForce "${pkgs.dbus}/bin/dbus-run-session ${pkgs.cage}/bin/cage -s -- ${greeterCmd}/bin/regreet-wrapper";
 

@@ -25,8 +25,6 @@ in
       size = fontSize;
     };
 
-    # catppuccin/nix handles gtk.theme and gtk.iconTheme via catppuccin.gtk
-    # catppuccin/nix handles gtk.cursorTheme via catppuccin.cursors
 
     gtk3.extraConfig = {
       gtk-application-prefer-dark-theme = 1;

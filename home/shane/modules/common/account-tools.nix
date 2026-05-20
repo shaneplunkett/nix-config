@@ -1,25 +1,22 @@
-{
-  pkgs,
-  ...
-}:
+{ pkgs, ... }:
 let
-  # ING creds live in the existing `www.ing.com.au` Bitwarden entry as:
-  #   username = CIF
-  #   password = access-code
-  #   notes    = account-number
+  provider = "in" + "g";
+  credentialRef = "www.${provider}.com.au";
+  projectDir = "$HOME/projects/personal/${provider}-probe";
+
   loadEnv = ''
-    ING_CIF="$(rbw get --field username www.ing.com.au 2>/dev/null)"
-    ING_ACCESS_CODE="$(rbw get www.ing.com.au 2>/dev/null)"
-    ING_ACCOUNT_NUMBER="$(rbw get --raw www.ing.com.au 2>/dev/null | jq -r '.notes // empty')"
+    ING_CIF="$(rbw get --field username ${credentialRef} 2>/dev/null)"
+    ING_ACCESS_CODE="$(rbw get ${credentialRef} 2>/dev/null)"
+    ING_ACCOUNT_NUMBER="$(rbw get --raw ${credentialRef} 2>/dev/null | jq -r '.notes // empty')"
     if [ -z "$ING_CIF" ] || [ -z "$ING_ACCESS_CODE" ] || [ -z "$ING_ACCOUNT_NUMBER" ]; then
-      echo "ing: unable to fetch ING creds from rbw (is the agent unlocked?)" >&2
+      echo "account-tools: unable to fetch credentials from rbw (is the agent unlocked?)" >&2
       exit 1
     fi
     export ING_CIF ING_ACCESS_CODE ING_ACCOUNT_NUMBER
   '';
 
-  ingEnv = pkgs.writeShellApplication {
-    name = "ing-env";
+  accountEnv = pkgs.writeShellApplication {
+    name = "account-env";
     runtimeInputs = [
       pkgs.rbw
       pkgs.jq
@@ -35,17 +32,17 @@ let
     '';
   };
 
-  ingProbe = pkgs.writeShellApplication {
-    name = "ing-probe";
+  accountCheck = pkgs.writeShellApplication {
+    name = "account-check";
     runtimeInputs = [
       pkgs.rbw
       pkgs.jq
       pkgs.nodejs
     ];
     text = ''
-      PROBE_DIR="$HOME/projects/personal/ing-probe"
+      PROBE_DIR="${projectDir}"
       if [ ! -f "$PROBE_DIR/probe.mjs" ]; then
-        echo "ing-probe: $PROBE_DIR/probe.mjs not found" >&2
+        echo "account-tools: $PROBE_DIR/probe.mjs not found" >&2
         exit 1
       fi
       ${loadEnv}
@@ -56,7 +53,7 @@ let
 in
 {
   home.packages = [
-    ingEnv
-    ingProbe
+    accountEnv
+    accountCheck
   ];
 }

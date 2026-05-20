@@ -38,7 +38,6 @@ _: {
         "alt-minus" = "resize smart -50";
         "alt-equal" = "resize smart +50";
 
-        # Workspace Config
         "alt-1" = "workspace 1";
         "alt-2" = "workspace 2";
         "alt-a" = "workspace A";
@@ -51,7 +50,6 @@ _: {
         "alt-o" = "workspace O";
         "alt-p" = "workspace P";
 
-        # Move Between Workspace
         "alt-shift-1" = "move-node-to-workspace 1";
         "alt-shift-2" = "move-node-to-workspace 2";
         "alt-shift-a" = "move-node-to-workspace A";
@@ -64,7 +62,6 @@ _: {
         "alt-shift-o" = "move-node-to-workspace O";
         "alt-shift-p" = "move-node-to-workspace P";
       };
-      # Join Windows
       mode.service.binding = {
         "alt-shift-h" = [
           "join-with left"

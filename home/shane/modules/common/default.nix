@@ -1,10 +1,10 @@
 { ... }:
 {
   imports = [
+    ./account-tools.nix
     ./ai
     ./btop.nix
     ./git.nix
-    ./ing-probe.nix
     ./lazygit.nix
     ./nh.nix
     ./nix-index.nix
@@ -15,6 +15,5 @@
     ./terraform.nix
     ./terminal
     ./theme
-    ./youtui
   ];
 }

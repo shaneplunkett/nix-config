@@ -8,7 +8,6 @@
 
   imports = [
 
-    # Always loaded
     ./theme.nix
     ./packages.nix
     ./webapps
@@ -19,7 +18,6 @@
 
   ]
 
-  # Compositor
   ++ lib.optionals (compositor == "hyprland") [
     ./hyprland.nix
   ]
@@ -27,7 +25,6 @@
     ./niri.nix
   ]
 
-  # Shell
   ++ lib.optionals (shell == "hyprpanel") [
     ./hyprpanel
     ./hyprpaper.nix

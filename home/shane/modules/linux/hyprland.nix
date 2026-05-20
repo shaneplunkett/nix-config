@@ -97,15 +97,11 @@ in
       windowrule = [
         "float 1, match:class ^com\.example\.launcher$"
         "size 500 430, match:class ^com\.example\.launcher$"
-        # Plex
         "opaque 1, match:title ^Plex.*$"
-        # Nemo
         "float 1, match:class ^nemo$"
         "size 1100 700, match:class ^nemo$"
-        # Bluetooth
         "float 1, match:title ^.*Bluetooth Devices$"
         "size 1100 700, match:title ^.*Bluetooth Devices$"
-        # Volume Control
         "float 1, match:title ^.*Volume Control$"
         "size 1100 700, match:title ^.*Volume Control$"
       ];

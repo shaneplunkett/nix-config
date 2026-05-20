@@ -2,4 +2,6 @@
 .envrc
 result/
 .claude
+.agents
+.codex
 result

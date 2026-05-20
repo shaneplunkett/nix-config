@@ -4,7 +4,6 @@
     ./modules/common/server-profile.nix
   ];
 
-  # Linux servers ship raw neovim (no nixvim — keeps the closure tiny).
   programs.neovim = {
     enable = true;
     defaultEditor = true;

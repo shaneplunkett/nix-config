@@ -1,5 +1,4 @@
 _: {
-  # Set Waydroid display to match effective monitor resolution (3840x2160 @ 1.5x)
   home.activation.waydroidDisplay = {
     after = [ "writeBoundary" ];
     before = [ ];

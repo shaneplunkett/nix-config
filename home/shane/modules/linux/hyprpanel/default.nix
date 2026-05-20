@@ -7,7 +7,6 @@ let
   themeConfig = import ./catppuccin_mocha.nix { inherit colours; };
 in
 {
-  # Shell-specific services launched via compositor exec-once
   wayland.windowManager.hyprland.settings.exec-once = [ "swaync" ];
 
   programs.hyprpanel = {

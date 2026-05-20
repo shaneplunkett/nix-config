@@ -5,9 +5,9 @@
   nix.settings = inputs.aagl.nixConfig;
 
   programs = {
-    sleepy-launcher.enable = true; # Zenless Zone Zero
-    anime-game-launcher.enable = true; # Genshin Impact
-    wavey-launcher.enable = true; # Wuthering Waves
+    sleepy-launcher.enable = true;
+    anime-game-launcher.enable = true;
+    wavey-launcher.enable = true;
 
     steam = {
       enable = true;

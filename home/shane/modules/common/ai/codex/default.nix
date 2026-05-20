@@ -332,7 +332,7 @@ in
   home = {
     # Linux gets the community-built GUI (when enabled); darwin gets the
     # official cask via modules/darwin/homebrew.nix. macOS server
-    # (homemacserver.nix) skips both since common/ai isn't imported there.
+    # Headless server profiles skip both since common/ai isn't imported there.
     packages = lib.optionals (pkgs.stdenv.isLinux && enableLinuxGui) [
       codexDesktopLinux
     ];

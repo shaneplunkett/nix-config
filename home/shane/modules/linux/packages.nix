@@ -14,8 +14,6 @@ let
   '';
 in
 {
-  # Electron app scaling flags (fractional scaling on Wayland)
-  # Chrome handles fractional scaling natively via Wayland protocol — no force flag
   xdg.configFile = {
     "electron-flags.conf".text = electronFlags;
     "electron32-flags.conf".text = electronFlags;

@@ -3,7 +3,6 @@ let
   hetzvps = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJZsq1NuUb93XrV2+aX6ztiSOpvh2Ym/u8ssrxY44p+h";
 in
 {
-  # Hetzner VPS — tailscale auth + restic backup password + persistent vex-brain secrets
   "tailscale-authkey.age".publicKeys = [
     shane
     hetzvps

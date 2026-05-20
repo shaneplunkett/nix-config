@@ -13,9 +13,6 @@
 
     agenix.url = "github:ryantm/agenix";
 
-    # Pre-computed weekly index of every binary in nixpkgs. Powers
-    # `nix-locate` and `command-not-found`, and lets `,` resolve commands
-    # against a local DB instead of evaluating the nixpkgs flake live.
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -55,23 +52,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Private companion repo — values that mustn't appear in the public flake
-    # (work-internal URLs, work-email attributes). `nrs-iter` overrides this
-    # input to the local checkout for live iteration; default URL is the
-    # pinned GitHub remote so the public flake is reproducible.
     nix-config-private.url = "git+ssh://git@github.com/shaneplunkett/nix-config-private.git";
 
-    # AutoGrab work skills — baked in via flake input so .claude/skills is
-    # declaratively managed. For active iteration use `nrs-iter` which
-    # `--override-input`s this to the local checkout.
     ag-ai-skills = {
       url = "git+ssh://git@github.com/autograb/ag-ai-skills.git";
       flake = false;
     };
 
-    # Personal skills + Vex persona content (rules, agents, core.md,
-    # output-style, hooks). Private repo so it's safe for credential-shaped
-    # files. `nrs-iter` overrides to ~/ai-skills for live iteration.
     ai-skills = {
       url = "git+ssh://git@github.com/shaneplunkett/ai-skills.git";
       flake = false;
@@ -87,11 +74,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Community Linux build of the official Codex desktop GUI. Extracts the
-    # macOS Codex.dmg from persistent.oaistatic.com and re-shims it as a
-    # Linux Electron app. NixOS-aware (patchelf'd Electron + LD_LIBRARY_PATH
-    # for dlopen'd GL/EGL libs). MIT licensed, ~840 stars, active maintainer.
-    # Consumed only by the NixOS desktop via `home/shane/modules/common/ai/codex/`.
     codex-desktop-linux = {
       url = "github:ilysenko/codex-desktop-linux";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -113,9 +95,6 @@
       ];
     in
     {
-      # `nix fmt` from anywhere in the tree → nixfmt-rfc-style on every tracked
-      # (or staged-but-untracked) .nix file. Excludes .gitignored paths automatically.
-      # Forwards extra args: `nix fmt -- --check` for diff-only.
       formatter = forAllSystems (
         system:
         let
@@ -148,12 +127,6 @@
           hostConfig = ./hosts/darwin/work.nix;
         };
 
-        "macvm" = lib.mkDarwinSystem {
-          hostname = "macvm";
-          system = "x86_64-darwin";
-          hostConfig = ./hosts/darwin/macvm.nix;
-          homeConfig = ./home/shane/homemacserver.nix;
-        };
       };
 
       nixosConfigurations = {
@@ -161,8 +134,8 @@
           hostname = "desktop";
           system = "x86_64-linux";
           hostConfig = ./hosts/desktop/configuration.nix;
-          compositor = "hyprland"; # or "niri"
-          shell = "noctalia"; # or "hyprpanel"
+          compositor = "hyprland";
+          shell = "noctalia";
         };
 
         hetzvps = lib.mkNixosSystem {

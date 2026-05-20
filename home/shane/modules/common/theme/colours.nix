@@ -1,5 +1,3 @@
-# Catppuccin Mocha — all 26 colours, without # prefix.
-# Consumers add the prefix they need (#, rgba(, 0xff, etc.)
 {
   rosewater = "f5e0dc";
   flamingo = "f2cdcd";
