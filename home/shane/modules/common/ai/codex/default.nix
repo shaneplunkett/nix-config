@@ -41,28 +41,9 @@ let
     );
 
   # ─── ag-ai-skills bake-in ──────────────────────────────────────────────
-  # Mirrors the cc/default.nix derivation — install.sh resolves shared_refs
-  # from SKILL.md frontmatter at build time. The script is vendored from
-  # the cc module (single source).
-  agSkillsBuilt = pkgs.stdenv.mkDerivation {
-    pname = "ag-ai-skills-built";
-    version = "0";
-    src = agSkillsSrc;
-    nativeBuildInputs = [
-      pkgs.yq-go
-      pkgs.bash
-    ];
-    dontConfigure = true;
-    dontInstall = true;
-    buildPhase = ''
-      runHook preBuild
-      cp ${../cc/install-ag-ai-skills.sh} ./install.sh
-      mkdir -p $out
-      bash ./install.sh "$out"
-      find "$out" -name SKILL.md -exec sed -i '1s/^-----$/---/' {} +
-      runHook postBuild
-    '';
-  };
+  # Shared package derivation resolves shared_refs from SKILL.md frontmatter
+  # at build time, with Codex's frontmatter normalisation applied.
+  agSkillsBuilt = pkgs.ag-ai-skills-built-codex;
 
   workSkillsAttrs = mkSkillsAttrs "${agSkillsSrc}/skills" agSkillsBuilt;
   personalSkillsAttrs = mkSkillsAttrs "${aiSkills}/personal" "${aiSkills}/personal";
@@ -133,11 +114,7 @@ let
   # unaffected and works regardless.
   enableLinuxGui = false;
   codexDesktopLinux = inputs.codex-desktop-linux.packages.${pkgs.system}.default;
-  codexPackage = pkgs.codex.overrideAttrs (oldAttrs: {
-    patches = (oldAttrs.patches or [ ]) ++ [
-      ./patches/codex-vex-markdown-colours.patch
-    ];
-  });
+  codexPackage = pkgs.codex-patched;
 
   codexConfigDir = ".codex";
   codexVariantDirs = [ ".codex-work" ];

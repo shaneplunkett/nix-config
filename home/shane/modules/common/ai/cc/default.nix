@@ -96,14 +96,7 @@ let
 
   # ─── Plugin / marketplace pins ─────────────────────────────────────────
   # Marketplace clone — discord, frontend-design live inside it as subdirs.
-  # Bump rev + hash to update. nix-prefetch-url --unpack <tarball> gives the
-  # base32 hash; nix-hash --to-sri --type sha256 <hash> converts to SRI.
-  claudePluginsMarketplace = pkgs.fetchFromGitHub {
-    owner = "anthropics";
-    repo = "claude-plugins-official";
-    rev = "1a2f18b05cf5652fd25403e8d229fc884fb84103";
-    hash = "sha256-LjMusufv+H8+t2O9DJgRS9QOuHelepIWuWFqiK5y3UQ=";
-  };
+  claudePluginsMarketplace = pkgs.claude-plugins-official;
 
   # Single source of truth for CC plugins — used to derive both
   # programs.claude-code.plugins (--plugin-dir wrapper args) AND
@@ -120,28 +113,7 @@ let
   # resulting per-skill subdirs are then handed to programs.claude-code.skills
   # for the canonical .claude dir, and inlined via home.file for the variants.
   agSkillsSrc = inputs.ag-ai-skills;
-  # install.sh isn't committed to ag-ai-skills upstream yet — vendor a copy
-  # alongside this module. Once upstream commits it, we can drop the cp and
-  # use the in-tree script directly.
-  agSkillsInstallScript = ./install-ag-ai-skills.sh;
-  agSkillsBuilt = pkgs.stdenv.mkDerivation {
-    pname = "ag-ai-skills-built";
-    version = "0";
-    src = agSkillsSrc;
-    nativeBuildInputs = [
-      pkgs.yq-go
-      pkgs.bash
-    ];
-    dontConfigure = true;
-    dontInstall = true;
-    buildPhase = ''
-      runHook preBuild
-      cp ${agSkillsInstallScript} ./install.sh
-      mkdir -p $out
-      bash ./install.sh "$out"
-      runHook postBuild
-    '';
-  };
+  agSkillsBuilt = pkgs.ag-ai-skills-built;
   # ─── ai-skills (personal skills + vex persona) ─────────────────────────
   # Personal skills are directories under ai-skills/personal/. Enumerated at
   # eval time from the flake input — replaces the runtime-iteration activation
@@ -172,9 +144,8 @@ let
   # lobotomized-claude-code system-prompt overrides baked in. The patched
   # binary is its own /nix/store derivation — survives GC, no sudo/re-apply
   # dance, nh switch re-derives when either input bumps. Knobs in
-  # packages/claude-code-patched/config.json.
-  tweakcc-fixed = pkgs.callPackage ./packages/tweakcc-fixed.nix { };
-  claude-code-patched = pkgs.callPackage ./packages/claude-code-patched { inherit tweakcc-fixed; };
+  # pkgs/claude-code-patched/config.json.
+  inherit (pkgs) claude-code-patched;
 
   # ─── Settings content ──────────────────────────────────────────────────
   # Shape parameterised so we produce both the intimate Vex variant (canonical
@@ -505,7 +476,7 @@ in
     enable = true;
 
     # claude-code with tweakcc-fixed + lobotomized-claude-code system-prompt
-    # overrides baked in at build time. See ./packages/claude-code-patched/.
+    # overrides baked in at build time. See pkgs/claude-code-patched/.
     package = claude-code-patched;
 
     settings = mkSettingsContent {

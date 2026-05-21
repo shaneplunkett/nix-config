@@ -11,7 +11,13 @@ in
   mkOverlays =
     extras:
     [
-      (final: _prev: import (rootPath + /pkgs) { pkgs = final; })
+      (
+        final: _prev:
+        import (rootPath + /pkgs) {
+          pkgs = final;
+          inherit inputs rootPath;
+        }
+      )
       vex-tooling.overlays.default
     ]
     ++ extras;
