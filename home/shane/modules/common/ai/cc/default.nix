@@ -198,6 +198,7 @@ let
       enabledPlugins = lib.mapAttrs (_: _: true) ccPlugins;
 
       env = {
+        CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1";
         CLAUDE_CODE_ENABLE_TELEMETRY = "1";
         OTEL_METRICS_EXPORTER = "otlp";
         OTEL_LOGS_EXPORTER = "otlp";

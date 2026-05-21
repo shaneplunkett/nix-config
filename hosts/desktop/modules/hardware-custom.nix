@@ -1,5 +1,10 @@
 { pkgs, lib, ... }:
 {
+  nix.settings = {
+    cores = 6;
+    max-jobs = 1;
+  };
+
   hardware = {
     bluetooth = {
       enable = true;
