@@ -105,7 +105,6 @@ let
 
   tmuxAppendGlobalOptions = {
     "terminal-features" = quote ",xterm-ghostty:RGB,usstyle";
-    "terminal-overrides" = ",xterm-ghostty:Tc:sitm=\\E[3m:ritm=\\E[23m";
   };
 
   tmuxKeyBindings = [
@@ -132,6 +131,20 @@ let
       "r"
       "c"
       "%"
+      "Space"
+      "F"
+      "P"
+      "p"
+      "s"
+    ])
+    ++ (map (key: "unbind -T root ${key}") [
+      "C-M-b"
+      "C-M-d"
+      "C-M-e"
+      "C-M-f"
+      "C-M-r"
+      "C-M-s"
+      "C-M-u"
     ])
     ++ renderBindings tmuxKeyBindings
     ++ renderTmuxOptions "set -g" tmuxGlobalOptions

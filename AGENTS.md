@@ -29,6 +29,23 @@ Prefer:
 - Verify shape via Context7 (home-manager / nixpkgs source) before committing
 - Collapse repeated keys via nested attrset (statix W20)
 
+## Project packages
+
+Fetched or built third-party packages belong in `pkgs/`, not inline inside
+Home Manager or host modules. Use one directory per package:
+`pkgs/<name>/default.nix`, expose it from `pkgs/default.nix` with
+`pkgs.callPackage`, then consume it as `pkgs.<name>` from modules.
+
+Inline derivations are only for module-local glue that is genuinely tied to the
+module, such as small `writeShellApplication` wrappers. Keep runtime wrappers
+near the module when they mainly inject secrets or compose commands, but move
+the packaged tool they wrap into `pkgs/`.
+
+For pinned packages, add `passthru.updateScript = nix-update-script { };` when
+`nix-update --flake <attr>` can handle the bump cleanly. If a package needs a
+manual fetcher refresh, use `nurl <url> <rev>` and keep the package addressable
+from `pkgs/` anyway.
+
 ## Tooling — use THESE
 
 | Task | Use | NOT |
@@ -39,10 +56,16 @@ Prefer:
 | Remote pkg search | `nh search <q>` | `nix search nixpkgs` |
 | Local options / docs | `manix <opt>` | grep nixpkgs |
 | New package draft | `nix-init <url>` | hand-write `buildNpmPackage` / `buildGoModule` |
+| Existing package bump | `nix-update --flake <attr>` | manual rev/hash replacement loops |
 | Run-once no-install | `, <cmd>` | `nix shell nixpkgs#<pkg> -c` |
 | Lint | `statix check <p>` then `statix fix <p>` | manual review |
 | Dead code | `deadnix <p>` | manual review |
 | Format | `nix fmt` (nixfmt-rfc-style, tracked + staged) | manual |
+
+For custom package pins, prefer making the package addressable from `pkgs/` with
+`passthru.updateScript` when the update needs project-specific flags. Then use
+`nix-update --flake <attr>` for ordinary source/hash bumps and `nurl <url> <rev>`
+when you need to refresh or draft a fetcher block manually.
 
 ## Done criteria for a nix edit
 

@@ -25,6 +25,13 @@ _: {
       };
       functions = {
         claude = "claude-restart $argv";
+        tmux = ''
+          if test (count $argv) -eq 0
+            command tmux new-session -A -s scratch
+          else
+            command tmux $argv
+          end
+        '';
         nrs = ''
           if test (uname) = Darwin
             nh darwin switch $argv "$HOME/nix-config" -H (hostname -s)

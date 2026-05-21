@@ -26,5 +26,6 @@
     manix
     nurl
     nix-init
+    nix-update
   ];
 }

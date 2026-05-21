@@ -1,17 +1,7 @@
 { pkgs, lib, ... }:
 {
   extraPlugins = lib.mkIf pkgs.stdenv.isDarwin [
-    (pkgs.vimUtils.buildVimPlugin {
-      name = "xcodebuild-nvim";
-      src = pkgs.fetchFromGitHub {
-        owner = "wojciech-kulik";
-        repo = "xcodebuild.nvim";
-        rev = "v7.0.0";
-        hash = "sha256-+GeZzPf9aFufvszUDCFX8Osp4202c6p2hOeI2vbjYrc=";
-      };
-      # Optional integrations (fzf-lua, telescope, snacks picker) aren't hard deps
-      nvimRequireCheck = "xcodebuild";
-    })
+    pkgs.xcodebuild-nvim
   ];
 
   extraPackages = lib.mkIf pkgs.stdenv.isDarwin (
