@@ -16,12 +16,11 @@ in
       system ? "x86_64-linux",
       hostConfig,
       homeConfig ? (rootPath + /home/shane/home.nix),
-      compositor ? "hyprland",
-      shell ? "hyprpanel",
+      shell ? "noctalia",
       extraModules ? [ ],
     }:
     nixpkgs.lib.nixosSystem {
-      specialArgs = { inherit inputs compositor shell; };
+      specialArgs = { inherit inputs shell; };
       modules = [
         {
           nixpkgs.hostPlatform = system;
@@ -42,7 +41,7 @@ in
 
         (common.mkHomeManagerModule {
           inherit homeConfig;
-          extraSpecialArgs = { inherit compositor shell; };
+          extraSpecialArgs = { inherit shell; };
           extraSharedModules = nixpkgs.lib.optionals (shell == "noctalia") [
             noctalia.homeModules.default
           ];

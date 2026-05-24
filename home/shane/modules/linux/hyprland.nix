@@ -1,6 +1,5 @@
 {
   lib,
-  compositor,
   shell,
   ...
 }:
@@ -9,7 +8,8 @@ let
 in
 {
   wayland.windowManager.hyprland = {
-    enable = compositor == "hyprland";
+    enable = true;
+    configType = "hyprlang";
     settings = {
       "$mod" = "SUPER";
       "$terminal" = "ghostty";
@@ -60,10 +60,6 @@ in
         "$mod,l,movefocus,r"
         "$mod,k,movefocus,u"
         "$mod,j,movefocus,d"
-      ]
-      ++ lib.optionals (shell == "hyprpanel") [
-        "$mod, space, exec, rofi -show drun"
-        "$mod, V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
       ]
       ++ lib.optionals (shell == "noctalia") [
         "$mod, space, exec, noctalia-shell ipc call launcher toggle"

@@ -1,9 +1,9 @@
-{ pkgs, compositor, ... }:
+{ pkgs, ... }:
 {
   programs = {
     neovim.defaultEditor = true;
     hyprland = {
-      enable = compositor == "hyprland";
+      enable = true;
       xwayland.enable = true;
     };
     appimage = {

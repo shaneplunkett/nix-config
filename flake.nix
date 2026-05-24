@@ -134,7 +134,6 @@
           hostname = "desktop";
           system = "x86_64-linux";
           hostConfig = ./hosts/desktop/configuration.nix;
-          compositor = "hyprland";
           shell = "noctalia";
         };
 

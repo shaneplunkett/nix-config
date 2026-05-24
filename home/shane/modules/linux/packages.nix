@@ -28,7 +28,8 @@ in
     unzip
     p7zip
     signal-desktop
-    plex-desktop
+    # Temporarily disabled: upstream Snapcraft fetch is timing out during rebuilds.
+    # plex-desktop
     ferdium
     mangohud
     protonup-ng
@@ -39,7 +40,6 @@ in
     hyprshot
     swappy
     cliphist
-    hyprpaper
     obsidian
     orca-slicer
     vlc

@@ -2,14 +2,157 @@
   config,
   lib,
   noctaliaVexPlugins,
+  pkgs,
   ...
 }:
 let
   c = import ../common/theme/colours.nix;
   hex = v: "#${v}";
+  hyprlandPackage = config.wayland.windowManager.hyprland.package or pkgs.hyprland;
+  noctaliaPackage = config.programs.noctalia-shell.package;
+  noctaliaCacheExpire = pkgs.writeShellApplication {
+    name = "noctalia-expire-cache";
+    runtimeInputs = [ pkgs.coreutils ];
+    text = ''
+      set -euo pipefail
+
+      cache_base="''${XDG_CACHE_HOME:-$HOME/.cache}"
+      cache_dir="''${NOCTALIA_CACHE_DIR:-$cache_base/noctalia}"
+
+      if [[ ! -d "$cache_dir" ]]; then
+        exit 0
+      fi
+
+      for entry in "$cache_dir"/* "$cache_dir"/.[!.]* "$cache_dir"/..?*; do
+        [[ -e "$entry" ]] || continue
+        case "$(basename "$entry")" in
+          wallpapers.json)
+            continue
+            ;;
+        esac
+
+        rm -rf -- "$entry"
+      done
+
+      printf 'Expired Noctalia cache at %s; preserved wallpapers.json if present.\n' "$cache_dir"
+    '';
+  };
+  noctaliaRestart = pkgs.writeShellApplication {
+    name = "noctalia-restart";
+    runtimeInputs = [
+      pkgs.coreutils
+      pkgs.gnugrep
+      hyprlandPackage
+      pkgs.procps
+      pkgs.systemd
+    ];
+    text = ''
+      set -euo pipefail
+
+      current_config="${noctaliaPackage}/share/noctalia-shell"
+      export XDG_RUNTIME_DIR="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+
+      if [[ -z "''${WAYLAND_DISPLAY:-}" || -z "''${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
+        if env_dump="$(systemctl --user show-environment 2>/dev/null)"; then
+          while IFS= read -r line; do
+            key="''${line%%=*}"
+            value="''${line#*=}"
+            case "$key" in
+              DISPLAY | HYPRLAND_INSTANCE_SIGNATURE | WAYLAND_DISPLAY | XDG_CURRENT_DESKTOP | XDG_SESSION_TYPE)
+                export "$key=$value"
+                ;;
+            esac
+          done <<< "$env_dump"
+        fi
+      fi
+
+      if [[ -z "''${WAYLAND_DISPLAY:-}" || -z "''${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
+        echo "No active Hyprland session found; not restarting Noctalia."
+        exit 0
+      fi
+
+      user="''${USER:-$(id -un)}"
+      pids_to_kill=()
+
+      for pid in $(pgrep -u "$user" -f '[q]uickshell' || true); do
+        if [[ -r "/proc/$pid/environ" ]] && grep -zq 'QS_CONFIG_PATH=.*noctalia-shell' "/proc/$pid/environ"; then
+          pids_to_kill+=("$pid")
+        fi
+      done
+
+      if (( ''${#pids_to_kill[@]} > 0 )); then
+        kill -TERM "''${pids_to_kill[@]}" 2>/dev/null || true
+
+        for _ in $(seq 1 30); do
+          remaining=0
+          for pid in "''${pids_to_kill[@]}"; do
+            if kill -0 "$pid" 2>/dev/null; then
+              remaining=1
+              break
+            fi
+          done
+          (( remaining == 0 )) && break
+          sleep 0.1
+        done
+
+        for pid in "''${pids_to_kill[@]}"; do
+          if kill -0 "$pid" 2>/dev/null; then
+            kill -KILL "$pid" 2>/dev/null || true
+          fi
+        done
+      fi
+
+      hyprctl dispatch exec ${lib.escapeShellArg (lib.getExe noctaliaPackage)}
+
+      for _ in $(seq 1 30); do
+        for pid in $(pgrep -u "$user" -f '[q]uickshell' || true); do
+          if [[ -r "/proc/$pid/environ" ]] && grep -zFq "QS_CONFIG_PATH=$current_config" "/proc/$pid/environ"; then
+            echo "Noctalia restarted with PID $pid."
+            exit 0
+          fi
+        done
+        sleep 0.1
+      done
+
+      echo "Noctalia restart was dispatched, but the new process was not observed." >&2
+      exit 1
+    '';
+  };
+  noctaliaRestartFingerprint = pkgs.writeText "noctalia-restart-fingerprint" ''
+    ${builtins.hashString "sha256" (
+      builtins.toJSON {
+        package = "${noctaliaPackage}";
+        inherit noctaliaVexPlugins;
+        inherit (config.programs.noctalia-shell) colors pluginSettings settings;
+      }
+    )}
+  '';
 in
 {
   imports = [ ./noctalia-plugins.nix ];
+
+  home.packages = [
+    noctaliaCacheExpire
+    noctaliaRestart
+  ];
+
+  home.activation.noctaliaRestart =
+    lib.hm.dag.entryAfter
+      [
+        "writeBoundary"
+        "noctaliaPluginSymlinks"
+      ]
+      ''
+        fingerprint_file="${config.xdg.stateHome}/noctalia/restart-fingerprint"
+
+        if ! cmp -s ${noctaliaRestartFingerprint} "$fingerprint_file"; then
+          $DRY_RUN_CMD ${lib.getExe noctaliaCacheExpire}
+          $DRY_RUN_CMD ${lib.getExe noctaliaRestart} || true
+
+          $DRY_RUN_CMD install -Dm0644 ${noctaliaRestartFingerprint} "$fingerprint_file"
+        fi
+      '';
+
   programs.noctalia-shell = {
     enable = true;
 
