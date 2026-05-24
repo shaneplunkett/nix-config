@@ -51,6 +51,16 @@ let
         headlineAccount = "personal";
       };
     };
+
+    vex-tailscale-guard = {
+      settings = {
+        refreshIntervalMs = 5000;
+        workTailnet = "autograb.com.au";
+        workAccountPattern = "autograb.com.au";
+        workAcceptRoutes = true;
+        personalAcceptRoutes = false;
+      };
+    };
   };
 
   pluginExtraFiles = lib.foldl' lib.recursiveUpdate { } (

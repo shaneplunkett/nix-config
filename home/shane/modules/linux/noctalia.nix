@@ -322,6 +322,9 @@ in
               textColor = "primary";
             }
             {
+              id = "plugin:vex-tailscale-guard";
+            }
+            {
               id = "Network";
               displayMode = "onhover";
               iconColor = "primary";
