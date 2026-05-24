@@ -13,7 +13,8 @@
       enable = true;
       gamescopeSession.enable = true;
       extraCompatPackages = [
-        inputs.dw-proton.packages.${pkgs.stdenv.hostPlatform.system}.dw-proton
+        # Temporarily disabled: upstream Dawn Wine fetch is stalling during rebuilds.
+        # inputs.dw-proton.packages.${pkgs.stdenv.hostPlatform.system}.dw-proton
       ];
     };
     gamemode.enable = true;
