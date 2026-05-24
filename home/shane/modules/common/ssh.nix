@@ -1,16 +1,14 @@
 _:
 let
   shaneHost = {
-    user = "shane";
-    identityFile = "~/.ssh/id_ed25519";
+    User = "shane";
+    IdentityFile = [ "~/.ssh/id_ed25519" ];
   };
   laptopHost = shaneHost // {
-    serverAliveInterval = 60;
-    serverAliveCountMax = 3;
-    extraOptions = {
-      RequestTTY = "yes";
-      RemoteCommand = "fish -l";
-    };
+    ServerAliveInterval = 60;
+    ServerAliveCountMax = 3;
+    RequestTTY = "yes";
+    RemoteCommand = "fish -l";
   };
 in
 {
@@ -18,33 +16,33 @@ in
     enable = true;
     enableDefaultConfig = false;
 
-    matchBlocks = {
+    settings = {
       "*" = {
-        addKeysToAgent = "yes";
-        setEnv = {
+        AddKeysToAgent = "yes";
+        SetEnv = {
           TERM = "xterm-256color";
         };
       };
 
       "github.com" = {
-        identityFile = "~/.ssh/id_ed25519";
-        identitiesOnly = true;
+        IdentityFile = [ "~/.ssh/id_ed25519" ];
+        IdentitiesOnly = true;
       };
 
       "pve" = shaneHost // {
-        hostname = "pve";
+        HostName = "pve";
       };
       "cube" = shaneHost // {
-        hostname = "cube";
+        HostName = "cube";
       };
       "desktop" = shaneHost // {
-        hostname = "desktop";
+        HostName = "desktop";
       };
       "mbp" = laptopHost // {
-        hostname = "shanes-macbook-pro";
+        HostName = "shanes-macbook-pro";
       };
       "wmbp" = laptopHost // {
-        hostname = "shanes-work-macbook-pro";
+        HostName = "shanes-work-macbook-pro";
       };
     };
   };

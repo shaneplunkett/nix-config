@@ -163,7 +163,6 @@ in
       zoxidePackage = null;
 
       settings = {
-        blacklist = [ "scratch" ];
         sort_order = [
           "config"
           "tmux"
@@ -176,6 +175,15 @@ in
         };
 
         session = [
+          {
+            name = "scratch";
+            path = "~";
+          }
+          {
+            name = "home";
+            path = "~";
+            startup_command = workspaceStartupCommand;
+          }
           {
             name = "nix-config";
             path = "~/nix-config";

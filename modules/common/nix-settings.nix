@@ -30,4 +30,5 @@ _: {
     download-buffer-size = 256 * 1024 * 1024;
   };
   home-manager.backupFileExtension = "backup";
+  home-manager.overwriteBackup = true;
 }

@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 set -u
 
 CONFIG="${SESH_CONFIG:-${XDG_CONFIG_HOME:-$HOME/.config}/sesh/sesh.toml}"
@@ -14,11 +15,12 @@ FZF_THEME=(
 )
 
 list_workspaces() {
-  sesh -C "$CONFIG" list -t -c 2>>"$LOG"
+  sesh -C "$CONFIG" list -t -c -d 2>>"$LOG"
 }
 
 find_projects() {
   {
+    printf '%s\n' "$HOME"
     printf '%s\n' "$HOME/nix-config"
     fd -H -t d -d 1 \
       -E .git -E node_modules -E .direnv -E .next -E dist \
