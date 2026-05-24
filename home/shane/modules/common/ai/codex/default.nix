@@ -69,15 +69,15 @@ let
     [
       "${aiSkills}/vex/core.md"
       "${aiSkills}/vex/output-style.md"
+      "${aiSkills}/vex/adapters/openai-codex.md"
     ]
     ++ vexRuleFiles
   );
 
   # ─── Hook scripts ──────────────────────────────────────────────────────
-  # codex-emit-context: generic wrapper that wraps a markdown file's
-  # contents as the JSON output schema codex expects for context-injection
-  # hook events. Used by SessionStart / PreCompact to inject vex/hooks/*.md
-  # content as additionalContext.
+  # codex-emit-context: wrapper that wraps a markdown file's contents as the
+  # hook-specific JSON shape Codex expects for context-injection events.
+  # PreCompact/PostCompact do not support additionalContext in Codex 0.131.0.
   codex-emit-context = mkBashHook {
     name = "codex-emit-context";
     runtimeInputs = [ pkgs.jq ];
@@ -221,9 +221,8 @@ let
     };
 
     # ─── Hooks ─────────────────────────────────────────────────────────
-    # 8 events exist; we wire the three that matter most for parity:
+    # 8 events exist; we wire the two that matter most for parity:
     # - SessionStart: inject vex/hooks/session-start.md as context
-    # - PreCompact: persona-preservation reminders before history compaction
     # - PostToolUse @ apply_patch: nix-lint .nix file edits
     hooks = {
       SessionStart = [
@@ -233,18 +232,6 @@ let
               type = "command";
               command = "${codex-emit-context}/bin/codex-emit-context SessionStart ${aiSkills}/vex/hooks/session-start.md";
               timeout = 10;
-            }
-          ];
-        }
-      ];
-
-      PreCompact = [
-        {
-          hooks = [
-            {
-              type = "command";
-              command = "${codex-emit-context}/bin/codex-emit-context PreCompact ${aiSkills}/vex/hooks/compaction.md";
-              timeout = 5;
             }
           ];
         }
@@ -269,6 +256,9 @@ let
   };
 
   codexConfigSeed = tomlFormat.generate "codex-config.toml" codexSettings;
+  codexHooksConfigSeed = tomlFormat.generate "codex-hooks-config.toml" {
+    inherit (codexSettings) hooks;
+  };
   codexMcpConfigSeed = tomlFormat.generate "codex-mcp-config.toml" {
     mcp_servers = transformedMcpServers;
   };
@@ -293,41 +283,102 @@ let
       rulesPath = "${homeDirectory}/${dir}/rules/default.rules";
     in
     ''
-      $DRY_RUN_CMD mkdir -p "${homeDirectory}/${dir}/rules"
+            $DRY_RUN_CMD mkdir -p "${homeDirectory}/${dir}/rules"
 
-      if [ -L "${configPath}" ]; then
-        $DRY_RUN_CMD rm "${configPath}"
-      fi
-      if [ ! -e "${configPath}" ]; then
-        $DRY_RUN_CMD cp "${codexConfigSeed}" "${configPath}"
-        $DRY_RUN_CMD chmod u+w "${configPath}"
-      fi
-      ${lib.optionalString (transformedMcpServers != { }) ''
-        if [ -e "${configPath}" ]; then
-          tmp="$(${pkgs.coreutils}/bin/mktemp)"
-          ${pkgs.gawk}/bin/awk '
-            /^\[mcp_servers(\.|])/{ skip = 1; next }
-            /^\[/{ skip = 0 }
-            !skip{ print }
-          ' "${configPath}" > "$tmp"
-          $DRY_RUN_CMD cp "$tmp" "${configPath}"
-          $DRY_RUN_CMD rm "$tmp"
-          if [ -z "''${DRY_RUN_CMD:-}" ]; then
-            printf '\n' >> "${configPath}"
-            cat "${codexMcpConfigSeed}" >> "${configPath}"
-          else
-            $DRY_RUN_CMD append managed mcp_servers to "${configPath}"
-          fi
-        fi
-      ''}
+            if [ -L "${configPath}" ]; then
+              $DRY_RUN_CMD rm "${configPath}"
+            fi
+            if [ ! -e "${configPath}" ]; then
+              $DRY_RUN_CMD cp "${codexConfigSeed}" "${configPath}"
+              $DRY_RUN_CMD chmod u+w "${configPath}"
+            fi
+            if [ -e "${configPath}" ]; then
+              tmp="$(${pkgs.coreutils}/bin/mktemp)"
+              ${pkgs.gawk}/bin/awk '
+                /^\[\[hooks\.(SessionStart|PostToolUse|PreCompact)(\.hooks)?\]\]$/ { skip = 1; next }
+                /^\[hooks\.state\.".*:(session_start|post_tool_use|pre_compact):[^"]*"\]$/ { skip = 1; next }
+                /^\[/ { skip = 0 }
+                !skip { print }
+              ' "${configPath}" > "$tmp"
+              $DRY_RUN_CMD cp "$tmp" "${configPath}"
+              $DRY_RUN_CMD rm "$tmp"
+              if [ -z "''${DRY_RUN_CMD:-}" ]; then
+                printf '\n' >> "${configPath}"
+                cat "${codexHooksConfigSeed}" >> "${configPath}"
+                ${pkgs.python3}/bin/python - "${configPath}" <<'PY'
+      import hashlib
+      import json
+      import pathlib
+      import sys
+      import tomllib
 
-      if [ -L "${rulesPath}" ]; then
-        $DRY_RUN_CMD rm "${rulesPath}"
-      fi
-      if [ ! -e "${rulesPath}" ]; then
-        $DRY_RUN_CMD cp "${./default.rules}" "${rulesPath}"
-        $DRY_RUN_CMD chmod u+w "${rulesPath}"
-      fi
+      config_path = pathlib.Path(sys.argv[1])
+      config = tomllib.loads(config_path.read_text())
+      event_labels = {
+          "SessionStart": "session_start",
+          "PostToolUse": "post_tool_use",
+      }
+
+
+      def hook_hash(event_label, group, handler):
+          identity = {
+              "event_name": event_label,
+              "hooks": [
+                  {
+                      "async": handler.get("async", False),
+                      "command": handler["command"],
+                      "timeout": handler.get("timeout", 600),
+                      "type": "command",
+                  }
+              ],
+          }
+          if group.get("matcher") is not None:
+              identity["matcher"] = group["matcher"]
+          payload = json.dumps(identity, sort_keys=True, separators=(",", ":")).encode()
+          return "sha256:" + hashlib.sha256(payload).hexdigest()
+
+
+      with config_path.open("a") as fh:
+          fh.write("\n")
+          for event_name, event_label in event_labels.items():
+              for group_index, group in enumerate(config.get("hooks", {}).get(event_name, [])):
+                  for handler_index, handler in enumerate(group.get("hooks", [])):
+                      if handler.get("type") != "command":
+                          continue
+                      key = f"{config_path}:{event_label}:{group_index}:{handler_index}"
+                      fh.write(f'[hooks.state."{key}"]\n')
+                      fh.write(f'trusted_hash = "{hook_hash(event_label, group, handler)}"\n\n')
+      PY
+              else
+                $DRY_RUN_CMD append managed hooks to "${configPath}"
+              fi
+            fi
+            ${lib.optionalString (transformedMcpServers != { }) ''
+              if [ -e "${configPath}" ]; then
+                tmp="$(${pkgs.coreutils}/bin/mktemp)"
+                ${pkgs.gawk}/bin/awk '
+                  /^\[mcp_servers(\.|])/{ skip = 1; next }
+                  /^\[/{ skip = 0 }
+                  !skip{ print }
+                ' "${configPath}" > "$tmp"
+                $DRY_RUN_CMD cp "$tmp" "${configPath}"
+                $DRY_RUN_CMD rm "$tmp"
+                if [ -z "''${DRY_RUN_CMD:-}" ]; then
+                  printf '\n' >> "${configPath}"
+                  cat "${codexMcpConfigSeed}" >> "${configPath}"
+                else
+                  $DRY_RUN_CMD append managed mcp_servers to "${configPath}"
+                fi
+              fi
+            ''}
+
+            if [ -L "${rulesPath}" ]; then
+              $DRY_RUN_CMD rm "${rulesPath}"
+            fi
+            if [ ! -e "${rulesPath}" ]; then
+              $DRY_RUN_CMD cp "${./default.rules}" "${rulesPath}"
+              $DRY_RUN_CMD chmod u+w "${rulesPath}"
+            fi
     '';
 in
 {

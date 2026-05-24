@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Generic hook helper for codex: emit a file's contents as additionalContext
-# wrapped in the hook-specific JSON output schema codex expects.
+# Hook helper for codex: emit a file's contents as additionalContext wrapped in
+# the hook-specific JSON output schema codex expects.
 #
-# Usage: codex-emit-context <event-name> <markdown-file>
+# Usage: codex-emit-context <context-capable-event-name> <markdown-file>
 #
 # Codex parses hook stdout as JSON conforming to <event>.command.output schema.
 # Raw stdout (e.g. plain `cat foo.md`) is silently ignored. To inject context
@@ -13,7 +13,7 @@
 #       "additionalContext": "<text>"
 #     } }
 #
-# The event name is camelCase per the wire schema rename_all rule.
+# PreCompact/PostCompact do not support additionalContext in Codex 0.131.0.
 #
 # runtimeInputs (jq) come from the writeShellApplication wrapper.
 
@@ -26,6 +26,14 @@ fi
 
 event="$1"
 file="$2"
+
+case "$event" in
+  SessionStart|PreToolUse|PostToolUse|UserPromptSubmit) ;;
+  *)
+    echo "codex-emit-context: $event does not support additionalContext" >&2
+    exit 64
+    ;;
+esac
 
 # Drain stdin — codex sends the event payload, we don't read it for this helper.
 cat > /dev/null

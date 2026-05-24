@@ -1,17 +1,16 @@
 --- a/tui/src/markdown_render.rs
 +++ b/tui/src/markdown_render.rs
-@@ -19,6 +19,7 @@
+@@ -53,6 +53,7 @@
  use pulldown_cmark::Parser;
  use pulldown_cmark::Tag;
  use pulldown_cmark::TagEnd;
 +use ratatui::style::Color;
  use ratatui::style::Style;
+ use ratatui::style::Stylize;
  use ratatui::text::Line;
- use ratatui::text::Span;
-@@ -50,21 +51,28 @@
+@@ -86,20 +87,27 @@
+ impl Default for MarkdownStyles {
      fn default() -> Self {
-         use ratatui::style::Stylize;
- 
 +        const MAUVE: Color = Color::Rgb(203, 166, 247);
 +        const LAVENDER: Color = Color::Rgb(180, 190, 254);
 +        const SAPPHIRE: Color = Color::Rgb(116, 199, 236);

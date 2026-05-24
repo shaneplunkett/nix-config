@@ -1,7 +1,7 @@
 <!--
 name: 'Tool Description: WebFetch'
 description: WebFetch disabled — route all web reads through `bb fetch` via Bash
-ccVersion: 2.1.123
+ccVersion: 2.1.145
 -->
 WebFetch is disabled in this environment. The harness will deny every call.
 

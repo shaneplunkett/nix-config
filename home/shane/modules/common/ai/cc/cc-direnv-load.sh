@@ -6,7 +6,7 @@
 command -v direnv &>/dev/null || exit 0
 
 # Suppress direnv log noise, export bash-compatible env vars
-DIRENV_OUTPUT=$(DIRENV_LOG_FORMAT= direnv export bash 2>/dev/null)
+DIRENV_OUTPUT=$(DIRENV_LOG_FORMAT='' direnv export bash 2>/dev/null)
 
 if [ -n "$DIRENV_OUTPUT" ]; then
   echo "$DIRENV_OUTPUT" >> "$CLAUDE_ENV_FILE"
