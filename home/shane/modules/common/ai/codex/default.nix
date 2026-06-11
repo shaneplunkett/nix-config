@@ -108,26 +108,52 @@ let
   codexVariantDirs = [ ".codex-work" ];
   mutableCodexDirs = [ codexConfigDir ] ++ codexVariantDirs;
 
+  codexMcpServer =
+    name: server:
+    let
+      isHttp = (server.url or null) != null;
+      alwaysStripKeys = [
+        # Codex accepts bearer_token_env_var and headers, but rejects a literal
+        # bearer_token even for HTTP transports.
+        "bearer_token"
+        "disabled"
+        "headers"
+        "type"
+      ];
+      stdioOnlyKeys = [
+        "args"
+        "command"
+        "cwd"
+        "env"
+        "env_vars"
+      ];
+      httpOnlyKeys = [
+        "bearer_token_env_var"
+        "env_http_headers"
+        "http_headers"
+        "oauth"
+        "oauth_resource"
+        "url"
+      ];
+      transportKeys = if isHttp then stdioOnlyKeys else httpOnlyKeys;
+      headers = server.headers or { };
+    in
+    (lib.filterAttrs (_: value: value != null) (
+      lib.removeAttrs server (alwaysStripKeys ++ transportKeys)
+    ))
+    // (lib.optionalAttrs (isHttp && headers != { }) {
+      http_headers = headers;
+    })
+    // {
+      enabled = !(server.disabled or false);
+    }
+    // (lib.optionalAttrs (name == "aikido") {
+      startup_timeout_sec = 30;
+      tool_timeout_sec = 300;
+    });
+
   transformedMcpServers = lib.optionalAttrs config.programs.mcp.enable (
-    lib.mapAttrs (
-      name: server:
-      (lib.filterAttrs (_: value: value != null) (
-        lib.removeAttrs server [
-          "disabled"
-          "headers"
-        ]
-      ))
-      // (lib.optionalAttrs (server ? headers && !(server ? http_headers)) {
-        http_headers = server.headers;
-      })
-      // {
-        enabled = !(server.disabled or false);
-      }
-      // (lib.optionalAttrs (name == "aikido") {
-        startup_timeout_sec = 30;
-        tool_timeout_sec = 300;
-      })
-    ) config.programs.mcp.servers
+    lib.mapAttrs codexMcpServer config.programs.mcp.servers
   );
 
   codexSettings = {

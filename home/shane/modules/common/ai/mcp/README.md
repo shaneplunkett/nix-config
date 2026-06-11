@@ -8,9 +8,10 @@ import `home/shane/modules/common/ai`.
 - `programs.mcp.servers` is the shared Home Manager schema.
 - `programs.claude-code.enableMcpIntegration = true` converts it to Claude
   Code's `mcpServers` shape.
-- `programs.codex.enableMcpIntegration = true` converts it to Codex's
-  `mcp_servers` shape, including `headers` → `http_headers` and
-  `disabled` → `enabled`.
+- The Codex module converts it to Codex's `mcp_servers` shape with
+  transport-aware filtering. `command` servers stay stdio-only, `url` servers
+  stay streamable-HTTP-only, `headers` maps to `http_headers` only for HTTP,
+  and `disabled` maps to `enabled`.
 - Keep server definitions here unless a server is genuinely harness-specific.
 
 ## Adding a server
