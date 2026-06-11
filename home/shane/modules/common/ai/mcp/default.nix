@@ -70,6 +70,13 @@ in
         };
       };
 
+      # PostHog exposes a very large MCP surface by default. Keep the shared
+      # always-on entry read-heavy and scoped; add more tools per-session when
+      # write access is genuinely needed.
+      posthog = {
+        url = "https://mcp.posthog.com/mcp?tools=projects-get,switch-project,project-get,docs-search,read-data-schema,read-data-warehouse-schema,query-run,insight-query,query-error-tracking-issues-list,query-error-tracking-issue,query-error-tracking-issue-events,feature-flag-get-all,feature-flag-get-definition,create-feature-flag,update-feature-flag,delete-feature-flag,feature-flags-activity-retrieve,feature-flags-bulk-update-tags-create,feature-flags-dependent-flags-retrieve,feature-flags-evaluation-reasons-retrieve,feature-flags-status-retrieve,feature-flags-test-evaluation-create,feature-flags-user-blast-radius-create,scheduled-changes-create,scheduled-changes-delete,scheduled-changes-get,scheduled-changes-list,scheduled-changes-update,experiment-list,experiment-get";
+      };
+
       xero = {
         command = "${xeroWrapper}/bin/xero-mcp-wrapper";
         args = [ ];

@@ -18,6 +18,7 @@
     tealdeer
     fzf
     pre-commit
+    slack
 
     nix-output-monitor
     nvd

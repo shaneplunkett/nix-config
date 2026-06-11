@@ -1,7 +1,10 @@
 { pkgs, lib, ... }:
+let
+  xcodebuild-nvim = pkgs.callPackage ../../../../../../pkgs/xcodebuild-nvim { };
+in
 {
   extraPlugins = lib.mkIf pkgs.stdenv.isDarwin [
-    pkgs.xcodebuild-nvim
+    xcodebuild-nvim
   ];
 
   extraPackages = lib.mkIf pkgs.stdenv.isDarwin (

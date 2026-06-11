@@ -2,7 +2,7 @@
 let
   inherit (pkgs.stdenv) isDarwin;
 
-  fishCommand = "direct:${lib.getExe pkgs.fish} --login --interactive";
+  fishCommand = "${lib.getExe pkgs.fish} --login --interactive";
 in
 {
   programs.ghostty = {
@@ -17,7 +17,7 @@ in
       font-size = if isDarwin then 21 else 14;
       command = fishCommand;
       shell-integration = "fish";
-      shell-integration-features = "cursor,title,ssh-env,ssh-terminfo,path";
+      shell-integration-features = "cursor,no-sudo,title";
       confirm-close-surface = false;
     }
     // lib.optionalAttrs isDarwin {
