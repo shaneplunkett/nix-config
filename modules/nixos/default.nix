@@ -1,6 +1,5 @@
 { ... }:
 {
-
   imports = [
     ./audio.nix
     ./docker.nix
@@ -10,5 +9,4 @@
     ./maintenance.nix
     ./user.nix
   ];
-
 }

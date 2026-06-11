@@ -40,6 +40,12 @@ in
         sharedModules = [
           nixvim.homeModules.nixvim
           catppuccin.homeModules.catppuccin
+          (
+            { lib, ... }:
+            {
+              catppuccin.autoEnable = lib.mkDefault false;
+            }
+          )
           vex-tooling.homeManagerModules.default
           nix-index-database.homeModules.nix-index
         ]

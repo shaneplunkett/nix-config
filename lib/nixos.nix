@@ -37,6 +37,12 @@ in
         hostConfig
         agenix.nixosModules.default
         catppuccin.nixosModules.catppuccin
+        (
+          { lib, ... }:
+          {
+            catppuccin.autoEnable = lib.mkDefault false;
+          }
+        )
         home-manager.nixosModules.home-manager
 
         (common.mkHomeManagerModule {
