@@ -11,6 +11,7 @@ _: {
       "ferdium"
       "hammerspoon"
       "teamviewer"
+      "codex-app"
     ];
 
     brews = [

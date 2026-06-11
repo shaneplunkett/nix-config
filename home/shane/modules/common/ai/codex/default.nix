@@ -97,23 +97,6 @@ let
     script = ./codex-nix-lint.sh;
   };
 
-  # ─── codex-desktop-linux (NixOS GUI) ───────────────────────────────────
-  # Linux GUI is community-packaged at ilysenko/codex-desktop-linux. It
-  # extracts the official macOS Codex.dmg and re-shims it for Linux
-  # Electron — same persistent.oaistatic.com payload the cask grabs.
-  # Reads the same ~/.codex/{config.toml,AGENTS.md,skills,rules} this
-  # module manages.
-  #
-  # CURRENTLY GATED OFF: upstream's payload FOD (codex-desktop-payload)
-  # has a hash mismatch on Shane's hardware vs the maintainer's declared
-  # SHA. The build runs for ~8 min in fixupPhase then errors with
-  # `sha256-3/gGqIvT… (specified) vs sha256-CpDmuIOmr4j… (got)` —
-  # reproducibility leak in the asar/electron patch pipeline. File an
-  # issue at github.com/ilysenko/codex-desktop-linux/issues/new before
-  # flipping `enableLinuxGui = true` below. CLI (`pkgs.codex`) is
-  # unaffected and works regardless.
-  enableLinuxGui = false;
-  codexDesktopLinux = inputs.codex-desktop-linux.packages.${pkgs.system}.default;
   codexPackage = pkgs.codex-patched;
 
   codexConfigDir = ".codex";
@@ -382,14 +365,11 @@ let
     '';
 in
 {
-  home = {
-    # Linux gets the community-built GUI (when enabled); darwin gets the
-    # official cask via modules/darwin/homebrew.nix. macOS server
-    # Headless server profiles skip both since common/ai isn't imported there.
-    packages = lib.optionals (pkgs.stdenv.isLinux && enableLinuxGui) [
-      codexDesktopLinux
-    ];
+  imports = [
+    inputs.codex-desktop-linux.homeManagerModules.default
+  ];
 
+  home = {
     # Variant CODEX_HOME dirs mirror the Claude Code CLAUDE_CONFIG_DIR pattern.
     # Auth stays mutable and unmanaged; run `CODEX_HOME=$HOME/.codex-work codex
     # login` once to bind this dir to the work account.
@@ -402,6 +382,20 @@ in
     activation.codexMutableConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] (
       lib.concatMapStringsSep "\n" mutableConfigActivation mutableCodexDirs
     );
+  };
+
+  programs.codexDesktopLinux = lib.mkIf pkgs.stdenv.isLinux {
+    enable = true;
+
+    # The community wrapper auto-stages the Chrome native host. Phone access
+    # needs the experimental Linux mobile-control variant plus an app-server
+    # user service; keep Computer Use UI off until we know we need it.
+    remoteMobileControl.enable = true;
+    remoteControl = {
+      enable = true;
+      package = codexPackage;
+      codexHome = "${homeDirectory}/${codexConfigDir}";
+    };
   };
 
   programs.codex = {

@@ -62,11 +62,11 @@
     "ai-skills": {
       "flake": false,
       "locked": {
-        "lastModified": 1779635031,
-        "narHash": "sha256-mr81vtABNklpuWERsJbojEJ0aW8PoBB1w6o5SCPqcWA=",
+        "lastModified": 1780142340,
+        "narHash": "sha256-gn6npBbAHlan6j5y0tmWdB5TQq7sPw/2EhsuZJfXEes=",
         "ref": "refs/heads/main",
-        "rev": "41ac54db6d580c34e621a046d44cb12cd9333903",
-        "revCount": 39,
+        "rev": "2a0b49070027bba320a3d8e46b80056273bfbdb4",
+        "revCount": 42,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/ai-skills.git"
       },
@@ -151,11 +151,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1779476458,
-        "narHash": "sha256-EXQ5PP0JXfGXAJSgFP0uEa5a6IoL8UaLPBXc5Bh56tA=",
+        "lastModified": 1780763393,
+        "narHash": "sha256-683Iw6ZcHopNTyYQdeABfFImHWVwXL/EGnWA1aLmdUY=",
         "owner": "ilysenko",
         "repo": "codex-desktop-linux",
-        "rev": "bd7a871e8cb06935f09834ecd619074e5ede62a4",
+        "rev": "002aed2ee01f0d65d6cffa971517a771e4757778",
         "type": "github"
       },
       "original": {
