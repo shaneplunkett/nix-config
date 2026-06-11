@@ -113,6 +113,11 @@ let
   # resulting per-skill subdirs are then handed to programs.claude-code.skills
   # for the canonical .claude dir, and inlined via home.file for the variants.
   agSkillsSrc = inputs.ag-ai-skills;
+  agSkillsRoot =
+    if builtins.pathExists "${agSkillsSrc}/skills" then
+      agSkillsSrc
+    else
+      "${agSkillsSrc}/plugins/autograb";
   agSkillsBuilt = pkgs.ag-ai-skills-built;
   # ─── ai-skills (personal skills + vex persona) ─────────────────────────
   # Personal skills are directories under ai-skills/personal/. Enumerated at
@@ -132,7 +137,7 @@ let
       }) (lib.attrNames (lib.filterAttrs (_: t: t == "directory") (builtins.readDir enumSrc)))
     );
 
-  workSkillsAttrs = mkSkillsAttrs "${agSkillsSrc}/skills" agSkillsBuilt;
+  workSkillsAttrs = mkSkillsAttrs "${agSkillsRoot}/skills" agSkillsBuilt;
   personalSkillsAttrs = mkSkillsAttrs "${aiSkills}/personal" "${aiSkills}/personal";
   allSkillsAttrs = workSkillsAttrs // personalSkillsAttrs;
 

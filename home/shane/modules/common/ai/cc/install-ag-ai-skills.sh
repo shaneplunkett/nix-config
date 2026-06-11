@@ -2,8 +2,16 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
-SKILLS_DIR="$REPO_ROOT/skills"
-SHARED_DIR="$REPO_ROOT/shared"
+if [[ -d "$REPO_ROOT/skills" ]]; then
+  SKILLS_DIR="$REPO_ROOT/skills"
+  SHARED_DIR="$REPO_ROOT/shared"
+elif [[ -d "$REPO_ROOT/plugins/autograb/skills" ]]; then
+  SKILLS_DIR="$REPO_ROOT/plugins/autograb/skills"
+  SHARED_DIR="$REPO_ROOT/plugins/autograb/shared"
+else
+  echo "Error: no supported AG skills layout found under $REPO_ROOT" >&2
+  exit 1
+fi
 INSTALL_DIR="${1:-$HOME/.claude/skills}"
 
 RED='\033[0;31m'
@@ -73,10 +81,14 @@ install_skill() {
       fi
 
       if [[ "$has_local_refs" == true ]] && [[ -f "$skill_refs_dir/$ref" ]]; then
-        echo -e "${RED}  Error: collision in $skill_name — '$ref' exists in both shared/ and skill references/${NC}" >&2
-        ERRORS+=("$skill_name: filename collision for '$ref'")
-        rm -rf "$dest"
-        return
+        if cmp -s "$SHARED_DIR/$ref" "$skill_refs_dir/$ref"; then
+          continue
+        else
+          echo -e "${RED}  Error: collision in $skill_name — '$ref' exists in both shared/ and skill references/${NC}" >&2
+          ERRORS+=("$skill_name: filename collision for '$ref'")
+          rm -rf "$dest"
+          return
+        fi
       fi
 
       cp "$SHARED_DIR/$ref" "$dest/references/"

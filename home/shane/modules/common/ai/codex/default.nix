@@ -43,9 +43,14 @@ let
   # ─── ag-ai-skills bake-in ──────────────────────────────────────────────
   # Shared package derivation resolves shared_refs from SKILL.md frontmatter
   # at build time, with Codex's frontmatter normalisation applied.
+  agSkillsRoot =
+    if builtins.pathExists "${agSkillsSrc}/skills" then
+      agSkillsSrc
+    else
+      "${agSkillsSrc}/plugins/autograb";
   agSkillsBuilt = pkgs.ag-ai-skills-built-codex;
 
-  workSkillsAttrs = mkSkillsAttrs "${agSkillsSrc}/skills" agSkillsBuilt;
+  workSkillsAttrs = mkSkillsAttrs "${agSkillsRoot}/skills" agSkillsBuilt;
   personalSkillsAttrs = mkSkillsAttrs "${aiSkills}/personal" "${aiSkills}/personal";
   allSkillsAttrs = workSkillsAttrs // personalSkillsAttrs;
 
@@ -106,10 +111,12 @@ let
   transformedMcpServers = lib.optionalAttrs config.programs.mcp.enable (
     lib.mapAttrs (
       name: server:
-      (lib.removeAttrs server [
-        "disabled"
-        "headers"
-      ])
+      (lib.filterAttrs (_: value: value != null) (
+        lib.removeAttrs server [
+          "disabled"
+          "headers"
+        ]
+      ))
       // (lib.optionalAttrs (server ? headers && !(server ? http_headers)) {
         http_headers = server.headers;
       })
