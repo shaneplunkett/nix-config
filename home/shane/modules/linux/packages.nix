@@ -3,6 +3,16 @@
   ...
 }:
 let
+  intifaceCentralFixed = pkgs.symlinkJoin {
+    name = "intiface-central-fixed";
+    paths = [ pkgs.intiface-central ];
+    nativeBuildInputs = [ pkgs.makeWrapper ];
+    postBuild = ''
+      wrapProgram $out/bin/intiface_central \
+        --prefix LD_LIBRARY_PATH : ${pkgs.intiface-central}/app/intiface-central/lib
+    '';
+  };
+
   electronFlags = ''
     --ozone-platform-hint=auto
     --enable-features=WaylandWindowDecorations
@@ -47,7 +57,7 @@ in
     bun
     bruno
     kubectl
-    intiface-central
+    intifaceCentralFixed
     megacmd
     yt-dlp
     google-chrome
