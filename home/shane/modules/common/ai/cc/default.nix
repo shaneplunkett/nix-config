@@ -205,15 +205,6 @@ let
         OTEL_EXPORTER_OTLP_ENDPOINT = priv.otelEndpoint;
         OTEL_EXPORTER_OTLP_PROTOCOL = "http/json";
         OTEL_RESOURCE_ATTRIBUTES = "autograb_user=${priv.autograbUser},team=${priv.autograbTeam}";
-
-        # Effective context-window cap consumed by the tweakcc-fixed
-        # `enableContextLimitOverride` patch (config.json#settings.misc).
-        # CC's auto-compact threshold is 75% of this value, and the plan-mode
-        # "% context used" gauge is calculated against it too. Opus 4.7 1M
-        # technically supports 1,000,000 tokens but starts degrading past
-        # ~350k — capping at 500k gives auto-compact ~375k headroom and keeps
-        # the % display honest. Bump if it compacts too aggressively.
-        CLAUDE_CODE_CONTEXT_LIMIT = "500000";
       };
 
       # skipDangerousModePermissionPrompt is a TOP-LEVEL state flag per the

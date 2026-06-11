@@ -17,6 +17,7 @@ in
     normaliseFrontmatter = true;
   };
   aikido-mcp = pkgs.callPackage ./aikido-mcp { };
+  claude-code = pkgs.callPackage ./claude-code { };
   claude-code-patched = pkgs.callPackage ./claude-code-patched { };
   claude-plugins-official = pkgs.callPackage ./claude-plugins-official { };
   codex-patched = pkgs.callPackage ./codex-patched { };

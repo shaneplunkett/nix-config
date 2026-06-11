@@ -3,6 +3,7 @@
 
 import json
 import os
+from pathlib import Path
 import subprocess
 import sys
 
@@ -107,15 +108,12 @@ def ctx_colour(pct):
 def get_effort_level(model_id):
     """Resolve the effective effort level.
 
-    Order of precedence (matches CC's own runtime resolution):
+    Order of precedence:
       1. CLAUDE_CODE_EFFORT_LEVEL env var (one-session override)
       2. settings.json/settings.local.json `effortLevel` key (set via /effort)
-      3. Our tweakcc maxEffortDefault patch — but only Opus 4.7 has variable
-         effort. Sonnet / Haiku / other models don't, so we skip the segment
-         for them rather than misreporting "max".
 
     CC does not pipe the live effort value to the statusline command (open
-    feature ask), so we mirror its resolution from disk + env."""
+    feature ask), so we mirror the explicit state we can read from disk + env."""
     env_val = os.environ.get("CLAUDE_CODE_EFFORT_LEVEL")
     if env_val:
         return env_val
@@ -129,10 +127,6 @@ def get_effort_level(model_id):
                     return val
         except Exception:
             continue
-    # tweakcc maxEffortDefault → CC starts Opus 4.7 at "max". Other models
-    # don't have variable effort, so we omit the segment entirely.
-    if "opus-4-7" in (model_id or "").lower():
-        return "max"
     return None
 
 
@@ -157,6 +151,21 @@ def model_context_limit(model_data):
 
 
 TAIL_WINDOW_BYTES = 256 * 1024  # 256 KiB — enough for ~50–100 recent entries
+
+
+def safe_transcript_path(transcript_path):
+    if not transcript_path:
+        return None
+    try:
+        path = Path(transcript_path).expanduser().resolve(strict=True)
+        claude_projects_dir = Path("~/.claude/projects").expanduser().resolve()
+        if claude_projects_dir not in path.parents:
+            return None
+        if not path.is_file():
+            return None
+        return path
+    except OSError:
+        return None
 
 
 def _scan_lines_for_usage(lines):
@@ -193,6 +202,7 @@ def context_from_transcript(transcript_path):
     first — for any plausible recent session this contains the last
     assistant entry. Only when the tail window doesn't find a usage block
     do we fall back to a full read."""
+    transcript_path = safe_transcript_path(transcript_path)
     if not transcript_path:
         return None
     try:
@@ -201,7 +211,7 @@ def context_from_transcript(transcript_path):
         return None
 
     try:
-        with open(transcript_path, "rb") as f:
+        with transcript_path.open("rb") as f:
             if size > TAIL_WINDOW_BYTES:
                 f.seek(size - TAIL_WINDOW_BYTES)
                 # Drop the leading partial line — first newline marks a real boundary
@@ -218,7 +228,7 @@ def context_from_transcript(transcript_path):
     if size <= TAIL_WINDOW_BYTES:
         return None
     try:
-        with open(transcript_path) as f:
+        with transcript_path.open() as f:
             return _scan_lines_for_usage(f.readlines())
     except (OSError, FileNotFoundError):
         return None
@@ -243,8 +253,7 @@ def main():
     parts.append(f"{fg(*MAUVE)}{name}{reset()}")
 
     # Effort level — no icon, keeps visual consistency with other segments.
-    # Only shown for models with variable effort (Opus 4.7); skipped for
-    # Sonnet/Haiku which don't expose the knob.
+    # Only shown when CC exposes the selected effort through env/settings.
     effort = get_effort_level(model.get("id"))
     if effort:
         parts.append(f"{fg(*FLAMINGO)}{effort}{reset()}")

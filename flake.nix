@@ -114,6 +114,25 @@
         }
       );
 
+      packages = forAllSystems (
+        system:
+        let
+          common = import ./lib/common.nix {
+            inherit inputs;
+            rootPath = ./.;
+          };
+          pkgs = import nixpkgs {
+            inherit system;
+            config.allowUnfree = true;
+            overlays = common.mkOverlays [ ];
+          };
+        in
+        import ./pkgs {
+          inherit pkgs inputs;
+          rootPath = ./.;
+        }
+      );
+
       darwinConfigurations = {
         "Shanes-MacBook-Pro" = lib.mkDarwinSystem {
           hostname = "Shanes-MacBook-Pro";

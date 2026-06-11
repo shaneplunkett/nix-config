@@ -29,13 +29,13 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   # Bun >=1.3 `.bun` ELF section support that CC 2.1.x ships with, so
   # native-binary extraction fails on `pkgs.claude-code` without these
   # commits.
-  version = "4.0.11-unstable-2026-05-15";
+  version = "0-unstable-2026-06-11";
 
   src = fetchFromGitHub {
     owner = "skrabe";
     repo = "tweakcc-fixed";
-    rev = "1459a2c04729c2d157225edae3ed752b4061b8c8";
-    hash = "sha256-dgqCFNJNU6mg0Z2FQceGZa0ugnRAt5IHdzkgfDpvyrE=";
+    rev = "c3f67ec5e3854724fa15c01cc1b761411f205f3b";
+    hash = "sha256-KYbraNBTRLkwOSl+8G6dNbx2c0JzSfan+9RgDnFM9D4=";
   };
 
   pnpmDeps = fetchPnpmDeps {
@@ -64,6 +64,14 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   # node-gyp-build picks `.node` over `.musl.node` at runtime, so it's
   # safe to leave the musl-only libc dep unsatisfied.
   autoPatchelfIgnoreMissingDeps = [ "libc.musl-*.so.*" ];
+
+  postPatch = ''
+    # In Nix, tweakcc patches the inner .claude-wrapped Bun binary before the
+    # final wrapper/fixup environment exists. Keep Nix's versionCheckHook as the
+    # real installed-binary check instead of failing on tweakcc's pre-fixup probe.
+    substituteInPlace src/patches/index.ts \
+      --replace-fail "      assertNativeBinaryStarts(tempBinaryPath);" "      // Nix runs the final installed-binary sanity check after fixup."
+  '';
 
   buildPhase = ''
     runHook preBuild

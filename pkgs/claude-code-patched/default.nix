@@ -1,6 +1,6 @@
 # claude-code-patched — pkgs.claude-code with tweakcc-fixed applied at build
 # time. Pairs with skrabe/lobotomized-claude-code for slimmer system prompts
-# and per-turn injections tuned for Opus 4.7.
+# and per-turn injections tuned for the current Opus model.
 #
 # The patch lives in preFixup so it runs AFTER installPhase (which puts the
 # original Bun binary at $out/bin/.claude-wrapped) but BEFORE autoPatchelfHook
@@ -21,17 +21,21 @@
   # User-supplied tweakcc config — tracked alongside this package so tweaks
   # are reproducible across hosts. Edit ./config.json to change knobs.
   tweakccConfig ? ./config.json,
+  # lobotomized-claude-code ships model-specific prompt sets. Keep this aligned
+  # with the Claude Code default model rather than silently carrying older
+  # prompt tuning across binary upgrades.
+  promptOverridesPromptSet ? "system-prompts-opus-4-8",
 }:
 let
   # skrabe/lobotomized-claude-code: slim, less-CAPS-heavy rewrites of Claude
-  # Code's system prompts and per-turn injections tuned for Opus 4.7. Not
+  # Code's system prompts and per-turn injections tuned for current Opus. Not
   # actually lobotomy — strips over-the-top prompt engineering and shrinks
   # the always-injected fragments. Bump rev + hash via nurl on update.
   promptOverrides = fetchFromGitHub {
     owner = "skrabe";
     repo = "lobotomized-claude-code";
-    rev = "4bb5dbb81d743107da5abadd026691c9d226bc02";
-    hash = "sha256-uU8wRE3NwK9LFu8UG2kkwAU9/xM/0IbRbAacRlYRTXc=";
+    rev = "3b8539248eff571fa27216d9dab778793f142033";
+    hash = "sha256-qdvL9f2RM4Rn4xCPmpQamXKarJbVjqyiqXYnZMs0hgs=";
   };
 
   # tweakcc-fixed's regex patches are pinned to specific CC minified shapes
@@ -75,7 +79,7 @@ claude-code.overrideAttrs (prev: {
     # tweakcc seeds defaults into system-prompts/ and system-reminders/
     # on first --apply, so they must be writable — symlinks back to the
     # immutable prompt-overrides source are insufficient.
-    cp -RL ${promptOverrides}/system-prompts  "$TWEAKCC_CONFIG_DIR/system-prompts"
+    cp -RL ${promptOverrides}/${promptOverridesPromptSet} "$TWEAKCC_CONFIG_DIR/system-prompts"
     cp -RL ${promptOverrides}/system-reminders "$TWEAKCC_CONFIG_DIR/system-reminders"
     chmod -R u+w "$TWEAKCC_CONFIG_DIR/system-prompts" "$TWEAKCC_CONFIG_DIR/system-reminders"
 
@@ -145,6 +149,9 @@ claude-code.overrideAttrs (prev: {
     # installPhase. Patch that one — the outer `claude` is the
     # makeBinaryWrapper shim and gets autoPatchelf'd separately.
     export TWEAKCC_CC_INSTALLATION_PATH="$out/bin/.claude-wrapped"
+    export DISABLE_AUTOUPDATER=1
+    export DISABLE_INSTALLATION_CHECKS=1
+    export USE_BUILTIN_RIPGREP=0
     ${lib.getExe tweakcc-fixed} --apply
   '';
 
