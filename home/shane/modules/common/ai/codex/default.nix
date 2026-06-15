@@ -3,6 +3,7 @@
   pkgs,
   lib,
   inputs,
+  isLinux ? pkgs.stdenv.isLinux,
   ...
 }:
 let
@@ -397,10 +398,7 @@ let
             fi
     '';
 in
-{
-  imports = [
-    inputs.codex-desktop-linux.homeManagerModules.default
-  ];
+lib.optionalAttrs isLinux {
 
   home = {
     # Variant CODEX_HOME dirs mirror the Claude Code CLAUDE_CONFIG_DIR pattern.
