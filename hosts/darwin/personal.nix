@@ -169,15 +169,17 @@ in
     StandardErrorPath = "/Users/shane/.hermes/profiles/vex/logs/launchd.err.log";
   };
 
+  power.sleep = {
+    computer = "never";
+    display = "never";
+    harddisk = "never";
+  };
+
   system = {
     activationScripts = {
       hermesVexGatewayLogs.text = ''
         mkdir -p /Users/shane/.hermes/profiles/vex/logs
         chown shane:staff /Users/shane/.hermes /Users/shane/.hermes/profiles /Users/shane/.hermes/profiles/vex /Users/shane/.hermes/profiles/vex/logs 2>/dev/null || true
-      '';
-
-      clamshellMode.text = ''
-        /usr/bin/pmset -c disablesleep 1 sleep 0
       '';
     };
 
