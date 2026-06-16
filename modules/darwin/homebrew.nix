@@ -12,6 +12,7 @@ _: {
       "hammerspoon"
       "teamviewer"
       "codex-app"
+      "bluebubbles"
     ];
 
     brews = [

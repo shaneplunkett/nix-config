@@ -24,6 +24,7 @@
       inputs.hyprland.follows = "hyprland";
     };
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+    hermes-agent.url = "github:NousResearch/hermes-agent";
     homebrew-core = {
       url = "github:homebrew/homebrew-core";
       flake = false;

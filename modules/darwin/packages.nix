@@ -1,4 +1,8 @@
-{ pkgs, ... }:
+{
+  inputs,
+  pkgs,
+  ...
+}:
 {
   environment.systemPackages = with pkgs; [
     vim
@@ -17,5 +21,6 @@
     google-chrome
     gh
     jankyborders
+    inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.messaging
   ];
 }

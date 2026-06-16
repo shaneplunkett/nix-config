@@ -4,5 +4,6 @@
     ./mcp
     ./cc
     ./codex
+    ./hermes
   ];
 }

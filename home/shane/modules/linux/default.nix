@@ -1,4 +1,5 @@
 {
+  inputs,
   lib,
   shell,
   ...
@@ -15,6 +16,7 @@
     ./lutris.nix
     ./waydroid.nix
     ./hyprland.nix
+    inputs.codex-desktop-linux.homeManagerModules.default
 
   ]
 
