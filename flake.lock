@@ -62,11 +62,11 @@
     "ai-skills": {
       "flake": false,
       "locked": {
-        "lastModified": 1781584045,
-        "narHash": "sha256-yL0BBHD7EWicBlaANXDxnubim6XJ6/dxBBTVtECwXsU=",
+        "lastModified": 1781584303,
+        "narHash": "sha256-vLxv5X/9Y1Vxwnnkyd2gjVaz14kKpJDT4kykmF8Bp30=",
         "ref": "refs/heads/main",
-        "rev": "5e4aea467294521f4fa8999e7cc741fafb0360c2",
-        "revCount": 43,
+        "rev": "1b50b9763939abd34e238b8ce77d4b3f9d195677",
+        "revCount": 44,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/ai-skills.git"
       },

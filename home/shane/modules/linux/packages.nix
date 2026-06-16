@@ -21,6 +21,7 @@ let
   chromeFlags = ''
     --ozone-platform-hint=auto
     --enable-features=WaylandWindowDecorations
+    --password-store=basic
   '';
 in
 {
@@ -52,6 +53,7 @@ in
     cliphist
     obsidian
     orca-slicer
+    mpv
     vlc
     samrewritten
     bun
