@@ -18,6 +18,7 @@ let
 
       profile="''${1:-vex}"
       env_file="$HOME/.hermes/profiles/$profile/.env"
+      mkdir -p "$HOME/.hermes/profiles/$profile/logs"
 
       clean_webhooks() {
         if [[ ! -f "$env_file" ]]; then
@@ -153,9 +154,33 @@ in
     hermesVexGateway
   ];
 
-  system.activationScripts.clamshellMode.text = ''
-    /usr/bin/pmset -c disablesleep 1 sleep 0
-  '';
+  launchd.user.agents.hermes-vex-gateway.serviceConfig = {
+    ProgramArguments = [
+      "${hermesVexGateway}/bin/hermes-vex-gateway"
+      "vex"
+    ];
+    RunAtLoad = true;
+    KeepAlive = true;
+    WorkingDirectory = "/Users/shane";
+    EnvironmentVariables = {
+      HOME = "/Users/shane";
+    };
+    StandardOutPath = "/Users/shane/.hermes/profiles/vex/logs/launchd.out.log";
+    StandardErrorPath = "/Users/shane/.hermes/profiles/vex/logs/launchd.err.log";
+  };
 
-  system.stateVersion = 6;
+  system = {
+    activationScripts = {
+      hermesVexGatewayLogs.text = ''
+        mkdir -p /Users/shane/.hermes/profiles/vex/logs
+        chown shane:staff /Users/shane/.hermes /Users/shane/.hermes/profiles /Users/shane/.hermes/profiles/vex /Users/shane/.hermes/profiles/vex/logs 2>/dev/null || true
+      '';
+
+      clamshellMode.text = ''
+        /usr/bin/pmset -c disablesleep 1 sleep 0
+      '';
+    };
+
+    stateVersion = 6;
+  };
 }
