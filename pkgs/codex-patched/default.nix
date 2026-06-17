@@ -52,9 +52,6 @@ rustPlatform.buildRustPackage (finalAttrs: {
   postPatch = ''
     substituteInPlace $cargoDepsCopy/*/webrtc-sys-*/build.rs \
       --replace-fail "cargo:rustc-link-lib=static=webrtc" "cargo:rustc-link-lib=dylib=webrtc"
-    substituteInPlace Cargo.toml \
-      --replace-fail 'lto = "thin"' "" \
-      --replace-fail 'codegen-units = 1' ""
   '';
 
   nativeBuildInputs = [
