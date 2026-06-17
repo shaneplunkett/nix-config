@@ -398,8 +398,7 @@ let
             fi
     '';
 in
-lib.optionalAttrs isLinux {
-
+{
   home = {
     # Variant CODEX_HOME dirs mirror the Claude Code CLAUDE_CONFIG_DIR pattern.
     # Auth stays mutable and unmanaged; run `CODEX_HOME=$HOME/.codex-work codex
@@ -415,40 +414,43 @@ lib.optionalAttrs isLinux {
     );
   };
 
-  programs.codexDesktopLinux = lib.mkIf pkgs.stdenv.isLinux {
-    enable = true;
-
-    # The community wrapper auto-stages the Chrome native host. Phone access
-    # needs the experimental Linux mobile-control variant plus an app-server
-    # user service; keep Computer Use UI off until we know we need it.
-    remoteMobileControl.enable = true;
-    remoteControl = {
+  programs = {
+    codex = {
       enable = true;
       package = codexPackage;
-      codexHome = "${homeDirectory}/${codexConfigDir}";
+
+      # ─── Persona ─────────────────────────────────────────────────────────
+      # Single AGENTS.md concatenated from core.md + output-style + rules/.
+      # Written to CODEX_HOME/AGENTS.md by the module.
+      context = vexAgentsMd;
+
+      # ─── Skills ──────────────────────────────────────────────────────────
+      # Same attrset CC consumes — module symlinks each into
+      # CODEX_HOME/skills/<name>/. Work skills come from the post-install
+      # derivation; personal skills come straight from the flake input.
+      skills = allSkillsAttrs;
+
+      # ─── Rules (prefix_rule allow-list) ──────────────────────────────────
+      # Mutable runtime files are seeded below instead of managed through
+      # `programs.codex.settings` / `programs.codex.rules`, because Codex
+      # legitimately persists approvals and preferences into those files.
+      settings = { };
+      rules = { };
     };
-  };
+  }
+  // lib.optionalAttrs isLinux {
+    codexDesktopLinux = {
+      enable = true;
 
-  programs.codex = {
-    enable = true;
-    package = codexPackage;
-
-    # ─── Persona ─────────────────────────────────────────────────────────
-    # Single AGENTS.md concatenated from core.md + output-style + rules/.
-    # Written to CODEX_HOME/AGENTS.md by the module.
-    context = vexAgentsMd;
-
-    # ─── Skills ──────────────────────────────────────────────────────────
-    # Same attrset CC consumes — module symlinks each into
-    # CODEX_HOME/skills/<name>/. Work skills come from the post-install
-    # derivation; personal skills come straight from the flake input.
-    skills = allSkillsAttrs;
-
-    # ─── Rules (prefix_rule allow-list) ──────────────────────────────────
-    # Mutable runtime files are seeded below instead of managed through
-    # `programs.codex.settings` / `programs.codex.rules`, because Codex
-    # legitimately persists approvals and preferences into those files.
-    settings = { };
-    rules = { };
+      # The community wrapper auto-stages the Chrome native host. Phone access
+      # needs the experimental Linux mobile-control variant plus an app-server
+      # user service; keep Computer Use UI off until we know we need it.
+      remoteMobileControl.enable = true;
+      remoteControl = {
+        enable = true;
+        package = codexPackage;
+        codexHome = "${homeDirectory}/${codexConfigDir}";
+      };
+    };
   };
 }

@@ -91,6 +91,12 @@ Darwin-only packages (`xcbeautify`, `swiftformat`, `swiftlint`, `sourcekit`) →
 
 ## AI modules
 
+Base AI tooling lives in `home/shane/modules/common/ai/` and is imported by
+`home/shane/modules/common/default.nix`. Hermes profile material is the
+exception: import `home/shane/modules/common/ai/hermes` only from profiles that
+should manage `~/.hermes/profiles/vex`, such as the Linux desktop and personal
+Darwin profile. Do not import Hermes into the work Mac profile.
+
 `home/shane/modules/common/ai/`:
 - `mcp/` — canonical `programs.mcp.servers` registry shared by Claude Code and Codex. Prefer pinned Nix packages for server binaries; runtime wrappers are only for secrets.
 - `cc/` — Claude Code. Settings, hooks, theme, plugins via `programs.claude-code` module. Private values (work URLs, work email) come from `inputs.nix-config-private`.

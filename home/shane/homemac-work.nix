@@ -1,9 +1,7 @@
 { ... }:
 {
-
   imports = [
     ./modules/common
-    ./modules/common/ai/hermes
   ];
 
   home = {

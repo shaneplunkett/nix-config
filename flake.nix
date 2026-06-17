@@ -144,6 +144,7 @@
           hostname = "Shanes-Work-MacBook-Pro";
           system = "aarch64-darwin";
           hostConfig = ./hosts/darwin/work.nix;
+          homeConfig = ./home/shane/homemac-work.nix;
         };
 
       };
