@@ -32,9 +32,39 @@ _: {
             command tmux $argv
           end
         '';
+        __nrs_darwin_host = ''
+          if set -q NRS_HOST
+            echo $NRS_HOST
+            return 0
+          end
+
+          set -l candidates
+          if command -sq scutil
+            for key in LocalHostName HostName
+              set -l value (scutil --get $key 2>/dev/null)
+              if test -n "$value"
+                set -a candidates $value
+              end
+            end
+          end
+
+          set -a candidates (hostname -s 2>/dev/null) (hostname 2>/dev/null)
+          for candidate in $candidates
+            switch $candidate
+              case Shanes-MacBook-Pro Shanes-Work-MacBook-Pro
+                echo $candidate
+                return 0
+            end
+          end
+
+          set -l tried (string join ', ' $candidates)
+          echo "nrs: could not resolve this Mac to a darwinConfigurations host. Tried: $tried" >&2
+          return 1
+        '';
         nrs = ''
           if test (uname) = Darwin
-            nh darwin switch $argv "$HOME/nix-config" -H (hostname -s)
+            set -l host (__nrs_darwin_host); or return 1
+            nh darwin switch $argv "$HOME/nix-config" -H $host
           else
             nh os switch $argv "$HOME/nix-config" -H (hostname)
           end
@@ -45,7 +75,8 @@ _: {
             --override-input ai-skills "path:$HOME/ai-skills" \
             --override-input nix-config-private "path:$HOME/projects/personal/nix-config-private"
           if test (uname) = Darwin
-            nh darwin switch $argv "$HOME/nix-config" -H (hostname -s) -- $overrides
+            set -l host (__nrs_darwin_host); or return 1
+            nh darwin switch $argv "$HOME/nix-config" -H $host -- $overrides
           else
             nh os switch $argv "$HOME/nix-config" -H (hostname) -- $overrides
           end
