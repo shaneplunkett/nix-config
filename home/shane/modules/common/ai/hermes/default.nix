@@ -39,7 +39,10 @@ let
 
     compression.codex_gpt55_autoraise = false;
 
-    agent.gateway_timeout = 3600;
+    agent = {
+      gateway_timeout = 3600;
+      reasoning_effort = "xhigh";
+    };
 
     toolsets = [
       "hermes-cli"
@@ -101,6 +104,8 @@ in
       - `config.yaml`: baseline Hermes profile settings.
       - `SOUL.md`: Vex prompt material sourced from the shared AI skills flake.
       - `.env.example`: names the mutable runtime variables without storing secrets.
+
+      Default reasoning effort is managed declaratively as `agent.reasoning_effort = "xhigh"`.
 
       Mutable runtime files:
 
