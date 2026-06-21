@@ -16,6 +16,7 @@
     ./lutris.nix
     ./waydroid.nix
     ./hyprland.nix
+    ./taildrop.nix
     inputs.codex-desktop-linux.homeManagerModules.default
 
   ]

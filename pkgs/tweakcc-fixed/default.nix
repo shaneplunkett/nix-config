@@ -3,7 +3,7 @@
 # skrabe/tweakcc-fixed is a fork of Piebald-AI/tweakcc carrying cherry-picked
 # upstream PRs plus skrabe-only features: system-reminder override mechanism,
 # MCP per-server instruction routing, Skills view, regex updates for CC
-# 2.1.113/126/142 minified shapes, and `claudemdContextOncePerConversation`.
+# 2.1.113/126/142/183 minified shapes, and `claudemdContextOncePerConversation`.
 # Upstream lags CC version churn by 2+ weeks; the fork is structural for
 # current CC, not optional.
 #
@@ -29,13 +29,13 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   # Bun >=1.3 `.bun` ELF section support that CC 2.1.x ships with, so
   # native-binary extraction fails on `pkgs.claude-code` without these
   # commits.
-  version = "0-unstable-2026-06-11";
+  version = "0-unstable-2026-06-19";
 
   src = fetchFromGitHub {
     owner = "skrabe";
     repo = "tweakcc-fixed";
-    rev = "c3f67ec5e3854724fa15c01cc1b761411f205f3b";
-    hash = "sha256-KYbraNBTRLkwOSl+8G6dNbx2c0JzSfan+9RgDnFM9D4=";
+    rev = "725dd2f530b48dcf1f2e053a5f616e3567855650";
+    hash = "sha256-hE5MfowgOyxseVWWlv3SVVTPeld1JCMDRNt5v8H5zmU=";
   };
 
   pnpmDeps = fetchPnpmDeps {

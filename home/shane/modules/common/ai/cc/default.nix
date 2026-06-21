@@ -85,6 +85,14 @@ let
     script = ./claude-restart-wrapper.sh;
   };
 
+  # Work profile intentionally uses pristine Claude Code. The patched native
+  # tweakcc build has broken interactive Team-profile turns before, so keep a
+  # clean binary available for ccw/ccwr while personal cc stays patched.
+  claude-work = pkgs.writeShellApplication {
+    name = "claude-work";
+    text = ''exec ${lib.getExe pkgs.claude-code} "$@"'';
+  };
+
   # UserPromptSubmit hook for claude-restart: intercepts the literal word
   # `restart` (trimmed, case-insensitive), touches the per-wrapper flag,
   # SIGTERMs claude, and blocks the prompt from reaching the model.
@@ -94,40 +102,25 @@ let
     script = ./restart-hook.sh;
   };
 
-  # ─── Plugin / marketplace pins ─────────────────────────────────────────
-  # Marketplace clone — discord, frontend-design live inside it as subdirs.
-  claudePluginsMarketplace = pkgs.claude-plugins-official;
+  # ─── Plugins — deliberately NOT managed by Nix ─────────────────────────
+  # Plugins and marketplaces are fully imperative. Claude owns the writable
+  # state in ~/.claude/plugins/{installed_plugins,known_marketplaces}.json,
+  # so `/plugin install`, `/plugin marketplace add`, and enable/disable
+  # toggles all just work and persist with zero rebuild. Nix used to assert
+  # `enabledPlugins` + `extraKnownMarketplaces` into the read-only settings.json
+  # symlink, which froze the toggle state and forced a rebuild for every swap.
+  # Trade-off accepted: a fresh machine starts with no plugins; re-add by hand.
+  # When a baseline settles, promote it back here (seed-once into the writable
+  # cache, mirroring the codex config.toml pattern) rather than re-freezing
+  # settings.json.
 
-  # Single source of truth for CC plugins — used to derive both
-  # programs.claude-code.plugins (--plugin-dir wrapper args) AND
-  # settings.json#enabledPlugins (marketplace registry state, so `claude plugin
-  # list` shows them as enabled). Add a new plugin here and both surfaces update.
-  ccPlugins = {
-    "discord@claude-plugins-official" = "${claudePluginsMarketplace}/external_plugins/discord";
-    "frontend-design@claude-plugins-official" = "${claudePluginsMarketplace}/plugins/frontend-design";
-  };
-
-  # ─── ag-ai-skills bake-in ──────────────────────────────────────────────
-  # install.sh resolves shared_refs from SKILL.md frontmatter into per-skill
-  # references/ dirs. We run it once at build time inside a derivation; the
-  # resulting per-skill subdirs are then handed to programs.claude-code.skills
-  # for the canonical .claude dir, and inlined via home.file for the variants.
-  agSkillsSrc = inputs.ag-ai-skills;
-  agSkillsRoot =
-    if builtins.pathExists "${agSkillsSrc}/skills" then
-      agSkillsSrc
-    else
-      "${agSkillsSrc}/plugins/autograb";
-  agSkillsBuilt = pkgs.ag-ai-skills-built;
   # ─── ai-skills (personal skills + vex persona) ─────────────────────────
   # Personal skills are directories under ai-skills/personal/. Enumerated at
   # eval time from the flake input — replaces the runtime-iteration activation
   # script that used to walk ~/ai-skills/personal/ at switch time.
   #
   # Helper: enumerate subdirectory names in `enumSrc` and map each to a
-  # value under `valueRoot`. Used for both work skills (enum source =
-  # ag-ai-skills source, value root = the post-install derivation) and
-  # personal skills (enum source = value root = the personal/ dir).
+  # value under `valueRoot`.
   mkSkillsAttrs =
     enumSrc: valueRoot:
     lib.listToAttrs (
@@ -137,12 +130,23 @@ let
       }) (lib.attrNames (lib.filterAttrs (_: t: t == "directory") (builtins.readDir enumSrc)))
     );
 
-  workSkillsAttrs = mkSkillsAttrs "${agSkillsRoot}/skills" agSkillsBuilt;
   personalSkillsAttrs = mkSkillsAttrs "${aiSkills}/personal" "${aiSkills}/personal";
-  allSkillsAttrs = workSkillsAttrs // personalSkillsAttrs;
 
-  workSkillNames = lib.attrNames workSkillsAttrs;
-  personalSkillNames = lib.attrNames personalSkillsAttrs;
+  # Keep default Claude sessions lean. Work and project-specific skills are
+  # exposed through repo-local .agents/skills and .claude/skills symlinks.
+  globalSkillNames = [
+    "memory-save"
+    "tavily-best-practices"
+    "tavily-cli"
+    "tavily-crawl"
+    "tavily-dynamic-search"
+    "tavily-extract"
+    "tavily-map"
+    "tavily-research"
+    "tavily-search"
+    "td-todoist"
+  ];
+  globalSkillsAttrs = lib.genAttrs globalSkillNames (name: personalSkillsAttrs.${name});
 
   # ─── claude-code-patched ───────────────────────────────────────────────
   # pkgs.claude-code with tweakcc-fixed applied at build time + skrabe's
@@ -198,9 +202,8 @@ let
       };
       feedbackSurveyRate = 0;
 
-      # Marketplace registry state — without this, plugins loaded via
-      # --plugin-dir show as 'disabled' in `claude plugin list`.
-      enabledPlugins = lib.mapAttrs (_: _: true) ccPlugins;
+      # Plugins/marketplaces are intentionally absent here — fully imperative,
+      # owned by Claude's writable plugin cache. See the note in the let block.
 
       env = {
         CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1";
@@ -430,7 +433,11 @@ let
           };
       personaTarget = if isVex then "vex/core.md" else "vex/core-pro.md";
       styleTarget = if isVex then "output-styles/vex.md" else "output-styles/vex-pro.md";
-      claudeMd = if isVex then "# Vex\n@vex/core.md\n" else "# Vex (Pro)\n@vex/core-pro.md\n";
+      claudeMd =
+        if isVex then
+          "# Vex\n@vex/core.md\n@vex/adapters/claude-code.md\n"
+        else
+          "# Vex (Pro)\n@vex/core-pro.md\n@vex/adapters/claude-code.md\n";
     in
     {
       "${dir}/settings.json".source = settingsSrc;
@@ -439,34 +446,29 @@ let
     }
     // {
       "${dir}/${personaTarget}".source = "${aiSkills}/${personaTarget}";
+      "${dir}/vex/adapters/claude-code.md".source = "${aiSkills}/vex/adapters/claude-code.md";
       "${dir}/${styleTarget}".source =
         if isVex then "${aiSkills}/vex/output-style.md" else "${aiSkills}/vex/output-style-pro.md";
       "${dir}/rules".source = "${aiSkills}/vex/rules";
       "${dir}/agents".source = "${aiSkills}/vex/agents";
     }
-    // lib.listToAttrs (
-      (map (name: {
-        name = "${dir}/skills/${name}";
-        value = {
-          source = "${agSkillsBuilt}/${name}";
-          recursive = true;
-        };
-      }) workSkillNames)
-      ++ (map (name: {
-        name = "${dir}/skills/${name}";
-        value = {
-          source = "${aiSkills}/personal/${name}";
-          recursive = true;
-        };
-      }) personalSkillNames)
-    );
+    // (lib.mapAttrs' (
+      name: source:
+      lib.nameValuePair "${dir}/skills/${name}" {
+        inherit source;
+        recursive = true;
+      }
+    ) globalSkillsAttrs);
 
 in
 {
   # claude-restart on PATH so the fish `claude` function (see fish.nix) can
   # find it, plus making it directly invokable as `claude-restart` for
   # debugging or use outside fish.
-  home.packages = [ claude-restart ];
+  home.packages = [
+    claude-restart
+    claude-work
+  ];
 
   # ─── Canonical ~/.claude — home-manager module owns it ─────────────────
   programs.claude-code = {
@@ -481,26 +483,21 @@ in
       hookSuffix = "";
     };
 
-    context = "# Vex\n@vex/core.md\n";
+    context = "# Vex\n@vex/core.md\n@vex/adapters/claude-code.md\n";
 
     # Shared MCP servers come from programs.mcp.servers and are translated
     # into Claude Code's native mcpServers shape by the Home Manager module.
     enableMcpIntegration = true;
 
-    # Marketplaces — writes both settings.json#extraKnownMarketplaces and
-    # ~/.claude/plugins/known_marketplaces.json declaratively.
-    marketplaces = {
-      claude-plugins-official = claudePluginsMarketplace;
-    };
+    # Plugins are NOT declared here — fully imperative via `/plugin`. Claude's
+    # writable cache (~/.claude/plugins/*.json) is the sole source of truth.
 
-    # Plugins — wrapped binary auto-loads each via --plugin-dir. discord and
-    # frontend-design live inside the marketplace clone. See `ccPlugins` above
-    # for the single source of truth.
-    plugins = lib.attrValues ccPlugins;
-
-    # Skills — work (from ag-ai-skills) + personal (from ai-skills/personal/).
-    # Module symlinks each into .claude/skills/<name>/.
-    skills = allSkillsAttrs;
+    # Skills — only the always-use baseline. `recursive = true` makes
+    # ~/.claude/skills a real directory whose nix-owned entries are the only
+    # managed children, so a hand-dropped ~/.claude/skills/<scratch>/SKILL.md
+    # loads and persists without a rebuild. Work/project packs are linked into
+    # repo-local .agents/skills and .claude/skills manually.
+    skills = globalSkillsAttrs;
 
     # Rules + agents dirs — module symlinks ~/.claude/{rules,agents}
     # recursively from the flake-input source.
@@ -519,6 +516,7 @@ in
         ".claude/themes/vex.json".source = vexThemeFile;
         ".claude/output-styles/vex.md".source = "${aiSkills}/vex/output-style.md";
         ".claude/vex/core.md".source = "${aiSkills}/vex/core.md";
+        ".claude/vex/adapters/claude-code.md".source = "${aiSkills}/vex/adapters/claude-code.md";
       }
       (
         (map (

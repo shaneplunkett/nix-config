@@ -34,8 +34,8 @@ let
   promptOverrides = fetchFromGitHub {
     owner = "skrabe";
     repo = "lobotomized-claude-code";
-    rev = "3b8539248eff571fa27216d9dab778793f142033";
-    hash = "sha256-qdvL9f2RM4Rn4xCPmpQamXKarJbVjqyiqXYnZMs0hgs=";
+    rev = "9edeead984f7c66ad0108228c122a2104779edac";
+    hash = "sha256-ggVsXldQt+KdyCTZ6ENlVhmbLyUDsLjj3Hmi+87aJu4=";
   };
 
   # tweakcc-fixed's regex patches are pinned to specific CC minified shapes

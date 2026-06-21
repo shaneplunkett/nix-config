@@ -6,7 +6,6 @@
 
   imports = [
     ./modules/common
-    ./modules/common/ai/hermes
     ./modules/linux
   ];
 

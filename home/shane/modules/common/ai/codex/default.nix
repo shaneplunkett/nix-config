@@ -10,7 +10,6 @@ let
   inherit (config.home) homeDirectory;
 
   aiSkills = inputs.ai-skills;
-  agSkillsSrc = inputs.ag-ai-skills;
   tomlFormat = pkgs.formats.toml { };
 
   # ─── Helpers (mirrored from ../cc/default.nix) ─────────────────────────
@@ -41,19 +40,23 @@ let
       }) (lib.attrNames (lib.filterAttrs (_: t: t == "directory") (builtins.readDir enumSrc)))
     );
 
-  # ─── ag-ai-skills bake-in ──────────────────────────────────────────────
-  # Shared package derivation resolves shared_refs from SKILL.md frontmatter
-  # at build time, with Codex's frontmatter normalisation applied.
-  agSkillsRoot =
-    if builtins.pathExists "${agSkillsSrc}/skills" then
-      agSkillsSrc
-    else
-      "${agSkillsSrc}/plugins/autograb";
-  agSkillsBuilt = pkgs.ag-ai-skills-built-codex;
-
-  workSkillsAttrs = mkSkillsAttrs "${agSkillsRoot}/skills" agSkillsBuilt;
   personalSkillsAttrs = mkSkillsAttrs "${aiSkills}/personal" "${aiSkills}/personal";
-  allSkillsAttrs = workSkillsAttrs // personalSkillsAttrs;
+
+  # Keep the global skill surface deliberately small. Use repo-local
+  # .agents/skills and .claude/skills symlinks for work/project packs.
+  globalSkillNames = [
+    "memory-save"
+    "tavily-best-practices"
+    "tavily-cli"
+    "tavily-crawl"
+    "tavily-dynamic-search"
+    "tavily-extract"
+    "tavily-map"
+    "tavily-research"
+    "tavily-search"
+    "td-todoist"
+  ];
+  globalSkillsAttrs = lib.genAttrs globalSkillNames (name: personalSkillsAttrs.${name});
 
   # ─── AGENTS.md concat (eval-time string) ───────────────────────────────
   # Codex's `programs.codex.context` types as `lines | path` — a derivation
@@ -291,7 +294,7 @@ let
         inherit source;
         recursive = true;
       }
-    ) allSkillsAttrs;
+    ) globalSkillsAttrs;
 
   mutableConfigActivation =
     dir:
@@ -425,10 +428,9 @@ in
       context = vexAgentsMd;
 
       # ─── Skills ──────────────────────────────────────────────────────────
-      # Same attrset CC consumes — module symlinks each into
-      # CODEX_HOME/skills/<name>/. Work skills come from the post-install
-      # derivation; personal skills come straight from the flake input.
-      skills = allSkillsAttrs;
+      # Global skills stay tiny; project/use-case skills live under repo-local
+      # .agents/skills and .claude/skills symlinks back to ~/ai-skills.
+      skills = globalSkillsAttrs;
 
       # ─── Rules (prefix_rule allow-list) ──────────────────────────────────
       # Mutable runtime files are seeded below instead of managed through
