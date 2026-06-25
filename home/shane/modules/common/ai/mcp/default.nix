@@ -62,6 +62,25 @@ in
         };
       };
 
+      chrome-devtools = {
+        command = "${nodejs}/bin/npx";
+        args = [
+          "-y"
+          "chrome-devtools-mcp@latest"
+          "--autoConnect"
+          "--channel"
+          "stable"
+          "--no-usage-statistics"
+          "--no-performance-crux"
+          "--screenshot-format"
+          "jpeg"
+          "--screenshot-max-width"
+          "1600"
+          "--screenshot-max-height"
+          "1200"
+        ];
+      };
+
       aikido = {
         command = "${aikidoWrapper}/bin/aikido-mcp-wrapper";
         args = [ ];

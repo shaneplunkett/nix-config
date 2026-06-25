@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }:
 let
@@ -9,6 +10,11 @@ let
   pluginRoot = "${homeDir}/projects/personal/noctalia-plugins";
   papirusIcons = "${pkgs.papirus-icon-theme}/share/icons/Papirus/48x48";
   freedesktopSounds = "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo";
+
+  # tl;dv recorder helper — static Go binary built from the noctalia-plugins flake.
+  tldvHelper = "${
+    inputs.noctalia-plugins.packages.${pkgs.stdenv.hostPlatform.system}.tldv-helper
+  }/bin/tldv-helper";
 
   plugins = {
     vex-timer = {
@@ -65,10 +71,9 @@ let
     vex-tldv-recorder = {
       settings = {
         accentColor = "primary";
-        nodeBin = "${pkgs.nodejs}/bin/node";
-        helperPath = "${pluginRoot}/vex-tldv-recorder/helper/bin/tldv-helper.mjs";
+        helperPath = tldvHelper; # static Go binary built from the noctalia-plugins flake
         statusPath = ""; # default XDG_STATE_HOME/vex-tldv-recorder/status.json
-        pollIntervalSec = 2;
+        refreshIntervalSec = 30;
       };
       # The tldv:// scheme handler: tl;dv login redirects to tldv://auth?access_token=…,
       # which the OS routes here to hand the token to the helper. Paired with the
@@ -81,7 +86,7 @@ let
           Comment=Captures the tldv://auth?access_token=… callback from tl;dv login
           NoDisplay=true
           Terminal=false
-          Exec=${pkgs.nodejs}/bin/node ${pluginRoot}/vex-tldv-recorder/helper/bin/tldv-helper.mjs auth-callback %u
+          Exec=${tldvHelper} auth-callback %u
           MimeType=x-scheme-handler/tldv;
         '';
       };

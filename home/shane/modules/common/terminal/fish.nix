@@ -3,12 +3,14 @@ _: {
     fish = {
       enable = true;
       shellAliases = {
-        cc = "claude --dangerously-skip-permissions";
-        ccr = "claude --dangerously-skip-permissions --resume";
+        cc = "claude --model 'claude-opus-4-6[1m]' --dangerously-skip-permissions";
+        ccr = "claude --model 'claude-opus-4-6[1m]' --dangerously-skip-permissions --resume";
         ccw = "CLAUDE_CONFIG_DIR=$HOME/.claude-work claude-work --dangerously-skip-permissions";
         ccwr = "CLAUDE_CONFIG_DIR=$HOME/.claude-work claude-work --dangerously-skip-permissions --resume";
         ccp = "CLAUDE_CONFIG_DIR=$HOME/.claude-pro claude";
         ccpr = "CLAUDE_CONFIG_DIR=$HOME/.claude-pro claude --resume";
+        cldw = "claude-delegate work";
+        cldp = "claude-delegate personal";
         cx = "codex";
         cxr = "codex resume --last";
         cxw = "CODEX_HOME=$HOME/.codex-work codex";

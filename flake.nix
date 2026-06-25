@@ -77,6 +77,12 @@
       url = "github:ilysenko/codex-desktop-linux";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Vex Noctalia plugins — provides the tl;dv recorder helper (Go binary).
+    noctalia-plugins = {
+      url = "git+ssh://git@github.com/shaneplunkett/noctalia-plugins.git";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

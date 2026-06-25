@@ -94,6 +94,128 @@ let
     text = ''exec ${lib.getExe pkgs.claude-code} "$@"'';
   };
 
+  # Non-interactive Claude worker wrapper. It selects an OAuth profile but runs
+  # in safe-mode, so profile dirs are only auth containers; no custom context,
+  # hooks, skills, plugins, MCP servers, or CLAUDE.md files are loaded.
+  claude-delegate = pkgs.writeShellApplication {
+    name = "claude-delegate";
+    runtimeInputs = [ pkgs.coreutils ];
+    text = ''
+      set -euo pipefail
+
+      usage() {
+        cat <<'EOF'
+      Usage:
+        claude-delegate [work|personal] [options] [prompt...]
+
+      Options:
+        --profile work|personal  Select OAuth profile (default: work)
+        --model MODEL            Claude model alias/name (default: opus)
+        --tools TOOLS            Built-in tools list (default: Read,Grep,Glob,Bash)
+        --write                  Also expose Edit,Write,MultiEdit
+        --max-budget-usd VALUE   Print-mode spend cap
+        -h, --help               Show this help
+
+      If no prompt arguments are supplied, stdin is used.
+      EOF
+      }
+
+      profile="work"
+      model="''${CLAUDE_DELEGATE_MODEL:-opus}"
+      tools="Read,Grep,Glob,Bash"
+      max_budget=0
+      prompt_parts=()
+
+      while [[ $# -gt 0 ]]; do
+        case "$1" in
+          work|personal)
+            profile="$1"
+            shift
+            ;;
+          --profile)
+            profile="''${2:-}"
+            shift 2
+            ;;
+          --model)
+            model="''${2:-}"
+            shift 2
+            ;;
+          --tools)
+            tools="''${2:-}"
+            shift 2
+            ;;
+          --write)
+            tools="Read,Grep,Glob,Bash,Edit,Write,MultiEdit"
+            shift
+            ;;
+          --max-budget-usd)
+            max_budget="''${2:-}"
+            shift 2
+            ;;
+          -h|--help)
+            usage
+            exit 0
+            ;;
+          --)
+            shift
+            prompt_parts+=("$@")
+            break
+            ;;
+          *)
+            prompt_parts+=("$1")
+            shift
+            ;;
+        esac
+      done
+
+      case "$profile" in
+        work)
+          config_dir="''${CLAUDE_DELEGATE_WORK_DIR:-$HOME/.claude-work}"
+          ;;
+        personal)
+          config_dir="''${CLAUDE_DELEGATE_PERSONAL_DIR:-$HOME/.claude}"
+          ;;
+        *)
+          echo "claude-delegate: profile must be 'work' or 'personal'" >&2
+          exit 64
+          ;;
+      esac
+
+      if [[ ! -d "$config_dir" ]]; then
+        echo "claude-delegate: config dir does not exist: $config_dir" >&2
+        exit 66
+      fi
+
+      if [[ ''${#prompt_parts[@]} -gt 0 ]]; then
+        prompt="''${prompt_parts[*]}"
+      else
+        prompt="$(cat)"
+      fi
+
+      if [[ -z "$prompt" ]]; then
+        echo "claude-delegate: prompt is empty" >&2
+        exit 64
+      fi
+
+      args=(
+        --safe-mode
+        --no-chrome
+        --no-session-persistence
+        --print
+        --output-format text
+        --model "$model"
+        --permission-mode bypassPermissions
+        --tools "$tools"
+      )
+
+      if [[ "$max_budget" != "0" ]]; then
+        args+=(--max-budget-usd "$max_budget")
+      fi
+
+      CLAUDE_CONFIG_DIR="$config_dir" exec ${lib.getExe claude-work} "''${args[@]}" -- "$prompt"
+    '';
+  };
+
   # UserPromptSubmit hook for claude-restart: intercepts the literal word
   # `restart` (trimmed, case-insensitive), touches the per-wrapper flag,
   # SIGTERMs claude, and blocks the prompt from reaching the model.
@@ -418,6 +540,20 @@ let
   # Variant config dirs — kept on the manual home.file generator because the
   # programs.claude-code module is single-dir (~/.claude only). Activated via
   # CLAUDE_CONFIG_DIR=$HOME/.claude-work claude (see fish.nix aliases).
+  baseVexClaudeContext = ''
+    # Vex
+    @vex/core.md
+    @vex/output-style.md
+    @vex/rules/brain.md
+    @vex/rules/cli-routing.md
+    @vex/rules/exec-function.md
+    @vex/rules/interaction.md
+    @vex/rules/protocols.md
+    @vex/rules/shane-profile.md
+  '';
+
+  claudeCode48Context = "# Vex — Claude Code\n@vex/claude-code/core.md\n@vex/claude-code/operations.md\n";
+
   vexVariantDirs = [ ".claude-work" ];
   proVariantDirs = [ ".claude-pro" ];
 
@@ -445,7 +581,7 @@ let
       styleTarget = if isVex then "output-styles/vex.md" else "output-styles/vex-pro.md";
       claudeMd =
         if isVex then
-          "# Vex — Claude Code\n@vex/claude-code/core.md\n@vex/claude-code/operations.md\n"
+          claudeCode48Context
         else
           "# Vex (Pro)\n@vex/core-pro.md\n@vex/adapters/claude-code.md\n";
     in
@@ -490,6 +626,7 @@ in
   home.packages = [
     claude-restart
     claude-work
+    claude-delegate
   ];
 
   # ─── Canonical ~/.claude — home-manager module owns it ─────────────────
@@ -503,10 +640,9 @@ in
     settings = mkSettingsContent {
       outputStyle = "vex";
       hookSuffix = "";
-      hookDir = claudeVexStack;
     };
 
-    context = "# Vex — Claude Code\n@vex/claude-code/core.md\n@vex/claude-code/operations.md\n";
+    context = baseVexClaudeContext;
 
     # Shared MCP servers come from programs.mcp.servers and are translated
     # into Claude Code's native mcpServers shape by the Home Manager module.
@@ -537,9 +673,10 @@ in
     lib.foldl' lib.recursiveUpdate
       {
         ".claude/themes/vex.json".source = vexThemeFile;
-        ".claude/output-styles/vex.md".source = "${claudeVexStack}/output-style.md";
+        ".claude/output-styles/vex.md".source = "${aiSkills}/vex/output-style.md";
         ".claude/vex/core.md".source = "${aiSkills}/vex/core.md";
-        ".claude/vex/adapters/claude-code.md".source = "${aiSkills}/vex/adapters/claude-code.md";
+        ".claude/vex/output-style.md".source = "${aiSkills}/vex/output-style.md";
+        ".claude/vex/rules".source = "${aiSkills}/vex/rules";
         ".claude/vex/claude-code" = {
           source = claudeVexStack;
           force = true;

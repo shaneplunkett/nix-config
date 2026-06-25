@@ -62,11 +62,11 @@
     "ai-skills": {
       "flake": false,
       "locked": {
-        "lastModified": 1782366608,
-        "narHash": "sha256-bMztY1rMn4bJHjbOWK93n2OPH6J6nHkzhJJ6X8B1s+s=",
+        "lastModified": 1782376270,
+        "narHash": "sha256-o3ejJ5IbGgAM03yUnh/HGRCHOiSEGWa38KYBc/lWiuc=",
         "ref": "refs/heads/main",
-        "rev": "d568628e310f34a6688a2b2e307657fb966a10b2",
-        "revCount": 49,
+        "rev": "2dad6dd9b187f67e276988fe00cdfff2ca610ca7",
+        "revCount": 50,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/ai-skills.git"
       },
@@ -277,7 +277,7 @@
     },
     "flake-utils_2": {
       "inputs": {
-        "systems": "systems_7"
+        "systems": "systems_6"
       },
       "locked": {
         "lastModified": 1731533236,
@@ -335,7 +335,7 @@
     },
     "gws": {
       "inputs": {
-        "flake-utils": "flake-utils_2",
+        "flake-utils": "flake-utils_3",
         "nixpkgs": [
           "vex-tooling",
           "nixpkgs"
@@ -985,6 +985,28 @@
         "type": "github"
       }
     },
+    "noctalia-plugins": {
+      "inputs": {
+        "flake-utils": "flake-utils_2",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "treefmt-nix": "treefmt-nix_2"
+      },
+      "locked": {
+        "lastModified": 1782372496,
+        "narHash": "sha256-7Fsj8yuXdoTx4v9kcxLfdxHarIZhTxJhB9E1BTaMiOM=",
+        "ref": "refs/heads/main",
+        "rev": "71ae4eee91c38f6f77a9e0232d71d7b495b92217",
+        "revCount": 18,
+        "type": "git",
+        "url": "ssh://git@github.com/shaneplunkett/noctalia-plugins.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/shaneplunkett/noctalia-plugins.git"
+      }
+    },
     "noctalia-qs": {
       "inputs": {
         "nixpkgs": [
@@ -1013,8 +1035,8 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "systems": "systems_6",
-        "treefmt-nix": "treefmt-nix_2"
+        "systems": "systems_7",
+        "treefmt-nix": "treefmt-nix_3"
       },
       "locked": {
         "lastModified": 1778983195,
@@ -1074,6 +1096,7 @@
         "nixpkgs": "nixpkgs_5",
         "nixvim": "nixvim",
         "noctalia": "noctalia",
+        "noctalia-plugins": "noctalia-plugins",
         "noctalia-qs": "noctalia-qs_2",
         "umu-launcher": "umu-launcher",
         "vex-tooling": "vex-tooling"
@@ -1178,21 +1201,6 @@
     },
     "systems_6": {
       "locked": {
-        "lastModified": 1689347949,
-        "narHash": "sha256-12tWmuL2zgBgZkdoB6qXZsgJEH9LR3oUgpaQq2RbI80=",
-        "owner": "nix-systems",
-        "repo": "default-linux",
-        "rev": "31732fcf5e8fea42e59c2488ad31a0e651500f68",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-systems",
-        "repo": "default-linux",
-        "type": "github"
-      }
-    },
-    "systems_7": {
-      "locked": {
         "lastModified": 1681028828,
         "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
         "owner": "nix-systems",
@@ -1203,6 +1211,21 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "systems_7": {
+      "locked": {
+        "lastModified": 1689347949,
+        "narHash": "sha256-12tWmuL2zgBgZkdoB6qXZsgJEH9LR3oUgpaQq2RbI80=",
+        "owner": "nix-systems",
+        "repo": "default-linux",
+        "rev": "31732fcf5e8fea42e59c2488ad31a0e651500f68",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default-linux",
         "type": "github"
       }
     },
@@ -1246,6 +1269,27 @@
     "treefmt-nix_2": {
       "inputs": {
         "nixpkgs": [
+          "noctalia-plugins",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1780220602,
+        "narHash": "sha256-eynAfOmbmxJnkp7YewvCEbShNnnYJ9gLLqkzsYtBPeM=",
+        "owner": "numtide",
+        "repo": "treefmt-nix",
+        "rev": "db947814a175b7ca6ded66e21383d938df01c227",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
+    "treefmt-nix_3": {
+      "inputs": {
+        "nixpkgs": [
           "noctalia-qs",
           "nixpkgs"
         ]
@@ -1286,42 +1330,19 @@
         "type": "github"
       }
     },
-    "vex-cli": {
-      "inputs": {
-        "flake-utils": "flake-utils_3",
-        "nixpkgs": [
-          "vex-tooling",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1782024253,
-        "narHash": "sha256-kXVEWFsotyZQo1Ul6nU6WrwwbfFY2zZ1yxzRgMQW6A0=",
-        "ref": "refs/heads/main",
-        "rev": "cc6e31cfe79575366522aa0f309fa942dfe0d0d9",
-        "revCount": 11,
-        "type": "git",
-        "url": "ssh://git@github.com/shaneplunkett/vex-cli.git"
-      },
-      "original": {
-        "type": "git",
-        "url": "ssh://git@github.com/shaneplunkett/vex-cli.git"
-      }
-    },
     "vex-tooling": {
       "inputs": {
         "gws": "gws",
         "nixpkgs": [
           "nixpkgs"
-        ],
-        "vex-cli": "vex-cli"
+        ]
       },
       "locked": {
-        "lastModified": 1782024857,
-        "narHash": "sha256-I02rlOvO1HZ7VAVAHsXNcHvIZkmcYhJCRKF4vGJLMjU=",
+        "lastModified": 1782376616,
+        "narHash": "sha256-GlKHcpm+uQhlMJHk02oRUubBRp6g+NXs+DXPbsJcIDw=",
         "ref": "refs/heads/main",
-        "rev": "1c50e8e9ee6fc4a45441d7875b58fa2e682c156c",
-        "revCount": 4,
+        "rev": "1cc3d6b3cd66dcbe4572cab81ca76bf3dc5e90fc",
+        "revCount": 5,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/vex-tooling.git"
       },
