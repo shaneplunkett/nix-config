@@ -1,7 +1,8 @@
-{ ... }:
+{ inputs, ... }:
 {
   imports = [
     ./account-tools.nix
+    inputs.nix-config-private.homeManagerModules.default
     ./ai
     ./btop.nix
     ./git.nix
