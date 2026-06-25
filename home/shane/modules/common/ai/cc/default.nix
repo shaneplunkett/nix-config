@@ -14,6 +14,7 @@ let
   # update ai-skills → rebuild. For active iteration use `nrs-iter` which
   # `--override-input`s this to ~/ai-skills (commits not even required).
   aiSkills = inputs.ai-skills;
+  claudeVexStack = "${aiSkills}/vex/claude-code";
 
   vexThemeFile = ./vex-theme.json;
 
@@ -164,6 +165,7 @@ let
     {
       outputStyle,
       hookSuffix,
+      hookDir ? "${aiSkills}/vex/hooks",
     }:
     {
       theme = "custom:vex";
@@ -208,10 +210,16 @@ let
       env = {
         CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1";
         CLAUDE_CODE_ENABLE_TELEMETRY = "1";
-        OTEL_METRICS_EXPORTER = "otlp";
+        CLAUDE_CODE_ENHANCED_TELEMETRY_BETA = "1";
+        OTEL_METRICS_EXPORTER = "none";
         OTEL_LOGS_EXPORTER = "otlp";
-        OTEL_EXPORTER_OTLP_ENDPOINT = priv.otelEndpoint;
+        OTEL_TRACES_EXPORTER = "otlp";
+        OTEL_EXPORTER_OTLP_ENDPOINT = "http://127.0.0.1:8421";
         OTEL_EXPORTER_OTLP_PROTOCOL = "http/json";
+        OTEL_LOG_TOOL_DETAILS = "1";
+        OTEL_LOG_TOOL_CONTENT = "1";
+        OTEL_LOG_USER_PROMPTS = "0";
+        OTEL_LOG_RAW_API_BODIES = "0";
         OTEL_RESOURCE_ATTRIBUTES = "autograb_user=${priv.autograbUser},team=${priv.autograbTeam}";
       };
 
@@ -301,7 +309,7 @@ let
 
       statusLine = {
         type = "command";
-        command = "${vex-statusline}/bin/vex-statusline";
+        command = "/home/shane/.local/bin/ahvi-statusline.sh ${vex-statusline}/bin/vex-statusline";
       };
 
       hooks = {
@@ -310,7 +318,7 @@ let
             hooks = [
               {
                 type = "command";
-                command = "cat ${aiSkills}/vex/hooks/compaction${hookSuffix}.md";
+                command = "cat ${hookDir}/compaction${hookSuffix}.md";
               }
             ];
           }
@@ -320,7 +328,7 @@ let
             hooks = [
               {
                 type = "command";
-                command = "cat ${aiSkills}/vex/hooks/session-end.md";
+                command = "cat ${hookDir}/session-end.md";
               }
             ];
           }
@@ -335,7 +343,7 @@ let
               }
               {
                 type = "command";
-                command = "cat ${aiSkills}/vex/hooks/session-start${hookSuffix}.md";
+                command = "cat ${hookDir}/session-start${hookSuffix}.md";
               }
             ];
           }
@@ -349,7 +357,7 @@ let
               }
               {
                 type = "command";
-                command = "cat ${aiSkills}/vex/hooks/session-reload${hookSuffix}.md && echo \"Git branch: $(git branch --show-current 2>/dev/null || echo N/A)\" && echo 'Recent commits:' && git log --oneline -5 2>/dev/null || true && echo 'Modified files:' && git diff --name-only 2>/dev/null || true";
+                command = "cat ${hookDir}/session-reload${hookSuffix}.md && echo \"Git branch: $(git branch --show-current 2>/dev/null || echo N/A)\" && echo 'Recent commits:' && git log --oneline -5 2>/dev/null || true && echo 'Modified files:' && git diff --name-only 2>/dev/null || true";
               }
             ];
           }
@@ -396,10 +404,11 @@ let
     {
       outputStyle,
       hookSuffix,
+      hookDir ? "${aiSkills}/vex/hooks",
     }:
     pkgs.writeText "claude-code-settings-${outputStyle}.json" (
       builtins.toJSON (
-        (mkSettingsContent { inherit outputStyle hookSuffix; })
+        (mkSettingsContent { inherit outputStyle hookSuffix hookDir; })
         // {
           "$schema" = "https://json.schemastore.org/claude-code-settings.json";
         }
@@ -425,6 +434,7 @@ let
           mkSettingsFile {
             outputStyle = "vex";
             hookSuffix = "";
+            hookDir = claudeVexStack;
           }
         else
           mkSettingsFile {
@@ -435,22 +445,34 @@ let
       styleTarget = if isVex then "output-styles/vex.md" else "output-styles/vex-pro.md";
       claudeMd =
         if isVex then
-          "# Vex\n@vex/core.md\n@vex/adapters/claude-code.md\n"
+          "# Vex — Claude Code\n@vex/claude-code/core.md\n@vex/claude-code/operations.md\n"
         else
           "# Vex (Pro)\n@vex/core-pro.md\n@vex/adapters/claude-code.md\n";
     in
     {
-      "${dir}/settings.json".source = settingsSrc;
+      "${dir}/settings.json" = {
+        source = settingsSrc;
+        force = true;
+      };
       "${dir}/themes/vex.json".source = vexThemeFile;
-      "${dir}/CLAUDE.md".text = claudeMd;
+      "${dir}/CLAUDE.md" = {
+        text = claudeMd;
+        force = true;
+      };
     }
     // {
       "${dir}/${personaTarget}".source = "${aiSkills}/${personaTarget}";
       "${dir}/vex/adapters/claude-code.md".source = "${aiSkills}/vex/adapters/claude-code.md";
       "${dir}/${styleTarget}".source =
-        if isVex then "${aiSkills}/vex/output-style.md" else "${aiSkills}/vex/output-style-pro.md";
+        if isVex then "${claudeVexStack}/output-style.md" else "${aiSkills}/vex/output-style-pro.md";
       "${dir}/rules".source = "${aiSkills}/vex/rules";
       "${dir}/agents".source = "${aiSkills}/vex/agents";
+    }
+    // lib.optionalAttrs isVex {
+      "${dir}/vex/claude-code" = {
+        source = claudeVexStack;
+        force = true;
+      };
     }
     // (lib.mapAttrs' (
       name: source:
@@ -481,9 +503,10 @@ in
     settings = mkSettingsContent {
       outputStyle = "vex";
       hookSuffix = "";
+      hookDir = claudeVexStack;
     };
 
-    context = "# Vex\n@vex/core.md\n@vex/adapters/claude-code.md\n";
+    context = "# Vex — Claude Code\n@vex/claude-code/core.md\n@vex/claude-code/operations.md\n";
 
     # Shared MCP servers come from programs.mcp.servers and are translated
     # into Claude Code's native mcpServers shape by the Home Manager module.
@@ -514,9 +537,13 @@ in
     lib.foldl' lib.recursiveUpdate
       {
         ".claude/themes/vex.json".source = vexThemeFile;
-        ".claude/output-styles/vex.md".source = "${aiSkills}/vex/output-style.md";
+        ".claude/output-styles/vex.md".source = "${claudeVexStack}/output-style.md";
         ".claude/vex/core.md".source = "${aiSkills}/vex/core.md";
         ".claude/vex/adapters/claude-code.md".source = "${aiSkills}/vex/adapters/claude-code.md";
+        ".claude/vex/claude-code" = {
+          source = claudeVexStack;
+          force = true;
+        };
       }
       (
         (map (

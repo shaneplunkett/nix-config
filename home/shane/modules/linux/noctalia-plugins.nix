@@ -61,6 +61,31 @@ let
         personalAcceptRoutes = false;
       };
     };
+
+    vex-tldv-recorder = {
+      settings = {
+        accentColor = "primary";
+        nodeBin = "${pkgs.nodejs}/bin/node";
+        helperPath = "${pluginRoot}/vex-tldv-recorder/helper/bin/tldv-helper.mjs";
+        statusPath = ""; # default XDG_STATE_HOME/vex-tldv-recorder/status.json
+        pollIntervalSec = 2;
+      };
+      # The tldv:// scheme handler: tl;dv login redirects to tldv://auth?access_token=…,
+      # which the OS routes here to hand the token to the helper. Paired with the
+      # x-scheme-handler/tldv association in theme.nix's xdg.mimeApps.
+      extraFiles = {
+        ".local/share/applications/vex-tldv-recorder.desktop".text = ''
+          [Desktop Entry]
+          Type=Application
+          Name=Vex tl;dv Recorder (auth handler)
+          Comment=Captures the tldv://auth?access_token=… callback from tl;dv login
+          NoDisplay=true
+          Terminal=false
+          Exec=${pkgs.nodejs}/bin/node ${pluginRoot}/vex-tldv-recorder/helper/bin/tldv-helper.mjs auth-callback %u
+          MimeType=x-scheme-handler/tldv;
+        '';
+      };
+    };
   };
 
   pluginExtraFiles = lib.foldl' lib.recursiveUpdate { } (

@@ -176,8 +176,14 @@ in
 
         session = [
           {
-            name = "scratch";
-            path = "~";
+            name = "nix-config";
+            path = "~/nix-config";
+            startup_command = workspaceStartupCommand;
+          }
+          {
+            name = "ai-skills";
+            path = "~/ai-skills";
+            startup_command = workspaceStartupCommand;
           }
           {
             name = "home";
@@ -185,9 +191,8 @@ in
             startup_command = workspaceStartupCommand;
           }
           {
-            name = "nix-config";
-            path = "~/nix-config";
-            startup_command = workspaceStartupCommand;
+            name = "scratch";
+            path = "~";
           }
         ];
 

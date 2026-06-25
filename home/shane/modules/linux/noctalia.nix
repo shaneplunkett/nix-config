@@ -340,6 +340,9 @@ in
               id = "plugin:vex-todoist";
             }
             {
+              id = "plugin:vex-tldv-recorder";
+            }
+            {
               id = "NotificationHistory";
               hideWhenZero = false;
               hideWhenZeroUnread = false;

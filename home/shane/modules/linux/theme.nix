@@ -91,6 +91,8 @@ in
         "video/webm" = "mpv.desktop";
         "video/x-msvideo" = "mpv.desktop";
         "video/quicktime" = "mpv.desktop";
+        # tl;dv desktop-auth callback (vex-tldv-recorder); handler defined in noctalia-plugins.nix
+        "x-scheme-handler/tldv" = "vex-tldv-recorder.desktop";
       };
     };
   };
