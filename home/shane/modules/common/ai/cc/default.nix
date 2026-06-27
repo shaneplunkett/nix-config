@@ -93,8 +93,8 @@ let
   };
 
   # Plain Claude Code profile selector for ccp/ccpr. This is deliberately
-  # boring: pristine upstream binary, safe-mode customisation bypass, separate
-  # OAuth containers for personal/work, and no Vex prompt/rules/hooks surface.
+  # boring: pristine upstream binary, separate OAuth containers for
+  # personal/work, and no Vex prompt/rules/hooks surface.
   claude-plain = pkgs.writeShellApplication {
     name = "claude-plain";
     runtimeInputs = [ pkgs.coreutils ];
@@ -111,7 +111,7 @@ let
         --personal   Use ~/.claude-pro (default)
         --work       Use ~/.claude-pro-work
 
-      Plain mode always runs pristine Claude Code with --safe-mode and built-in auto memory disabled.
+      Plain mode runs pristine Claude Code against a de-Vexed profile with built-in auto memory disabled.
       Pass Claude's own --help after --, for example: ccp -- --help
       EOF
       }
@@ -171,9 +171,7 @@ let
       esac
 
       mkdir -p "$config_dir"
-      CLAUDE_CONFIG_DIR="$config_dir" \
-        CLAUDE_CODE_DISABLE_AUTO_MEMORY=1 \
-        exec ${lib.getExe pkgs.claude-code} --safe-mode "''${passthrough[@]}"
+      CLAUDE_CONFIG_DIR="$config_dir" exec ${lib.getExe pkgs.claude-code} "''${passthrough[@]}"
     '';
   };
 
