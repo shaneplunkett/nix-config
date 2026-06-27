@@ -302,33 +302,7 @@ in
               pinned = [ ];
             }
             {
-              id = "Volume";
-              displayMode = "onhover";
-              iconColor = "secondary";
-              middleClickCommand = "pwvucontrol || pavucontrol";
-              textColor = "secondary";
-            }
-            {
-              id = "Microphone";
-              displayMode = "onhover";
-              iconColor = "tertiary";
-              middleClickCommand = "pwvucontrol || pavucontrol";
-              textColor = "tertiary";
-            }
-            {
-              id = "VPN";
-              displayMode = "onhover";
-              iconColor = "primary";
-              textColor = "primary";
-            }
-            {
               id = "plugin:vex-tailscale-guard";
-            }
-            {
-              id = "Network";
-              displayMode = "onhover";
-              iconColor = "primary";
-              textColor = "primary";
             }
             {
               id = "plugin:vex-timer";
@@ -341,6 +315,9 @@ in
             }
             {
               id = "plugin:vex-tldv-recorder";
+            }
+            {
+              id = "plugin:screen-shot-and-record";
             }
             {
               id = "NotificationHistory";
