@@ -39,14 +39,19 @@ let
       text = ''exec bash ${script} "$@"'';
     };
 
-  # Themed status line — invoked by CC via settings.json statusLine.command.
+  # Claude status line — invoked by CC via settings.json statusLine.command.
   # Stays on writeShellApplication rather than writers.writePython3Bin
   # because the latter runs pycodestyle and our script (intentionally) has
   # long lines and a non-PEP8 shebang-as-comment.
-  vex-statusline = pkgs.writeShellApplication {
-    name = "vex-statusline";
+  claude-statusline = pkgs.writeShellApplication {
+    name = "claude-statusline";
     runtimeInputs = [ pkgs.python3 ];
     text = "exec python3 ${./vex-statusline.py}";
+  };
+
+  claudeStatusLine = {
+    type = "command";
+    command = "/home/shane/.local/bin/ahvi-statusline.sh ${claude-statusline}/bin/claude-statusline";
   };
 
   # SessionStart / CwdChanged hook: load direnv environment into CLAUDE_ENV_FILE.
@@ -111,7 +116,7 @@ let
         --personal   Use ~/.claude-pro (default)
         --work       Use ~/.claude-pro-work
 
-      Plain mode runs pristine Claude Code against a de-Vexed profile with built-in auto memory disabled.
+      Plain mode runs pristine Claude Code against a de-Vexed profile with dangerous permissions enabled and built-in auto memory disabled.
       Pass Claude's own --help after --, for example: ccp -- --help
       EOF
       }
@@ -171,7 +176,7 @@ let
       esac
 
       mkdir -p "$config_dir"
-      CLAUDE_CONFIG_DIR="$config_dir" exec ${lib.getExe pkgs.claude-code} "''${passthrough[@]}"
+      CLAUDE_CONFIG_DIR="$config_dir" exec ${lib.getExe pkgs.claude-code} --dangerously-skip-permissions "''${passthrough[@]}"
     '';
   };
 
@@ -513,10 +518,7 @@ let
 
       disabledMcpjsonServers = [ "posthog" ];
 
-      statusLine = {
-        type = "command";
-        command = "/home/shane/.local/bin/ahvi-statusline.sh ${vex-statusline}/bin/vex-statusline";
-      };
+      statusLine = claudeStatusLine;
 
       hooks = {
         PreCompact = [
@@ -629,6 +631,7 @@ let
       "$schema" = "https://json.schemastore.org/claude-code-settings.json";
       feedbackSurveyRate = 0;
       autoMemoryEnabled = false;
+      statusLine = claudeStatusLine;
     }
   );
 

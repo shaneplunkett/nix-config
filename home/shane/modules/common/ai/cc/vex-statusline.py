@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Vex status line for Claude Code."""
+"""Status line for Shane's Claude Code profiles."""
 
 import json
 import os
@@ -105,6 +105,10 @@ def ctx_colour(pct):
     return TEAL
 
 
+def claude_config_dir():
+    return os.path.expanduser(os.environ.get("CLAUDE_CONFIG_DIR") or "~/.claude")
+
+
 def get_effort_level(model_id):
     """Resolve the effective effort level.
 
@@ -117,7 +121,7 @@ def get_effort_level(model_id):
     env_val = os.environ.get("CLAUDE_CODE_EFFORT_LEVEL")
     if env_val:
         return env_val
-    claude_dir = os.path.expanduser("~/.claude")
+    claude_dir = claude_config_dir()
     for fname in ("settings.local.json", "settings.json"):
         path = os.path.join(claude_dir, fname)
         try:
@@ -158,8 +162,11 @@ def safe_transcript_path(transcript_path):
         return None
     try:
         path = Path(transcript_path).expanduser().resolve(strict=True)
-        claude_projects_dir = Path("~/.claude/projects").expanduser().resolve()
-        if claude_projects_dir not in path.parents:
+        allowed_project_dirs = [
+            Path("~/.claude/projects").expanduser().resolve(),
+            (Path(claude_config_dir()) / "projects").resolve(),
+        ]
+        if not any(project_dir in path.parents for project_dir in allowed_project_dirs):
             return None
         if not path.is_file():
             return None
