@@ -181,8 +181,17 @@ let
 
     # ─── Features ──────────────────────────────────────────────────────
     # Lifecycle hooks are feature-flagged off by default. Without this
-    # the [hooks] block below is parsed but ignored.
-    features.hooks = true;
+    # the [hooks] block below is parsed but ignored. Memory stays off:
+    # vex-brain is Shane's single memory source of truth.
+    features = {
+      hooks = true;
+      memories = false;
+    };
+
+    memories = {
+      generate_memories = false;
+      use_memories = false;
+    };
 
     # ─── TUI ───────────────────────────────────────────────────────────
     # Codex's theme surface is syntax/diff highlighting, not a full
@@ -372,6 +381,83 @@ let
       PY
               else
                 $DRY_RUN_CMD append managed hooks to "${configPath}"
+              fi
+            fi
+            if [ -e "${configPath}" ]; then
+              if [ -z "''${DRY_RUN_CMD:-}" ]; then
+                ${pkgs.python3}/bin/python - "${configPath}" <<'PY'
+      import pathlib
+      import re
+      import sys
+
+      config_path = pathlib.Path(sys.argv[1])
+      lines = config_path.read_text().splitlines()
+      out = []
+      in_features = False
+      seen_features = False
+      wrote_feature_memory = False
+      skip_memories = False
+
+
+      def table_name(line):
+          stripped = line.strip()
+          if stripped.startswith("[["):
+              return None
+          match = re.match(r"^\[([^\]]+)\]\s*$", stripped)
+          return match.group(1) if match else None
+
+
+      def leave_features():
+          global in_features, wrote_feature_memory
+          if in_features and not wrote_feature_memory:
+              out.append("memories = false")
+              wrote_feature_memory = True
+          in_features = False
+
+
+      for line in lines:
+          name = table_name(line)
+
+          if skip_memories:
+              if name is None and not line.lstrip().startswith("[["):
+                  continue
+              skip_memories = False
+
+          if name == "memories":
+              leave_features()
+              skip_memories = True
+              continue
+
+          if name is not None or line.lstrip().startswith("[["):
+              leave_features()
+
+          if name == "features":
+              seen_features = True
+              in_features = True
+              wrote_feature_memory = False
+              out.append(line)
+              continue
+
+          if in_features and re.match(r"^\s*memories\s*=", line):
+              continue
+
+          out.append(line)
+
+      leave_features()
+
+      if not seen_features:
+          if out and out[-1] != "":
+              out.append("")
+          out.extend(["[features]", "memories = false"])
+
+      while out and out[-1] == "":
+          out.pop()
+
+      out.extend(["", "[memories]", "generate_memories = false", "use_memories = false"])
+      config_path.write_text("\n".join(out) + "\n")
+      PY
+              else
+                $DRY_RUN_CMD enforce managed Codex memory settings in "${configPath}"
               fi
             fi
             ${lib.optionalString (transformedMcpServers != { }) ''

@@ -7,8 +7,8 @@ _: {
         ccr = "claude --model 'claude-opus-4-6[1m]' --dangerously-skip-permissions --resume";
         ccw = "CLAUDE_CONFIG_DIR=$HOME/.claude-work claude-work --dangerously-skip-permissions";
         ccwr = "CLAUDE_CONFIG_DIR=$HOME/.claude-work claude-work --dangerously-skip-permissions --resume";
-        ccp = "CLAUDE_CONFIG_DIR=$HOME/.claude-pro claude";
-        ccpr = "CLAUDE_CONFIG_DIR=$HOME/.claude-pro claude --resume";
+        ccp = "claude-plain";
+        ccpr = "claude-plain --resume";
         cldw = "claude-delegate work";
         cldp = "claude-delegate personal";
         cx = "codex";

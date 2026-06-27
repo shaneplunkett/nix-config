@@ -77,10 +77,8 @@ let
   # restart-only (handoff machinery dropped), nix-native install.
   #
   # The wrapper takes the user's invocation; fish.nix defines a `claude`
-  # function that calls this binary, so `cc`/`ccr`/`ccw`/`ccp` abbrs all
-  # route through it. Inside the wrapper, `command -v claude` resolves to
-  # the home-manager-wrapped binary cleanly (fish function shadowing
-  # doesn't propagate to bash).
+  # function that calls this binary, so personal `cc`/`ccr` route through it.
+  # Work/plain aliases intentionally bypass this.
   claude-restart = mkBashHook {
     name = "claude-restart";
     script = ./claude-restart-wrapper.sh;
@@ -92,6 +90,91 @@ let
   claude-work = pkgs.writeShellApplication {
     name = "claude-work";
     text = ''exec ${lib.getExe pkgs.claude-code} "$@"'';
+  };
+
+  # Plain Claude Code profile selector for ccp/ccpr. This is deliberately
+  # boring: pristine upstream binary, safe-mode customisation bypass, separate
+  # OAuth containers for personal/work, and no Vex prompt/rules/hooks surface.
+  claude-plain = pkgs.writeShellApplication {
+    name = "claude-plain";
+    runtimeInputs = [ pkgs.coreutils ];
+    text = ''
+      set -euo pipefail
+
+      usage() {
+        cat <<'EOF'
+      Usage:
+        ccp [--personal|--work|--profile personal|work] [claude options...] [command] [prompt]
+        ccpr [--personal|--work|--profile personal|work] [claude options...]
+
+      Profiles:
+        --personal   Use ~/.claude-pro (default)
+        --work       Use ~/.claude-pro-work
+
+      Plain mode always runs pristine Claude Code with --safe-mode and built-in auto memory disabled.
+      Pass Claude's own --help after --, for example: ccp -- --help
+      EOF
+      }
+
+      profile="personal"
+      passthrough=()
+
+      while [[ $# -gt 0 ]]; do
+        case "$1" in
+          --personal)
+            profile="personal"
+            shift
+            ;;
+          --work)
+            profile="work"
+            shift
+            ;;
+          --profile)
+            if [[ $# -lt 2 ]]; then
+              echo "claude-plain: --profile requires 'personal' or 'work'" >&2
+              exit 64
+            fi
+            profile="$2"
+            shift 2
+            ;;
+          --profile=*)
+            profile="''${1#--profile=}"
+            shift
+            ;;
+          -h|--help)
+            usage
+            exit 0
+            ;;
+          --)
+            shift
+            passthrough+=("$@")
+            break
+            ;;
+          *)
+            passthrough+=("$1")
+            shift
+            ;;
+        esac
+      done
+
+      case "$profile" in
+        personal)
+          config_dir="''${CLAUDE_PLAIN_PERSONAL_DIR:-$HOME/.claude-pro}"
+          ;;
+        work)
+          config_dir="''${CLAUDE_PLAIN_WORK_DIR:-$HOME/.claude-pro-work}"
+          ;;
+        *)
+          echo "claude-plain: profile must be 'personal' or 'work'" >&2
+          exit 64
+          ;;
+      esac
+
+      mkdir -p "$config_dir"
+      CLAUDE_CONFIG_DIR="$config_dir" \
+        CLAUDE_CODE_DISABLE_AUTO_MEMORY=1 \
+        exec ${lib.getExe pkgs.claude-code} --safe-mode "''${passthrough[@]}"
+    '';
   };
 
   # Non-interactive Claude worker wrapper. It selects an OAuth profile but runs
@@ -280,9 +363,8 @@ let
   inherit (pkgs) claude-code-patched;
 
   # ─── Settings content ──────────────────────────────────────────────────
-  # Shape parameterised so we produce both the intimate Vex variant (canonical
-  # ~/.claude managed by programs.claude-code module + ~/.claude-work variant)
-  # and the public-safe Vex (Pro) variant (~/.claude-pro).
+  # Shape parameterised so we produce both the canonical ~/.claude Vex profile
+  # managed by programs.claude-code and the ~/.claude-work Vex variant.
   mkSettingsContent =
     {
       outputStyle,
@@ -304,7 +386,6 @@ let
           "Crystallising"
           "Distilling"
           "Divining"
-          "Dreaming"
           "Enchanting"
           "Gathering"
           "Gazing"
@@ -326,6 +407,10 @@ let
         ];
       };
       feedbackSurveyRate = 0;
+
+      # The vex-brain is Shane's memory source of truth. Keep Claude Code's
+      # built-in auto memory off across every generated profile.
+      autoMemoryEnabled = false;
 
       # Plugins/marketplaces are intentionally absent here — fully imperative,
       # owned by Claude's writable plugin cache. See the note in the let block.
@@ -541,9 +626,17 @@ let
       )
     );
 
+  plainSettingsFile = pkgs.writeText "claude-code-settings-plain.json" (
+    builtins.toJSON {
+      "$schema" = "https://json.schemastore.org/claude-code-settings.json";
+      feedbackSurveyRate = 0;
+      autoMemoryEnabled = false;
+    }
+  );
+
   # Variant config dirs — kept on the manual home.file generator because the
   # programs.claude-code module is single-dir (~/.claude only). Activated via
-  # CLAUDE_CONFIG_DIR=$HOME/.claude-work claude (see fish.nix aliases).
+  # CLAUDE_CONFIG_DIR or the ccp profile selector wrappers (see fish.nix aliases).
   baseVexClaudeContext = ''
     # Vex
     @vex/core.md
@@ -559,35 +652,20 @@ let
   claudeCode48Context = "# Vex — Claude Code\n@vex/claude-code/core.md\n@vex/claude-code/operations.md\n";
 
   vexVariantDirs = [ ".claude-work" ];
-  proVariantDirs = [ ".claude-pro" ];
+  plainVariantDirs = [
+    ".claude-pro"
+    ".claude-pro-work"
+  ];
 
-  # ─── home.file generator for variant dirs only ─────────────────────────
-  filesForVariant =
-    {
-      dir,
-      variant,
-    }:
+  # ─── home.file generators for variant dirs only ────────────────────────
+  filesForVexVariant =
+    dir:
     let
-      isVex = variant == "vex";
-      settingsSrc =
-        if isVex then
-          mkSettingsFile {
-            outputStyle = "vex";
-            hookSuffix = "";
-            hookDir = claudeVexStack;
-          }
-        else
-          mkSettingsFile {
-            outputStyle = "vex-pro";
-            hookSuffix = "-pro";
-          };
-      personaTarget = if isVex then "vex/core.md" else "vex/core-pro.md";
-      styleTarget = if isVex then "output-styles/vex.md" else "output-styles/vex-pro.md";
-      claudeMd =
-        if isVex then
-          claudeCode48Context
-        else
-          "# Vex (Pro)\n@vex/core-pro.md\n@vex/adapters/claude-code.md\n";
+      settingsSrc = mkSettingsFile {
+        outputStyle = "vex";
+        hookSuffix = "";
+        hookDir = claudeVexStack;
+      };
     in
     {
       "${dir}/settings.json" = {
@@ -596,19 +674,18 @@ let
       };
       "${dir}/themes/vex.json".source = vexThemeFile;
       "${dir}/CLAUDE.md" = {
-        text = claudeMd;
+        text = claudeCode48Context;
         force = true;
       };
     }
     // {
-      "${dir}/${personaTarget}".source = "${aiSkills}/${personaTarget}";
+      "${dir}/vex/core.md".source = "${aiSkills}/vex/core.md";
       "${dir}/vex/adapters/claude-code.md".source = "${aiSkills}/vex/adapters/claude-code.md";
-      "${dir}/${styleTarget}".source =
-        if isVex then "${claudeVexStack}/output-style.md" else "${aiSkills}/vex/output-style-pro.md";
+      "${dir}/output-styles/vex.md".source = "${claudeVexStack}/output-style.md";
       "${dir}/rules".source = "${aiSkills}/vex/rules";
       "${dir}/agents".source = "${aiSkills}/vex/agents";
     }
-    // lib.optionalAttrs isVex {
+    // {
       "${dir}/vex/claude-code" = {
         source = claudeVexStack;
         force = true;
@@ -622,17 +699,15 @@ let
       }
     ) globalSkillsAttrs);
 
+  filesForPlainVariant = dir: {
+    "${dir}/settings.json" = {
+      source = plainSettingsFile;
+      force = true;
+    };
+  };
+
 in
 {
-  # claude-restart on PATH so the fish `claude` function (see fish.nix) can
-  # find it, plus making it directly invokable as `claude-restart` for
-  # debugging or use outside fish.
-  home.packages = [
-    claude-restart
-    claude-work
-    claude-delegate
-  ];
-
   # ─── Canonical ~/.claude — home-manager module owns it ─────────────────
   programs.claude-code = {
     enable = true;
@@ -669,38 +744,68 @@ in
     agentsDir = "${aiSkills}/vex/agents";
   };
 
-  # Two things the module doesn't expose options for, kept as raw home.file:
-  # - themes/vex.json (no themes option in the module)
-  # - output-styles/vex.md (programs.claude-code.outputStyles treats store-path
-  #   strings as inline text; raw home.file keeps it as a real source file)
-  # - vex/core.md at a custom path (referenced from CLAUDE.md as @vex/core.md)
-  home.file =
-    lib.foldl' lib.recursiveUpdate
-      {
-        ".claude/themes/vex.json".source = vexThemeFile;
-        ".claude/output-styles/vex.md".source = "${aiSkills}/vex/output-style.md";
-        ".claude/vex/core.md".source = "${aiSkills}/vex/core.md";
-        ".claude/vex/output-style.md".source = "${aiSkills}/vex/output-style.md";
-        ".claude/vex/rules".source = "${aiSkills}/vex/rules";
-        ".claude/vex/claude-code" = {
-          source = claudeVexStack;
-          force = true;
-        };
-      }
-      (
-        (map (
-          dir:
-          filesForVariant {
-            inherit dir;
-            variant = "vex";
-          }
-        ) vexVariantDirs)
-        ++ (map (
-          dir:
-          filesForVariant {
-            inherit dir;
-            variant = "vex-pro";
-          }
-        ) proVariantDirs)
-      );
+  home = {
+    # claude-restart on PATH so the fish `claude` function (see fish.nix) can
+    # find it, plus making it directly invokable as `claude-restart` for
+    # debugging or use outside fish.
+    packages = [
+      claude-restart
+      claude-work
+      claude-plain
+      claude-delegate
+    ];
+
+    # Two things the module doesn't expose options for, kept as raw home.file:
+    # - themes/vex.json (no themes option in the module)
+    # - output-styles/vex.md (programs.claude-code.outputStyles treats store-path
+    #   strings as inline text; raw home.file keeps it as a real source file)
+    # - vex/core.md at a custom path (referenced from CLAUDE.md as @vex/core.md)
+    file = lib.foldl' lib.recursiveUpdate {
+      ".claude/themes/vex.json".source = vexThemeFile;
+      ".claude/output-styles/vex.md".source = "${aiSkills}/vex/output-style.md";
+      ".claude/vex/core.md".source = "${aiSkills}/vex/core.md";
+      ".claude/vex/output-style.md".source = "${aiSkills}/vex/output-style.md";
+      ".claude/vex/rules".source = "${aiSkills}/vex/rules";
+      ".claude/vex/claude-code" = {
+        source = claudeVexStack;
+        force = true;
+      };
+    } ((map filesForVexVariant vexVariantDirs) ++ (map filesForPlainVariant plainVariantDirs));
+
+    activation.cleanPlainClaudeProfiles = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+      for dir in "$HOME/.claude-pro" "$HOME/.claude-pro-work"; do
+        if [ ! -d "$dir" ]; then
+          continue
+        fi
+
+        for rel in \
+          CLAUDE.md \
+          CLAUDE.md.backup \
+          agents \
+          agents.backup \
+          output-styles/vex.md \
+          output-styles/vex.md.backup \
+          output-styles/vex-pro.md \
+          output-styles/vex-pro.md.backup \
+          rules \
+          skills \
+          themes/vex.json \
+          themes/vex.json.backup \
+          vex
+        do
+          target="$dir/$rel"
+          if [ -e "$target" ] || [ -L "$target" ]; then
+            $DRY_RUN_CMD rm -rf "$target"
+          fi
+        done
+
+        for maybe_empty in themes output-styles; do
+          target="$dir/$maybe_empty"
+          if [ -d "$target" ] && [ -z "$(find "$target" -mindepth 1 -maxdepth 1 2>/dev/null)" ]; then
+            $DRY_RUN_CMD rmdir "$target"
+          fi
+        done
+      done
+    '';
+  };
 }
