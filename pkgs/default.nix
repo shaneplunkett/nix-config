@@ -17,6 +17,7 @@ in
     normaliseFrontmatter = true;
   };
   aikido-mcp = pkgs.callPackage ./aikido-mcp { };
+  bluebubbles-themed = pkgs.callPackage ./bluebubbles-themed { };
   claude-code = pkgs.callPackage ./claude-code { };
   claude-code-patched = pkgs.callPackage ./claude-code-patched { };
   claude-plugins-official = pkgs.callPackage ./claude-plugins-official { };

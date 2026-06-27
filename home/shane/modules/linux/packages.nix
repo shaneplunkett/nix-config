@@ -1,8 +1,11 @@
 {
+  lib,
   pkgs,
   ...
 }:
 let
+  bluebubblesThemed = pkgs.bluebubbles-themed;
+
   intifaceCentralFixed = pkgs.symlinkJoin {
     name = "intiface-central-fixed";
     paths = [ pkgs.intiface-central ];
@@ -116,6 +119,32 @@ let
   '';
 in
 {
+  home.activation.bluebubblesThemePrefs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    prefs="$HOME/.local/share/app.bluebubbles.BlueBubbles/shared_preferences.json"
+    mkdir -p "$(dirname "$prefs")"
+
+    if [[ -f "$prefs" ]]; then
+      tmp="$(${pkgs.coreutils}/bin/mktemp)"
+      ${pkgs.jq}/bin/jq \
+        --arg selected "Shane Desktop" \
+        --arg adaptive '{"theme_mode":1,"default_theme_mode":1}' \
+        '. + {
+          "flutter.selected-dark": $selected,
+          "flutter.selected-light": $selected,
+          "flutter.adaptive_theme_preferences": $adaptive
+        }' "$prefs" > "$tmp"
+      ${pkgs.coreutils}/bin/mv "$tmp" "$prefs"
+    else
+      ${pkgs.coreutils}/bin/cat > "$prefs" <<'JSON'
+    {
+      "flutter.selected-dark": "Shane Desktop",
+      "flutter.selected-light": "Shane Desktop",
+      "flutter.adaptive_theme_preferences": "{\"theme_mode\":1,\"default_theme_mode\":1}"
+    }
+    JSON
+    fi
+  '';
+
   xdg.configFile = {
     "electron-flags.conf".text = electronFlags;
     "electron32-flags.conf".text = electronFlags;
@@ -130,7 +159,7 @@ in
     unzip
     p7zip
     signal-desktop
-    bluebubbles
+    bluebubblesThemed
     # Temporarily disabled: upstream Snapcraft fetch is timing out during rebuilds.
     # plex-desktop
     ferdium
