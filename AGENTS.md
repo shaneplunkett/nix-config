@@ -58,7 +58,7 @@ from `pkgs/` anyway.
 | New package draft | `nix-init <url>` | hand-write `buildNpmPackage` / `buildGoModule` |
 | Existing package bump | `nix-update --flake <attr>` | manual rev/hash replacement loops |
 | Run-once no-install | `, <cmd>` | `nix shell nixpkgs#<pkg> -c` |
-| Lint | `statix check <p>` then `statix fix <p>` | manual review |
+| Lint | `statix check .` then `statix fix .` if needed | manual review or path lists |
 | Dead code | `deadnix <p>` | manual review |
 | Format | `nix fmt` (nixfmt-rfc-style, tracked + staged) | manual |
 
@@ -70,7 +70,7 @@ when you need to refresh or draft a fetcher block manually.
 ## Done criteria for a nix edit
 
 1. `git add` new files — flakes ignore untracked
-2. `statix check <changed>` clean
+2. `statix check .` clean — Statix takes a single target, so run it at repo root
 3. `deadnix <changed>` empty
 4. `nh {os,darwin} build . -H <host>` green
 5. `nix flake check` green
