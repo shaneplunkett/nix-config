@@ -131,7 +131,8 @@ in
         '. + {
           "flutter.selected-dark": $selected,
           "flutter.selected-light": $selected,
-          "flutter.adaptive_theme_preferences": $adaptive
+          "flutter.adaptive_theme_preferences": $adaptive,
+          "flutter.closeToTray": false
         }' "$prefs" > "$tmp"
       ${pkgs.coreutils}/bin/mv "$tmp" "$prefs"
     else
@@ -139,7 +140,8 @@ in
     {
       "flutter.selected-dark": "Shane Desktop",
       "flutter.selected-light": "Shane Desktop",
-      "flutter.adaptive_theme_preferences": "{\"theme_mode\":1,\"default_theme_mode\":1}"
+      "flutter.adaptive_theme_preferences": "{\"theme_mode\":1,\"default_theme_mode\":1}",
+      "flutter.closeToTray": false
     }
     JSON
     fi
