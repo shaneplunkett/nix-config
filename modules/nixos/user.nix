@@ -11,4 +11,16 @@ _: {
     ];
   };
 
+  security.sudo.extraRules = [
+    {
+      users = [ "shane" ];
+      commands = [
+        {
+          command = "/nix/store/*-nixos-system-*/bin/switch-to-configuration switch";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+  ];
+
 }
