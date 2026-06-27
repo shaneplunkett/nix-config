@@ -91,6 +91,18 @@ let
         '';
       };
     };
+
+    screen-shot-and-record = {
+      settings = {
+        enableCross = true;
+        enableWindowsSelection = true;
+        screenshotEditor = "swappy";
+        keepSourceScreenshot = false;
+        savePath = "~/Pictures/Screenshots";
+        recordingSavePath = "~/Videos/Screen Recordings";
+        recordingNotifications = true;
+      };
+    };
   };
 
   pluginExtraFiles = lib.foldl' lib.recursiveUpdate { } (

@@ -288,6 +288,7 @@ let
       outputStyle,
       hookSuffix,
       hookDir ? "${aiSkills}/vex/hooks",
+      model ? null,
     }:
     {
       theme = "custom:vex";
@@ -519,6 +520,9 @@ let
           }
         ];
       };
+    }
+    // lib.optionalAttrs (model != null) {
+      inherit model;
     };
 
   # Hand-built settings.json for the variant dirs (canonical .claude is module-managed).
@@ -640,6 +644,7 @@ in
     settings = mkSettingsContent {
       outputStyle = "vex";
       hookSuffix = "";
+      model = "claude-opus-4-6[1m]";
     };
 
     context = baseVexClaudeContext;

@@ -26,6 +26,12 @@ in
         "$mod, A, exec, claude"
         "$mod, RETURN, exec, $terminal"
         "$mod_SHIFT, 4, exec, hyprshot -m region --clipboard-only"
+        "$mod_SHIFT, 5, exec, ${
+          if shell == "noctalia" then
+            "noctalia-shell ipc call plugin:screen-shot-and-record record"
+          else
+            "bug-record"
+        }"
         "$mod_SHIFT,W,exec,hyprctl dispatch togglehidden"
         "$mod_SHIFT,F,togglefloating"
 
@@ -100,6 +106,10 @@ in
         "size 1100 700, match:title ^.*Bluetooth Devices$"
         "float 1, match:title ^.*Volume Control$"
         "size 1100 700, match:title ^.*Volume Control$"
+      ];
+
+      layerrule = lib.optionals (shell == "noctalia") [
+        "match:namespace noctalia-shell:regionSelector, no_anim on"
       ];
 
       monitor = [

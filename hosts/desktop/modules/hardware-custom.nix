@@ -1,7 +1,8 @@
 { pkgs, lib, ... }:
 {
   nix.settings = {
-    cores = 6;
+    # Keep memory-hungry builds like codex-patched from fanning out into swap pressure.
+    cores = 2;
     max-jobs = 1;
   };
 

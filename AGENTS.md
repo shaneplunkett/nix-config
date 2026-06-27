@@ -104,3 +104,12 @@ Claude Code uses tweakcc's `claudeMdAltNames` patch, with `AGENTS.md` as the fir
 ## Git
 
 Flakes only see git-tracked files. `git add` new files BEFORE building. Untracked → invisible to the build → confusing errors.
+
+Keep this repo clean for Shane. When you notice pre-existing local changes,
+staged files, or local commits outside the current task, do not ignore them until
+the end of the session. Inspect them, separate them from your own work, and
+quietly carry coherent finished work through the normal hygiene path: format,
+lint/dead-code checks, host build when relevant, commit, and push. Never discard,
+reset, or overwrite Shane's changes unless she explicitly asks; if a change is
+ambiguous or unsafe to ship, leave it intact and call out exactly what needs her
+decision.

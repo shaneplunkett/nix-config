@@ -21,6 +21,7 @@ in
   claude-code-patched = pkgs.callPackage ./claude-code-patched { };
   claude-plugins-official = pkgs.callPackage ./claude-plugins-official { };
   codex-patched = pkgs.callPackage ./codex-patched { };
+  orca-slicer-bambulab = pkgs.callPackage ./orca-slicer-bambulab { };
   tweakcc-fixed = pkgs.callPackage ./tweakcc-fixed { };
   xcodebuild-nvim = pkgs.callPackage ./xcodebuild-nvim { };
   xero-mcp-server = pkgs.callPackage ./xero-mcp-server { };
