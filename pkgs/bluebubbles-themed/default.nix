@@ -78,5 +78,8 @@ bluebubbles.overrideAttrs (old: {
     if (name == null || name == "OLED Dark" || name == "Shane Desktop") {
       return ThemeStruct(name: "Shane Desktop", themeData: ts.shaneDesktopTheme);
     }'
+
+    sed -i '/void onWindowClose() async {/,/^  }$/ s/windowManager.hide()/windowManager.minimize()/' lib/main.dart
+    grep -q 'await windowManager.minimize();' lib/main.dart
   '';
 })
