@@ -54,6 +54,25 @@ let
     command = "/home/shane/.local/bin/ahvi-statusline.sh ${claude-statusline}/bin/claude-statusline";
   };
 
+  claudeIdentityEnv = {
+    OTEL_RESOURCE_ATTRIBUTES = "autograb_user=${priv.autograbUser},team=${priv.autograbTeam}";
+  };
+
+  claudeTelemetryEnv = claudeIdentityEnv // {
+    CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1";
+    CLAUDE_CODE_ENABLE_TELEMETRY = "1";
+    CLAUDE_CODE_ENHANCED_TELEMETRY_BETA = "1";
+    OTEL_METRICS_EXPORTER = "none";
+    OTEL_LOGS_EXPORTER = "otlp";
+    OTEL_TRACES_EXPORTER = "otlp";
+    OTEL_EXPORTER_OTLP_ENDPOINT = "http://127.0.0.1:8421";
+    OTEL_EXPORTER_OTLP_PROTOCOL = "http/json";
+    OTEL_LOG_TOOL_DETAILS = "1";
+    OTEL_LOG_TOOL_CONTENT = "1";
+    OTEL_LOG_USER_PROMPTS = "0";
+    OTEL_LOG_RAW_API_BODIES = "0";
+  };
+
   # SessionStart / CwdChanged hook: load direnv environment into CLAUDE_ENV_FILE.
   cc-direnv-load = mkBashHook {
     name = "cc-direnv-load";
@@ -418,21 +437,7 @@ let
       # Plugins/marketplaces are intentionally absent here — fully imperative,
       # owned by Claude's writable plugin cache. See the note in the let block.
 
-      env = {
-        CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1";
-        CLAUDE_CODE_ENABLE_TELEMETRY = "1";
-        CLAUDE_CODE_ENHANCED_TELEMETRY_BETA = "1";
-        OTEL_METRICS_EXPORTER = "none";
-        OTEL_LOGS_EXPORTER = "otlp";
-        OTEL_TRACES_EXPORTER = "otlp";
-        OTEL_EXPORTER_OTLP_ENDPOINT = "http://127.0.0.1:8421";
-        OTEL_EXPORTER_OTLP_PROTOCOL = "http/json";
-        OTEL_LOG_TOOL_DETAILS = "1";
-        OTEL_LOG_TOOL_CONTENT = "1";
-        OTEL_LOG_USER_PROMPTS = "0";
-        OTEL_LOG_RAW_API_BODIES = "0";
-        OTEL_RESOURCE_ATTRIBUTES = "autograb_user=${priv.autograbUser},team=${priv.autograbTeam}";
-      };
+      env = claudeTelemetryEnv;
 
       # skipDangerousModePermissionPrompt is a TOP-LEVEL state flag per the
       # official schema at json.schemastore.org/claude-code-settings.json —
@@ -631,6 +636,7 @@ let
       "$schema" = "https://json.schemastore.org/claude-code-settings.json";
       feedbackSurveyRate = 0;
       autoMemoryEnabled = false;
+      env = claudeIdentityEnv;
       statusLine = claudeStatusLine;
     }
   );
