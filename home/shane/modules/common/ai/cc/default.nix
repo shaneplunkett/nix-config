@@ -687,6 +687,8 @@ let
   baseVexClaudeContext = ''
     # Vex
     @vex/core.md
+    @vex/adapters/claude-code.md
+    @vex/adapters/claude-code-personal.md
     @vex/output-style.md
     @vex/rules/brain.md
     @vex/rules/cli-routing.md
@@ -739,6 +741,10 @@ let
       };
       "${dir}/vex/adapters/claude-code.md" = {
         source = "${aiSkills}/vex/adapters/claude-code.md";
+        force = true;
+      };
+      "${dir}/vex/adapters/claude-code-personal.md" = {
+        source = "${aiSkills}/vex/adapters/claude-code-personal.md";
         force = true;
       };
       "${dir}/vex/output-style.md" = {
