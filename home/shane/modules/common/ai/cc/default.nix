@@ -687,7 +687,6 @@ let
   baseVexClaudeContext = ''
     # Vex
     @vex/core.md
-    @vex/adapters/claude-code.md
     @vex/adapters/claude-code-personal.md
     @vex/output-style.md
     @vex/rules/brain.md
