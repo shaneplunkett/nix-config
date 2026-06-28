@@ -24,7 +24,12 @@ _: {
       "Xcode" = 497799835;
     };
     onActivation = {
-      cleanup = "zap";
+      # nix-darwin currently emits Homebrew's removed --force-cleanup flag for "zap".
+      cleanup = "none";
+      extraFlags = [
+        "--cleanup"
+        "--zap"
+      ];
       autoUpdate = false;
       upgrade = false;
     };
