@@ -123,6 +123,11 @@ let
         "bearer_token"
         "disabled"
         "headers"
+        # Shared MCP entries may carry Claude/RMCP OAuth metadata. Codex treats
+        # these as an instruction to start an OAuth flow during MCP initialise,
+        # which breaks non-OAuth HTTP servers such as Shane's MCPHub proxy.
+        "oauth"
+        "oauth_resource"
         "type"
       ];
       stdioOnlyKeys = [
@@ -136,8 +141,6 @@ let
         "bearer_token_env_var"
         "env_http_headers"
         "http_headers"
-        "oauth"
-        "oauth_resource"
         "url"
       ];
       transportKeys = if isHttp then stdioOnlyKeys else httpOnlyKeys;
