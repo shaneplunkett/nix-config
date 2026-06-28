@@ -1,4 +1,24 @@
-_: {
+{ lib, ... }:
+let
+  nopasswd = command: {
+    inherit command;
+    options = [ "NOPASSWD" ];
+  };
+
+  switchActions = [
+    "boot"
+    "test"
+    "switch"
+  ];
+
+  switchCommand = action: "/nix/store/*-nixos-system-*/bin/switch-to-configuration ${action}";
+
+  envPrefixes = [
+    "/run/current-system/sw/bin/env"
+    "/nix/store/*-coreutils-*/bin/env"
+  ];
+in
+{
 
   users.users.shane = {
     isNormalUser = true;
@@ -14,40 +34,17 @@ _: {
   security.sudo.extraRules = [
     {
       users = [ "shane" ];
-      commands = [
-        {
-          command = "/nix/store/*-nixos-system-*/bin/switch-to-configuration boot";
-          options = [ "NOPASSWD" ];
-        }
-        {
-          command = "/nix/store/*-nixos-system-*/bin/switch-to-configuration test";
-          options = [ "NOPASSWD" ];
-        }
-        {
-          command = "/nix/store/*-nixos-system-*/bin/switch-to-configuration switch";
-          options = [ "NOPASSWD" ];
-        }
-        {
-          command = "/run/current-system/sw/bin/env * /nix/store/*-nixos-system-*/bin/switch-to-configuration test";
-          options = [ "NOPASSWD" ];
-        }
-        {
-          command = "/run/current-system/sw/bin/env * /nix/store/*-nixos-system-*/bin/switch-to-configuration switch";
-          options = [ "NOPASSWD" ];
-        }
-        {
-          command = "/run/current-system/sw/bin/env * /nix/store/*-nixos-system-*/bin/switch-to-configuration boot";
-          options = [ "NOPASSWD" ];
-        }
-        {
-          command = "/run/current-system/sw/bin/env * nix build --no-link --profile /nix/var/nix/profiles/system /nix/store/*-nixos-system-*";
-          options = [ "NOPASSWD" ];
-        }
-        {
-          command = "/run/current-system/sw/bin/env * ln -sfn /nix/var/nix/profiles/system-*-link /nix/var/nix/profiles/system";
-          options = [ "NOPASSWD" ];
-        }
-      ];
+      commands = map nopasswd (
+        (map switchCommand switchActions)
+        ++ (lib.concatMap (
+          env:
+          (map (action: "${env} * ${switchCommand action}") switchActions)
+          ++ [
+            "${env} * nix build --no-link --profile /nix/var/nix/profiles/system /nix/store/*-nixos-system-*"
+            "${env} * ln -sfn /nix/var/nix/profiles/system-*-link /nix/var/nix/profiles/system"
+          ]
+        ) envPrefixes)
+      );
     }
   ];
 }
