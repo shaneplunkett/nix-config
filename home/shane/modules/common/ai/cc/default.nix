@@ -278,7 +278,7 @@ let
           config_dir="''${CLAUDE_DELEGATE_WORK_DIR:-$HOME/.claude-work}"
           ;;
         personal)
-          config_dir="''${CLAUDE_DELEGATE_PERSONAL_DIR:-$HOME/.claude}"
+          config_dir="''${CLAUDE_DELEGATE_PERSONAL_DIR:-$HOME/.claude-vex}"
           ;;
         *)
           echo "claude-delegate: profile must be 'work' or 'personal'" >&2
@@ -332,7 +332,7 @@ let
 
   # ─── Plugins — deliberately NOT managed by Nix ─────────────────────────
   # Plugins and marketplaces are fully imperative. Claude owns the writable
-  # state in ~/.claude/plugins/{installed_plugins,known_marketplaces}.json,
+  # state in each profile's plugins/{installed_plugins,known_marketplaces}.json,
   # so `/plugin install`, `/plugin marketplace add`, and enable/disable
   # toggles all just work and persist with zero rebuild. Nix used to assert
   # `enabledPlugins` + `extraKnownMarketplaces` into the read-only settings.json
@@ -361,7 +361,7 @@ let
   personalSkillsAttrs = mkSkillsAttrs "${aiSkills}/personal" "${aiSkills}/personal";
 
   # Keep default Claude sessions lean. Work and project-specific skills are
-  # exposed through repo-local .agents/skills and .claude/skills symlinks.
+  # exposed through repo-local .agents/skills and profile-local skills symlinks.
   globalSkillNames = [
     "memory-save"
     "tavily-best-practices"
@@ -385,8 +385,8 @@ let
   inherit (pkgs) claude-code-patched;
 
   # ─── Settings content ──────────────────────────────────────────────────
-  # Shape parameterised so we produce both the canonical ~/.claude Vex profile
-  # managed by programs.claude-code and the ~/.claude-work Vex variant.
+  # Shape parameterised so we produce both the ~/.claude-vex Vex profile and
+  # the ~/.claude-work Vex variant.
   mkSettingsContent =
     {
       outputStyle,
@@ -615,7 +615,7 @@ let
       inherit model;
     };
 
-  # Hand-built settings.json for the variant dirs (canonical .claude is module-managed).
+  # Hand-built settings.json for the variant dirs (default .claude is module-managed).
   mkSettingsFile =
     {
       outputStyle,
@@ -631,15 +631,41 @@ let
       )
     );
 
+  plainSettingsContent = {
+    feedbackSurveyRate = 0;
+    autoMemoryEnabled = false;
+    env = claudeIdentityEnv;
+    statusLine = claudeStatusLine;
+  };
+
   plainSettingsFile = pkgs.writeText "claude-code-settings-plain.json" (
-    builtins.toJSON {
-      "$schema" = "https://json.schemastore.org/claude-code-settings.json";
-      feedbackSurveyRate = 0;
-      autoMemoryEnabled = false;
-      env = claudeIdentityEnv;
-      statusLine = claudeStatusLine;
-    }
+    builtins.toJSON (
+      plainSettingsContent
+      // {
+        "$schema" = "https://json.schemastore.org/claude-code-settings.json";
+      }
+    )
   );
+
+  cleanLegacyVexProfileRels = [
+    "agents"
+    "agents.backup"
+    "CLAUDE.md"
+    "CLAUDE.md.backup"
+    "output-styles/vex.md"
+    "output-styles/vex.md.backup"
+    "output-styles/vex-pro.md"
+    "output-styles/vex-pro.md.backup"
+    "rules"
+    "skills"
+    "themes/vex.json"
+    "themes/vex.json.backup"
+    "vex"
+  ];
+
+  cleanPlainProfileRels = cleanLegacyVexProfileRels;
+
+  cleanRelShellWords = rels: lib.concatMapStringsSep " " lib.escapeShellArg rels;
 
   # Variant config dirs — kept on the manual home.file generator because the
   # programs.claude-code module is single-dir (~/.claude only). Activated via
@@ -658,7 +684,10 @@ let
 
   claudeCode48Context = "# Vex — Claude Code\n@vex/claude-code/core.md\n@vex/claude-code/operations.md\n";
 
-  vexVariantDirs = [ ".claude-work" ];
+  vexVariantDirs = [
+    ".claude-vex"
+    ".claude-work"
+  ];
   plainVariantDirs = [
     ".claude-pro"
     ".claude-pro-work"
@@ -668,6 +697,7 @@ let
   filesForVexVariant =
     dir:
     let
+      context = if dir == ".claude-vex" then baseVexClaudeContext else claudeCode48Context;
       settingsSrc = mkSettingsFile {
         outputStyle = "vex";
         hookSuffix = "";
@@ -679,18 +709,44 @@ let
         source = settingsSrc;
         force = true;
       };
-      "${dir}/themes/vex.json".source = vexThemeFile;
+      "${dir}/themes/vex.json" = {
+        source = vexThemeFile;
+        force = true;
+      };
       "${dir}/CLAUDE.md" = {
-        text = claudeCode48Context;
+        text = context;
         force = true;
       };
     }
     // {
-      "${dir}/vex/core.md".source = "${aiSkills}/vex/core.md";
-      "${dir}/vex/adapters/claude-code.md".source = "${aiSkills}/vex/adapters/claude-code.md";
-      "${dir}/output-styles/vex.md".source = "${claudeVexStack}/output-style.md";
-      "${dir}/rules".source = "${aiSkills}/vex/rules";
-      "${dir}/agents".source = "${aiSkills}/vex/agents";
+      "${dir}/vex/core.md" = {
+        source = "${aiSkills}/vex/core.md";
+        force = true;
+      };
+      "${dir}/vex/adapters/claude-code.md" = {
+        source = "${aiSkills}/vex/adapters/claude-code.md";
+        force = true;
+      };
+      "${dir}/vex/output-style.md" = {
+        source = "${aiSkills}/vex/output-style.md";
+        force = true;
+      };
+      "${dir}/vex/rules" = {
+        source = "${aiSkills}/vex/rules";
+        force = true;
+      };
+      "${dir}/output-styles/vex.md" = {
+        source = "${claudeVexStack}/output-style.md";
+        force = true;
+      };
+      "${dir}/rules" = {
+        source = "${aiSkills}/vex/rules";
+        force = true;
+      };
+      "${dir}/agents" = {
+        source = "${aiSkills}/vex/agents";
+        force = true;
+      };
     }
     // {
       "${dir}/vex/claude-code" = {
@@ -703,6 +759,7 @@ let
       lib.nameValuePair "${dir}/skills/${name}" {
         inherit source;
         recursive = true;
+        force = true;
       }
     ) globalSkillsAttrs);
 
@@ -715,7 +772,7 @@ let
 
 in
 {
-  # ─── Canonical ~/.claude — home-manager module owns it ─────────────────
+  # ─── Package install + plain ~/.claude profile ─────────────────────────
   programs.claude-code = {
     enable = true;
 
@@ -723,32 +780,17 @@ in
     # overrides baked in at build time. See pkgs/claude-code-patched/.
     package = claude-code-patched;
 
-    settings = mkSettingsContent {
-      outputStyle = "vex";
-      hookSuffix = "";
-      model = "claude-opus-4-6[1m]";
-    };
-
-    context = baseVexClaudeContext;
+    settings = plainSettingsContent;
 
     # Shared MCP servers come from programs.mcp.servers and are translated
     # into Claude Code's native mcpServers shape by the Home Manager module.
     enableMcpIntegration = true;
 
     # Plugins are NOT declared here — fully imperative via `/plugin`. Claude's
-    # writable cache (~/.claude/plugins/*.json) is the sole source of truth.
+    # writable cache (<profile>/plugins/*.json) is the sole source of truth.
 
-    # Skills — only the always-use baseline. `recursive = true` makes
-    # ~/.claude/skills a real directory whose nix-owned entries are the only
-    # managed children, so a hand-dropped ~/.claude/skills/<scratch>/SKILL.md
-    # loads and persists without a rebuild. Work/project packs are linked into
-    # repo-local .agents/skills and .claude/skills manually.
-    skills = globalSkillsAttrs;
-
-    # Rules + agents dirs — module symlinks ~/.claude/{rules,agents}
-    # recursively from the flake-input source.
-    rulesDir = "${aiSkills}/vex/rules";
-    agentsDir = "${aiSkills}/vex/agents";
+    # Vex skills/rules/agents are generated under ~/.claude-vex below.
+    skills = { };
   };
 
   home = {
@@ -762,44 +804,28 @@ in
       claude-delegate
     ];
 
-    # Two things the module doesn't expose options for, kept as raw home.file:
-    # - themes/vex.json (no themes option in the module)
-    # - output-styles/vex.md (programs.claude-code.outputStyles treats store-path
-    #   strings as inline text; raw home.file keeps it as a real source file)
-    # - vex/core.md at a custom path (referenced from CLAUDE.md as @vex/core.md)
-    file = lib.foldl' lib.recursiveUpdate {
-      ".claude/themes/vex.json".source = vexThemeFile;
-      ".claude/output-styles/vex.md".source = "${aiSkills}/vex/output-style.md";
-      ".claude/vex/core.md".source = "${aiSkills}/vex/core.md";
-      ".claude/vex/output-style.md".source = "${aiSkills}/vex/output-style.md";
-      ".claude/vex/rules".source = "${aiSkills}/vex/rules";
-      ".claude/vex/claude-code" = {
-        source = claudeVexStack;
-        force = true;
-      };
-    } ((map filesForVexVariant vexVariantDirs) ++ (map filesForPlainVariant plainVariantDirs));
+    file = lib.foldl' lib.recursiveUpdate { } (
+      (map filesForVexVariant vexVariantDirs) ++ (map filesForPlainVariant plainVariantDirs)
+    );
 
     activation.cleanPlainClaudeProfiles = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+      # Keep the legacy default config dir non-Vex. Claude Code's project-memory
+      # walk checks $HOME/.claude/CLAUDE.md from every repo under $HOME.
+      if [ -d "$HOME/.claude" ]; then
+        for rel in ${cleanRelShellWords cleanLegacyVexProfileRels}; do
+          target="$HOME/.claude/$rel"
+          if [ -e "$target" ] || [ -L "$target" ]; then
+            $DRY_RUN_CMD rm -rf "$target"
+          fi
+        done
+      fi
+
       for dir in "$HOME/.claude-pro" "$HOME/.claude-pro-work"; do
         if [ ! -d "$dir" ]; then
           continue
         fi
 
-        for rel in \
-          CLAUDE.md \
-          CLAUDE.md.backup \
-          agents \
-          agents.backup \
-          output-styles/vex.md \
-          output-styles/vex.md.backup \
-          output-styles/vex-pro.md \
-          output-styles/vex-pro.md.backup \
-          rules \
-          skills \
-          themes/vex.json \
-          themes/vex.json.backup \
-          vex
-        do
+        for rel in ${cleanRelShellWords cleanPlainProfileRels}; do
           target="$dir/$rel"
           if [ -e "$target" ] || [ -L "$target" ]; then
             $DRY_RUN_CMD rm -rf "$target"

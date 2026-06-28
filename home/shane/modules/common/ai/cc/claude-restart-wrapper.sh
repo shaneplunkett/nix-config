@@ -22,7 +22,7 @@
 
 set -u
 
-CLAUDE_TMP_DIR="${HOME}/.claude/tmp"
+CLAUDE_TMP_DIR="${CLAUDE_CONFIG_DIR:-${HOME}/.claude-vex}/tmp"
 WRAPPER_ID=$$
 RESTART_FLAG="${CLAUDE_TMP_DIR}/restart-flag-${WRAPPER_ID}"
 

@@ -31,7 +31,7 @@ if [ -z "${CLAUDE_RESTART_ID-}" ]; then
   exit 2
 fi
 
-CLAUDE_TMP_DIR="${HOME}/.claude/tmp"
+CLAUDE_TMP_DIR="${CLAUDE_CONFIG_DIR:-${HOME}/.claude-vex}/tmp"
 RESTART_FLAG="${CLAUDE_TMP_DIR}/restart-flag-${CLAUDE_RESTART_ID}"
 
 mkdir -p "$CLAUDE_TMP_DIR"

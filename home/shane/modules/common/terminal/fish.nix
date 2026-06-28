@@ -3,8 +3,8 @@ _: {
     fish = {
       enable = true;
       shellAliases = {
-        cc = "claude --model 'claude-opus-4-6[1m]' --dangerously-skip-permissions";
-        ccr = "claude --model 'claude-opus-4-6[1m]' --dangerously-skip-permissions --resume";
+        cc = "CLAUDE_CONFIG_DIR=$HOME/.claude-vex claude --model 'claude-opus-4-6[1m]' --dangerously-skip-permissions";
+        ccr = "CLAUDE_CONFIG_DIR=$HOME/.claude-vex claude --model 'claude-opus-4-6[1m]' --dangerously-skip-permissions --resume";
         ccw = "CLAUDE_CONFIG_DIR=$HOME/.claude-work claude-work --dangerously-skip-permissions";
         ccwr = "CLAUDE_CONFIG_DIR=$HOME/.claude-work claude-work --dangerously-skip-permissions --resume";
         ccp = "claude-plain";
