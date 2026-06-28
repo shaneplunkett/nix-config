@@ -11,8 +11,8 @@ let
 
   # Vex persona + personal skills come from the ai-skills flake input (private
   # GitHub repo). Edits go via: change ai-skills repo → commit → nix flake
-  # update ai-skills → rebuild. For active iteration use `nrs-iter` which
-  # `--override-input`s this to ~/ai-skills (commits not even required).
+  # update ai-skills → rebuild. For local iteration, run a normal `nrs`
+  # switch from ~/nix-config with the current flake inputs.
   aiSkills = inputs.ai-skills;
   claudeVexStack = "${aiSkills}/vex/claude-code";
 
@@ -363,7 +363,18 @@ let
   # Keep default Claude sessions lean. Work and project-specific skills are
   # exposed through repo-local .agents/skills and profile-local skills symlinks.
   globalSkillNames = [
+    "bb-browserbase"
+    "compass-autograb"
+    "confluence-autograb"
+    "confluence-pretty-publisher"
+    "github-gh"
+    "gmail"
+    "google-calendar"
+    "google-drive"
+    "jira-autograb"
+    "langsmith-autograb"
     "memory-save"
+    "slack-autograb"
     "tavily-best-practices"
     "tavily-cli"
     "tavily-crawl"
@@ -374,7 +385,10 @@ let
     "tavily-search"
     "td-todoist"
   ];
-  globalSkillsAttrs = lib.genAttrs globalSkillNames (name: personalSkillsAttrs.${name});
+  availableGlobalSkillNames = builtins.filter (
+    name: builtins.hasAttr name personalSkillsAttrs
+  ) globalSkillNames;
+  globalSkillsAttrs = lib.genAttrs availableGlobalSkillNames (name: personalSkillsAttrs.${name});
 
   # ─── claude-code-patched ───────────────────────────────────────────────
   # pkgs.claude-code with tweakcc-fixed applied at build time + skrabe's

@@ -71,18 +71,6 @@ _: {
             nh os switch $argv "$HOME/nix-config" -H (hostname)
           end
         '';
-        nrs-iter = ''
-          set -l overrides \
-            --override-input ag-ai-skills "path:$HOME/projects/work/ag-ai-skills" \
-            --override-input ai-skills "path:$HOME/ai-skills" \
-            --override-input nix-config-private "path:$HOME/projects/personal/nix-config-private"
-          if test (uname) = Darwin
-            set -l host (__nrs_darwin_host); or return 1
-            nh darwin switch $argv "$HOME/nix-config" -H $host -- $overrides
-          else
-            nh os switch $argv "$HOME/nix-config" -H (hostname) -- $overrides
-          end
-        '';
         tfc = ''
           set -l plan_file (mktemp -u --suffix=.tfplan)
           set -l plan_json (mktemp -u --suffix=.json)

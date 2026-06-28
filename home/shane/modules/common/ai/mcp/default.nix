@@ -98,6 +98,9 @@ in
 
       mcphub = {
         url = "https://mcphub.tail1d49f8.ts.net/mcp/$smart";
+        env_http_headers = {
+          Authorization = "MCPHUB_AUTHORIZATION";
+        };
         oauth_resource = "https://mcphub.tail1d49f8.ts.net";
       };
 

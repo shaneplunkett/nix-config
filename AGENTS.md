@@ -9,7 +9,7 @@
 | `Shanes-Work-MacBook-Pro` | aarch64-darwin | `nh darwin switch . -H Shanes-Work-MacBook-Pro` |
 | `hetzvps` | aarch64-linux | deploy-rs (server, not local) |
 
-Build only (no activation): `nh {os,darwin} build . -H <host>`. Live-iterate a flake input: `nrs-iter`.
+Build only (no activation): `nh {os,darwin} build . -H <host>`. Apply changes with `nrs`.
 
 ## Research — don't rely on training data alone
 

@@ -46,7 +46,18 @@ let
   # Keep the global skill surface deliberately small. Use repo-local
   # .agents/skills and .claude/skills symlinks for work/project packs.
   globalSkillNames = [
+    "bb-browserbase"
+    "compass-autograb"
+    "confluence-autograb"
+    "confluence-pretty-publisher"
+    "github-gh"
+    "gmail"
+    "google-calendar"
+    "google-drive"
+    "jira-autograb"
+    "langsmith-autograb"
     "memory-save"
+    "slack-autograb"
     "tavily-best-practices"
     "tavily-cli"
     "tavily-crawl"
@@ -57,7 +68,10 @@ let
     "tavily-search"
     "td-todoist"
   ];
-  globalSkillsAttrs = lib.genAttrs globalSkillNames (name: personalSkillsAttrs.${name});
+  availableGlobalSkillNames = builtins.filter (
+    name: builtins.hasAttr name personalSkillsAttrs
+  ) globalSkillNames;
+  globalSkillsAttrs = lib.genAttrs availableGlobalSkillNames (name: personalSkillsAttrs.${name});
 
   # ─── AGENTS.md concat (eval-time string) ───────────────────────────────
   # Codex's `programs.codex.context` types as `lines | path` — a derivation
@@ -66,7 +80,7 @@ let
   # source stays in ai-skills/vex/; the concat is rebuilt automatically
   # when any rules/*.md file changes.
   #
-  # Total size is ~39 KiB — exceeds the default project_doc_max_bytes (32
+  # Total size is ~44 KiB — exceeds the default project_doc_max_bytes (32
   # KiB), so we bump that in settings below.
   vexRuleFiles = lib.pipe "${codexVexStack}/rules" [
     builtins.readDir
@@ -107,7 +121,30 @@ let
     script = ./codex-nix-lint.sh;
   };
 
-  codexPackage = pkgs.codex-patched;
+  rbwRuntimeEnv = ''
+    if [ -z "''${XDG_RUNTIME_DIR:-}" ]; then
+      runtime_dir="/run/user/$(${pkgs.coreutils}/bin/id -u)"
+      if [ -d "$runtime_dir" ]; then
+        export XDG_RUNTIME_DIR="$runtime_dir"
+      fi
+    fi
+  '';
+
+  codexBasePackage = pkgs.codex-patched;
+  codexPackage = pkgs.writeShellApplication {
+    name = "codex";
+    runtimeInputs = [
+      pkgs.rbw
+    ];
+    text = ''
+      ${rbwRuntimeEnv}
+      mcphub_token="$(rbw get mcphub-bearer 2>/dev/null || true)"
+      if [ -n "$mcphub_token" ]; then
+        export MCPHUB_AUTHORIZATION="Bearer $mcphub_token"
+      fi
+      exec ${codexBasePackage}/bin/codex "$@"
+    '';
+  };
 
   codexConfigDir = ".codex";
   codexVariantDirs = [ ".codex-work" ];
@@ -178,7 +215,7 @@ let
 
     # ─── Persona cap ───────────────────────────────────────────────────
     # Default project_doc_max_bytes is 32 KiB; the concat'd Vex persona
-    # is ~39 KiB. Bump to 64 KiB so AGENTS.md isn't truncated, with
+    # is ~44 KiB. Bump to 64 KiB so AGENTS.md isn't truncated, with
     # headroom for the rules dir to grow.
     project_doc_max_bytes = 65536;
 
