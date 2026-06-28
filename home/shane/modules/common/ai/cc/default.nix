@@ -14,8 +14,6 @@ let
   # update ai-skills → rebuild. For local iteration, run a normal `nrs`
   # switch from ~/nix-config with the current flake inputs.
   aiSkills = inputs.ai-skills;
-  claudeVexStack = "${aiSkills}/vex/claude-code";
-
   vexThemeFile = ./vex-theme.json;
 
   # ─── Helper: wrap a bash script as a writeShellApplication binary. ─────
@@ -697,8 +695,6 @@ let
     @vex/rules/shane-profile.md
   '';
 
-  claudeCode48Context = "# Vex — Claude Code\n@vex/claude-code/core.md\n@vex/claude-code/operations.md\n";
-
   vexVariantDirs = [
     ".claude-vex"
     ".claude-work"
@@ -712,11 +708,10 @@ let
   filesForVexVariant =
     dir:
     let
-      context = if dir == ".claude-vex" then baseVexClaudeContext else claudeCode48Context;
+      context = baseVexClaudeContext;
       settingsSrc = mkSettingsFile {
         outputStyle = "vex";
         hookSuffix = "";
-        hookDir = claudeVexStack;
       };
     in
     {
@@ -738,10 +733,6 @@ let
         source = "${aiSkills}/vex/core.md";
         force = true;
       };
-      "${dir}/vex/adapters/claude-code.md" = {
-        source = "${aiSkills}/vex/adapters/claude-code.md";
-        force = true;
-      };
       "${dir}/vex/adapters/claude-code-personal.md" = {
         source = "${aiSkills}/vex/adapters/claude-code-personal.md";
         force = true;
@@ -755,7 +746,7 @@ let
         force = true;
       };
       "${dir}/output-styles/vex.md" = {
-        source = "${claudeVexStack}/output-style.md";
+        source = "${aiSkills}/vex/output-style.md";
         force = true;
       };
       "${dir}/rules" = {
@@ -764,12 +755,6 @@ let
       };
       "${dir}/agents" = {
         source = "${aiSkills}/vex/agents";
-        force = true;
-      };
-    }
-    // {
-      "${dir}/vex/claude-code" = {
-        source = claudeVexStack;
         force = true;
       };
     }

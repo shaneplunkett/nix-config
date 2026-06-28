@@ -10,7 +10,7 @@ let
   inherit (config.home) homeDirectory;
 
   aiSkills = inputs.ai-skills;
-  codexVexStack = "${aiSkills}/vex/codex";
+  vexRoot = "${aiSkills}/vex";
   tomlFormat = pkgs.formats.toml { };
 
   # ─── Helpers (mirrored from ../cc/default.nix) ─────────────────────────
@@ -82,18 +82,18 @@ let
   #
   # Total size is ~44 KiB — exceeds the default project_doc_max_bytes (32
   # KiB), so we bump that in settings below.
-  vexRuleFiles = lib.pipe "${codexVexStack}/rules" [
+  vexRuleFiles = lib.pipe "${vexRoot}/rules" [
     builtins.readDir
     (lib.filterAttrs (n: t: t == "regular" && lib.hasSuffix ".md" n))
     lib.attrNames
-    (map (n: "${codexVexStack}/rules/${n}"))
+    (map (n: "${vexRoot}/rules/${n}"))
   ];
 
   vexAgentsMd = lib.concatMapStringsSep "\n\n" builtins.readFile (
     [
-      "${codexVexStack}/core.md"
-      "${codexVexStack}/output-style.md"
-      "${codexVexStack}/adapters/openai-codex.md"
+      "${vexRoot}/core.md"
+      "${vexRoot}/output-style.md"
+      "${vexRoot}/adapters/openai-codex.md"
     ]
     ++ vexRuleFiles
   );
@@ -300,7 +300,7 @@ let
           hooks = [
             {
               type = "command";
-              command = "${codex-emit-context}/bin/codex-emit-context SessionStart ${codexVexStack}/hooks/session-start.md";
+              command = "${codex-emit-context}/bin/codex-emit-context SessionStart ${vexRoot}/hooks/session-start.md";
               timeout = 10;
             }
           ];

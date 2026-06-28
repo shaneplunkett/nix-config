@@ -81,6 +81,10 @@ in
         ];
       };
 
+      ahvi = {
+        url = "http://127.0.0.1:8420/mcp";
+      };
+
       aikido = {
         command = "${aikidoWrapper}/bin/aikido-mcp-wrapper";
         args = [ ];
