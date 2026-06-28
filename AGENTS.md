@@ -11,6 +11,13 @@
 
 Build only (no activation): `nh {os,darwin} build . -H <host>`. Apply changes with `nrs`.
 
+Codex can run `nh os switch . -H desktop` directly; do not assume a sudo prompt
+means Shane must do it manually. Passwordless switching is configured in
+`modules/nixos/user.nix`. If `nh` suddenly asks for a password, inspect the
+actual sudo command it is running: the allowed shapes include
+`switch-to-configuration {test,boot,switch}` and `sudo env ...`, including both
+`/run/current-system/sw/bin/env` and Nix store `coreutils` `env` paths.
+
 ## Research — don't rely on training data alone
 
 - **Library shapes, derivation patterns, home-manager / nixpkgs options** → Context7 via MCPHub. Search: `mcp__claude_ai_MCPHub__search_tools` for "context7", then `call_tool` to fetch live docs.
