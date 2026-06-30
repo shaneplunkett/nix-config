@@ -112,7 +112,7 @@ in
 {
   home.file = pluginExtraFiles;
 
-  programs.noctalia-shell.pluginSettings = lib.mapAttrs (_: p: p.settings) plugins;
+  programs.noctalia.settings.plugin_settings = lib.mapAttrs (_: p: p.settings) plugins;
 
   home.activation.noctaliaPluginSymlinks = lib.hm.dag.entryAfter [ "writeBoundary" ] (
     lib.concatStringsSep "\n" (

@@ -16,7 +16,7 @@
   stdenvNoCC,
   fetchFromGitHub,
   nodejs,
-  pnpm_10,
+  pnpm,
   fetchPnpmDeps,
   pnpmConfigHook,
   autoPatchelfHook,
@@ -25,29 +25,28 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "tweakcc-fixed";
-  # Tracking `main` until skrabe cuts a new tag. Latest tag predates the
-  # Bun >=1.3 `.bun` ELF section support that CC 2.1.x ships with, so
-  # native-binary extraction fails on `pkgs.claude-code` without these
-  # commits.
-  version = "0-unstable-2026-06-19";
+  # Keep on skrabe's releases: upstream Piebald-AI/tweakcc still lags
+  # Claude Code version churn, and this fork carries the prompt/reminder
+  # patching features this config depends on.
+  version = "2.5.2";
 
   src = fetchFromGitHub {
     owner = "skrabe";
     repo = "tweakcc-fixed";
-    rev = "725dd2f530b48dcf1f2e053a5f616e3567855650";
-    hash = "sha256-hE5MfowgOyxseVWWlv3SVVTPeld1JCMDRNt5v8H5zmU=";
+    rev = "59b408e0b3d8101d5d87e7c93c0c2a854e69173b";
+    hash = "sha256-GsNM3hEtobVJsqEbx2lXpv1pcvjQo88Ghf6WCYUfZPs=";
   };
 
   pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs) pname version src;
-    pnpm = pnpm_10;
+    inherit pnpm;
     fetcherVersion = 3;
-    hash = "sha256-nLgbq3FMFNFC3sdFOUTalypd6V2LlvR4LZqQBL1MJPg=";
+    hash = "sha256-g1lOWbUNCBtsb/AUjB5uKcjNegk0B2gtllnw4YAyDf0=";
   };
 
   nativeBuildInputs = [
     nodejs
-    pnpm_10
+    pnpm
     pnpmConfigHook
     makeBinaryWrapper
   ]

@@ -26,4 +26,5 @@ in
   tweakcc-fixed = pkgs.callPackage ./tweakcc-fixed { };
   xcodebuild-nvim = pkgs.callPackage ./xcodebuild-nvim { };
   xero-mcp-server = pkgs.callPackage ./xero-mcp-server { };
+  ytmdesktop-bin = pkgs.callPackage ./ytmdesktop-bin { };
 }

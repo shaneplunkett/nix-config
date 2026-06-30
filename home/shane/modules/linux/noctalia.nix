@@ -9,7 +9,7 @@ let
   c = import ../common/theme/colours.nix;
   hex = v: "#${v}";
   hyprlandPackage = config.wayland.windowManager.hyprland.package or pkgs.hyprland;
-  noctaliaPackage = config.programs.noctalia-shell.package;
+  noctaliaPackage = config.programs.noctalia.package;
   noctaliaCacheExpire = pkgs.writeShellApplication {
     name = "noctalia-expire-cache";
     runtimeInputs = [ pkgs.coreutils ];
@@ -123,7 +123,7 @@ let
       builtins.toJSON {
         package = "${noctaliaPackage}";
         inherit noctaliaVexPlugins;
-        inherit (config.programs.noctalia-shell) colors pluginSettings settings;
+        inherit (config.programs.noctalia) customPalettes settings;
       }
     )}
   '';
@@ -153,30 +153,38 @@ in
         fi
       '';
 
-  programs.noctalia-shell = {
+  programs.noctalia = {
     enable = true;
 
-    colors = lib.mapAttrs (_: lib.mkForce) {
-      mPrimary = hex c.lavender;
-      mOnPrimary = hex c.crust;
-      mSecondary = hex c.teal;
-      mOnSecondary = hex c.crust;
-      mTertiary = hex c.peach;
-      mOnTertiary = hex c.crust;
-      mError = hex c.red;
-      mOnError = hex c.crust;
-      mSurface = hex c.base;
-      mOnSurface = hex c.text;
-      mSurfaceVariant = hex c.surface0;
-      mOnSurfaceVariant = hex c.subtext1;
-      mOutline = hex c.overlay0;
-      mShadow = hex c.crust;
-      mHover = hex c.surface1;
-      mOnHover = hex c.text;
+    customPalettes.vex = {
+      dark = {
+        mPrimary = hex c.lavender;
+        mOnPrimary = hex c.crust;
+        mSecondary = hex c.teal;
+        mOnSecondary = hex c.crust;
+        mTertiary = hex c.peach;
+        mOnTertiary = hex c.crust;
+        mError = hex c.red;
+        mOnError = hex c.crust;
+        mSurface = hex c.base;
+        mOnSurface = hex c.text;
+        mSurfaceVariant = hex c.surface0;
+        mOnSurfaceVariant = hex c.subtext1;
+        mOutline = hex c.overlay0;
+        mShadow = hex c.crust;
+        mHover = hex c.surface1;
+        mOnHover = hex c.text;
+      };
     };
 
     settings = {
       settingsVersion = 59;
+
+      theme = {
+        source = "custom";
+        custom_palette = "vex";
+        mode = "dark";
+      };
 
       bar = {
         barType = "simple";

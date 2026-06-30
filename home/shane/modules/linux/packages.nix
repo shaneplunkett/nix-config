@@ -167,7 +167,7 @@ in
     ferdium
     mangohud
     protonup-ng
-    ytmdesktop
+    ytmdesktop-bin
     libnotify
     pavucontrol
     blueman
