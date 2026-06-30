@@ -145,6 +145,33 @@ let
       exec ${codexBasePackage}/bin/codex "$@"
     '';
   };
+  codexDesktopPackage =
+    if isLinux then
+      let
+        basePackage =
+          inputs.codex-desktop-linux.packages.${pkgs.stdenv.hostPlatform.system}.codex-desktop-remote-mobile-control;
+      in
+      pkgs.symlinkJoin {
+        name = "codex-desktop-remote-mobile-control-with-codex-cli";
+        paths = [ basePackage ];
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+        postBuild = ''
+          rm "$out/bin/codex-desktop"
+          makeWrapper "${basePackage}/bin/codex-desktop" "$out/bin/codex-desktop" \
+            --set CODEX_CLI_PATH "${lib.getExe codexPackage}" \
+            --prefix PATH : "${lib.makeBinPath [ codexPackage ]}"
+
+          if [ -f "${basePackage}/share/applications/codex-desktop.desktop" ]; then
+            rm "$out/share/applications/codex-desktop.desktop"
+            install -Dm0644 "${basePackage}/share/applications/codex-desktop.desktop" \
+              "$out/share/applications/codex-desktop.desktop"
+            substituteInPlace "$out/share/applications/codex-desktop.desktop" \
+              --replace-fail "${basePackage}" "$out"
+          fi
+        '';
+      }
+    else
+      null;
 
   codexConfigDir = ".codex";
   codexVariantDirs = [ ".codex-work" ];
@@ -570,6 +597,7 @@ in
   // lib.optionalAttrs isLinux {
     codexDesktopLinux = {
       enable = true;
+      package = codexDesktopPackage;
 
       # The community wrapper auto-stages the Chrome native host. Phone access
       # needs the experimental Linux mobile-control variant plus an app-server
