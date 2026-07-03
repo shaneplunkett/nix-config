@@ -117,7 +117,7 @@ let
 
   # Plain Claude Code profile selector for ccp/ccpr. This uses pristine
   # upstream Claude Code, separate OAuth containers for personal/work, and no
-  # Vex prompt/rules/hooks surface. The work profile gets a small de-Vexed
+  # Vex prompt/rules/hooks surface. Both profiles get a small de-Vexed
   # support prompt from ai-skills/work-claude/Prompt.md.
   claude-plain = pkgs.writeShellApplication {
     name = "claude-plain";
@@ -136,7 +136,7 @@ let
         --work       Use ~/.claude-pro-work
 
       Plain mode runs pristine Claude Code against a de-Vexed profile with dangerous permissions enabled and built-in auto memory disabled.
-      The work profile includes a small warm-support CLAUDE.md from ai-skills/work-claude/Prompt.md.
+      Both plain profiles include a small warm-support CLAUDE.md from ai-skills/work-claude/Prompt.md.
       Pass Claude's own --help after --, for example: ccp -- --help
       EOF
       }
@@ -662,7 +662,7 @@ let
     )
   );
 
-  workClaudePromptFile = "${aiSkills}/work-claude/Prompt.md";
+  plainClaudePromptFile = "${aiSkills}/work-claude/Prompt.md";
 
   cleanLegacyVexProfileRels = [
     "agents"
@@ -680,8 +680,7 @@ let
     "vex"
   ];
 
-  cleanPlainPersonalProfileRels = cleanLegacyVexProfileRels;
-  cleanPlainWorkProfileRels = lib.filter (rel: rel != "CLAUDE.md") cleanLegacyVexProfileRels;
+  cleanPlainProfileRels = lib.filter (rel: rel != "CLAUDE.md") cleanLegacyVexProfileRels;
 
   cleanRelShellWords = rels: lib.concatMapStringsSep " " lib.escapeShellArg rels;
 
@@ -825,8 +824,12 @@ in
     ];
 
     file = (lib.foldl' lib.recursiveUpdate { } (map filesForVexVariant vexVariantDirs)) // {
+      ".claude-pro/CLAUDE.md" = {
+        source = plainClaudePromptFile;
+        force = true;
+      };
       ".claude-pro-work/CLAUDE.md" = {
-        source = workClaudePromptFile;
+        source = plainClaudePromptFile;
         force = true;
       };
     };
@@ -850,32 +853,12 @@ in
         done
       fi
 
-      for dir in "$HOME/.claude-pro"; do
+      for dir in "$HOME/.claude-pro" "$HOME/.claude-pro-work"; do
         if [ ! -d "$dir" ]; then
           continue
         fi
 
-        for rel in ${cleanRelShellWords cleanPlainPersonalProfileRels}; do
-          target="$dir/$rel"
-          if [ -e "$target" ] || [ -L "$target" ]; then
-            $DRY_RUN_CMD rm -rf "$target"
-          fi
-        done
-
-        for maybe_empty in themes output-styles; do
-          target="$dir/$maybe_empty"
-          if [ -d "$target" ] && [ -z "$(find "$target" -mindepth 1 -maxdepth 1 2>/dev/null)" ]; then
-            $DRY_RUN_CMD rmdir "$target"
-          fi
-        done
-      done
-
-      for dir in "$HOME/.claude-pro-work"; do
-        if [ ! -d "$dir" ]; then
-          continue
-        fi
-
-        for rel in ${cleanRelShellWords cleanPlainWorkProfileRels}; do
+        for rel in ${cleanRelShellWords cleanPlainProfileRels}; do
           target="$dir/$rel"
           if [ -e "$target" ] || [ -L "$target" ]; then
             $DRY_RUN_CMD rm -rf "$target"
