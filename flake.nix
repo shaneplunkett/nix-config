@@ -37,12 +37,14 @@
     };
     catppuccin.url = "github:catppuccin/nix";
 
+    # Keep Noctalia on v4 for plugin support. v5 currently drops the QML plugin
+    # surface Shane's local plugins use.
     noctalia = {
-      url = "github:noctalia-dev/noctalia-shell";
+      url = "github:noctalia-dev/noctalia-shell/fddc9cd584676a85d0a48225830e153178b1c000";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     noctalia-qs = {
-      url = "github:noctalia-dev/noctalia-qs";
+      url = "github:noctalia-dev/noctalia-qs/4116b41cdc89e186be7cb8b24a9b6022af95d742";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
