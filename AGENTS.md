@@ -11,6 +11,14 @@
 
 Build only (no activation): `nh {os,darwin} build . -H <host>`. Apply changes with `nrs`.
 
+Home Manager is built into the host switch path. Do not run standalone Home
+Manager activations such as `./result/activate`,
+`home-manager switch`, or activation packages from
+`config.home-manager.users.<name>.home.activationPackage` unless Shane
+explicitly asks for that exact operation. These activations can run side-effect
+hooks such as shell restarts; use `nh os switch . -H desktop` / `nrs` when the
+live desktop should actually change.
+
 Codex can run `nh os switch . -H desktop` directly; do not assume a sudo prompt
 means Shane must do it manually. Passwordless switching is configured in
 `modules/nixos/user.nix`. If `nh` suddenly asks for a password, inspect the

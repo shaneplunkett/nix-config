@@ -8,6 +8,7 @@ let
   # Private values (work URLs / email attributes) live in the companion
   # nix-config-private flake input. The public flake stays clean.
   priv = inputs.nix-config-private.values;
+  homeDirectory = "/home/shane";
 
   # Vex persona + personal skills come from the ai-skills flake input (private
   # GitHub repo). Edits go via: change ai-skills repo → commit → nix flake
@@ -767,12 +768,22 @@ let
       }
     ) globalSkillsAttrs);
 
-  filesForPlainVariant = dir: {
-    "${dir}/settings.json" = {
-      source = plainSettingsFile;
-      force = true;
-    };
-  };
+  mutablePlainSettingsActivation =
+    dir:
+    let
+      settingsPath = "${homeDirectory}/${dir}/settings.json";
+    in
+    ''
+      $DRY_RUN_CMD mkdir -p "${homeDirectory}/${dir}"
+
+      if [ -L "${settingsPath}" ]; then
+        $DRY_RUN_CMD rm "${settingsPath}"
+      fi
+      if [ ! -e "${settingsPath}" ]; then
+        $DRY_RUN_CMD cp "${plainSettingsFile}" "${settingsPath}"
+        $DRY_RUN_CMD chmod u+w "${settingsPath}"
+      fi
+    '';
 
 in
 {
@@ -808,8 +819,13 @@ in
       claude-delegate
     ];
 
-    file = lib.foldl' lib.recursiveUpdate { } (
-      (map filesForVexVariant vexVariantDirs) ++ (map filesForPlainVariant plainVariantDirs)
+    file = lib.foldl' lib.recursiveUpdate { } (map filesForVexVariant vexVariantDirs);
+
+    # Plain profiles are OAuth/plugin containers. Claude writes plugin state by
+    # atomically replacing settings.json, so it must be normal writable user
+    # state rather than a Home Manager symlink into /nix/store.
+    activation.mutablePlainClaudeSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] (
+      lib.concatMapStringsSep "\n" mutablePlainSettingsActivation plainVariantDirs
     );
 
     activation.cleanPlainClaudeProfiles = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
