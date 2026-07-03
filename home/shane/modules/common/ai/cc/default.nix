@@ -115,9 +115,10 @@ let
     text = ''exec ${lib.getExe pkgs.claude-code} "$@"'';
   };
 
-  # Plain Claude Code profile selector for ccp/ccpr. This is deliberately
-  # boring: pristine upstream binary, separate OAuth containers for
-  # personal/work, and no Vex prompt/rules/hooks surface.
+  # Plain Claude Code profile selector for ccp/ccpr. This uses pristine
+  # upstream Claude Code, separate OAuth containers for personal/work, and no
+  # Vex prompt/rules/hooks surface. The work profile gets a small de-Vexed
+  # support prompt from ai-skills/work-claude/Prompt.md.
   claude-plain = pkgs.writeShellApplication {
     name = "claude-plain";
     runtimeInputs = [ pkgs.coreutils ];
@@ -135,6 +136,7 @@ let
         --work       Use ~/.claude-pro-work
 
       Plain mode runs pristine Claude Code against a de-Vexed profile with dangerous permissions enabled and built-in auto memory disabled.
+      The work profile includes a small warm-support CLAUDE.md from ai-skills/work-claude/Prompt.md.
       Pass Claude's own --help after --, for example: ccp -- --help
       EOF
       }
@@ -660,6 +662,8 @@ let
     )
   );
 
+  workClaudePromptFile = "${aiSkills}/work-claude/Prompt.md";
+
   cleanLegacyVexProfileRels = [
     "agents"
     "agents.backup"
@@ -676,7 +680,8 @@ let
     "vex"
   ];
 
-  cleanPlainProfileRels = cleanLegacyVexProfileRels;
+  cleanPlainPersonalProfileRels = cleanLegacyVexProfileRels;
+  cleanPlainWorkProfileRels = lib.filter (rel: rel != "CLAUDE.md") cleanLegacyVexProfileRels;
 
   cleanRelShellWords = rels: lib.concatMapStringsSep " " lib.escapeShellArg rels;
 
@@ -819,7 +824,12 @@ in
       claude-delegate
     ];
 
-    file = lib.foldl' lib.recursiveUpdate { } (map filesForVexVariant vexVariantDirs);
+    file = (lib.foldl' lib.recursiveUpdate { } (map filesForVexVariant vexVariantDirs)) // {
+      ".claude-pro-work/CLAUDE.md" = {
+        source = workClaudePromptFile;
+        force = true;
+      };
+    };
 
     # Plain profiles are OAuth/plugin containers. Claude writes plugin state by
     # atomically replacing settings.json, so it must be normal writable user
@@ -840,12 +850,32 @@ in
         done
       fi
 
-      for dir in "$HOME/.claude-pro" "$HOME/.claude-pro-work"; do
+      for dir in "$HOME/.claude-pro"; do
         if [ ! -d "$dir" ]; then
           continue
         fi
 
-        for rel in ${cleanRelShellWords cleanPlainProfileRels}; do
+        for rel in ${cleanRelShellWords cleanPlainPersonalProfileRels}; do
+          target="$dir/$rel"
+          if [ -e "$target" ] || [ -L "$target" ]; then
+            $DRY_RUN_CMD rm -rf "$target"
+          fi
+        done
+
+        for maybe_empty in themes output-styles; do
+          target="$dir/$maybe_empty"
+          if [ -d "$target" ] && [ -z "$(find "$target" -mindepth 1 -maxdepth 1 2>/dev/null)" ]; then
+            $DRY_RUN_CMD rmdir "$target"
+          fi
+        done
+      done
+
+      for dir in "$HOME/.claude-pro-work"; do
+        if [ ! -d "$dir" ]; then
+          continue
+        fi
+
+        for rel in ${cleanRelShellWords cleanPlainWorkProfileRels}; do
           target="$dir/$rel"
           if [ -e "$target" ] || [ -L "$target" ]; then
             $DRY_RUN_CMD rm -rf "$target"
