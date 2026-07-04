@@ -18,12 +18,9 @@ in
   };
   aikido-mcp = pkgs.callPackage ./aikido-mcp { };
   bluebubbles-themed = pkgs.callPackage ./bluebubbles-themed { };
-  claude-code = pkgs.callPackage ./claude-code { };
-  claude-code-patched = pkgs.callPackage ./claude-code-patched { };
   claude-plugins-official = pkgs.callPackage ./claude-plugins-official { };
   codex-patched = pkgs.callPackage ./codex-patched { };
   orca-slicer-bambulab = pkgs.callPackage ./orca-slicer-bambulab { };
-  tweakcc-fixed = pkgs.callPackage ./tweakcc-fixed { };
   xcodebuild-nvim = pkgs.callPackage ./xcodebuild-nvim { };
   xero-mcp-server = pkgs.callPackage ./xero-mcp-server { };
   ytmdesktop-bin = pkgs.callPackage ./ytmdesktop-bin { };

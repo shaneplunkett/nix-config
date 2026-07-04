@@ -3,14 +3,8 @@ _: {
     fish = {
       enable = true;
       shellAliases = {
-        cc = "CLAUDE_CONFIG_DIR=$HOME/.claude-vex claude --model 'claude-opus-4-6[1m]' --dangerously-skip-permissions";
-        ccr = "CLAUDE_CONFIG_DIR=$HOME/.claude-vex claude --model 'claude-opus-4-6[1m]' --dangerously-skip-permissions --resume";
-        ccw = "CLAUDE_CONFIG_DIR=$HOME/.claude-work claude-work --dangerously-skip-permissions";
-        ccwr = "CLAUDE_CONFIG_DIR=$HOME/.claude-work claude-work --dangerously-skip-permissions --resume";
-        ccp = "claude-plain";
-        ccpr = "claude-plain --resume";
-        cldw = "claude-delegate work";
-        cldp = "claude-delegate personal";
+        ccr = "cc --resume";
+        ccwr = "ccw --resume";
         cx = "codex";
         cxr = "codex resume --last";
         cxw = "CODEX_HOME=$HOME/.codex-work codex";
@@ -26,7 +20,6 @@ _: {
         nvl = "nvim --listen /tmp/nvim";
       };
       functions = {
-        claude = "claude-restart $argv";
         tmux = ''
           if test (count $argv) -eq 0
             command tmux new-session -A -s scratch

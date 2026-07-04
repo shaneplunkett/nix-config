@@ -12,7 +12,7 @@ else
   echo "Error: no supported AG skills layout found under $REPO_ROOT" >&2
   exit 1
 fi
-INSTALL_DIR="${1:-$HOME/.claude-vex/skills}"
+INSTALL_DIR="${1:-$HOME/.claude/skills}"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
