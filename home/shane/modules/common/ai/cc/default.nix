@@ -39,18 +39,6 @@ let
 
   cc = mkClaudeProfile "cc" ".claude";
   ccw = mkClaudeProfile "ccw" ".claude-work";
-
-  legacyClaudeProfileRels = [
-    "agents"
-    "agents.backup"
-    "output-styles"
-    "rules"
-    "skills"
-    "themes"
-    "vex"
-  ];
-
-  cleanRelShellWords = rels: lib.concatMapStringsSep " " lib.escapeShellArg rels;
 in
 {
   programs.claude-code = {
@@ -81,20 +69,5 @@ in
         force = true;
       };
     };
-
-    activation.cleanLegacyClaudeProfiles = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-      for dir in "$HOME/.claude" "$HOME/.claude-work"; do
-        if [ ! -d "$dir" ]; then
-          continue
-        fi
-
-        for rel in ${cleanRelShellWords legacyClaudeProfileRels}; do
-          target="$dir/$rel"
-          if [ -e "$target" ] || [ -L "$target" ]; then
-            $DRY_RUN_CMD rm -rf "$target"
-          fi
-        done
-      done
-    '';
   };
 }
