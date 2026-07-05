@@ -5,6 +5,7 @@
 }:
 let
   colours = import ../common/theme/colours.nix;
+  primaryWorkspaceGaps = "gapsout:50 70 110 70";
 in
 {
   wayland.windowManager.hyprland = {
@@ -118,15 +119,15 @@ in
       ];
 
       workspace = [
-        "1, monitor:DP-2, default:true"
-        "2, monitor:DP-2"
-        "3, monitor:DP-2"
-        "4, monitor:DP-2"
-        "5, monitor:DP-2"
-        "6, monitor:DP-2"
-        "7, monitor:DP-2"
-        "8, monitor:DP-2"
-        "10, monitor:DP-2"
+        "1, monitor:DP-2, default:true, ${primaryWorkspaceGaps}"
+        "2, monitor:DP-2, ${primaryWorkspaceGaps}"
+        "3, monitor:DP-2, ${primaryWorkspaceGaps}"
+        "4, monitor:DP-2, ${primaryWorkspaceGaps}"
+        "5, monitor:DP-2, ${primaryWorkspaceGaps}"
+        "6, monitor:DP-2, ${primaryWorkspaceGaps}"
+        "7, monitor:DP-2, ${primaryWorkspaceGaps}"
+        "8, monitor:DP-2, ${primaryWorkspaceGaps}"
+        "10, monitor:DP-2, ${primaryWorkspaceGaps}"
         "9, monitor:HDMI-A-1, default:true"
       ];
 

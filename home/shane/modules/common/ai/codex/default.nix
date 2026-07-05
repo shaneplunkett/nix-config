@@ -13,9 +13,6 @@ let
   vexRoot = "${aiSkills}/vex";
   tomlFormat = pkgs.formats.toml { };
 
-  # ─── Helpers (mirrored from ../cc/default.nix) ─────────────────────────
-  # Kept local rather than refactoring into a shared lib.nix so the cc
-  # module's blast radius stays zero. Two helpers = ~20 lines; fine.
   mkBashHook =
     {
       name,
@@ -43,8 +40,6 @@ let
 
   personalSkillsAttrs = mkSkillsAttrs "${aiSkills}/personal" "${aiSkills}/personal";
 
-  # Keep the global skill surface deliberately small. Use repo-local
-  # .agents/skills and .claude/skills symlinks for work/project packs.
   globalSkillNames = [
     "bb-browserbase"
     "compass-autograb"
@@ -73,15 +68,6 @@ let
   ) globalSkillNames;
   globalSkillsAttrs = lib.genAttrs availableGlobalSkillNames (name: personalSkillsAttrs.${name});
 
-  # ─── AGENTS.md concat (eval-time string) ───────────────────────────────
-  # Codex's `programs.codex.context` types as `lines | path` — a derivation
-  # output isn't either, so we build the persona as a single eval-time
-  # string via builtins.readFile over the source files. The canonical
-  # source stays in ai-skills/vex/; the concat is rebuilt automatically
-  # when any rules/*.md file changes.
-  #
-  # Total size is ~44 KiB — exceeds the default project_doc_max_bytes (32
-  # KiB), so we bump that in settings below.
   vexRuleFiles = lib.pipe "${vexRoot}/rules" [
     builtins.readDir
     (lib.filterAttrs (n: t: t == "regular" && lib.hasSuffix ".md" n))
@@ -98,19 +84,12 @@ let
     ++ vexRuleFiles
   );
 
-  # ─── Hook scripts ──────────────────────────────────────────────────────
-  # codex-emit-context: wrapper that wraps a markdown file's contents as the
-  # hook-specific JSON shape Codex expects for context-injection events.
-  # PreCompact/PostCompact do not support additionalContext in Codex 0.131.0.
   codex-emit-context = mkBashHook {
     name = "codex-emit-context";
     runtimeInputs = [ pkgs.jq ];
     script = ./codex-emit-context.sh;
   };
 
-  # codex-nix-lint: PostToolUse hook that statix+deadnix-lints .nix files
-  # touched by apply_patch. Emits blocking JSON feedback so codex
-  # surfaces findings back to the model.
   codex-nix-lint = mkBashHook {
     name = "codex-nix-lint";
     runtimeInputs = [
@@ -142,6 +121,7 @@ let
       if [ -n "$mcphub_token" ]; then
         export MCPHUB_AUTHORIZATION="Bearer $mcphub_token"
       fi
+
       exec ${codexBasePackage}/bin/codex "$@"
     '';
   };
@@ -228,28 +208,37 @@ let
     lib.mapAttrs codexMcpServer config.programs.mcp.servers
   );
 
-  codexSettings = {
-    # ─── Model ─────────────────────────────────────────────────────────
-    # gpt-5.5 is the recommended default for ChatGPT Plus accounts —
-    # newest frontier coding/agentic model, available on any tier when
-    # signing in with ChatGPT. If 5.5 hasn't rolled to Shane's account
-    # yet, fall back to "gpt-5.4" (also Plus-eligible). Note: avoid
-    # `gpt-5.1-codex-max` and `gpt-5.3-codex-spark` — both gated to
-    # ChatGPT Pro / Business / Enterprise plans, not Plus.
-    # Override per-invocation with `codex --model <id>` or per-session
-    # via the `/model` slash command in the TUI.
-    model = "gpt-5.5";
+  codexHooks = {
+    SessionStart = [
+      {
+        hooks = [
+          {
+            type = "command";
+            command = "${codex-emit-context}/bin/codex-emit-context SessionStart ${vexRoot}/hooks/session-start.md";
+            timeout = 10;
+          }
+        ];
+      }
+    ];
 
-    # ─── Persona cap ───────────────────────────────────────────────────
-    # Default project_doc_max_bytes is 32 KiB; the concat'd Vex persona
-    # is ~44 KiB. Bump to 64 KiB so AGENTS.md isn't truncated, with
-    # headroom for the rules dir to grow.
+    PostToolUse = [
+      {
+        matcher = "apply_patch";
+        hooks = [
+          {
+            type = "command";
+            command = "${codex-nix-lint}/bin/codex-nix-lint";
+            timeout = 30;
+          }
+        ];
+      }
+    ];
+  };
+
+  codexSettings = {
+    model = "gpt-5.5";
     project_doc_max_bytes = 65536;
 
-    # ─── Features ──────────────────────────────────────────────────────
-    # Lifecycle hooks are feature-flagged off by default. Without this
-    # the [hooks] block below is parsed but ignored. Memory stays off:
-    # vex-brain is Shane's single memory source of truth.
     features = {
       hooks = true;
       memories = false;
@@ -260,11 +249,6 @@ let
       use_memories = false;
     };
 
-    # ─── TUI ───────────────────────────────────────────────────────────
-    # Codex's theme surface is syntax/diff highlighting, not a full
-    # chrome skin like Claude Code's custom:vex theme. Pin Catppuccin
-    # Mocha explicitly so terminals, NixVim, fzf, lazygit, tmux, and
-    # Codex all line up around the same dark mauve aesthetic.
     tui = {
       theme = "catppuccin-mocha";
       status_line = [
@@ -283,82 +267,142 @@ let
       ];
     };
 
-    # ─── Subprocess environment inheritance ────────────────────────────
-    # Codex defaults `shell_environment_policy.inherit = "core"` — a
-    # minimal allow-list that strips XDG_RUNTIME_DIR, DBUS_SESSION_*,
-    # WAYLAND_DISPLAY, and similar runtime vars. That breaks every CLI
-    # wrapper here that shells out to `rbw get` (the agent socket lives
-    # under $XDG_RUNTIME_DIR/rbw/) — including the xero MCP server and
-    # any Bash tool call that fetches a token. Inheriting "all" mirrors
-    # CC's default behaviour and lets the rbw-wrapped CLIs work cleanly.
     shell_environment_policy."inherit" = "all";
 
-    # ─── Sandbox / approvals ───────────────────────────────────────────
-    # Default to the fully trusted local-operator posture Shane wants:
-    # no command prompts and no Codex sandbox. Opt out per session with:
-    # `codex --sandbox workspace-write --ask-for-approval on-request`.
     sandbox_mode = "danger-full-access";
     approval_policy = "never";
 
-    # ─── Project trust ────────────────────────────────────────────────
-    # Codex tries to persist directory trust into config.toml during TUI
-    # onboarding. The live file is mutable, but declare the baseline here
-    # so fresh installs start trusted.
     projects."/home/shane/nix-config".trust_level = "trusted";
 
-    # ─── Agents (subagent role table) ──────────────────────────────────
-    # Keep concurrency conservative until we know how codex's subagent
-    # orchestrator behaves with the Vex persona. Per-role agent
-    # definitions are deferred — codex's `agents.<name>.config_file`
-    # wants TOML role layers, not the CC-style .md agent files. Port
-    # those individually in v2 once we've sat with the baseline.
     agents = {
       max_threads = 4;
       max_depth = 2;
     };
 
-    # ─── Hooks ─────────────────────────────────────────────────────────
-    # 8 events exist; we wire the two that matter most for parity:
-    # - SessionStart: inject vex/hooks/session-start.md as context
-    # - PostToolUse @ apply_patch: nix-lint .nix file edits
-    hooks = {
-      SessionStart = [
-        {
-          hooks = [
-            {
-              type = "command";
-              command = "${codex-emit-context}/bin/codex-emit-context SessionStart ${vexRoot}/hooks/session-start.md";
-              timeout = 10;
-            }
-          ];
-        }
-      ];
-
-      PostToolUse = [
-        {
-          matcher = "apply_patch";
-          hooks = [
-            {
-              type = "command";
-              command = "${codex-nix-lint}/bin/codex-nix-lint";
-              timeout = 30;
-            }
-          ];
-        }
-      ];
-    };
+    hooks = codexHooks;
   }
   // lib.optionalAttrs (transformedMcpServers != { }) {
     mcp_servers = transformedMcpServers;
   };
 
   codexConfigSeed = tomlFormat.generate "codex-config.toml" codexSettings;
-  codexHooksConfigSeed = tomlFormat.generate "codex-hooks-config.toml" {
-    inherit (codexSettings) hooks;
+
+  codexConfigMerger = pkgs.writeShellApplication {
+    name = "codex-config-merge";
+    runtimeInputs = [
+      (pkgs.python3.withPackages (pythonPackages: [ pythonPackages.tomli-w ]))
+    ];
+    text = ''
+            exec python3 - "$@" <<'PY'
+      import pathlib
+      import sys
+      import tomllib
+
+      import tomli_w
+
+      REPLACE_SUBTREES = {
+          ("hooks",),
+          ("mcp_servers",),
+          ("memories",),
+      }
+
+
+      def read_toml(path):
+          if not path.exists():
+              return {}
+          with path.open("rb") as fh:
+              return tomllib.load(fh)
+
+
+      def merge(base, managed):
+          for key, value in managed.items():
+              if isinstance(value, dict) and isinstance(base.get(key), dict):
+                  merge(base[key], value)
+              else:
+                  base[key] = value
+          return base
+
+
+      def delete_path(data, path):
+          cursor = data
+          for key in path[:-1]:
+              child = cursor.get(key)
+              if not isinstance(child, dict):
+                  return
+              cursor = child
+          cursor.pop(path[-1], None)
+
+
+      def leaf_paths(data, prefix=()):
+          for key, value in data.items():
+              path = prefix + (key,)
+              if isinstance(value, dict):
+                  yield from leaf_paths(value, path)
+              else:
+                  yield path
+
+
+      managed_path = pathlib.Path(sys.argv[1])
+      target_path = pathlib.Path(sys.argv[2])
+
+      managed = read_toml(managed_path)
+      target = read_toml(target_path)
+
+      for path in REPLACE_SUBTREES:
+          delete_path(target, path)
+      for path in leaf_paths(managed):
+          is_replaced_subtree = any(
+              path[: len(subtree)] == subtree for subtree in REPLACE_SUBTREES
+          )
+          if not is_replaced_subtree:
+              delete_path(target, path)
+
+      target_path.parent.mkdir(parents=True, exist_ok=True)
+      target_path.write_bytes(tomli_w.dumps(merge(target, managed)).encode())
+      PY
+    '';
   };
-  codexMcpConfigSeed = tomlFormat.generate "codex-mcp-config.toml" {
-    mcp_servers = transformedMcpServers;
-  };
+
+  mutableConfigActivation =
+    dir:
+    let
+      configPath = "${homeDirectory}/${dir}/config.toml";
+      managedConfigPath = "${homeDirectory}/${dir}/managed_config.toml";
+      rulesPath = "${homeDirectory}/${dir}/rules/default.rules";
+    in
+    ''
+      $DRY_RUN_CMD mkdir -p "${homeDirectory}/${dir}/rules"
+
+      if [ -L "${configPath}" ]; then
+        $DRY_RUN_CMD rm "${configPath}"
+      fi
+      if [ -f "${configPath}" ]; then
+        $DRY_RUN_CMD chmod u+w "${configPath}"
+      fi
+      if [ -z "''${DRY_RUN_CMD:-}" ]; then
+        ${codexConfigMerger}/bin/codex-config-merge "${codexConfigSeed}" "${configPath}"
+      else
+        $DRY_RUN_CMD merge managed Codex settings into "${configPath}"
+      fi
+
+      for legacyFile in \
+        "${managedConfigPath}" \
+        "${homeDirectory}/${dir}/vex.config.toml" \
+        "${homeDirectory}/${dir}/hooks.json"
+      do
+        if [ -L "$legacyFile" ]; then
+          $DRY_RUN_CMD rm "$legacyFile"
+        fi
+      done
+
+      if [ -L "${rulesPath}" ]; then
+        $DRY_RUN_CMD rm "${rulesPath}"
+      fi
+      if [ ! -e "${rulesPath}" ]; then
+        $DRY_RUN_CMD cp "${./default.rules}" "${rulesPath}"
+        $DRY_RUN_CMD chmod u+w "${rulesPath}"
+      fi
+    '';
 
   filesForVariant =
     dir:
@@ -372,200 +416,11 @@ let
         recursive = true;
       }
     ) globalSkillsAttrs;
-
-  mutableConfigActivation =
-    dir:
-    let
-      configPath = "${homeDirectory}/${dir}/config.toml";
-      rulesPath = "${homeDirectory}/${dir}/rules/default.rules";
-    in
-    ''
-            $DRY_RUN_CMD mkdir -p "${homeDirectory}/${dir}/rules"
-
-            if [ -L "${configPath}" ]; then
-              $DRY_RUN_CMD rm "${configPath}"
-            fi
-            if [ ! -e "${configPath}" ]; then
-              $DRY_RUN_CMD cp "${codexConfigSeed}" "${configPath}"
-              $DRY_RUN_CMD chmod u+w "${configPath}"
-            fi
-            if [ -e "${configPath}" ]; then
-              tmp="$(${pkgs.coreutils}/bin/mktemp)"
-              ${pkgs.gawk}/bin/awk '
-                /^\[\[hooks\.(SessionStart|PostToolUse|PreCompact)(\.hooks)?\]\]$/ { skip = 1; next }
-                /^\[hooks\.state\.".*:(session_start|post_tool_use|pre_compact):[^"]*"\]$/ { skip = 1; next }
-                /^\[/ { skip = 0 }
-                !skip { print }
-              ' "${configPath}" > "$tmp"
-              $DRY_RUN_CMD cp "$tmp" "${configPath}"
-              $DRY_RUN_CMD rm "$tmp"
-              if [ -z "''${DRY_RUN_CMD:-}" ]; then
-                printf '\n' >> "${configPath}"
-                cat "${codexHooksConfigSeed}" >> "${configPath}"
-                ${pkgs.python3}/bin/python - "${configPath}" <<'PY'
-      import hashlib
-      import json
-      import pathlib
-      import sys
-      import tomllib
-
-      config_path = pathlib.Path(sys.argv[1])
-      config = tomllib.loads(config_path.read_text())
-      event_labels = {
-          "SessionStart": "session_start",
-          "PostToolUse": "post_tool_use",
-      }
-
-
-      def hook_hash(event_label, group, handler):
-          identity = {
-              "event_name": event_label,
-              "hooks": [
-                  {
-                      "async": handler.get("async", False),
-                      "command": handler["command"],
-                      "timeout": handler.get("timeout", 600),
-                      "type": "command",
-                  }
-              ],
-          }
-          if group.get("matcher") is not None:
-              identity["matcher"] = group["matcher"]
-          payload = json.dumps(identity, sort_keys=True, separators=(",", ":")).encode()
-          return "sha256:" + hashlib.sha256(payload).hexdigest()
-
-
-      with config_path.open("a") as fh:
-          fh.write("\n")
-          for event_name, event_label in event_labels.items():
-              for group_index, group in enumerate(config.get("hooks", {}).get(event_name, [])):
-                  for handler_index, handler in enumerate(group.get("hooks", [])):
-                      if handler.get("type") != "command":
-                          continue
-                      key = f"{config_path}:{event_label}:{group_index}:{handler_index}"
-                      fh.write(f'[hooks.state."{key}"]\n')
-                      fh.write(f'trusted_hash = "{hook_hash(event_label, group, handler)}"\n\n')
-      PY
-              else
-                $DRY_RUN_CMD append managed hooks to "${configPath}"
-              fi
-            fi
-            if [ -e "${configPath}" ]; then
-              if [ -z "''${DRY_RUN_CMD:-}" ]; then
-                ${pkgs.python3}/bin/python - "${configPath}" <<'PY'
-      import pathlib
-      import re
-      import sys
-
-      config_path = pathlib.Path(sys.argv[1])
-      lines = config_path.read_text().splitlines()
-      out = []
-      in_features = False
-      seen_features = False
-      wrote_feature_memory = False
-      skip_memories = False
-
-
-      def table_name(line):
-          stripped = line.strip()
-          if stripped.startswith("[["):
-              return None
-          match = re.match(r"^\[([^\]]+)\]\s*$", stripped)
-          return match.group(1) if match else None
-
-
-      def leave_features():
-          global in_features, wrote_feature_memory
-          if in_features and not wrote_feature_memory:
-              out.append("memories = false")
-              wrote_feature_memory = True
-          in_features = False
-
-
-      for line in lines:
-          name = table_name(line)
-
-          if skip_memories:
-              if name is None and not line.lstrip().startswith("[["):
-                  continue
-              skip_memories = False
-
-          if name == "memories":
-              leave_features()
-              skip_memories = True
-              continue
-
-          if name is not None or line.lstrip().startswith("[["):
-              leave_features()
-
-          if name == "features":
-              seen_features = True
-              in_features = True
-              wrote_feature_memory = False
-              out.append(line)
-              continue
-
-          if in_features and re.match(r"^\s*memories\s*=", line):
-              continue
-
-          out.append(line)
-
-      leave_features()
-
-      if not seen_features:
-          if out and out[-1] != "":
-              out.append("")
-          out.extend(["[features]", "memories = false"])
-
-      while out and out[-1] == "":
-          out.pop()
-
-      out.extend(["", "[memories]", "generate_memories = false", "use_memories = false"])
-      config_path.write_text("\n".join(out) + "\n")
-      PY
-              else
-                $DRY_RUN_CMD enforce managed Codex memory settings in "${configPath}"
-              fi
-            fi
-            ${lib.optionalString (transformedMcpServers != { }) ''
-              if [ -e "${configPath}" ]; then
-                tmp="$(${pkgs.coreutils}/bin/mktemp)"
-                ${pkgs.gawk}/bin/awk '
-                  /^\[mcp_servers(\.|])/{ skip = 1; next }
-                  /^\[/{ skip = 0 }
-                  !skip{ print }
-                ' "${configPath}" > "$tmp"
-                $DRY_RUN_CMD cp "$tmp" "${configPath}"
-                $DRY_RUN_CMD rm "$tmp"
-                if [ -z "''${DRY_RUN_CMD:-}" ]; then
-                  printf '\n' >> "${configPath}"
-                  cat "${codexMcpConfigSeed}" >> "${configPath}"
-                else
-                  $DRY_RUN_CMD append managed mcp_servers to "${configPath}"
-                fi
-              fi
-            ''}
-
-            if [ -L "${rulesPath}" ]; then
-              $DRY_RUN_CMD rm "${rulesPath}"
-            fi
-            if [ ! -e "${rulesPath}" ]; then
-              $DRY_RUN_CMD cp "${./default.rules}" "${rulesPath}"
-              $DRY_RUN_CMD chmod u+w "${rulesPath}"
-            fi
-    '';
 in
 {
   home = {
-    # Variant CODEX_HOME dirs mirror the Claude Code CLAUDE_CONFIG_DIR pattern.
-    # Auth stays mutable and unmanaged; run `CODEX_HOME=$HOME/.codex-work codex
-    # login` once to bind this dir to the work account.
     file = lib.foldl' lib.recursiveUpdate { } (map filesForVariant codexVariantDirs);
 
-    # Home Manager still owns the immutable parts (package, AGENTS.md, skills).
-    # `config.toml` and `rules/default.rules` are writable user state seeded
-    # from Nix on first activation, mirroring Home Manager's mutable settings
-    # pattern for apps that write back into their own config.
     activation.codexMutableConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] (
       lib.concatMapStringsSep "\n" mutableConfigActivation mutableCodexDirs
     );
@@ -576,20 +431,8 @@ in
       enable = true;
       package = codexPackage;
 
-      # ─── Persona ─────────────────────────────────────────────────────────
-      # Single AGENTS.md concatenated from core.md + output-style + rules/.
-      # Written to CODEX_HOME/AGENTS.md by the module.
       context = vexAgentsMd;
-
-      # ─── Skills ──────────────────────────────────────────────────────────
-      # Global skills stay tiny; project/use-case skills live under repo-local
-      # .agents/skills and .claude/skills symlinks back to ~/ai-skills.
       skills = globalSkillsAttrs;
-
-      # ─── Rules (prefix_rule allow-list) ──────────────────────────────────
-      # Mutable runtime files are seeded below instead of managed through
-      # `programs.codex.settings` / `programs.codex.rules`, because Codex
-      # legitimately persists approvals and preferences into those files.
       settings = { };
       rules = { };
     };

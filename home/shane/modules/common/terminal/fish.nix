@@ -3,8 +3,6 @@ _: {
     fish = {
       enable = true;
       shellAliases = {
-        ccr = "cc --resume";
-        ccwr = "ccw --resume";
         cx = "codex";
         cxr = "codex resume --last";
         cxw = "CODEX_HOME=$HOME/.codex-work codex";
@@ -56,13 +54,96 @@ _: {
           echo "nrs: could not resolve this Mac to a darwinConfigurations host. Tried: $tried" >&2
           return 1
         '';
+        refresh-fish = ''
+          function __refresh_fish_on_signal --on-variable __nix_config_fish_refresh_generation
+            status is-interactive; or return
+            set -q __refresh_fish_broadcasting; and return
+            refresh-fish --quiet
+          end
+
+          set -l quiet 0
+          if test (count $argv) -gt 0
+            switch $argv[1]
+              case -q --quiet
+                set quiet 1
+              case '*'
+                echo "refresh-fish: unknown argument $argv[1]" >&2
+                return 2
+            end
+          end
+
+          set -l config "$HOME/.config/fish/config.fish"
+          if not test -f "$config"
+            echo "refresh-fish: missing $config" >&2
+            return 1
+          end
+
+          for function_file in "$HOME"/.config/fish/functions/*.fish
+            test -e "$function_file"; or continue
+            source "$function_file"
+          end
+
+          set -l in_reloadable_block 0
+          while read -l line
+            switch "$line"
+              case '    # Abbreviations' '    # Aliases'
+                set in_reloadable_block 1
+                continue
+              case '    # *'
+                set in_reloadable_block 0
+            end
+
+            if test $in_reloadable_block -eq 1
+              set -l trimmed (string trim "$line")
+              if string match -qr '^(abbr --add|alias) ' -- "$trimmed"
+                eval "$trimmed"
+              end
+            end
+          end < "$config"
+
+          if test $quiet -eq 0
+            echo "fish aliases, abbreviations, and functions refreshed"
+          end
+        '';
+        refresh-fish-all = ''
+          set -l quiet 0
+          if test (count $argv) -gt 0
+            switch $argv[1]
+              case -q --quiet
+                set quiet 1
+              case '*'
+                echo "refresh-fish-all: unknown argument $argv[1]" >&2
+                return 2
+            end
+          end
+
+          refresh-fish --quiet; or return $status
+
+          set -g __refresh_fish_broadcasting 1
+          set -U __nix_config_fish_refresh_generation (command date +%s):(random):$fish_pid
+          set -e __refresh_fish_broadcasting
+
+          if test $quiet -eq 0
+            echo "fish refresh signal sent to listening shells"
+          end
+        '';
         nrs = ''
+          set -l switch_status
+
           if test (uname) = Darwin
             set -l host (__nrs_darwin_host); or return 1
             nh darwin switch $argv "$HOME/nix-config" -H $host
+            set switch_status $status
           else
             nh os switch $argv "$HOME/nix-config" -H (hostname)
+            set switch_status $status
           end
+
+          if test $switch_status -eq 0
+            refresh-fish-all --quiet
+          end
+
+          return $switch_status
         '';
         tfc = ''
           set -l plan_file (mktemp -u --suffix=.tfplan)
@@ -80,6 +161,12 @@ _: {
       };
       generateCompletions = true;
       interactiveShellInit = ''
+        function __refresh_fish_on_signal --on-variable __nix_config_fish_refresh_generation
+          status is-interactive; or return
+          set -q __refresh_fish_broadcasting; and return
+          refresh-fish --quiet
+        end
+
         set fish_greeting
         set -gx PATH $HOME/go/bin $PATH
         set -gx LS_COLORS "di=38;2;180;190;254:ln=38;2;203;166;247:so=38;2;245;194;231:pi=38;2;242;205;205:ex=38;2;166;227;161:bd=38;2;249;226;175:cd=38;2;249;226;175:su=38;2;166;227;161;48;2;30;30;46:sg=38;2;166;227;161;48;2;30;30;46:tw=38;2;180;190;254;48;2;30;30;46:ow=38;2;180;190;254:st=38;2;180;190;254;48;2;30;30;46:or=38;2;243;139;168:mi=38;2;243;139;168;48;2;30;30;46:*.tar=38;2;250;179;135:*.gz=38;2;250;179;135:*.zip=38;2;250;179;135:*.7z=38;2;250;179;135:*.bz2=38;2;250;179;135:*.xz=38;2;250;179;135:*.zst=38;2;250;179;135:*.deb=38;2;250;179;135:*.rpm=38;2;250;179;135:*.nix=38;2;148;226;213:*.json=38;2;249;226;175:*.yaml=38;2;249;226;175:*.yml=38;2;249;226;175:*.toml=38;2;249;226;175:*.md=38;2;205;214;244:*.txt=38;2;205;214;244:*.rs=38;2;250;179;135:*.go=38;2;137;220;235:*.py=38;2;249;226;175:*.js=38;2;249;226;175:*.ts=38;2;137;180;250:*.lua=38;2;137;180;250:*.sh=38;2;166;227;161:*.fish=38;2;166;227;161"

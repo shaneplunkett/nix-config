@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   lib,
   inputs,
@@ -33,12 +34,14 @@ let
       text = ''
         mkdir -p "$HOME/${configDir}"
         export CLAUDE_CONFIG_DIR="$HOME/${configDir}"
-        exec ${lib.getExe pkgs.claude-code} --dangerously-skip-permissions "$@"
+        exec ${lib.getExe config.programs.claude-code.finalPackage} --dangerously-skip-permissions "$@"
       '';
     };
 
-  cc = mkClaudeProfile "cc" ".claude";
-  ccw = mkClaudeProfile "ccw" ".claude-work";
+  claudePersonal = mkClaudeProfile "claude-personal" ".claude";
+  claudeWork = mkClaudeProfile "claude-work" ".claude-work";
+  claudePersonalExe = lib.getExe claudePersonal;
+  claudeWorkExe = lib.getExe claudeWork;
 in
 {
   programs.claude-code = {
@@ -49,10 +52,19 @@ in
     skills = { };
   };
 
+  # Keep `cc` as an interactive convenience only. A real `cc` binary collides
+  # with C compiler wrappers inside dev shells.
+  programs.fish.shellAliases = {
+    cc = claudePersonalExe;
+    ccr = "${claudePersonalExe} --resume";
+    ccw = claudeWorkExe;
+    ccwr = "${claudeWorkExe} --resume";
+  };
+
   home = {
     packages = [
-      cc
-      ccw
+      claudePersonal
+      claudeWork
     ];
 
     file = {
