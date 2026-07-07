@@ -100,6 +100,17 @@ let
     script = ./codex-nix-lint.sh;
   };
 
+  codex-git-commit-guard = pkgs.writeShellApplication {
+    name = "codex-git-commit-guard";
+    runtimeInputs = [
+      pkgs.coreutils
+      pkgs.git
+      pkgs.gnugrep
+      pkgs.jq
+    ];
+    text = ''exec ${pkgs.bash}/bin/bash ${../git-commit-guard.sh} codex "$@"'';
+  };
+
   rbwRuntimeEnv = ''
     if [ -z "''${XDG_RUNTIME_DIR:-}" ]; then
       runtime_dir="/run/user/$(${pkgs.coreutils}/bin/id -u)"
@@ -215,6 +226,19 @@ let
           {
             type = "command";
             command = "${codex-emit-context}/bin/codex-emit-context SessionStart ${vexRoot}/hooks/session-start.md";
+            timeout = 10;
+          }
+        ];
+      }
+    ];
+
+    PreToolUse = [
+      {
+        matcher = "exec_command|functions.exec_command|Bash|shell";
+        hooks = [
+          {
+            type = "command";
+            command = "${codex-git-commit-guard}/bin/codex-git-commit-guard";
             timeout = 10;
           }
         ];
