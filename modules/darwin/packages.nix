@@ -14,9 +14,9 @@
     home-manager
     hidden-bar
     postman
+    pear-desktop
     raycast
     signal-desktop
-    ytmdesktop
     google-chrome
     gh
     jankyborders

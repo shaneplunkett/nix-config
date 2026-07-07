@@ -13,6 +13,7 @@ _: {
       "teamviewer"
       "codex-app"
       "bluebubbles"
+      "yt-music"
     ];
 
     brews = [
