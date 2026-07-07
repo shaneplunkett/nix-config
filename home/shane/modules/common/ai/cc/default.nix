@@ -73,6 +73,7 @@ let
   claudeSettings = {
     feedbackSurveyRate = 0;
     autoMemoryEnabled = false;
+    model = "opus";
     env = {
       OTEL_RESOURCE_ATTRIBUTES = "autograb_user=${priv.autograbUser},team=${priv.autograbTeam}";
     };
