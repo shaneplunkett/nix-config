@@ -137,6 +137,8 @@
         import ./pkgs {
           inherit pkgs inputs;
           rootPath = ./.;
+          isLinux = nixpkgs.lib.hasSuffix "-linux" system;
+          isX86Linux = system == "x86_64-linux";
         }
       );
 

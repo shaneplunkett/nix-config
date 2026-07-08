@@ -2,9 +2,12 @@
   pkgs,
   inputs,
   rootPath,
+  isLinux ? false,
+  isX86Linux ? false,
 }:
 let
   agSkillsInstallScript = rootPath + /home/shane/modules/common/ai/cc/install-ag-ai-skills.sh;
+  optionalAttrs = condition: attrs: if condition then attrs else { };
 in
 {
   ag-ai-skills-built = pkgs.callPackage ./ag-ai-skills-built {
@@ -17,11 +20,15 @@ in
     normaliseFrontmatter = true;
   };
   aikido-mcp = pkgs.callPackage ./aikido-mcp { };
-  bluebubbles-themed = pkgs.callPackage ./bluebubbles-themed { };
   claude-plugins-official = pkgs.callPackage ./claude-plugins-official { };
   codex-patched = pkgs.callPackage ./codex-patched { };
-  orca-slicer-bambulab = pkgs.callPackage ./orca-slicer-bambulab { };
   xcodebuild-nvim = pkgs.callPackage ./xcodebuild-nvim { };
   xero-mcp-server = pkgs.callPackage ./xero-mcp-server { };
+}
+// optionalAttrs isLinux {
+  bluebubbles-themed = pkgs.callPackage ./bluebubbles-themed { };
+}
+// optionalAttrs isX86Linux {
+  orca-slicer-bambulab = pkgs.callPackage ./orca-slicer-bambulab { };
   ytmdesktop-bin = pkgs.callPackage ./ytmdesktop-bin { };
 }

@@ -16,6 +16,8 @@ in
         import (rootPath + /pkgs) {
           pkgs = final;
           inherit inputs rootPath;
+          isLinux = _prev.stdenv.hostPlatform.isLinux;
+          isX86Linux = _prev.stdenv.hostPlatform.system == "x86_64-linux";
         }
       )
       (final: prev: {
