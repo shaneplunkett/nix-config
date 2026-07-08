@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   lib,
   noctaliaVexPlugins,
   pkgs,
@@ -155,6 +156,15 @@ in
 
   programs.noctalia-shell = {
     enable = true;
+
+    # v4 AudioService "sticky" per-app volume fights external volume changes:
+    # once an app's volume is touched via the Noctalia panel, a 1s enforcer
+    # timer reverts any pactl/app-slider/media-key change forever (upstream
+    # noctalia-shell#2878/#2496, closed as v4 EOL). Patch makes external
+    # changes update the sticky value instead of being reverted.
+    package = inputs.noctalia.packages.${pkgs.system}.default.overrideAttrs (old: {
+      patches = (old.patches or [ ]) ++ [ ./patches/noctalia-audio-follow-external-volume.patch ];
+    });
 
     colors = lib.mapAttrs (_: lib.mkForce) {
       mPrimary = hex c.lavender;

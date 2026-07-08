@@ -1,0 +1,23 @@
+--- a/Services/Media/AudioService.qml	2026-07-08 19:15:56.714840493 +1000
++++ b/Services/Media/AudioService.qml	2026-07-08 19:16:23.320894499 +1000
+@@ -384,7 +384,9 @@
+               return;
+             }
+             if (root._skipPipewireVolumeSyncForNode(modelData)) {
+-              return;
++              // External change (pactl, app slider, media keys): follow it by
++              // updating the panel sticky value instead of fighting it.
++              root._writePanelStickyVolume(modelData, modelData.audio.volume);
+             }
+             var key = root.getAppKey(modelData);
+             if (key) {
+@@ -397,7 +399,8 @@
+               return;
+             }
+             if (root._skipPipewireMuteSyncForNode(modelData)) {
+-              return;
++              // External change: follow it, same as volume above.
++              root._writePanelStickyMute(modelData, modelData.audio.muted);
+             }
+             var key = root.getAppKey(modelData);
+             if (key) {
