@@ -62,11 +62,11 @@
     "ai-skills": {
       "flake": false,
       "locked": {
-        "lastModified": 1783055935,
-        "narHash": "sha256-6PTHv0J+Izr0zCYUjcubP4X928+tOWcpIbje3lkbsmo=",
+        "lastModified": 1783654496,
+        "narHash": "sha256-rNd0VMyRBX1goEpoxiPa/Lj/fWDbMgxJGAw8ignO74w=",
         "ref": "refs/heads/main",
-        "rev": "41a2653c18bef761456693fabaffa595722bfaca",
-        "revCount": 69,
+        "rev": "9c8aa83b2dfc9f3bca60ebfe46dea9126a7816f0",
+        "revCount": 70,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/ai-skills.git"
       },
@@ -779,11 +779,11 @@
     },
     "nix-config-private": {
       "locked": {
-        "lastModified": 1782400783,
-        "narHash": "sha256-aDB6Z1BP5xTvw8cradphlz7Gr2T70xUh+HEeR55MbcY=",
+        "lastModified": 1783654495,
+        "narHash": "sha256-sQh/NVbVQyEyvSZkuf3jdjIkdPKWABL9Cou6WUppnbs=",
         "ref": "refs/heads/main",
-        "rev": "435696469b62b07c51eb8e19bdec4bde74375423",
-        "revCount": 3,
+        "rev": "fa8cda37385379cc43a5f600143d47190b2056c4",
+        "revCount": 4,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/nix-config-private.git"
       },
@@ -1340,11 +1340,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1783061684,
-        "narHash": "sha256-vbn9sKY5/BMfIL89Z5Lj3mQHdFrKEf1X6flvev3bPz4=",
+        "lastModified": 1783654496,
+        "narHash": "sha256-smpjRbMA+bNCE/jRX/CXY1fjkbX5PtGWgGMZL3hq+gQ=",
         "ref": "refs/heads/main",
-        "rev": "87df2d41e93b17e9410adb65a1559ca58eb672e6",
-        "revCount": 8,
+        "rev": "21f98b657231842a35e45433e0a1493d2694c079",
+        "revCount": 9,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/vex-tooling.git"
       },
