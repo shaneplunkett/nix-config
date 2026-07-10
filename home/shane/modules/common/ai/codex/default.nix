@@ -138,29 +138,11 @@ let
   };
   codexDesktopPackage =
     if isLinux then
-      let
-        basePackage =
-          inputs.codex-desktop-linux.packages.${pkgs.stdenv.hostPlatform.system}.codex-desktop-remote-mobile-control;
-      in
-      pkgs.symlinkJoin {
-        name = "codex-desktop-remote-mobile-control-with-codex-cli";
-        paths = [ basePackage ];
-        nativeBuildInputs = [ pkgs.makeWrapper ];
-        postBuild = ''
-          rm "$out/bin/codex-desktop"
-          makeWrapper "${basePackage}/bin/codex-desktop" "$out/bin/codex-desktop" \
-            --set CODEX_CLI_PATH "${lib.getExe codexPackage}" \
-            --prefix PATH : "${lib.makeBinPath [ codexPackage ]}"
-
-          if [ -f "${basePackage}/share/applications/codex-desktop.desktop" ]; then
-            rm "$out/share/applications/codex-desktop.desktop"
-            install -Dm0644 "${basePackage}/share/applications/codex-desktop.desktop" \
-              "$out/share/applications/codex-desktop.desktop"
-            substituteInPlace "$out/share/applications/codex-desktop.desktop" \
-              --replace-fail "${basePackage}" "$out"
-          fi
-        '';
-      }
+      inputs.codex-desktop-linux.packages.${pkgs.stdenv.hostPlatform.system}.codex-desktop-remote-mobile-control.overrideAttrs
+        (old: {
+          nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ pkgs.wrapGAppsHook3 ];
+          buildInputs = (old.buildInputs or [ ]) ++ [ pkgs.gsettings-desktop-schemas ];
+        })
     else
       null;
 
@@ -465,6 +447,7 @@ in
     codexDesktopLinux = {
       enable = true;
       package = codexDesktopPackage;
+      cliPackage = codexPackage;
 
       # The community wrapper auto-stages the Chrome native host. Phone access
       # needs the experimental Linux mobile-control variant plus an app-server
@@ -475,6 +458,54 @@ in
         package = codexPackage;
         codexHome = "${homeDirectory}/${codexConfigDir}";
       };
+    };
+  };
+}
+// lib.optionalAttrs isLinux {
+  systemd.user = {
+    services = {
+      codex-remote-control.Service = {
+        KillMode = "control-group";
+        MemoryHigh = "3G";
+        MemoryMax = "6G";
+        OOMPolicy = "stop";
+        TasksMax = 512;
+        TimeoutStopSec = 10;
+      };
+
+      codex-mcp-helper-reaper = {
+        Unit = {
+          Description = "Reap stale Codex MCP helper generations";
+          After = [ "codex-remote-control.service" ];
+        };
+        Service = {
+          Type = "oneshot";
+          ExecStart = lib.escapeShellArgs [
+            (lib.getExe pkgs.codex-mcp-helper-reaper)
+            "--all-codex-parents"
+            "--include-orphans"
+            "--app-dir"
+            "${codexDesktopPackage}/opt/codex-desktop"
+            "--codex-home"
+            "${homeDirectory}/${codexConfigDir}"
+            "--passes"
+            "1"
+            "--term-timeout"
+            "2"
+          ];
+        };
+      };
+    };
+
+    timers.codex-mcp-helper-reaper = {
+      Unit.Description = "Periodically reap stale Codex MCP helper generations";
+      Timer = {
+        OnBootSec = "2min";
+        OnUnitActiveSec = "5min";
+        AccuracySec = "30s";
+        Unit = "codex-mcp-helper-reaper.service";
+      };
+      Install.WantedBy = [ "timers.target" ];
     };
   };
 }
