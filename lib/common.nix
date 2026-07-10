@@ -20,11 +20,6 @@ in
           isX86Linux = _prev.stdenv.hostPlatform.system == "x86_64-linux";
         }
       )
-      (final: prev: {
-        vesktop = prev.vesktop.override {
-          pnpm_10_29_2 = final.pnpm_10;
-        };
-      })
       vex-tooling.overlays.default
     ]
     ++ extras;

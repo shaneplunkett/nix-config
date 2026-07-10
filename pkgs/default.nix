@@ -20,6 +20,7 @@ in
     normaliseFrontmatter = true;
   };
   aikido-mcp = pkgs.callPackage ./aikido-mcp { };
+  claude-code-latest = pkgs.callPackage ./claude-code-latest { };
   claude-plugins-official = pkgs.callPackage ./claude-plugins-official { };
   codex-patched = pkgs.callPackage ./codex-patched { };
   xcodebuild-nvim = pkgs.callPackage ./xcodebuild-nvim { };

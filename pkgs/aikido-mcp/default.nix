@@ -6,15 +6,15 @@
 
 buildNpmPackage rec {
   pname = "aikido-mcp";
-  version = "1.0.12";
+  version = "1.0.14";
 
   src = fetchurl {
     url = "https://registry.npmjs.org/@aikidosec/mcp/-/mcp-${version}.tgz";
-    hash = "sha256-zyftLkVpcL4sbYvVaxmxHgnXSfk/5qazMswRgDx2zwc=";
+    hash = "sha256-JY1jcDWtHUV7wN7L5b/OiZZlIExBn8HncNyfj9fJB2E=";
   };
 
   sourceRoot = "package";
-  npmDepsHash = "sha256-zMonyDKIYfvpIRcDaMbvBy/jxgqIyZZ8DxU35wC7Af4=";
+  npmDepsHash = "sha256-DnMdIOJaB0w8nEbhsyvvMtaiQ/xp0VPGAIbpyX0jOxY=";
   dontNpmBuild = true;
 
   passthru.updateScript = nix-update-script { };

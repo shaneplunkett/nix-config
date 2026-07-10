@@ -27,7 +27,11 @@ _: {
       "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
     ];
 
-    download-buffer-size = 256 * 1024 * 1024;
+    # Keep full flake updates from turning cache downloads/unpacks into a
+    # desktop-wide resource spike.
+    http-connections = 6;
+    max-substitution-jobs = 4;
+    download-buffer-size = 64 * 1024 * 1024;
   };
   home-manager.backupFileExtension = "backup";
   home-manager.overwriteBackup = true;

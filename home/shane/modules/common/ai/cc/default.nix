@@ -133,7 +133,7 @@ in
 {
   programs.claude-code = {
     enable = true;
-    package = pkgs.claude-code;
+    package = pkgs.claude-code-latest;
     settings = claudeSettings;
     enableMcpIntegration = true;
     skills = { };

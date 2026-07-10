@@ -23,18 +23,18 @@
 }:
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "codex-patched";
-  version = "0.142.4";
+  version = "0.144.1";
 
   src = fetchFromGitHub {
     owner = "openai";
     repo = "codex";
     tag = "rust-v${finalAttrs.version}";
-    hash = "sha256-cYkdLy0+KMjcx0k7IDACsiTK3ZZks6cmwbeDMheN6WY=";
+    hash = "sha256-KHgrqIZyAmLhTZSRYbb7huBO8neOib/B1Vx/oPW2nEU=";
   };
 
   sourceRoot = "${finalAttrs.src.name}/codex-rs";
 
-  cargoHash = "sha256-1gDiCB3Nf/0aIm+EoL3g9C0xbCi3cv6TfH5VytjJpOY=";
+  cargoHash = "sha256-S4dsZXfmKvJItL2XYKyxfhqdCMATEG6oPjrtVRwkuYc=";
 
   patches = [
     ./codex-vex-markdown-colours.patch

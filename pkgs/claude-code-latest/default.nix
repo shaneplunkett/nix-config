@@ -1,0 +1,34 @@
+{
+  stdenvNoCC,
+  fetchurl,
+  claude-code,
+}:
+let
+  version = "2.1.206";
+  baseUrl = "https://downloads.claude.ai/claude-code-releases";
+  platformKey = "${stdenvNoCC.hostPlatform.node.platform}-${stdenvNoCC.hostPlatform.node.arch}";
+  platforms = {
+    darwin-arm64.checksum = "3197aba4442dbd5b3df42b6f35e6d7bd03b5e48ce18b7a3c5c6f5f8c28e03b7f";
+    darwin-x64.checksum = "b1e1636917a12c7d4e1fa54cd13f7f76ba3779fb988180610b6ca483258c2f46";
+    linux-arm64.checksum = "cb8ccaf4ae6beb558747227a362010c6b32b4f4a5868c3a7e96aa9972fc6ef58";
+    linux-x64.checksum = "d131494be407ff56a62f4e99a96ba60102002d01e3b6b1494db16bef4b7f060f";
+  };
+  platform =
+    platforms.${platformKey} or (throw "claude-code-latest: unsupported platform ${platformKey}");
+in
+claude-code.overrideAttrs (old: {
+  inherit version;
+
+  src = fetchurl {
+    url = "${baseUrl}/${version}/${platformKey}/claude";
+    sha256 = platform.checksum;
+  };
+
+  passthru = (old.passthru or { }) // {
+    upstreamVersion = version;
+  };
+
+  meta = old.meta // {
+    changelog = "https://github.com/anthropics/claude-code/blob/v${version}/CHANGELOG.md";
+  };
+})
