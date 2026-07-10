@@ -33,6 +33,17 @@ let
     text = ''exec ${pkgs.bash}/bin/bash ${../git-commit-guard.sh} claude "$@"'';
   };
 
+  claudeStatusline = pkgs.writeShellApplication {
+    name = "claude-statusline";
+    runtimeInputs = [ pkgs.python3 ];
+    text = "exec python3 ${./vex-statusline.py}";
+  };
+
+  claudeStatusLine = {
+    type = "command";
+    command = "/home/shane/.local/bin/ahvi-statusline.sh ${claudeStatusline}/bin/claude-statusline";
+  };
+
   personalSkillsRoot = "${aiSkills}/personal";
   baselineSkillNames = [
     "bb-browserbase"
@@ -74,6 +85,7 @@ let
     feedbackSurveyRate = 0;
     autoMemoryEnabled = false;
     model = "opus";
+    statusLine = claudeStatusLine;
     env = {
       OTEL_RESOURCE_ATTRIBUTES = "autograb_user=${priv.autograbUser},team=${priv.autograbTeam}";
     };
