@@ -10,6 +10,7 @@
 
     ./theme.nix
     ./packages.nix
+    ./bloodborne.nix
     ./webapps
     ./heroic.nix
     ./vesktop.nix
