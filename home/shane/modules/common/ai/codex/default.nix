@@ -3,7 +3,6 @@
   pkgs,
   lib,
   inputs,
-  isLinux ? pkgs.stdenv.isLinux,
   ...
 }:
 let
@@ -136,16 +135,6 @@ let
       exec ${codexBasePackage}/bin/codex "$@"
     '';
   };
-  codexDesktopPackage =
-    if isLinux then
-      inputs.codex-desktop-linux.packages.${pkgs.stdenv.hostPlatform.system}.codex-desktop-remote-mobile-control.overrideAttrs
-        (old: {
-          nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ pkgs.wrapGAppsHook3 ];
-          buildInputs = (old.buildInputs or [ ]) ++ [ pkgs.gsettings-desktop-schemas ];
-        })
-    else
-      null;
-
   codexConfigDir = ".codex";
   codexVariantDirs = [ ".codex-work" ];
   mutableCodexDirs = [ codexConfigDir ] ++ codexVariantDirs;
@@ -441,71 +430,6 @@ in
       skills = globalSkillsAttrs;
       settings = { };
       rules = { };
-    };
-  }
-  // lib.optionalAttrs isLinux {
-    codexDesktopLinux = {
-      enable = true;
-      package = codexDesktopPackage;
-      cliPackage = codexPackage;
-
-      # The community wrapper auto-stages the Chrome native host. Phone access
-      # needs the experimental Linux mobile-control variant plus an app-server
-      # user service; keep Computer Use UI off until we know we need it.
-      remoteMobileControl.enable = true;
-      remoteControl = {
-        enable = true;
-        package = codexPackage;
-        codexHome = "${homeDirectory}/${codexConfigDir}";
-      };
-    };
-  };
-}
-// lib.optionalAttrs isLinux {
-  systemd.user = {
-    services = {
-      codex-remote-control.Service = {
-        KillMode = "control-group";
-        MemoryHigh = "3G";
-        MemoryMax = "6G";
-        OOMPolicy = "stop";
-        TasksMax = 512;
-        TimeoutStopSec = 10;
-      };
-
-      codex-mcp-helper-reaper = {
-        Unit = {
-          Description = "Reap stale Codex MCP helper generations";
-          After = [ "codex-remote-control.service" ];
-        };
-        Service = {
-          Type = "oneshot";
-          ExecStart = lib.escapeShellArgs [
-            (lib.getExe pkgs.codex-mcp-helper-reaper)
-            "--all-codex-parents"
-            "--include-orphans"
-            "--app-dir"
-            "${codexDesktopPackage}/opt/codex-desktop"
-            "--codex-home"
-            "${homeDirectory}/${codexConfigDir}"
-            "--passes"
-            "1"
-            "--term-timeout"
-            "2"
-          ];
-        };
-      };
-    };
-
-    timers.codex-mcp-helper-reaper = {
-      Unit.Description = "Periodically reap stale Codex MCP helper generations";
-      Timer = {
-        OnBootSec = "2min";
-        OnUnitActiveSec = "5min";
-        AccuracySec = "30s";
-        Unit = "codex-mcp-helper-reaper.service";
-      };
-      Install.WantedBy = [ "timers.target" ];
     };
   };
 }

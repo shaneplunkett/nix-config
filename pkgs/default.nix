@@ -28,9 +28,6 @@ in
 }
 // optionalAttrs isLinux {
   bluebubbles-themed = pkgs.callPackage ./bluebubbles-themed { };
-  codex-mcp-helper-reaper = pkgs.callPackage ./codex-mcp-helper-reaper {
-    src = inputs.codex-desktop-linux + /linux-features/mcp-helper-reaper/reaper;
-  };
 }
 // optionalAttrs isX86Linux {
   orca-slicer-bambulab = pkgs.callPackage ./orca-slicer-bambulab { };
