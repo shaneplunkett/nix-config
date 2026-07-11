@@ -27,7 +27,7 @@ let
       fi
 
       cd "$game_root"
-      exec ${lib.getExe pkgs.shadps4} --show-fps -g "$game_path"
+      exec ${lib.getExe pkgs.shadps4-cache-fixed} --show-fps -g "$game_path"
     '';
   };
 in

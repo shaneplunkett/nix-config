@@ -165,7 +165,7 @@ in
     ferdium
     mangohud
     protonup-ng
-    shadps4
+    shadps4-cache-fixed
     ytmdesktop-bin
     libnotify
     pavucontrol

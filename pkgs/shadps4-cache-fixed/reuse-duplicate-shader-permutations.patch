@@ -1,0 +1,40 @@
+diff --git a/src/video_core/renderer_vulkan/vk_pipeline_serialization.cpp b/src/video_core/renderer_vulkan/vk_pipeline_serialization.cpp
+index 10f8b514..333a1972 100644
+--- a/src/video_core/renderer_vulkan/vk_pipeline_serialization.cpp
++++ b/src/video_core/renderer_vulkan/vk_pipeline_serialization.cpp
+@@ -269,6 +269,7 @@ bool PipelineCache::LoadPipelineStage(Serialization::Archive& ar, size_t stage)
+     // at the exact position rather than append
+ 
+     vk::ShaderModule module{};
++    bool insert_permutation = true;
+ 
+     auto [it_pgm, new_program] = program_cache.try_emplace(program->info.pgm_hash);
+     if (new_program) {
+@@ -277,11 +278,15 @@ bool PipelineCache::LoadPipelineStage(Serialization::Archive& ar, size_t stage)
+     } else {
+         const auto& it = std::ranges::find(it_pgm.value()->modules, spec, &Program::Module::spec);
+         if (it != it_pgm.value()->modules.end()) {
+-            // If the permutation is already preloaded, make sure it has the same permutation index
+             const auto idx = std::distance(it_pgm.value()->modules.begin(), it);
+-            ASSERT_MSG(perm_idx == idx, "Permutation {} is already inserted at {}! ({}_{:x})",
+-                       perm_idx, idx, program->info.stage, program->info.pgm_hash);
++            if (perm_idx != idx) {
++                LOG_WARNING(Render,
++                            "Permutation {} duplicates permutation {}; reusing the preloaded "
++                            "module ({}_{:x})",
++                            perm_idx, idx, program->info.stage, program->info.pgm_hash);
++            }
+             module = it->module;
++            insert_permutation = false;
+         } else {
+             module = CompileSPV(spv, instance.GetDevice());
+         }
+@@ -288,7 +293,9 @@ bool PipelineCache::LoadPipelineStage(Serialization::Archive& ar, size_t stage)
+     }
+-    it_pgm.value()->InsertPermut(module, std::move(spec), perm_idx);
++    if (insert_permutation) {
++        it_pgm.value()->InsertPermut(module, std::move(spec), perm_idx);
++    }
+ 
+     infos[stage] = &it_pgm.value()->info;
+     modules[stage] = module;
