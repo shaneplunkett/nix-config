@@ -238,6 +238,14 @@ let
     features = {
       hooks = true;
       memories = false;
+
+      # GPT-5.6 Sol's reserved collaboration.spawn_agent schema hides custom
+      # agent and model routing. Use a non-reserved namespace until upstream
+      # fixes openai/codex#31814 and #32031.
+      multi_agent_v2 = {
+        hide_spawn_agent_metadata = false;
+        tool_namespace = "agents";
+      };
     };
 
     memories = {
