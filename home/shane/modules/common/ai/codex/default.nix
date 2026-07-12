@@ -300,6 +300,7 @@ let
       import tomli_w
 
       REPLACE_SUBTREES = {
+          ("agents",),
           ("hooks",),
           ("mcp_servers",),
           ("memories",),
