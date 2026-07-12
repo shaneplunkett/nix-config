@@ -162,7 +162,7 @@ in
     # timer reverts any pactl/app-slider/media-key change forever (upstream
     # noctalia-shell#2878/#2496, closed as v4 EOL). Patch makes external
     # changes update the sticky value instead of being reverted.
-    package = inputs.noctalia.packages.${pkgs.system}.default.overrideAttrs (old: {
+    package = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
       patches = (old.patches or [ ]) ++ [ ./patches/noctalia-audio-follow-external-volume.patch ];
     });
 

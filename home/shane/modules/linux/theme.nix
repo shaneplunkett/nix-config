@@ -9,6 +9,7 @@ in
   fonts.fontconfig.enable = true;
 
   home.pointerCursor = {
+    enable = true;
     name = "catppuccin-mocha-mauve-cursors";
     package = pkgs.catppuccin-cursors.mochaMauve;
     size = cursorSize;
@@ -49,7 +50,7 @@ in
 
   qt = {
     enable = true;
-    platformTheme.name = "gtk";
+    platformTheme.name = "gtk3";
   };
 
   xdg = {
