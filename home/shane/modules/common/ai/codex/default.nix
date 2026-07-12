@@ -270,11 +270,6 @@ let
 
     projects."/home/shane/nix-config".trust_level = "trusted";
 
-    agents = {
-      max_threads = 4;
-      max_depth = 2;
-    };
-
     hooks = codexHooks;
   }
   // lib.optionalAttrs (transformedMcpServers != { }) {
