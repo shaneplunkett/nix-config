@@ -37,6 +37,8 @@ rustPlatform.buildRustPackage (finalAttrs: {
   cargoHash = "sha256-S4dsZXfmKvJItL2XYKyxfhqdCMATEG6oPjrtVRwkuYc=";
 
   patches = [
+    # Remove after openai/codex#31984 is fixed upstream.
+    ./codex-manual-missing-checksum.patch
     ./codex-vex-markdown-colours.patch
   ];
 
