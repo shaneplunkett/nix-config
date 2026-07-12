@@ -231,7 +231,8 @@ let
   };
 
   codexSettings = {
-    model = "gpt-5.5";
+    model = "gpt-5.6";
+    model_reasoning_effort = "high";
     project_doc_max_bytes = 65536;
 
     features = {
