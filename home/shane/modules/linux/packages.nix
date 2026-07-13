@@ -188,6 +188,7 @@ in
     samrewritten
     bun
     bruno
+    plezy
     kubectl
     intifaceCentralFixed
     megacmd
