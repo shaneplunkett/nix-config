@@ -25,11 +25,11 @@
     "ag-ai-skills": {
       "flake": false,
       "locked": {
-        "lastModified": 1783570783,
-        "narHash": "sha256-3DZtolS8heU7EeS33AtroNrQTPPK4D9xjmrTJGai20I=",
+        "lastModified": 1783999542,
+        "narHash": "sha256-JNZKnuTifbIVo2jdsldB1GSTT1O0I13kb5Bw6XyHUBs=",
         "ref": "refs/heads/main",
-        "rev": "3dbabd7da469e8d4fdadba1c176eed96dd7f9560",
-        "revCount": 31,
+        "rev": "f99fd95f1d874fcb083a02b9f85d957f515f9d71",
+        "revCount": 33,
         "type": "git",
         "url": "ssh://git@github.com/autograb/ag-ai-skills.git"
       },
@@ -60,13 +60,21 @@
       }
     },
     "ai-skills": {
-      "flake": false,
+      "inputs": {
+        "ag-ai-skills": "ag-ai-skills",
+        "langsmith-skills": "langsmith-skills",
+        "matt-skills": "matt-skills",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "vercel-skills": "vercel-skills"
+      },
       "locked": {
-        "lastModified": 1783836405,
-        "narHash": "sha256-pYVXsNQOGTqWWF+gilW8Ai2tOyhzt1UE7kxS03mfSSM=",
+        "lastModified": 1784009406,
+        "narHash": "sha256-q3dscTAQszwg4gMyPck2N4RmcknWDRfHALYkLKOA4/E=",
         "ref": "refs/heads/main",
-        "rev": "666be63bc7487c81cb2b7b90abfb4808bd23cd73",
-        "revCount": 74,
+        "rev": "5a003716c60440e86f84cdf3ba1f3ac451ed403e",
+        "revCount": 75,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/ai-skills.git"
       },
@@ -716,6 +724,38 @@
         "type": "github"
       }
     },
+    "langsmith-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1775696284,
+        "narHash": "sha256-XxTmxiKkTi7dM+ZbCYjwC7zclG5ZC2dS8Q1qDE5JJRM=",
+        "owner": "langchain-ai",
+        "repo": "langsmith-skills",
+        "rev": "68c8bb6b4b7cb5b20870b7b6afb340f6c958b0e6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "langchain-ai",
+        "repo": "langsmith-skills",
+        "type": "github"
+      }
+    },
+    "matt-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1783949761,
+        "narHash": "sha256-snwD/txU2uwMGr1KBoVew9YL8kjZjMyt8STrCRIvjrk=",
+        "owner": "mattpocock",
+        "repo": "skills",
+        "rev": "66898f60e8c744e269f8ce06c2b2b99ce7660d5f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mattpocock",
+        "repo": "skills",
+        "type": "github"
+      }
+    },
     "nix-config-private": {
       "locked": {
         "lastModified": 1783654495,
@@ -1018,7 +1058,6 @@
     "root": {
       "inputs": {
         "aagl": "aagl",
-        "ag-ai-skills": "ag-ai-skills",
         "agenix": "agenix",
         "ai-skills": "ai-skills",
         "catppuccin": "catppuccin",
@@ -1251,6 +1290,22 @@
         "dir": "packaging/nix",
         "owner": "Open-Wine-Components",
         "repo": "umu-launcher",
+        "type": "github"
+      }
+    },
+    "vercel-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1783959504,
+        "narHash": "sha256-aMBdpoLo3SBCrnxRRkY/hZgpRzreicMO+0ZROCVZXX0=",
+        "owner": "vercel-labs",
+        "repo": "skills",
+        "rev": "cf4a3ea678b7ea5066caa90de94bf2dfacde5538",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vercel-labs",
+        "repo": "skills",
         "type": "github"
       }
     },

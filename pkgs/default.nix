@@ -1,24 +1,12 @@
 {
   pkgs,
-  inputs,
-  rootPath,
   isLinux ? false,
   isX86Linux ? false,
 }:
 let
-  agSkillsInstallScript = rootPath + /home/shane/modules/common/ai/cc/install-ag-ai-skills.sh;
   optionalAttrs = condition: attrs: if condition then attrs else { };
 in
 {
-  ag-ai-skills-built = pkgs.callPackage ./ag-ai-skills-built {
-    src = inputs.ag-ai-skills;
-    installScript = agSkillsInstallScript;
-  };
-  ag-ai-skills-built-codex = pkgs.callPackage ./ag-ai-skills-built {
-    src = inputs.ag-ai-skills;
-    installScript = agSkillsInstallScript;
-    normaliseFrontmatter = true;
-  };
   aikido-mcp = pkgs.callPackage ./aikido-mcp { };
   claude-code-latest = pkgs.callPackage ./claude-code-latest { };
   claude-plugins-official = pkgs.callPackage ./claude-plugins-official { };

@@ -8,8 +8,10 @@
 let
   inherit (config.home) homeDirectory;
 
-  aiSkills = inputs.ai-skills;
-  vexRoot = "${aiSkills}/vex";
+  aiSkillsRoot = inputs.ai-skills.outPath;
+  system = pkgs.stdenv.hostPlatform.system;
+  skillProfiles = inputs.ai-skills.lib.skillProfiles.${system};
+  vexRoot = "${aiSkillsRoot}/vex";
   tomlFormat = pkgs.formats.toml { };
 
   mkBashHook =
@@ -27,45 +29,6 @@ let
       ++ runtimeInputs;
       text = ''exec bash ${script} "$@"'';
     };
-
-  mkSkillsAttrs =
-    enumSrc: valueRoot:
-    lib.listToAttrs (
-      map (name: {
-        inherit name;
-        value = valueRoot + "/${name}";
-      }) (lib.attrNames (lib.filterAttrs (_: t: t == "directory") (builtins.readDir enumSrc)))
-    );
-
-  personalSkillsAttrs = mkSkillsAttrs "${aiSkills}/personal" "${aiSkills}/personal";
-
-  globalSkillNames = [
-    "bb-browserbase"
-    "compass-autograb"
-    "confluence-autograb"
-    "confluence-pretty-publisher"
-    "github-gh"
-    "gmail"
-    "google-calendar"
-    "google-drive"
-    "jira-autograb"
-    "langsmith-autograb"
-    "memory-save"
-    "slack-autograb"
-    "tavily-best-practices"
-    "tavily-cli"
-    "tavily-crawl"
-    "tavily-dynamic-search"
-    "tavily-extract"
-    "tavily-map"
-    "tavily-research"
-    "tavily-search"
-    "td-todoist"
-  ];
-  availableGlobalSkillNames = builtins.filter (
-    name: builtins.hasAttr name personalSkillsAttrs
-  ) globalSkillNames;
-  globalSkillsAttrs = lib.genAttrs availableGlobalSkillNames (name: personalSkillsAttrs.${name});
 
   vexRuleFiles = lib.pipe "${vexRoot}/rules" [
     builtins.readDir
@@ -136,7 +99,10 @@ let
     '';
   };
   codexConfigDir = ".codex";
-  codexVariantDirs = [ ".codex-work" ];
+  codexVariantSkills = {
+    ".codex-work" = skillProfiles.codexWork;
+  };
+  codexVariantDirs = lib.attrNames codexVariantSkills;
   mutableCodexDirs = [ codexConfigDir ] ++ codexVariantDirs;
 
   codexMcpServer =
@@ -405,7 +371,7 @@ let
     '';
 
   filesForVariant =
-    dir:
+    dir: skills:
     {
       "${dir}/AGENTS.md".text = vexAgentsMd;
     }
@@ -415,11 +381,11 @@ let
         inherit source;
         recursive = true;
       }
-    ) globalSkillsAttrs;
+    ) skills;
 in
 {
   home = {
-    file = lib.foldl' lib.recursiveUpdate { } (map filesForVariant codexVariantDirs);
+    file = lib.foldl' lib.recursiveUpdate { } (lib.mapAttrsToList filesForVariant codexVariantSkills);
 
     activation.codexMutableConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] (
       lib.concatMapStringsSep "\n" mutableConfigActivation mutableCodexDirs
@@ -432,7 +398,7 @@ in
       package = codexPackage;
 
       context = vexAgentsMd;
-      skills = globalSkillsAttrs;
+      skills = skillProfiles.codex;
       settings = { };
       rules = { };
     };

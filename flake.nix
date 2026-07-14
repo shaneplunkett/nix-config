@@ -55,14 +55,9 @@
 
     nix-config-private.url = "git+ssh://git@github.com/shaneplunkett/nix-config-private.git";
 
-    ag-ai-skills = {
-      url = "git+ssh://git@github.com/autograb/ag-ai-skills.git";
-      flake = false;
-    };
-
     ai-skills = {
       url = "git+ssh://git@github.com/shaneplunkett/ai-skills.git";
-      flake = false;
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     umu-launcher.url = "github:Open-Wine-Components/umu-launcher?dir=packaging/nix";
@@ -130,8 +125,7 @@
           };
         in
         import ./pkgs {
-          inherit pkgs inputs;
-          rootPath = ./.;
+          inherit pkgs;
           isLinux = nixpkgs.lib.hasSuffix "-linux" system;
           isX86Linux = system == "x86_64-linux";
         }
