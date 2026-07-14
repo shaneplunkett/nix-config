@@ -67,14 +67,14 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "vercel-skills": "vercel-skills"
+        "tavily-skills": "tavily-skills"
       },
       "locked": {
-        "lastModified": 1784009406,
-        "narHash": "sha256-q3dscTAQszwg4gMyPck2N4RmcknWDRfHALYkLKOA4/E=",
+        "lastModified": 1784010805,
+        "narHash": "sha256-KGBDVlBleId9zkR0D4aHNL4Fyom38J66PIkBEfJNoaA=",
         "ref": "refs/heads/main",
-        "rev": "5a003716c60440e86f84cdf3ba1f3ac451ed403e",
-        "revCount": 75,
+        "rev": "592eebf90636d33c16238fe21413b8032f5309cc",
+        "revCount": 77,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/ai-skills.git"
       },
@@ -1207,6 +1207,22 @@
         "type": "github"
       }
     },
+    "tavily-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1780600028,
+        "narHash": "sha256-Y0eLc5afmz8IrFzB6f8WuTsEn6pmCzo8SMQ+OljIFKo=",
+        "owner": "tavily-ai",
+        "repo": "skills",
+        "rev": "ea5e8201b0d3ed9c10b70b71187589bd761fe2d2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tavily-ai",
+        "repo": "skills",
+        "type": "github"
+      }
+    },
     "treefmt-nix": {
       "inputs": {
         "nixpkgs": [
@@ -1290,22 +1306,6 @@
         "dir": "packaging/nix",
         "owner": "Open-Wine-Components",
         "repo": "umu-launcher",
-        "type": "github"
-      }
-    },
-    "vercel-skills": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1783959504,
-        "narHash": "sha256-aMBdpoLo3SBCrnxRRkY/hZgpRzreicMO+0ZROCVZXX0=",
-        "owner": "vercel-labs",
-        "repo": "skills",
-        "rev": "cf4a3ea678b7ea5066caa90de94bf2dfacde5538",
-        "type": "github"
-      },
-      "original": {
-        "owner": "vercel-labs",
-        "repo": "skills",
         "type": "github"
       }
     },
