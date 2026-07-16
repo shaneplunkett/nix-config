@@ -51,5 +51,10 @@ _: {
   home.file.".gitignore_work".text = ''
     .envrc
     .direnv/
+    .claude/
+    .agents
+    .agents/
+    .codex/
+    CLAUDE.local.md
   '';
 }
