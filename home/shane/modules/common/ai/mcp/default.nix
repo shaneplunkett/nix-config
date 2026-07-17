@@ -29,6 +29,20 @@ let
     '';
   };
 
+  context7Wrapper = pkgs.writeShellApplication {
+    name = "context7-mcp-wrapper";
+    runtimeInputs = [
+      pkgs.rbw
+      pkgs.context7-mcp
+    ];
+    text = ''
+      ${rbwRuntimeEnv}
+      CONTEXT7_API_KEY="$(rbw get context_7_autograb 2>/dev/null)"
+      export CONTEXT7_API_KEY
+      exec context7-mcp --transport stdio
+    '';
+  };
+
   xeroWrapper = pkgs.writeShellApplication {
     name = "xero-mcp-wrapper";
     runtimeInputs = [
@@ -87,6 +101,11 @@ in
         env = {
           AIKIDO_MCP_ALL_TOOLS = "true";
         };
+      };
+
+      context7 = {
+        command = "${context7Wrapper}/bin/context7-mcp-wrapper";
+        args = [ ];
       };
 
       # PostHog exposes a very large MCP surface by default. Keep the shared
