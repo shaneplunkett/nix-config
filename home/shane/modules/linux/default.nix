@@ -11,9 +11,7 @@
     ./packages.nix
     ./bloodborne.nix
     ./webapps
-    ./heroic.nix
     ./vesktop.nix
-    ./lutris.nix
     ./waydroid.nix
     ./hyprland.nix
     ./taildrop.nix

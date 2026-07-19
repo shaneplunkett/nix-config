@@ -60,16 +60,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    umu-launcher.url = "github:Open-Wine-Components/umu-launcher?dir=packaging/nix";
-    umu-launcher.inputs.nixpkgs.follows = "nixpkgs";
-
-    dw-proton.url = "github:imaviso/dwproton-flake";
-
-    aagl = {
-      url = "github:ezKEa/aagl-gtk-on-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Vex Noctalia plugins — provides the tl;dv recorder helper (Go binary).
     noctalia-plugins = {
       url = "git+ssh://git@github.com/shaneplunkett/noctalia-plugins.git";
