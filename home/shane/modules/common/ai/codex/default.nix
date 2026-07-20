@@ -99,11 +99,7 @@ let
     '';
   };
   codexConfigDir = ".codex";
-  codexVariantSkills = {
-    ".codex-work" = skillProfiles.codexWork;
-  };
-  codexVariantDirs = lib.attrNames codexVariantSkills;
-  mutableCodexDirs = [ codexConfigDir ] ++ codexVariantDirs;
+  mutableCodexDirs = [ codexConfigDir ];
 
   codexMcpServer =
     name: server:
@@ -202,6 +198,7 @@ let
     project_doc_max_bytes = 65536;
 
     features = {
+      chronicle = false;
       hooks = true;
       memories = false;
 
@@ -213,6 +210,29 @@ let
         tool_namespace = "agents";
       };
     };
+
+    plugins = {
+      "chrome@openai-bundled".enabled = false;
+      "documents@openai-primary-runtime".enabled = false;
+      "pdf@openai-primary-runtime".enabled = false;
+      "presentations@openai-primary-runtime".enabled = false;
+      "sites@openai-bundled".enabled = false;
+      "spreadsheets@openai-primary-runtime".enabled = false;
+      "template-creator@openai-primary-runtime".enabled = false;
+      "visualize@openai-bundled".enabled = false;
+    };
+
+    skills.config =
+      map
+        (path: {
+          inherit path;
+          enabled = false;
+        })
+        [
+          "${homeDirectory}/.codex/skills/.system/imagegen/SKILL.md"
+          "${homeDirectory}/.codex/skills/.system/plugin-creator/SKILL.md"
+          "${homeDirectory}/.codex/skills/chronicle/SKILL.md"
+        ];
 
     memories = {
       generate_memories = false;
@@ -370,22 +390,16 @@ let
       fi
     '';
 
-  filesForVariant =
-    dir: skills:
-    {
-      "${dir}/AGENTS.md".text = vexAgentsMd;
-    }
-    // lib.mapAttrs' (
-      name: source:
-      lib.nameValuePair "${dir}/skills/${name}" {
-        inherit source;
-        recursive = true;
-      }
-    ) skills;
 in
 {
   home = {
-    file = lib.foldl' lib.recursiveUpdate { } (lib.mapAttrsToList filesForVariant codexVariantSkills);
+    file = lib.mapAttrs' (
+      name: source:
+      lib.nameValuePair ".codex/skills/${name}" {
+        inherit source;
+        force = true;
+      }
+    ) skillProfiles.codex;
 
     activation.codexMutableConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] (
       lib.concatMapStringsSep "\n" mutableConfigActivation mutableCodexDirs
@@ -398,7 +412,7 @@ in
       package = codexPackage;
 
       context = vexAgentsMd;
-      skills = skillProfiles.codex;
+      skills = { };
       settings = { };
       rules = { };
     };

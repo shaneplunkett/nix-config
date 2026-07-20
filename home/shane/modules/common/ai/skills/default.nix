@@ -13,7 +13,6 @@ in
     name: source:
     lib.nameValuePair ".agents/skills/${name}" {
       inherit source;
-      recursive = true;
       force = true;
     }
   ) ecosystemSkills;

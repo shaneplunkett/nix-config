@@ -2,12 +2,6 @@ _: {
   programs = {
     fish = {
       enable = true;
-      shellAliases = {
-        cx = "codex";
-        cxr = "codex resume --last";
-        cxw = "CODEX_HOME=$HOME/.codex-work codex";
-        cxwr = "CODEX_HOME=$HOME/.codex-work codex resume --last";
-      };
       shellAbbrs = {
         cat = "bat";
         ngc = "nh clean all --keep 3 --keep-since 7d --ask";
