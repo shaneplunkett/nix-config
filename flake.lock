@@ -48,11 +48,11 @@
         "tavily-skills": "tavily-skills"
       },
       "locked": {
-        "lastModified": 1784012768,
-        "narHash": "sha256-CSXv0dEBXFuTXsDz2luAeGBOzK2Lgem0AzGuV1+i0u0=",
+        "lastModified": 1784520775,
+        "narHash": "sha256-H4YDTWNoCaXfa85cbVcxCqHF4onOAv1M1dySry0l9Wo=",
         "ref": "refs/heads/main",
-        "rev": "823d8a51a0564c4fef895c4acb6e560d6f6f5601",
-        "revCount": 78,
+        "rev": "a30a182b0bbaced8344fd20d904680af49838e7d",
+        "revCount": 80,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/ai-skills.git"
       },
@@ -1199,11 +1199,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1784012760,
-        "narHash": "sha256-WUxUWhpdS4yTptmV3Zka+6AYcjyKmm25KTeDsEclYI0=",
+        "lastModified": 1784511881,
+        "narHash": "sha256-qHpiS4pqERn4QSZlXO+Qj7qyVALLayejqvl8LsCziN8=",
         "ref": "refs/heads/main",
-        "rev": "2aba39e473f392c257c4fdaf3f9e22a1bf27b042",
-        "revCount": 11,
+        "rev": "a376b34d08a6a1a6c4205cdc5ba3687e341c6f27",
+        "revCount": 12,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/vex-tooling.git"
       },
