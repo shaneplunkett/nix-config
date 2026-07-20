@@ -15,6 +15,7 @@ in
         final: _prev:
         import (rootPath + /pkgs) {
           pkgs = final;
+          vexCodeSrc = inputs.vex-code;
           isLinux = _prev.stdenv.hostPlatform.isLinux;
           isX86Linux = _prev.stdenv.hostPlatform.system == "x86_64-linux";
         }

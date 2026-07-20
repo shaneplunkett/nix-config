@@ -60,6 +60,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Shane's personal T3 Code fork. Treat it as source so this flake owns the
+    # Nix package while updates remain a single targeted lock-file bump.
+    vex-code = {
+      url = "github:shaneplunkett/vex-code";
+      flake = false;
+    };
+
     # Vex Noctalia plugins — provides the tl;dv recorder helper (Go binary).
     noctalia-plugins = {
       url = "git+ssh://git@github.com/shaneplunkett/noctalia-plugins.git";
@@ -116,6 +123,7 @@
         in
         import ./pkgs {
           inherit pkgs;
+          vexCodeSrc = inputs.vex-code;
           isLinux = nixpkgs.lib.hasSuffix "-linux" system;
           isX86Linux = system == "x86_64-linux";
         }

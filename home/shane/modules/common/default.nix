@@ -16,5 +16,6 @@
     ./terraform.nix
     ./terminal
     ./theme
+    ./vex-code.nix
   ];
 }

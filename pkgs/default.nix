@@ -1,5 +1,6 @@
 {
   pkgs,
+  vexCodeSrc,
   isLinux ? false,
   isX86Linux ? false,
 }:
@@ -11,6 +12,7 @@ in
   claude-code-latest = pkgs.callPackage ./claude-code-latest { };
   claude-plugins-official = pkgs.callPackage ./claude-plugins-official { };
   codex-patched = pkgs.callPackage ./codex-patched { };
+  vex-code = pkgs.callPackage ./vex-code { src = vexCodeSrc; };
   xcodebuild-nvim = pkgs.callPackage ./xcodebuild-nvim { };
   xero-mcp-server = pkgs.callPackage ./xero-mcp-server { };
 }

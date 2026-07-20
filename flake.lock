@@ -1002,6 +1002,7 @@
         "noctalia": "noctalia",
         "noctalia-plugins": "noctalia-plugins",
         "noctalia-qs": "noctalia-qs_2",
+        "vex-code": "vex-code",
         "vex-tooling": "vex-tooling"
       }
     },
@@ -1188,6 +1189,22 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
+    "vex-code": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1783784280,
+        "narHash": "sha256-CWlJpIpbVNafClEnwTVOTDzPUYBdJtQM4Nz2DkhPV7A=",
+        "owner": "shaneplunkett",
+        "repo": "vex-code",
+        "rev": "6fa74f178e25b5d8cd4b1ae37617e73d0b7a8d63",
+        "type": "github"
+      },
+      "original": {
+        "owner": "shaneplunkett",
+        "repo": "vex-code",
         "type": "github"
       }
     },
