@@ -41,6 +41,7 @@
       "inputs": {
         "ag-ai-skills": "ag-ai-skills",
         "langsmith-skills": "langsmith-skills",
+        "linear-cli": "linear-cli",
         "matt-skills": "matt-skills",
         "nixpkgs": [
           "nixpkgs"
@@ -48,11 +49,11 @@
         "tavily-skills": "tavily-skills"
       },
       "locked": {
-        "lastModified": 1784634696,
-        "narHash": "sha256-Hdu4z/SFXXAiVDUXTZHTFB26d71yKM2VDfXCdQ6GEw0=",
+        "lastModified": 1784636844,
+        "narHash": "sha256-O6AQcsp8zfQVIn2cgKaxxIIDUVaT2Ig2lvA3HEQVWXQ=",
         "ref": "refs/heads/main",
-        "rev": "66601646b813cdbc1bb77c3dba11541e60886156",
-        "revCount": 85,
+        "rev": "b205f2f915c05be3ed62c1818f4bea6c457c2171",
+        "revCount": 87,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/ai-skills.git"
       },
@@ -681,6 +682,22 @@
       "original": {
         "owner": "langchain-ai",
         "repo": "langsmith-skills",
+        "type": "github"
+      }
+    },
+    "linear-cli": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1784409736,
+        "narHash": "sha256-p4eTKC1G807B8SXLKOr1GSEhzY1zx3AGgz1SfcJ3xxQ=",
+        "owner": "schpet",
+        "repo": "linear-cli",
+        "rev": "1393c709529d5d8e712d2b1ac67e39ca50175a2b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "schpet",
+        "repo": "linear-cli",
         "type": "github"
       }
     },
