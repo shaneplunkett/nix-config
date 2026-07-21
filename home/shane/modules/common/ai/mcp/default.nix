@@ -60,10 +60,6 @@ in
         args = [ ];
       };
 
-      linear-personal = {
-        url = "https://mcp.linear.app/mcp";
-      };
-
       # PostHog exposes a very large MCP surface by default. Keep the shared
       # always-on entry scoped, while allowing feature flag and scheduled-change
       # admin so agents can handle routine product ops.
