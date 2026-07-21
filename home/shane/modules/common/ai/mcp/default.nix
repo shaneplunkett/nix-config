@@ -3,8 +3,6 @@
   ...
 }:
 let
-  inherit (pkgs) nodejs;
-
   rbwRuntimeEnv = ''
     if [ -z "''${XDG_RUNTIME_DIR:-}" ]; then
       runtime_dir="/run/user/$(${pkgs.coreutils}/bin/id -u)"
@@ -43,58 +41,12 @@ let
     '';
   };
 
-  xeroWrapper = pkgs.writeShellApplication {
-    name = "xero-mcp-wrapper";
-    runtimeInputs = [
-      pkgs.rbw
-      pkgs.xero-mcp-server
-    ];
-    text = ''
-      ${rbwRuntimeEnv}
-      XERO_CLIENT_ID="$(rbw get xero-client-id 2>/dev/null)"
-      XERO_CLIENT_SECRET="$(rbw get xero-client-secret 2>/dev/null)"
-      export XERO_CLIENT_ID XERO_CLIENT_SECRET
-      exec ${pkgs.xero-mcp-server}/bin/@xeroapi/xero-mcp-server
-    '';
-  };
-
 in
 {
   programs.mcp = {
     enable = true;
 
     servers = {
-      # Desktop-only: direct local connections.
-      neovim = {
-        command = "${nodejs}/bin/npx";
-        args = [
-          "-y"
-          "mcp-neovim-server"
-        ];
-        env = {
-          NVIM_SOCKET_PATH = "/tmp/nvim";
-        };
-      };
-
-      chrome-devtools = {
-        command = "${nodejs}/bin/npx";
-        args = [
-          "-y"
-          "chrome-devtools-mcp@latest"
-          "--autoConnect"
-          "--channel"
-          "stable"
-          "--no-usage-statistics"
-          "--no-performance-crux"
-          "--screenshot-format"
-          "jpeg"
-          "--screenshot-max-width"
-          "1600"
-          "--screenshot-max-height"
-          "1200"
-        ];
-      };
-
       aikido = {
         command = "${aikidoWrapper}/bin/aikido-mcp-wrapper";
         args = [ ];
@@ -106,6 +58,10 @@ in
       context7 = {
         command = "${context7Wrapper}/bin/context7-mcp-wrapper";
         args = [ ];
+      };
+
+      linear-personal = {
+        url = "https://mcp.linear.app/mcp";
       };
 
       # PostHog exposes a very large MCP surface by default. Keep the shared
@@ -122,15 +78,6 @@ in
         };
         oauth_resource = "https://mcphub.tail1d49f8.ts.net";
       };
-
-      xero = {
-        command = "${xeroWrapper}/bin/xero-mcp-wrapper";
-        args = [ ];
-      };
     };
   };
-
-  home.packages = [
-    nodejs
-  ];
 }
