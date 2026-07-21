@@ -73,31 +73,7 @@ let
     text = ''exec ${pkgs.bash}/bin/bash ${../git-commit-guard.sh} codex "$@"'';
   };
 
-  rbwRuntimeEnv = ''
-    if [ -z "''${XDG_RUNTIME_DIR:-}" ]; then
-      runtime_dir="/run/user/$(${pkgs.coreutils}/bin/id -u)"
-      if [ -d "$runtime_dir" ]; then
-        export XDG_RUNTIME_DIR="$runtime_dir"
-      fi
-    fi
-  '';
-
-  codexBasePackage = pkgs.codex-patched;
-  codexPackage = pkgs.writeShellApplication {
-    name = "codex";
-    runtimeInputs = [
-      pkgs.rbw
-    ];
-    text = ''
-      ${rbwRuntimeEnv}
-      mcphub_token="$(rbw get mcphub-bearer 2>/dev/null || true)"
-      if [ -n "$mcphub_token" ]; then
-        export MCPHUB_AUTHORIZATION="Bearer $mcphub_token"
-      fi
-
-      exec ${codexBasePackage}/bin/codex "$@"
-    '';
-  };
+  codexPackage = pkgs.codex-patched;
   codexConfigDir = ".codex";
   mutableCodexDirs = [ codexConfigDir ];
 
@@ -111,9 +87,8 @@ let
         "bearer_token"
         "disabled"
         "headers"
-        # Shared MCP entries may carry Claude/RMCP OAuth metadata. Codex treats
-        # these as an instruction to start an OAuth flow during MCP initialise,
-        # which breaks non-OAuth HTTP servers such as Shane's MCPHub proxy.
+        # Shared MCP entries may carry Claude/RMCP OAuth metadata that Codex
+        # treats as an instruction to start an OAuth flow during initialisation.
         "oauth"
         "oauth_resource"
         "type"

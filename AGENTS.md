@@ -28,7 +28,7 @@ actual sudo command it is running: the allowed shapes include
 
 ## Research — don't rely on training data alone
 
-- **Library shapes, derivation patterns, home-manager / nixpkgs options** → Context7 via MCPHub. Search: `mcp__claude_ai_MCPHub__search_tools` for "context7", then `call_tool` to fetch live docs.
+- **Library shapes, derivation patterns, home-manager / nixpkgs options** → the directly configured Context7 MCP. Resolve the library ID, then query its live docs.
 - **Current state of the world, unknown tools, comparisons** → tavily (`tvly search "..."`, or `tvly research "..."` for deeper synthesis with citations).
 - Default to checking. Nix QoL tools (`nh`, `nurl`, `nix-init`, `nix-locate`, `manix`, `comma-with-db`) are 2025+; training data is stale.
 
