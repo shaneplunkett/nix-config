@@ -20,6 +20,28 @@ in
           isX86Linux = _prev.stdenv.hostPlatform.system == "x86_64-linux";
         }
       )
+      (
+        final: prev:
+        let
+          electron = inputs.electron-nixpkgs.legacyPackages.${final.stdenv.hostPlatform.system}.electron_43;
+        in
+        {
+          bitwarden-desktop =
+            (prev.bitwarden-desktop.override {
+              electron_39 = electron;
+            }).overrideAttrs
+              (old: {
+                # Upstream still pins Electron 39. Update the manifest after npmDeps
+                # has been assembled so nixpkgs' runtime-major check accepts the
+                # maintained Electron used by electron-builder.
+                preBuild = ''
+                  substituteInPlace package.json \
+                    --replace-fail '"electron": "39.8.5"' '"electron": "${electron.version}"'
+                ''
+                + old.preBuild;
+              });
+        }
+      )
       vex-tooling.overlays.default
     ]
     ++ extras;

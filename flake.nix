@@ -3,6 +3,10 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    # Keep Bitwarden's security-sensitive Electron runtime independently current.
+    electron-nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+
     nix-darwin.url = "github:nix-darwin/nix-darwin/master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
