@@ -9,6 +9,8 @@
 let
   version = "2.1.1";
   jsrPackage = "jsr:@schpet/linear-cli@${version}";
+  denoConfig = ./deno.json;
+  denoLock = ./deno.lock;
 
   src = fetchFromGitHub {
     owner = "schpet";
@@ -24,6 +26,7 @@ let
     nativeBuildInputs = [ deno ];
 
     dontUnpack = true;
+    dontFixup = true;
 
     buildPhase = ''
       runHook preBuild
@@ -31,8 +34,9 @@ let
       export DENO_DIR="$TMPDIR/deno-dir"
       export SSL_CERT_FILE="${cacert}/etc/ssl/certs/ca-bundle.crt"
       mkdir -p "$DENO_DIR"
-      deno cache "${jsrPackage}"
-      find "$DENO_DIR" -maxdepth 1 -type f -delete
+      cp ${denoConfig} deno.json
+      cp ${denoLock} deno.lock
+      deno install --vendor --frozen --entrypoint "${jsrPackage}"
 
       runHook postBuild
     '';
@@ -41,14 +45,15 @@ let
       runHook preInstall
 
       mkdir -p "$out"
-      cp -R "$DENO_DIR"/. "$out/"
+      cp deno.json deno.lock "$out/"
+      cp -R vendor node_modules "$out/"
 
       runHook postInstall
     '';
 
     outputHashMode = "recursive";
     outputHashAlgo = "sha256";
-    outputHash = "sha256-5qHRpT1aOYRruKaMHxtj5I9J1ouyCLbovkKayA4wDBg=";
+    outputHash = "sha256-bFX6Lli74/mhXgt55IcWse/WcySzdbkLwYnsw5HolvE=";
   };
 in
 stdenvNoCC.mkDerivation {
@@ -63,9 +68,8 @@ stdenvNoCC.mkDerivation {
     runHook preInstall
 
     makeWrapper ${lib.getExe deno} "$out/bin/linear" \
-      --set DENO_DIR "${denoDeps}" \
       --set DENO_NO_UPDATE_CHECK 1 \
-      --add-flags "run --cached-only --allow-all --quiet ${jsrPackage}"
+      --add-flags "run --cached-only --frozen --vendor --config ${denoDeps}/deno.json --lock ${denoDeps}/deno.lock --allow-all --quiet ${jsrPackage}"
     install -Dm644 LICENSE "$out/share/licenses/linear-cli/LICENSE"
 
     runHook postInstall
