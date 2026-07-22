@@ -19,7 +19,7 @@
     fzf
     pre-commit
     slack
-
+    bitwarden-desktop
     nix-output-monitor
     nvd
     statix

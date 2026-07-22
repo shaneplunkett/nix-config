@@ -20,5 +20,6 @@
     google-chrome
     gh
     jankyborders
+    linear
   ];
 }
