@@ -3,37 +3,22 @@
   pkgs,
   lib,
   inputs,
+  aiHelpers,
   ...
 }:
 let
   priv = inputs.nix-config-private.values;
-  aiSkillsRoot = inputs.ai-skills.outPath;
-  system = pkgs.stdenv.hostPlatform.system;
-  skillProfiles = inputs.ai-skills.lib.skillProfiles.${system};
-  workPrompt = "${aiSkillsRoot}/work-claude/Prompt.md";
-  brainRule = "${aiSkillsRoot}/vex/rules/brain.md";
-  cliRoutingRule = "${aiSkillsRoot}/vex/rules/cli-routing.md";
+  inherit (aiHelpers) aiSkillsRoot skillProfiles;
 
   claudePrompt = pkgs.writeText "claude-code-CLAUDE.md" (
-    lib.concatStringsSep "\n\n" (
-      map builtins.readFile [
-        workPrompt
-        brainRule
-        cliRoutingRule
-      ]
-    )
+    aiHelpers.readMarkdownBundle [
+      "${aiSkillsRoot}/work-claude/Prompt.md"
+      "${aiSkillsRoot}/vex/rules/brain.md"
+      "${aiSkillsRoot}/vex/rules/cli-routing.md"
+    ]
   );
 
-  gitCommitGuard = pkgs.writeShellApplication {
-    name = "claude-git-commit-guard";
-    runtimeInputs = [
-      pkgs.coreutils
-      pkgs.git
-      pkgs.gnugrep
-      pkgs.jq
-    ];
-    text = ''exec ${pkgs.bash}/bin/bash ${../git-commit-guard.sh} claude "$@"'';
-  };
+  gitCommitGuard = aiHelpers.mkCommitGuard "claude";
 
   claudeStatusline = pkgs.writeShellApplication {
     name = "claude-statusline";
@@ -45,17 +30,6 @@ let
     type = "command";
     command = "/home/shane/.local/bin/ahvi-statusline.sh ${claudeStatusline}/bin/claude-statusline";
   };
-
-  mkSkillEntries =
-    configDir: skills:
-    lib.mapAttrs' (
-      name: source:
-      lib.nameValuePair "${configDir}/skills/${name}" {
-        inherit source;
-        recursive = true;
-        force = true;
-      }
-    ) skills;
 
   claudeSettings = {
     feedbackSurveyRate = 0;
@@ -133,6 +107,10 @@ in
         force = true;
       };
     }
-    // mkSkillEntries ".claude-work" skillProfiles.claudeWork;
+    // aiHelpers.mkSkillTree {
+      dir = ".claude-work/skills";
+      skills = skillProfiles.claudeWork;
+      recursive = true;
+    };
   };
 }

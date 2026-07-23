@@ -2,16 +2,14 @@
   config,
   pkgs,
   lib,
-  inputs,
+  aiHelpers,
   ...
 }:
 let
   inherit (config.home) homeDirectory;
 
-  aiSkillsRoot = inputs.ai-skills.outPath;
-  system = pkgs.stdenv.hostPlatform.system;
-  skillProfiles = inputs.ai-skills.lib.skillProfiles.${system};
-  vexRoot = "${aiSkillsRoot}/vex";
+  inherit (aiHelpers) skillProfiles;
+  vexRoot = "${aiHelpers.aiSkillsRoot}/vex";
   tomlFormat = pkgs.formats.toml { };
 
   mkBashHook =
@@ -37,7 +35,7 @@ let
     (map (n: "${vexRoot}/rules/${n}"))
   ];
 
-  vexAgentsMd = lib.concatMapStringsSep "\n\n" builtins.readFile (
+  vexAgentsMd = aiHelpers.readMarkdownBundle (
     [
       "${vexRoot}/core.md"
       "${vexRoot}/output-style.md"
@@ -62,16 +60,7 @@ let
     script = ./codex-nix-lint.sh;
   };
 
-  codex-git-commit-guard = pkgs.writeShellApplication {
-    name = "codex-git-commit-guard";
-    runtimeInputs = [
-      pkgs.coreutils
-      pkgs.git
-      pkgs.gnugrep
-      pkgs.jq
-    ];
-    text = ''exec ${pkgs.bash}/bin/bash ${../git-commit-guard.sh} codex "$@"'';
-  };
+  codex-git-commit-guard = aiHelpers.mkCommitGuard "codex";
 
   codexPackage = pkgs.codex;
   codexConfigDir = ".codex";
@@ -368,13 +357,10 @@ let
 in
 {
   home = {
-    file = lib.mapAttrs' (
-      name: source:
-      lib.nameValuePair ".codex/skills/${name}" {
-        inherit source;
-        force = true;
-      }
-    ) skillProfiles.codex;
+    file = aiHelpers.mkSkillTree {
+      dir = ".codex/skills";
+      skills = skillProfiles.codex;
+    };
 
     activation.codexMutableConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] (
       lib.concatMapStringsSep "\n" mutableConfigActivation mutableCodexDirs

@@ -1,13 +1,11 @@
-{ pkgs, lib, ... }:
+{
+  pkgs,
+  lib,
+  aiHelpers,
+  ...
+}:
 let
-  rbwRuntimeEnv = ''
-    if [ -z "''${XDG_RUNTIME_DIR:-}" ]; then
-      runtime_dir="/run/user/$(${pkgs.coreutils}/bin/id -u)"
-      if [ -d "$runtime_dir" ]; then
-        export XDG_RUNTIME_DIR="$runtime_dir"
-      fi
-    fi
-  '';
+  inherit (aiHelpers) rbwRuntimeEnv;
 
   linear = pkgs.writeShellApplication {
     name = "linear";
