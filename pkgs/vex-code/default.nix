@@ -1,6 +1,6 @@
 {
   claude-code-latest,
-  codex-patched,
+  codex,
   fetchPnpmDeps,
   lib,
   lsof,
@@ -18,7 +18,7 @@ let
 in
 (t3code.override {
   claude-code = claude-code-latest;
-  codex = codex-patched;
+  inherit codex;
   enableClaude = true;
   pnpm_10 = pnpm;
 }).overrideAttrs

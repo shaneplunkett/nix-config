@@ -11,7 +11,6 @@ in
   aikido-mcp = pkgs.callPackage ./aikido-mcp { };
   claude-code-latest = pkgs.callPackage ./claude-code-latest { };
   claude-plugins-official = pkgs.callPackage ./claude-plugins-official { };
-  codex-patched = pkgs.callPackage ./codex-patched { };
   linear-cli = pkgs.callPackage ./linear-cli { };
   vex-code = pkgs.callPackage ./vex-code { src = vexCodeSrc; };
   xcodebuild-nvim = pkgs.callPackage ./xcodebuild-nvim { };

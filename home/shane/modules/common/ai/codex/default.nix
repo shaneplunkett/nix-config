@@ -73,7 +73,7 @@ let
     text = ''exec ${pkgs.bash}/bin/bash ${../git-commit-guard.sh} codex "$@"'';
   };
 
-  codexPackage = pkgs.codex-patched;
+  codexPackage = pkgs.codex;
   codexConfigDir = ".codex";
   mutableCodexDirs = [ codexConfigDir ];
 
