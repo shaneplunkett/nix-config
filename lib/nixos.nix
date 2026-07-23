@@ -20,7 +20,10 @@ in
       extraModules ? [ ],
     }:
     nixpkgs.lib.nixosSystem {
-      specialArgs = { inherit inputs shell; };
+      specialArgs = {
+        inherit inputs shell;
+        inherit (common) palette;
+      };
       modules = [
         {
           nixpkgs.hostPlatform = system;

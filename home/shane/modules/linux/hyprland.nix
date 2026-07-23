@@ -1,10 +1,11 @@
 {
   lib,
+  palette,
   shell,
   ...
 }:
 let
-  colours = import ../common/theme/colours.nix;
+  inherit (palette) hyprRgba;
   primaryWorkspaceGaps = "gapsout:50 70 110 70";
 in
 {
@@ -146,8 +147,8 @@ in
           enabled = true;
           range = 4;
           render_power = 3;
-          color = "rgba(${colours.base}ff)";
-          color_inactive = "rgba(${colours.mantle}ff)";
+          color = hyprRgba.base;
+          color_inactive = hyprRgba.mantle;
         };
       };
 
@@ -157,8 +158,8 @@ in
         gaps_out = 50;
         resize_on_border = true;
 
-        "col.active_border" = "rgba(${colours.mauve}ff) rgba(${colours.lavender}ff) 45deg";
-        "col.inactive_border" = "rgba(${colours.surface2}ff)";
+        "col.active_border" = "${hyprRgba.mauve} ${hyprRgba.lavender} 45deg";
+        "col.inactive_border" = hyprRgba.surface2;
       };
 
       env = [
@@ -172,13 +173,13 @@ in
       };
 
       group = {
-        "col.border_active" = "rgba(${colours.green}ff)";
-        "col.border_inactive" = "rgba(${colours.surface2}ff)";
+        "col.border_active" = hyprRgba.green;
+        "col.border_inactive" = hyprRgba.surface2;
         groupbar = {
           font_size = 10;
           gradients = false;
-          "col.active" = "rgba(${colours.mauve}ff)";
-          "col.inactive" = "rgba(${colours.surface0}ff)";
+          "col.active" = hyprRgba.mauve;
+          "col.inactive" = hyprRgba.surface0;
         };
       };
     };

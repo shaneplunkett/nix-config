@@ -19,9 +19,10 @@ let
       isLinux = inputs.nixpkgs.lib.hasSuffix "-linux" system;
       isX86Linux = system == "x86_64-linux";
     };
+  palette = import ./palette.nix;
 in
 {
-  inherit mkProjectPackages;
+  inherit mkProjectPackages palette;
 
   mkOverlays =
     extras:
@@ -64,7 +65,7 @@ in
         useGlobalPkgs = true;
         useUserPackages = true;
         extraSpecialArgs = {
-          inherit inputs;
+          inherit inputs palette;
         }
         // extraSpecialArgs;
         users.shane = import homeConfig;

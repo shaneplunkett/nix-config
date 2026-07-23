@@ -16,7 +16,9 @@ in
   xero-mcp-server = pkgs.callPackage ./xero-mcp-server { };
 }
 // optionalAttrs isLinux {
-  bluebubbles-themed = pkgs.callPackage ./bluebubbles-themed { };
+  bluebubbles-themed = pkgs.callPackage ./bluebubbles-themed {
+    palette = import ../lib/palette.nix;
+  };
 }
 // optionalAttrs isX86Linux {
   orca-slicer-bambulab = pkgs.callPackage ./orca-slicer-bambulab { };

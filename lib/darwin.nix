@@ -21,7 +21,10 @@ in
       extraModules ? [ ],
     }:
     nix-darwin.lib.darwinSystem {
-      specialArgs = { inherit inputs; };
+      specialArgs = {
+        inherit inputs;
+        inherit (common) palette;
+      };
       modules = [
         {
           nixpkgs.hostPlatform = system;

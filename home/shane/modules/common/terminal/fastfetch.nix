@@ -1,7 +1,4 @@
-_:
-let
-  c = import ../theme/colours.nix;
-in
+{ palette, ... }:
 {
   programs.fastfetch = {
     enable = true;
@@ -20,8 +17,8 @@ in
       display = {
         separator = "  ";
         color = {
-          keys = "#${c.lavender}";
-          title = "#${c.mauve}";
+          keys = palette.withHash.lavender;
+          title = palette.withHash.mauve;
         };
       };
 

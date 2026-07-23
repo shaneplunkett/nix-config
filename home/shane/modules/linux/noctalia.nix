@@ -3,12 +3,12 @@
   inputs,
   lib,
   noctaliaVexPlugins,
+  palette,
   pkgs,
   ...
 }:
 let
-  c = import ../common/theme/colours.nix;
-  hex = v: "#${v}";
+  inherit (palette) withHash;
   hyprlandPackage = config.wayland.windowManager.hyprland.package or pkgs.hyprland;
   noctaliaPackage = config.programs.noctalia-shell.package;
   noctaliaCacheExpire = pkgs.writeShellApplication {
@@ -167,22 +167,22 @@ in
     });
 
     colors = lib.mapAttrs (_: lib.mkForce) {
-      mPrimary = hex c.lavender;
-      mOnPrimary = hex c.crust;
-      mSecondary = hex c.teal;
-      mOnSecondary = hex c.crust;
-      mTertiary = hex c.peach;
-      mOnTertiary = hex c.crust;
-      mError = hex c.red;
-      mOnError = hex c.crust;
-      mSurface = hex c.base;
-      mOnSurface = hex c.text;
-      mSurfaceVariant = hex c.surface0;
-      mOnSurfaceVariant = hex c.subtext1;
-      mOutline = hex c.overlay0;
-      mShadow = hex c.crust;
-      mHover = hex c.surface1;
-      mOnHover = hex c.text;
+      mPrimary = withHash.lavender;
+      mOnPrimary = withHash.crust;
+      mSecondary = withHash.teal;
+      mOnSecondary = withHash.crust;
+      mTertiary = withHash.peach;
+      mOnTertiary = withHash.crust;
+      mError = withHash.red;
+      mOnError = withHash.crust;
+      mSurface = withHash.base;
+      mOnSurface = withHash.text;
+      mSurfaceVariant = withHash.surface0;
+      mOnSurfaceVariant = withHash.subtext1;
+      mOutline = withHash.overlay0;
+      mShadow = withHash.crust;
+      mHover = withHash.surface1;
+      mOnHover = withHash.text;
     };
 
     settings = {
@@ -472,7 +472,7 @@ in
         fillMode = "crop";
         fillColor = "#000000";
         useSolidColor = false;
-        solidColor = "#1a1a2e";
+        solidColor = withHash.base;
         automationEnabled = true;
         wallpaperChangeMode = "random";
         randomIntervalSec = 300;
@@ -589,8 +589,8 @@ in
         batteryCriticalThreshold = 5;
         enableDgpuMonitoring = false;
         useCustomColors = false;
-        warningColor = hex c.peach;
-        criticalColor = hex c.red;
+        warningColor = withHash.peach;
+        criticalColor = withHash.red;
         externalMonitor = "resources || missioncenter || jdsystemmonitor || corestats || system-monitoring-center || gnome-system-monitor || plasma-systemmonitor || mate-system-monitor || ukui-system-monitor || deepin-system-monitor || pantheon-system-monitor";
       };
 

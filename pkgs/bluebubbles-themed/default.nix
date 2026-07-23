@@ -1,7 +1,10 @@
 {
   bluebubbles,
-  colours ? import ../../home/shane/modules/common/theme/colours.nix,
+  palette,
 }:
+let
+  colours = palette.hex;
+in
 
 bluebubbles.overrideAttrs (old: {
   postPatch = (old.postPatch or "") + ''

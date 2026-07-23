@@ -1,10 +1,11 @@
-_: {
+{ palette, ... }:
+{
 
   services.aerospace = {
     enable = true;
     settings = {
       after-startup-command = [
-        "exec-and-forget /run/current-system/sw/bin/borders active_color=0xffcba6f7 inactive_color=0xff585b70 width=10.0"
+        "exec-and-forget /run/current-system/sw/bin/borders active_color=0xff${palette.hex.mauve} inactive_color=0xff${palette.hex.surface2} width=10.0"
       ];
       default-root-container-layout = "tiles";
       automatically-unhide-macos-hidden-apps = true;

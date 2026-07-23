@@ -1,32 +1,32 @@
-_:
+{ palette, ... }:
 let
-  colours = import ./theme/colours.nix;
+  inherit (palette) withHash;
 in
 {
   xdg.configFile."lazygit/config.yml".text = ''
     gui:
       theme:
         activeBorderColor:
-          - '#${colours.mauve}'
+          - '${withHash.mauve}'
           - bold
         inactiveBorderColor:
-          - '#${colours.subtext0}'
+          - '${withHash.subtext0}'
         optionsTextColor:
-          - '#${colours.blue}'
+          - '${withHash.blue}'
         selectedLineBgColor:
-          - '#${colours.surface0}'
+          - '${withHash.surface0}'
         cherryPickedCommitBgColor:
-          - '#${colours.surface1}'
+          - '${withHash.surface1}'
         cherryPickedCommitFgColor:
-          - '#${colours.mauve}'
+          - '${withHash.mauve}'
         unstagedChangesColor:
-          - '#${colours.red}'
+          - '${withHash.red}'
         defaultFgColor:
-          - '#${colours.text}'
+          - '${withHash.text}'
         searchingActiveBorderColor:
-          - '#${colours.yellow}'
+          - '${withHash.yellow}'
       authorColors:
-        '*': '#${colours.lavender}'
+        '*': '${withHash.lavender}'
     git:
       overrideGpg: true
   '';

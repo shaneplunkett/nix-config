@@ -1,15 +1,20 @@
-{ lib, pkgs, ... }:
+{
+  lib,
+  pkgs,
+  palette,
+  ...
+}:
 let
-  colours = import ../../theme/colours.nix;
+  inherit (palette) withHash;
 
   bg = "default";
-  default_fg = "#${colours.text}";
-  session_fg = "#${colours.green}";
-  prefix_session_fg = "#${colours.peach}";
-  session_selection_fg = "#${colours.base}";
-  session_selection_bg = "#${colours.mauve}";
-  active_window_fg = "#${colours.mauve}";
-  active_pane_border = "#${colours.lavender}";
+  default_fg = withHash.text;
+  session_fg = withHash.green;
+  prefix_session_fg = withHash.peach;
+  session_selection_fg = withHash.base;
+  session_selection_bg = withHash.mauve;
+  active_window_fg = withHash.mauve;
+  active_pane_border = withHash.lavender;
 
   quote = value: ''"${value}"'';
 

@@ -1,11 +1,10 @@
 {
-  pkgs,
   lib,
+  palette,
+  pkgs,
   ...
 }:
 let
-  colours = import ../../../../home/shane/modules/common/theme/colours.nix;
-
   greeterBackground = toString ../assets/greeter-bg.jpg;
   greeterCmd = pkgs.writeShellApplication {
     name = "regreet-wrapper";
@@ -74,7 +73,9 @@ in
           "maroon"
           "red"
         ];
-        defineColors = lib.concatMapStringsSep "\n" (v: "@define-color ${v} #${colours.${v}};") paletteVars;
+        defineColors = lib.concatMapStringsSep "\n" (
+          v: "@define-color ${v} ${palette.withHash.${v}};"
+        ) paletteVars;
       in
       defineColors + "\n\n" + builtins.readFile ./greetd-theme.css;
 
