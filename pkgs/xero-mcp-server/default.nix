@@ -14,7 +14,8 @@ buildNpmPackage rec {
     hash = "sha256-T6PQP0BuTEiomgsS1Vbj4oWBmB2RLzHJ+hIoEnqD3x8=";
   };
 
-  patches = [
+  # The lockfile patch is version-specific; regenerate it on every bump.
+  patches = assert version == "0.0.17"; [
     ./package-lock-0.0.17.patch
   ];
 
