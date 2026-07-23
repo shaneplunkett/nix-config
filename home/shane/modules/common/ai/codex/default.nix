@@ -193,9 +193,9 @@ let
           enabled = false;
         })
         [
-          "${homeDirectory}/.codex/skills/.system/imagegen/SKILL.md"
-          "${homeDirectory}/.codex/skills/.system/plugin-creator/SKILL.md"
-          "${homeDirectory}/.codex/skills/chronicle/SKILL.md"
+          "${homeDirectory}/${codexConfigDir}/skills/.system/imagegen/SKILL.md"
+          "${homeDirectory}/${codexConfigDir}/skills/.system/plugin-creator/SKILL.md"
+          "${homeDirectory}/${codexConfigDir}/skills/chronicle/SKILL.md"
         ];
 
     memories = {
@@ -356,26 +356,36 @@ let
 
 in
 {
-  home = {
-    file = aiHelpers.mkSkillTree {
-      dir = ".codex/skills";
-      skills = skillProfiles.codex;
-    };
-
-    activation.codexMutableConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] (
-      lib.concatMapStringsSep "\n" mutableConfigActivation mutableCodexDirs
-    );
+  # Published artifact other modules consume (e.g. vex-code).
+  options.vex.ai.codex.configDir = lib.mkOption {
+    type = lib.types.str;
+    description = "Home-relative Codex config directory.";
   };
 
-  programs = {
-    codex = {
-      enable = true;
-      package = codexPackage;
+  config = {
+    vex.ai.codex.configDir = codexConfigDir;
 
-      context = vexAgentsMd;
-      skills = { };
-      settings = { };
-      rules = { };
+    home = {
+      file = aiHelpers.mkSkillTree {
+        dir = "${codexConfigDir}/skills";
+        skills = skillProfiles.codex;
+      };
+
+      activation.codexMutableConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] (
+        lib.concatMapStringsSep "\n" mutableConfigActivation mutableCodexDirs
+      );
+    };
+
+    programs = {
+      codex = {
+        enable = true;
+        package = codexPackage;
+
+        context = vexAgentsMd;
+        skills = { };
+        settings = { };
+        rules = { };
+      };
     };
   };
 }

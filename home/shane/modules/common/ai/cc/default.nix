@@ -9,6 +9,7 @@
 let
   priv = inputs.nix-config-private.values;
   inherit (aiHelpers) aiSkillsRoot skillProfiles;
+  configDir = ".claude-work";
 
   claudePrompt = pkgs.writeText "claude-code-CLAUDE.md" (
     aiHelpers.readMarkdownBundle [
@@ -75,42 +76,62 @@ let
       '';
     };
 
-  claudeWork = mkClaudeProfile "claude-work" ".claude-work";
+  claudeWork = mkClaudeProfile "claude-work" configDir;
   claudeWorkExe = lib.getExe claudeWork;
 in
 {
-  programs.claude-code = {
-    enable = true;
-    package = pkgs.claude-code;
-    settings = claudeSettings;
-    enableMcpIntegration = true;
-    skills = { };
+  # Published artifacts other modules consume (e.g. vex-code); reading these
+  # options instead of guessing paths makes the coupling eval-checked.
+  options.vex.ai.claude = {
+    configDir = lib.mkOption {
+      type = lib.types.str;
+      description = "Home-relative directory of the Claude Code work profile.";
+    };
+    workWrapper = lib.mkOption {
+      type = lib.types.package;
+      description = "Wrapper that launches Claude Code against the work profile.";
+    };
   };
 
-  programs.fish.shellAliases = {
-    ccw = claudeWorkExe;
-    ccwr = "${claudeWorkExe} --resume";
-  };
+  config = {
+    vex.ai.claude = {
+      inherit configDir;
+      workWrapper = claudeWork;
+    };
 
-  home = {
-    packages = [
-      claudeWork
-    ];
+    programs.claude-code = {
+      enable = true;
+      package = pkgs.claude-code;
+      settings = claudeSettings;
+      enableMcpIntegration = true;
+      skills = { };
+    };
 
-    file = {
-      ".claude-work/CLAUDE.md" = {
-        source = claudePrompt;
-        force = true;
+    programs.fish.shellAliases = {
+      ccw = claudeWorkExe;
+      ccwr = "${claudeWorkExe} --resume";
+    };
+
+    home = {
+      packages = [
+        claudeWork
+      ];
+
+      file = {
+        "${configDir}/CLAUDE.md" = {
+          source = claudePrompt;
+          force = true;
+        };
+        "${configDir}/settings.json" = {
+          source = settingsFile;
+          force = true;
+        };
+      }
+      // aiHelpers.mkSkillTree {
+        dir = "${configDir}/skills";
+        skills = skillProfiles.claudeWork;
+        recursive = true;
       };
-      ".claude-work/settings.json" = {
-        source = settingsFile;
-        force = true;
-      };
-    }
-    // aiHelpers.mkSkillTree {
-      dir = ".claude-work/skills";
-      skills = skillProfiles.claudeWork;
-      recursive = true;
     };
   };
 }
