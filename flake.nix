@@ -45,9 +45,11 @@
       url = "github:homebrew/homebrew-cask";
       flake = false;
     };
+    # Nixvim deliberately keeps its own nixpkgs pin: upstream tests against a
+    # specific revision and documents that `follows` opts out of that guarantee
+    # (vimPlugins.<name> breakage). It instantiates its own nixpkgs regardless.
     nixvim = {
       url = "github:nix-community/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
     catppuccin = {
       url = "github:catppuccin/nix";
