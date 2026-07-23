@@ -6,20 +6,27 @@ let
     vex-tooling
     nix-index-database
     ;
+
+  # Single constructor for the project package set in pkgs/. The platform is
+  # passed as a system string so the overlay can derive it from prev (avoiding
+  # recursion through final.stdenv) while the flake packages output passes the
+  # forAllSystems value.
+  mkProjectPackages =
+    system: pkgs:
+    import (rootPath + /pkgs) {
+      inherit pkgs;
+      vexCodeSrc = inputs.vex-code;
+      isLinux = inputs.nixpkgs.lib.hasSuffix "-linux" system;
+      isX86Linux = system == "x86_64-linux";
+    };
 in
 {
+  inherit mkProjectPackages;
+
   mkOverlays =
     extras:
     [
-      (
-        final: _prev:
-        import (rootPath + /pkgs) {
-          pkgs = final;
-          vexCodeSrc = inputs.vex-code;
-          isLinux = _prev.stdenv.hostPlatform.isLinux;
-          isX86Linux = _prev.stdenv.hostPlatform.system == "x86_64-linux";
-        }
-      )
+      (final: prev: mkProjectPackages prev.stdenv.hostPlatform.system final)
       (
         final: prev:
         let

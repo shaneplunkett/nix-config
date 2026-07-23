@@ -49,8 +49,6 @@ in
           inherit homeConfig;
           extraSpecialArgs = {
             inherit shell;
-            isDarwin = false;
-            isLinux = true;
           };
           extraSharedModules = nixpkgs.lib.optionals (shell == "noctalia") [
             noctalia.homeModules.default

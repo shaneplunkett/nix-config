@@ -15,13 +15,22 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    agenix.url = "github:ryantm/agenix";
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        darwin.follows = "nix-darwin";
+        home-manager.follows = "home-manager";
+      };
+    };
 
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Hyprland deliberately keeps its own nixpkgs pin: following ours would
+    # invalidate the Hyprland Cachix binary cache and force local rebuilds.
     hyprland.url = "github:hyprwm/Hyprland";
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
@@ -38,8 +47,12 @@
     };
     nixvim = {
       url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
-    catppuccin.url = "github:catppuccin/nix";
+    catppuccin = {
+      url = "github:catppuccin/nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Keep Noctalia on v4 for plugin support. v5 currently drops the QML plugin
     # surface Shane's local plugins use.
@@ -125,12 +138,7 @@
             overlays = common.mkOverlays [ ];
           };
         in
-        import ./pkgs {
-          inherit pkgs;
-          vexCodeSrc = inputs.vex-code;
-          isLinux = nixpkgs.lib.hasSuffix "-linux" system;
-          isX86Linux = system == "x86_64-linux";
-        }
+        common.mkProjectPackages system pkgs
       );
 
       darwinConfigurations = {
@@ -144,7 +152,6 @@
           hostname = "Shanes-Work-MacBook-Pro";
           system = "aarch64-darwin";
           hostConfig = ./hosts/darwin/work.nix;
-          homeConfig = ./home/shane/homemac-work.nix;
         };
 
       };

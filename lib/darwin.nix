@@ -42,13 +42,7 @@ in
         home-manager.darwinModules.home-manager
         agenix.darwinModules.default
 
-        (common.mkHomeManagerModule {
-          inherit homeConfig;
-          extraSpecialArgs = {
-            isDarwin = true;
-            isLinux = false;
-          };
-        })
+        (common.mkHomeManagerModule { inherit homeConfig; })
       ]
       ++ (
         if enableHomebrew then
