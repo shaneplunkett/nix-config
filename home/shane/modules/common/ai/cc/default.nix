@@ -81,7 +81,7 @@ in
 {
   programs.claude-code = {
     enable = true;
-    package = pkgs.claude-code-latest;
+    package = pkgs.claude-code;
     settings = claudeSettings;
     enableMcpIntegration = true;
     skills = { };

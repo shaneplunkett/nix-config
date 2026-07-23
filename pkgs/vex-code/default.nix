@@ -1,5 +1,4 @@
 {
-  claude-code-latest,
   codex,
   fetchPnpmDeps,
   lib,
@@ -92,7 +91,6 @@ let
       );
 in
 (t3code.override {
-  claude-code = claude-code-latest;
   inherit codex;
   enableClaude = true;
   t3code-unwrapped = unwrapped;

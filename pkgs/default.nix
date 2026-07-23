@@ -9,7 +9,6 @@ let
 in
 {
   aikido-mcp = pkgs.callPackage ./aikido-mcp { };
-  claude-code-latest = pkgs.callPackage ./claude-code-latest { };
   claude-plugins-official = pkgs.callPackage ./claude-plugins-official { };
   linear-cli = pkgs.callPackage ./linear-cli { };
   vex-code = pkgs.callPackage ./vex-code { src = vexCodeSrc; };
