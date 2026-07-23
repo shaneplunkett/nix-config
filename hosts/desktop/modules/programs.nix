@@ -10,6 +10,9 @@
       enable = true;
       binfmt = true;
     };
+    # Run prebuilt dynamically-linked binaries (PyPI wheels like ruff,
+    # pre-commit hook envs, vendor CLIs) without per-binary patchelf.
+    nix-ld.enable = true;
   };
 
   environment.sessionVariables = {
