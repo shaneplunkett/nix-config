@@ -1165,11 +1165,11 @@
     "vex-code": {
       "flake": false,
       "locked": {
-        "lastModified": 1784862353,
-        "narHash": "sha256-j5Bnr1HWt/YVWWb3n4v61Kb9VkHwbDC8sMepptQnrYs=",
+        "lastModified": 1784935839,
+        "narHash": "sha256-N5WGs0sTKTSXMT/iNA7pFNzvHNWaMdMYB+vlRrzRcgE=",
         "owner": "shaneplunkett",
         "repo": "vex-code",
-        "rev": "7ed09ae5be8d9c1c69c4869edd51f32b4b42b456",
+        "rev": "3f9bd76e90ec18a6f89f22707cc05957580fdbe0",
         "type": "github"
       },
       "original": {
