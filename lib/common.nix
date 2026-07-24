@@ -39,6 +39,16 @@ in
               electron_39 = electron;
             }).overrideAttrs
               (old: {
+                # Apple's ld from cctools 1010.6 traps while processing stubs for
+                # Bitwarden's desktop_napi dylib on aarch64-darwin. Use LLVM's
+                # Mach-O linker for the Rust outputs until nixpkgs updates ld.
+                nativeBuildInputs =
+                  old.nativeBuildInputs ++ final.lib.optionals final.stdenv.hostPlatform.isDarwin [ final.lld ];
+                env =
+                  old.env
+                  // final.lib.optionalAttrs final.stdenv.hostPlatform.isDarwin {
+                    RUSTFLAGS = "-C link-arg=-fuse-ld=lld";
+                  };
                 # Upstream still pins Electron 39. Update the manifest after npmDeps
                 # has been assembled so nixpkgs' runtime-major check accepts the
                 # maintained Electron used by electron-builder.
