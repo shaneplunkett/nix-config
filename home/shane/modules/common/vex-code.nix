@@ -28,11 +28,8 @@ in
         enabled = true;
         config = {
           enabled = true;
-          # The work-profile wrapper published by the cc module; it sets
-          # CLAUDE_CONFIG_DIR so Claude uses its work OAuth session.
-          binaryPath = lib.getExe config.vex.ai.claude.workWrapper;
-          # Claude's setting is a HOME override, not the config directory.
-          homePath = homeDirectory;
+          binaryPath = lib.getExe config.programs.claude-code.finalPackage;
+          homePath = "${homeDirectory}/${config.vex.ai.claude.configDir}";
         };
       };
     };
