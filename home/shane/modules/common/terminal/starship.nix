@@ -1,8 +1,12 @@
-_: {
+{ palette, ... }:
+{
   programs.starship = {
     enable = true;
     enableFishIntegration = true;
     settings = {
+      palette = "catppuccin_mocha";
+      palettes.catppuccin_mocha = palette.withHash;
+
       character = {
         success_symbol = "[[󰄛](teal) ❯](mauve)";
         error_symbol = "[[󰄛](maroon) ❯](mauve)";
