@@ -27,6 +27,20 @@ in
   mkOverlays =
     extras:
     [
+      (
+        _final: prev:
+        let
+          system = prev.stdenv.hostPlatform.system;
+          aiPackages = inputs.llm-agents.packages.${system} or { };
+          hasCliPackages = builtins.hasAttr "claude-code" aiPackages && builtins.hasAttr "codex" aiPackages;
+        in
+        (prev.lib.optionalAttrs hasCliPackages {
+          inherit (aiPackages) claude-code codex;
+        })
+        // (prev.lib.optionalAttrs (
+          prev.stdenv.hostPlatform.isLinux && builtins.hasAttr "claude-desktop" aiPackages
+        ) { inherit (aiPackages) claude-desktop; })
+      )
       (final: prev: mkProjectPackages prev.stdenv.hostPlatform.system final)
       (
         final: prev:

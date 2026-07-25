@@ -79,6 +79,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Fast-moving AI CLIs with daily updates and cache-backed builds. Consume
+    # the direct package outputs so their derivations match Numtide's cache.
+    llm-agents.url = "github:numtide/llm-agents.nix";
+
     # Shane's personal T3 Code fork. Treat it as source so this flake owns the
     # Nix package while updates remain a single targeted lock-file bump.
     vex-code = {
