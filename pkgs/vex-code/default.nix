@@ -36,7 +36,7 @@ let
               pnpmWorkspaces
               ;
             fetcherVersion = 4;
-            hash = "sha256-bfZDQjVdT0neQYxmNB8t+XU8mbjVsAtaTi2Vms5pzxw=";
+            hash = "sha256-QNVBRvXVUOKZEdIqKY2dfjvmivMTaJJSh2cexvtdJ6k=";
           };
 
           postPatch =
