@@ -9,7 +9,7 @@
 let
   priv = inputs.nix-config-private.values;
   inherit (aiHelpers) aiSkillsRoot skillProfiles;
-  configDir = ".claude-work";
+  configDir = ".claude";
 
   claudePrompt = pkgs.writeText "claude-code-CLAUDE.md" (
     aiHelpers.readMarkdownBundle [
@@ -55,15 +55,6 @@ let
       ];
     };
   };
-
-  settingsFile = pkgs.writeText "claude-code-settings.json" (
-    builtins.toJSON (
-      claudeSettings
-      // {
-        "$schema" = "https://json.schemastore.org/claude-code-settings.json";
-      }
-    )
-  );
 
   mkClaudeProfile =
     name: configDir:
@@ -113,6 +104,10 @@ in
     };
 
     home = {
+      # Every entry point (bare `claude`, ccw, Vex Code's homePath) must agree
+      # on one config dir so the root .claude.json lives in a single place.
+      sessionVariables.CLAUDE_CONFIG_DIR = "${config.home.homeDirectory}/${configDir}";
+
       packages = [
         claudeWork
       ];
@@ -120,10 +115,6 @@ in
       file = {
         "${configDir}/CLAUDE.md" = {
           source = claudePrompt;
-          force = true;
-        };
-        "${configDir}/settings.json" = {
-          source = settingsFile;
           force = true;
         };
       }
