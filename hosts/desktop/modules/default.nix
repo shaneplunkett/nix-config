@@ -2,6 +2,7 @@
 {
 
   imports = [
+    ./cowork.nix
     ./gaming.nix
     ./hardware-custom.nix
     ./multimedia.nix

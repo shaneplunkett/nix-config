@@ -39,7 +39,19 @@ in
         })
         // (prev.lib.optionalAttrs (
           prev.stdenv.hostPlatform.isLinux && builtins.hasAttr "claude-desktop" aiPackages
-        ) { inherit (aiPackages) claude-desktop; })
+        ) {
+          # ANGLE dlopens the native libEGL.so.1 from inside a bundled shared
+          # library, where upstream's runtimeDependencies RUNPATH (executables
+          # only) doesn't reach, so GPU init fails and the UI falls back to
+          # software rendering. Put glvnd on LD_LIBRARY_PATH, which dlopen
+          # always searches.
+          claude-desktop = aiPackages.claude-desktop.overrideAttrs (old: {
+            postFixup = (old.postFixup or "") + ''
+              wrapProgram $out/bin/claude-desktop \
+                --prefix LD_LIBRARY_PATH : ${prev.lib.makeLibraryPath [ prev.libglvnd ]}
+            '';
+          });
+        })
       )
       (final: prev: mkProjectPackages prev.stdenv.hostPlatform.system final)
       (
