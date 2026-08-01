@@ -42,6 +42,7 @@ let
     exec = "granola %U";
     icon = "granola";
     categories = [ "Office" ];
+    mimeTypes = [ "x-scheme-handler/granola" ];
     startupWMClass = "Granola";
   };
 
@@ -88,6 +89,16 @@ stdenv.mkDerivation {
     7z x -y "$src" -oinstaller >/dev/null
     7z x -y 'installer/$PLUGINSDIR/app-64.7z' -oapp-bundle >/dev/null
     asar extract app-bundle/resources/app.asar app
+
+    # Granola's auth endpoint only accepts "macOS" and "Windows" here. The
+    # renderer otherwise forwards Electron's "linux" platform verbatim, which
+    # makes the production endpoint return HTTP 500 before OAuth can start.
+    auth_platform_from='function vt(){return window.electron.platform===`darwin`?`macOS`:window.electron.platform===`win32`?`Windows`:window.electron.platform}'
+    auth_platform_to='function vt(){return window.electron.platform===`darwin`?`macOS`:window.electron.platform===`win32`?`Windows`:window.electron.platform===`linux`?`Windows`:window.electron.platform}'
+    auth_renderer="$(grep -lF "$auth_platform_from" app/dist-app/assets/*.js)"
+    substituteInPlace "$auth_renderer" \
+      --replace-fail "$auth_platform_from" "$auth_platform_to"
+    grep -Fq "$auth_platform_to" "$auth_renderer"
 
     # In unpackaged mode Granola resolves its tray and meeting-service icons
     # relative to app.getAppPath(). The Windows distribution stores them beside
