@@ -9,5 +9,8 @@
 
   wayland.windowManager.hyprland.settings.windowrule = [
     "workspace 1 silent, match:class ^granola$"
+    "tile 1, match:class ^granola$"
+    "fullscreen_state 0 0, match:class ^granola$"
+    "suppress_event maximize, match:class ^granola$"
   ];
 }
