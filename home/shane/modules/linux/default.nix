@@ -9,6 +9,7 @@
 
     ./theme.nix
     ./packages.nix
+    ./granola.nix
     ./bloodborne.nix
     ./webapps
     ./vesktop.nix
