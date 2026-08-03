@@ -10,10 +10,10 @@ _: {
       "plex"
       "ferdium"
       "hammerspoon"
-      "teamviewer"
       "codex-app"
       "bluebubbles"
       "yt-music"
+      "claude"
     ];
 
     brews = [
@@ -25,8 +25,6 @@ _: {
       "Xcode" = 497799835;
     };
     onActivation = {
-      # Keep cleanup disabled; Homebrew now exits non-zero from bundle cleanup
-      # when unmanaged formulae are present.
       cleanup = "none";
       autoUpdate = false;
       upgrade = false;
