@@ -24,6 +24,22 @@ _: {
     };
   };
 
+  # The pinned Sunshine package loads uhid but omits upstream's udev rules.
+  # Keep its virtual-controller devices accessible through the same group as
+  # /dev/uinput so DS5, Xbox, and Switch controller emulation all work.
+  services.udev.extraRules = ''
+    KERNEL=="uhid", GROUP="uinput", MODE="0660", TAG+="uaccess"
+    KERNEL=="hidraw*", ATTRS{name}=="Sunshine PS5 (virtual) pad*", GROUP="uinput", MODE="0660", TAG+="uaccess"
+    SUBSYSTEMS=="input", ATTRS{name}=="Sunshine X-Box One (virtual) pad*", GROUP="uinput", MODE="0660", TAG+="uaccess"
+    SUBSYSTEMS=="input", ATTRS{name}=="Sunshine gamepad (virtual) motion sensors*", GROUP="uinput", MODE="0660", TAG+="uaccess"
+    SUBSYSTEMS=="input", ATTRS{name}=="Sunshine Nintendo (virtual) pad*", GROUP="uinput", MODE="0660", TAG+="uaccess"
+    SUBSYSTEMS=="input", ATTRS{name}=="Sunshine PS5 (virtual) pad*", GROUP="uinput", MODE="0660", TAG+="uaccess"
+  '';
+
+  # Sunshine's package advertises this through modules-load.d, but NixOS does
+  # not consume package-provided modules-load files during early boot.
+  boot.kernelModules = [ "uhid" ];
+
   # Moonlight's streaming ports are exposed only on the wired home LAN.
   # tailscale0 is already trusted by networking.nix for remote streaming.
   networking.firewall.interfaces.enp10s0 = {
