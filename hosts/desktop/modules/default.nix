@@ -10,6 +10,7 @@
     ./packages.nix
     ./programs.nix
     ./services
+    ./sunshine.nix
     ./vr.nix
     ./waydroid.nix
 
