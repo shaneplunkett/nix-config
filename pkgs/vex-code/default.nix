@@ -22,7 +22,7 @@ let
   unwrapped = (t3code.unwrapped.override { pnpm_10 = pnpm; }).overrideAttrs (
     finalAttrs: previousAttrs: {
       pname = "vex-code-unwrapped";
-      version = "0.0.31-vex.0";
+      version = "0.0.33-vex.0";
       inherit src;
 
       pnpmDeps = fetchPnpmDeps {
@@ -34,7 +34,7 @@ let
           pnpmWorkspaces
           ;
         fetcherVersion = 4;
-        hash = "sha256-T4Av+63TauvUxokF9hogiWGoC1laITqAvku7Jxm2plg=";
+        hash = "sha256-i/K5bj7CS7PGIX5hfayxAJ7ngNib92w3SDKGXTVWccA=";
       };
 
       postPatch = ''
