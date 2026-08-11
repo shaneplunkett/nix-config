@@ -161,6 +161,8 @@ let
     model_reasoning_effort = "high";
     project_doc_max_bytes = 65536;
 
+    agents.max_concurrent_threads_per_session = 10;
+
     features = {
       chronicle = false;
       hooks = true;
