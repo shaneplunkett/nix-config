@@ -17,6 +17,9 @@ in
       hostConfig,
       homeConfig ? (rootPath + /home/shane/home.nix),
       shell ? "noctalia",
+      # The vex-tooling agent CLI stack (rbw-wrapped, needs an interactive
+      # secrets agent). Servers opt out.
+      agentClis ? true,
       extraModules ? [ ],
     }:
     nixpkgs.lib.nixosSystem {
@@ -53,9 +56,13 @@ in
           extraSpecialArgs = {
             inherit shell;
           };
-          extraSharedModules = nixpkgs.lib.optionals (shell == "noctalia") [
-            noctalia.homeModules.default
-          ];
+          extraSharedModules =
+            nixpkgs.lib.optionals (shell == "noctalia") [
+              noctalia.homeModules.default
+            ]
+            ++ nixpkgs.lib.optionals agentClis [
+              inputs.vex-tooling.homeManagerModules.default
+            ];
         })
       ]
       ++ extraModules;

@@ -114,7 +114,6 @@ in
               catppuccin.autoEnable = lib.mkDefault false;
             }
           )
-          vex-tooling.homeManagerModules.default
           nix-index-database.homeModules.nix-index
         ]
         ++ extraSharedModules;

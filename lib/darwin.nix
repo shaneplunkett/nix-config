@@ -45,7 +45,12 @@ in
         home-manager.darwinModules.home-manager
         agenix.darwinModules.default
 
-        (common.mkHomeManagerModule { inherit homeConfig; })
+        (common.mkHomeManagerModule {
+          inherit homeConfig;
+          extraSharedModules = [
+            inputs.vex-tooling.homeManagerModules.default
+          ];
+        })
       ]
       ++ (
         if enableHomebrew then

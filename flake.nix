@@ -175,6 +175,7 @@
           system = "aarch64-linux";
           hostConfig = ./hosts/hetzvps/configuration.nix;
           homeConfig = ./home/shane/homelinuxserver.nix;
+          agentClis = false;
         };
       };
     };

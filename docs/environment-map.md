@@ -24,7 +24,7 @@ noctalia-plugins ─ QML       ─┘
 
 | Input | Checkout | Provides | Consumed via |
 |---|---|---|---|
-| `vex-tooling` | `~/projects/personal/vex-tooling` | Agent-stack CLIs and MCP servers: `vex`, `langsmith`, `agent-slack`, `gws`, `tvly`, `bb`, `todoist`, `confluence`, `unifi`, `linear` (managed-auth wrapper), `aikido-mcp`, `xero-mcp-server` (on hold, unwired). Credentials injected from rbw at invocation. | `overlays.default` in `lib/common.nix` + `homeManagerModules.default` in `sharedModules` (every host gets every CLI) |
+| `vex-tooling` | `~/projects/personal/vex-tooling` | Agent-stack CLIs and MCP servers: `vex`, `langsmith`, `agent-slack`, `gws`, `tvly`, `bb`, `todoist`, `confluence`, `unifi`, `linear` (managed-auth wrapper), `aikido-mcp`, `xero-mcp-server` (on hold, unwired). Credentials injected from rbw at invocation. | `overlays.default` in `lib/common.nix` + `homeManagerModules.default` on the desktop and darwin hosts only (servers opt out via `agentClis = false` in `flake.nix`) |
 | `ai-skills` | `~/ai-skills` | `lib.skillProfiles` (claudeWork / codex / allSkills) and the CLAUDE.md prompt sources. Carries its own skill inputs (work skills, langsmith-skills, matt-skills, tavily-skills, sanitised linear-cli skill). | `home/shane/modules/common/ai/lib.nix` |
 | `nix-config-private` | `~/projects/personal/nix-config-private` | Private `values` and work-specific home-manager modules. Zero inputs of its own. | `homeManagerModules.default` + `inputs.nix-config-private.values` in the AI modules |
 | `vex-code` | `~/projects/personal/vex-code` | Source only (`flake = false`); this repo's `pkgs/vex-code` owns the build. | `pkgs/default.nix` (`vexCodeSrc`) |
