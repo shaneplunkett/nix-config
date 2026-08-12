@@ -90,7 +90,7 @@
       flake = false;
     };
 
-    # Vex Noctalia plugins — provides the tl;dv recorder helper (Go binary).
+    # Vex Noctalia plugins — QML plugins symlinked live from the local checkout.
     noctalia-plugins = {
       url = "git+ssh://git@github.com/shaneplunkett/noctalia-plugins.git";
       inputs.nixpkgs.follows = "nixpkgs";

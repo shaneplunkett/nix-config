@@ -11,11 +11,6 @@ let
   papirusIcons = "${pkgs.papirus-icon-theme}/share/icons/Papirus/48x48";
   freedesktopSounds = "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo";
 
-  # tl;dv recorder helper — static Go binary built from the noctalia-plugins flake.
-  tldvHelper = "${
-    inputs.noctalia-plugins.packages.${pkgs.stdenv.hostPlatform.system}.tldv-helper
-  }/bin/tldv-helper";
-
   plugins = {
     vex-timer = {
       settings = {
@@ -65,30 +60,6 @@ let
         workAccountPattern = "autograb.com.au";
         workAcceptRoutes = true;
         personalAcceptRoutes = false;
-      };
-    };
-
-    vex-tldv-recorder = {
-      settings = {
-        accentColor = "primary";
-        helperPath = tldvHelper; # static Go binary built from the noctalia-plugins flake
-        statusPath = ""; # default XDG_STATE_HOME/vex-tldv-recorder/status.json
-        refreshIntervalSec = 30;
-      };
-      # The tldv:// scheme handler: tl;dv login redirects to tldv://auth?access_token=…,
-      # which the OS routes here to hand the token to the helper. Paired with the
-      # x-scheme-handler/tldv association in theme.nix's xdg.mimeApps.
-      extraFiles = {
-        ".local/share/applications/vex-tldv-recorder.desktop".text = ''
-          [Desktop Entry]
-          Type=Application
-          Name=Vex tl;dv Recorder (auth handler)
-          Comment=Captures the tldv://auth?access_token=… callback from tl;dv login
-          NoDisplay=true
-          Terminal=false
-          Exec=${tldvHelper} auth-callback %u
-          MimeType=x-scheme-handler/tldv;
-        '';
       };
     };
 
