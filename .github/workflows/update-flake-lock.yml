@@ -1,0 +1,40 @@
+# Weekly lock-bump bot for the personal flake inputs. Runs the day after
+# vex-tooling's package-update bot so a Monday merge there lands here
+# Tuesday. Opens a PR only — nothing deploys until a local rebuild.
+#
+# Deliberately excludes nixpkgs and the other third-party inputs: those
+# bumps trigger large rebuilds and are run by hand when chosen.
+#
+# Needs the FLAKE_INPUTS_TOKEN repo secret: a fine-grained PAT with
+# Contents: read-only on the private inputs (vex-tooling, ai-skills,
+# nix-config-private, noctalia-plugins). vex-code is public.
+name: update-flake-lock
+
+on:
+  schedule:
+    - cron: "0 21 * * 1" # Tuesday 07:00 Melbourne
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  lockfile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@v16
+
+      - name: Fetch private inputs over HTTPS with the scoped token
+        run: |
+          git config --global \
+            url."https://x-access-token:${{ secrets.FLAKE_INPUTS_TOKEN }}@github.com/".insteadOf \
+            "ssh://git@github.com/"
+
+      - uses: DeterminateSystems/update-flake-lock@v28
+        with:
+          inputs: vex-tooling ai-skills nix-config-private vex-code noctalia-plugins
+          pr-title: "flake.lock: weekly bump of personal inputs"
+          commit-msg: "flake.lock: weekly bump of personal inputs"
