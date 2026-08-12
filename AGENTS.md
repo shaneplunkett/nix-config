@@ -51,6 +51,13 @@ Home Manager or host modules. Use one directory per package:
 `pkgs/<name>/default.nix`, expose it from `pkgs/default.nix` with
 `pkgs.callPackage`, then consume it as `pkgs.<name>` from modules.
 
+**Residency carve-out:** agent-stack CLIs and MCP servers (anything the agent
+stack invokes) are packaged in the `vex-tooling` flake input, NOT here — its
+overlay supplies them as `pkgs.<name>`. `pkgs/` here is for desktop apps,
+themed builds, and machine config. Where things live, and the update chain for
+each repo, is documented in `docs/environment-map.md` — check it before
+packaging something new or hunting for where a CLI version comes from.
+
 Inline derivations are only for module-local glue that is genuinely tied to the
 module, such as small `writeShellApplication` wrappers. Keep runtime wrappers
 near the module when they mainly inject secrets or compose commands, but move
