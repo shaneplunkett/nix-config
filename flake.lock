@@ -1294,11 +1294,11 @@
     "vex-code": {
       "flake": false,
       "locked": {
-        "lastModified": 1786340221,
-        "narHash": "sha256-BEIl8Q1MO4MPsL456EN6vfjvYolbLRO7x0NHYS+rndM=",
+        "lastModified": 1786517917,
+        "narHash": "sha256-smV93RWtx0MPocCkdiTS1PR+VvoUg8D6nyfgUWOlVrM=",
         "owner": "shaneplunkett",
         "repo": "vex-code",
-        "rev": "a065332778c96b85efb00a8de90b2f682dc8db27",
+        "rev": "fbe2c91eac0e92880dc6cc543844e0146a95e2f6",
         "type": "github"
       },
       "original": {
