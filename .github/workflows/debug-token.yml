@@ -41,3 +41,28 @@ jobs:
           else
             echo "token-as-username: FAILED"
           fi
+
+      - uses: DeterminateSystems/nix-installer-action@v16
+
+      - name: Replicate the real workflow's fetch path
+        env:
+          TOKEN: ${{ secrets.FLAKE_INPUTS_TOKEN }}
+        run: |
+          nix --version
+          git config --global \
+            url."https://x-access-token:${TOKEN}@github.com/".insteadOf \
+            "ssh://git@github.com/"
+          echo "--- gitconfig keys:"
+          git config --global --list | sed "s/${TOKEN}/<TOKEN>/g"
+          echo "--- git ls-remote via insteadOf rewrite:"
+          if git ls-remote "ssh://git@github.com/shaneplunkett/ai-skills.git" HEAD; then
+            echo "git-via-insteadOf: OK"
+          else
+            echo "git-via-insteadOf: FAILED"
+          fi
+          echo "--- nix fetch of the same input:"
+          if nix flake metadata "git+ssh://git@github.com/shaneplunkett/ai-skills.git" --json > /dev/null; then
+            echo "nix-fetch: OK"
+          else
+            echo "nix-fetch: FAILED"
+          fi
