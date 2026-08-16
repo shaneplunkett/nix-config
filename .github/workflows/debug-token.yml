@@ -24,3 +24,20 @@ jobs:
               | jq -r '.full_name // .message')
             echo "${repo}: ${result}"
           done
+
+      - name: Probe git-over-HTTPS auth forms
+        env:
+          TOKEN: ${{ secrets.FLAKE_INPUTS_TOKEN }}
+        run: |
+          for user in x-access-token oauth2 git shaneplunkett; do
+            if git ls-remote "https://${user}:${TOKEN}@github.com/shaneplunkett/ai-skills.git" HEAD >/dev/null 2>&1; then
+              echo "username '${user}': OK"
+            else
+              echo "username '${user}': FAILED"
+            fi
+          done
+          if git ls-remote "https://${TOKEN}@github.com/shaneplunkett/ai-skills.git" HEAD >/dev/null 2>&1; then
+            echo "token-as-username: OK"
+          else
+            echo "token-as-username: FAILED"
+          fi
