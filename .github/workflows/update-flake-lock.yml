@@ -35,6 +35,7 @@ jobs:
 
       - uses: DeterminateSystems/update-flake-lock@v28
         with:
+          token: ${{ secrets.FLAKE_INPUTS_TOKEN }}
           inputs: vex-tooling ai-skills nix-config-private vex-code noctalia-plugins
           pr-title: "flake.lock: weekly bump of personal inputs"
           commit-msg: "flake.lock: weekly bump of personal inputs"
