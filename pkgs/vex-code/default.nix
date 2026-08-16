@@ -15,15 +15,22 @@ let
     hash = "sha256-YgtmBepPYvxWptCphzP0eQcdAyHgPkhrUix+mnRhdDE=";
   };
 
+  # nixpkgs' resource-monitor sidecar derives its sourceRoot from src.name.
+  # Flake-input source trees carry no name attribute, so pin the "source"
+  # unpack dir name stdenv produces for a /nix/store/*-source directory.
+  namedSrc = src // {
+    name = "source";
+  };
+
   # nixpkgs splits t3code into an unwrapped pnpm build plus a symlinkJoin
   # wrapper that puts the enabled agent CLIs on PATH. The fork source, pnpm
   # swap, and branding belong on the unwrapped build; the agent toggles on
   # the wrapper.
-  unwrapped = (t3code.unwrapped.override { pnpm_10 = pnpm; }).overrideAttrs (
+  unwrapped = (t3code.unwrapped.override { pnpm_11 = pnpm; }).overrideAttrs (
     finalAttrs: previousAttrs: {
       pname = "vex-code-unwrapped";
       version = "0.0.34-vex.0";
-      inherit src;
+      src = namedSrc;
 
       pnpmDeps = fetchPnpmDeps {
         inherit pnpm;

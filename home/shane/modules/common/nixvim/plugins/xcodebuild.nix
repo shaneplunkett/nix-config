@@ -3,22 +3,22 @@ let
   xcodebuild-nvim = pkgs.callPackage ../../../../../../pkgs/xcodebuild-nvim { };
 in
 {
-  extraPlugins = lib.mkIf pkgs.stdenv.isDarwin [
+  extraPlugins = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin [
     xcodebuild-nvim
   ];
 
-  extraPackages = lib.mkIf pkgs.stdenv.isDarwin (
+  extraPackages = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin (
     with pkgs;
     [
       xcbeautify
     ]
   );
 
-  extraConfigLua = lib.mkIf pkgs.stdenv.isDarwin ''
+  extraConfigLua = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin ''
     require("xcodebuild").setup({})
   '';
 
-  keymaps = lib.mkIf pkgs.stdenv.isDarwin [
+  keymaps = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin [
     {
       mode = "n";
       key = "<leader>Xb";

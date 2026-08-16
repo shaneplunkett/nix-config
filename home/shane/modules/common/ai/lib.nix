@@ -1,6 +1,10 @@
 # Shared helpers for the AI harness modules (cc, codex, mcp, linear, skills).
 # Exposed to those modules as the `aiHelpers` module argument by ./default.nix.
-{ pkgs, lib, inputs }:
+{
+  pkgs,
+  lib,
+  inputs,
+}:
 {
   aiSkillsRoot = inputs.ai-skills.outPath;
 

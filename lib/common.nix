@@ -37,21 +37,22 @@ in
         (prev.lib.optionalAttrs hasCliPackages {
           inherit (aiPackages) claude-code codex;
         })
-        // (prev.lib.optionalAttrs (
-          prev.stdenv.hostPlatform.isLinux && builtins.hasAttr "claude-desktop" aiPackages
-        ) {
-          # ANGLE dlopens the native libEGL.so.1 from inside a bundled shared
-          # library, where upstream's runtimeDependencies RUNPATH (executables
-          # only) doesn't reach, so GPU init fails and the UI falls back to
-          # software rendering. Put glvnd on LD_LIBRARY_PATH, which dlopen
-          # always searches.
-          claude-desktop = aiPackages.claude-desktop.overrideAttrs (old: {
-            postFixup = (old.postFixup or "") + ''
-              wrapProgram $out/bin/claude-desktop \
-                --prefix LD_LIBRARY_PATH : ${prev.lib.makeLibraryPath [ prev.libglvnd ]}
-            '';
-          });
-        })
+        // (prev.lib.optionalAttrs
+          (prev.stdenv.hostPlatform.isLinux && builtins.hasAttr "claude-desktop" aiPackages)
+          {
+            # ANGLE dlopens the native libEGL.so.1 from inside a bundled shared
+            # library, where upstream's runtimeDependencies RUNPATH (executables
+            # only) doesn't reach, so GPU init fails and the UI falls back to
+            # software rendering. Put glvnd on LD_LIBRARY_PATH, which dlopen
+            # always searches.
+            claude-desktop = aiPackages.claude-desktop.overrideAttrs (old: {
+              postFixup = (old.postFixup or "") + ''
+                wrapProgram $out/bin/claude-desktop \
+                  --prefix LD_LIBRARY_PATH : ${prev.lib.makeLibraryPath [ prev.libglvnd ]}
+              '';
+            });
+          }
+        )
       )
       (final: prev: mkProjectPackages prev.stdenv.hostPlatform.system final)
       (
@@ -60,9 +61,14 @@ in
           electron = inputs.electron-nixpkgs.legacyPackages.${final.stdenv.hostPlatform.system}.electron_43;
         in
         {
+          # wf-recorder 0.6.0 predates FFmpeg 9's removal of AVCodec.pix_fmts,
+          # ch_layouts and sample_fmts. Keep it on FFmpeg 8 until upstream
+          # supports 9.
+          wf-recorder = prev.wf-recorder.override { ffmpeg = final.ffmpeg_8; };
+
           bitwarden-desktop =
             (prev.bitwarden-desktop.override {
-              electron_39 = electron;
+              electron_41 = electron;
             }).overrideAttrs
               (old: {
                 # Apple's ld from cctools 1010.6 traps while processing stubs for
@@ -75,12 +81,12 @@ in
                   // final.lib.optionalAttrs final.stdenv.hostPlatform.isDarwin {
                     RUSTFLAGS = "-C link-arg=-fuse-ld=lld";
                   };
-                # Upstream still pins Electron 39. Update the manifest after npmDeps
+                # Upstream still pins Electron 41. Update the manifest after npmDeps
                 # has been assembled so nixpkgs' runtime-major check accepts the
                 # maintained Electron used by electron-builder.
                 preBuild = ''
                   substituteInPlace package.json \
-                    --replace-fail '"electron": "39.8.5"' '"electron": "${electron.version}"'
+                    --replace-fail '"electron": "41.7.2"' '"electron": "${electron.version}"'
                 ''
                 + old.preBuild;
               });
