@@ -23,7 +23,12 @@ jobs:
   lockfile:
     runs-on: ubuntu-latest
     steps:
+      # persist-credentials would stamp the workflow's own token into the
+      # repo's git config as an ambient auth header, which nix's git calls
+      # pick up and which overrides the PAT for the private inputs.
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: DeterminateSystems/nix-installer-action@v16
 
