@@ -66,3 +66,18 @@ jobs:
           else
             echo "nix-fetch: FAILED"
           fi
+
+      - uses: actions/checkout@v4
+        with:
+          path: checkout-repro
+
+      - name: Repro with actions/checkout present (persist-credentials default)
+        run: |
+          cd checkout-repro
+          echo "--- extraheader checkout wrote into local config:"
+          git config --local --list | grep -i extraheader || echo "(none)"
+          if nix flake update ai-skills; then
+            echo "flake-update-after-checkout: OK"
+          else
+            echo "flake-update-after-checkout: FAILED"
+          fi
