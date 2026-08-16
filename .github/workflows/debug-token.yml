@@ -1,0 +1,26 @@
+# Temporary diagnostic — checks which private inputs FLAKE_INPUTS_TOKEN
+# can actually see. Prints repo names only, never the token. Delete
+# after the update-flake-lock workflow is green.
+name: debug-token
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe each private input with the secret
+        env:
+          TOKEN: ${{ secrets.FLAKE_INPUTS_TOKEN }}
+        run: |
+          echo "token length: ${#TOKEN}"
+          echo "token prefix: ${TOKEN:0:11}"
+          for repo in vex-tooling ai-skills nix-config-private noctalia-plugins; do
+            result=$(curl -s -H "Authorization: Bearer ${TOKEN}" \
+              "https://api.github.com/repos/shaneplunkett/${repo}" \
+              | jq -r '.full_name // .message')
+            echo "${repo}: ${result}"
+          done
