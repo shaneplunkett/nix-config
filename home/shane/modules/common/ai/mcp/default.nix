@@ -57,6 +57,20 @@ in
       posthog = {
         url = "https://mcp.posthog.com/mcp";
       };
+
+      granola = {
+        url = "https://mcp.granola.ai/mcp";
+      };
+
+      # Same endpoint twice on purpose: Claude Code and Codex both key OAuth
+      # tokens by server name, so each entry holds its own Linear account.
+      linear-personal = {
+        url = "https://mcp.linear.app/mcp";
+      };
+
+      linear-work = {
+        url = "https://mcp.linear.app/mcp";
+      };
     };
   };
 }
