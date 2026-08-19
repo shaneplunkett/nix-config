@@ -29,7 +29,7 @@ let
   unwrapped = (t3code.unwrapped.override { pnpm_11 = pnpm; }).overrideAttrs (
     finalAttrs: previousAttrs: {
       pname = "vex-code-unwrapped";
-      version = "0.0.34-vex.0";
+      version = "0.0.34-vex.1";
       src = namedSrc;
 
       pnpmDeps = fetchPnpmDeps {
@@ -41,7 +41,7 @@ let
           pnpmWorkspaces
           ;
         fetcherVersion = 4;
-        hash = "sha256-KxsxNNo/WU0pBy7lqwxU1OGQtZA7agTppPSGF3CCogw=";
+        hash = "sha256-AW7M/GU1AQJO8qcbv+aIGhxkCya28kp0TOwfBKlg2rQ=";
       };
 
       postPatch = ''
@@ -85,8 +85,9 @@ let
               '<string>T3 Code (Alpha)</string>' \
               '<string>Vex Code (Alpha)</string>'
           mv "$old_executable" "$vex_executable"
-          install -m 444 ${src}/apps/desktop/resources/icon.icns \
-            "$old_app/Contents/Resources/t3code.icns"
+          png2icns \
+            "$old_app/Contents/Resources/t3code.icns" \
+            ${src}/assets/vex/vex-code-macos-1024.png
           mv "$old_app" "$vex_app"
         '';
 
