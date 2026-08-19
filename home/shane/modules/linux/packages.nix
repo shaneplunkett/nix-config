@@ -6,16 +6,6 @@
 let
   bluebubblesThemed = pkgs.bluebubbles-themed;
 
-  intifaceCentralFixed = pkgs.symlinkJoin {
-    name = "intiface-central-fixed";
-    paths = [ pkgs.intiface-central ];
-    nativeBuildInputs = [ pkgs.makeWrapper ];
-    postBuild = ''
-      wrapProgram $out/bin/intiface_central \
-        --prefix LD_LIBRARY_PATH : ${pkgs.intiface-central}/app/intiface-central/lib
-    '';
-  };
-
   orcaSlicerFixed = pkgs.symlinkJoin {
     name = "orca-slicer-fixed";
     paths = [ pkgs.orca-slicer-bambulab ];
@@ -191,7 +181,6 @@ in
     bruno
     plezy
     kubectl
-    intifaceCentralFixed
     megacmd
     yt-dlp
     google-chrome
