@@ -8,6 +8,11 @@ in
 {
   fonts.fontconfig.enable = true;
 
+  # Apps read light/dark via the xdg-desktop-portal Settings interface, which is
+  # backed by this dconf key. Nothing else asserts it (noctalia only syncs it when
+  # user theming/templates are enabled), so own it declaratively.
+  dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
+
   home.pointerCursor = {
     enable = true;
     name = "catppuccin-mocha-mauve-cursors";
