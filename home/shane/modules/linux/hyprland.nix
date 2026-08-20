@@ -6,181 +6,293 @@
 }:
 let
   inherit (palette) hyprRgba;
-  primaryWorkspaceGaps = "gapsout:50 70 110 70";
+  inherit (lib.generators) mkLuaInline;
+
+  mod = "SUPER";
+  terminal = "ghostty";
+
+  primaryWorkspaceGaps = {
+    top = 50;
+    right = 70;
+    bottom = 110;
+    left = 70;
+  };
+
+  # hl.bind(keys, dispatcher [, opts]); the dispatcher is a raw Lua expression.
+  bind = keys: dispatcher: { _args = [ keys (mkLuaInline dispatcher) ]; };
+  bindOpts = keys: dispatcher: opts: { _args = [ keys (mkLuaInline dispatcher) opts ]; };
+  exec = cmd: ''hl.dsp.exec_cmd("${cmd}")'';
+
+  workspaceKeys = [
+    { key = "1"; ws = 1; }
+    { key = "A"; ws = 2; }
+    { key = "B"; ws = 3; }
+    { key = "E"; ws = 4; }
+    { key = "T"; ws = 5; }
+    { key = "S"; ws = 6; }
+    { key = "M"; ws = 7; }
+    { key = "O"; ws = 8; }
+    { key = "9"; ws = 9; }
+    { key = "G"; ws = 10; }
+  ];
+
+  workspaceBinds = lib.concatMap (
+    { key, ws }:
+    [
+      (bind "${mod} + ${key}" "hl.dsp.focus({ workspace = ${toString ws} })")
+      (bind "${mod} + SHIFT + ${key}" "hl.dsp.window.move({ workspace = ${toString ws}, follow = true })")
+    ]
+  ) workspaceKeys;
+
+  directionBinds = lib.concatMap (dir: [
+    (bind "${mod} + ${dir.key}" ''hl.dsp.focus({ direction = "${dir.d}" })'')
+    (bind "${mod} + SHIFT + ${dir.key}" ''hl.dsp.window.move({ direction = "${dir.d}" })'')
+  ]) [
+    { key = "h"; d = "l"; }
+    { key = "l"; d = "r"; }
+    { key = "k"; d = "u"; }
+    { key = "j"; d = "d"; }
+  ];
 in
 {
   wayland.windowManager.hyprland = {
     enable = true;
-    configType = "hyprlang";
+    configType = "lua";
     settings = {
-      "$mod" = "SUPER";
-      "$terminal" = "ghostty";
-
-      exec-once = [
-        "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-        "systemctl --user start hyprpolkitagent"
-        "wl-paste --type text --watch cliphist store"
-        "wl-paste --type image --watch cliphist store"
+      on = [
+        {
+          _args = [
+            "hyprland.start"
+            (mkLuaInline ''
+              function()
+                hl.exec_cmd("systemctl --user start hyprpolkitagent")
+                hl.exec_cmd("wl-paste --type text --watch cliphist store")
+                hl.exec_cmd("wl-paste --type image --watch cliphist store")
+              end'')
+          ];
+        }
       ];
 
       bind = [
-        "$mod_SHIFT, Q, killactive"
-        "$mod, A, exec, claude"
-        "$mod, RETURN, exec, $terminal"
-        "$mod_SHIFT, 4, exec, hyprshot -m region --clipboard-only"
-        "$mod_SHIFT, 5, exec, ${
-          if shell == "noctalia" then
-            "noctalia-shell ipc call plugin:screen-shot-and-record record"
-          else
-            "bug-record"
-        }"
-        "$mod_SHIFT,W,exec,hyprctl dispatch togglehidden"
-        "$mod_SHIFT,F,togglefloating"
+        (bind "${mod} + SHIFT + Q" "hl.dsp.window.close()")
+        (bind "${mod} + A" (exec "claude"))
+        (bind "${mod} + RETURN" (exec terminal))
+        (bind "${mod} + SHIFT + 4" (exec "hyprshot -m region --clipboard-only"))
+        (bind "${mod} + SHIFT + 5" (
+          exec (
+            if shell == "noctalia" then
+              "noctalia-shell ipc call plugin:screen-shot-and-record record"
+            else
+              "bug-record"
+          )
+        ))
+        (bind "${mod} + SHIFT + W" (exec "hyprctl dispatch togglehidden"))
+        (bind "${mod} + SHIFT + F" "hl.dsp.window.float()")
 
-        "$mod,1,workspace,1"
-        "$mod,A,workspace,2"
-        "$mod,B,workspace,3"
-        "$mod,E,workspace,4"
-        "$mod,T,workspace,5"
-        "$mod,S,workspace,6"
-        "$mod,M,workspace,7"
-        "$mod,O,workspace,8"
-        "$mod,9,workspace,9"
-        "$mod,G,workspace,10"
-
-        "$mod_SHIFT,1,movetoworkspace,1"
-        "$mod_SHIFT,A,movetoworkspace,2"
-        "$mod_SHIFT,B,movetoworkspace,3"
-        "$mod_SHIFT,E,movetoworkspace,4"
-        "$mod_SHIFT,T,movetoworkspace,5"
-        "$mod_SHIFT,S,movetoworkspace,6"
-        "$mod_SHIFT,M,movetoworkspace,7"
-        "$mod_SHIFT,O,movetoworkspace,8"
-        "$mod_SHIFT,9,movetoworkspace,9"
-        "$mod_SHIFT,G,movetoworkspace,10"
-
-        "$mod_SHIFT,h,movewindow,l"
-        "$mod_SHIFT,l,movewindow,r"
-        "$mod_SHIFT,k,movewindow,u"
-        "$mod_SHIFT,j,movewindow,d"
-
-        "$mod,h,movefocus,l"
-        "$mod,l,movefocus,r"
-        "$mod,k,movefocus,u"
-        "$mod,j,movefocus,d"
+        (bindOpts "${mod} + mouse:272" "hl.dsp.window.drag()" { mouse = true; })
+        (bindOpts "${mod} + mouse:273" "hl.dsp.window.resize()" { mouse = true; })
       ]
+      ++ workspaceBinds
+      ++ directionBinds
       ++ lib.optionals (shell == "noctalia") [
-        "$mod, space, exec, noctalia-shell ipc call launcher toggle"
-        "$mod, V, exec, noctalia-shell ipc call launcher clipboard"
-        "$mod, N, exec, noctalia-shell ipc call controlCenter toggle"
-        "$mod SHIFT, L, exec, noctalia-shell ipc call lockScreen lock"
+        (bind "${mod} + space" (exec "noctalia-shell ipc call launcher toggle"))
+        (bind "${mod} + V" (exec "noctalia-shell ipc call launcher clipboard"))
+        (bind "${mod} + N" (exec "noctalia-shell ipc call controlCenter toggle"))
+        (bind "${mod} + SHIFT + L" (exec "noctalia-shell ipc call lockScreen lock"))
       ];
 
-      bindm = [
-        "$mod, mouse:272, movewindow"
-        "$mod, mouse:273, resizewindow"
-
+      curve = [
+        {
+          _args = [
+            "easeout"
+            {
+              type = "bezier";
+              points = [
+                [
+                  0.25
+                  0.1
+                ]
+                [
+                  0.25
+                  1.0
+                ]
+              ];
+            }
+          ];
+        }
       ];
 
-      animations = {
-        enabled = true;
-
-        bezier = [
-          "easeout, 0.25, 0.1, 0.25, 1"
-        ];
-
-        animation = [
-          "windows, 1, 3, easeout, gnomed"
-          "windowsOut, 1, 3, easeout, gnomed"
-          "fade, 1, 3, easeout"
-          "border, 1, 10, easeout"
-          "workspaces, 1, 2, easeout, slide"
-        ];
-      };
-
-      windowrule = [
-        "float 1, match:class ^com\.example\.launcher$"
-        "size 500 430, match:class ^com\.example\.launcher$"
-        "opaque 1, match:title ^Plex.*$"
-        "float 1, match:class ^nemo$"
-        "size 1100 700, match:class ^nemo$"
-        "float 1, match:title ^.*Bluetooth Devices$"
-        "size 1100 700, match:title ^.*Bluetooth Devices$"
-        "float 1, match:title ^.*Volume Control$"
-        "size 1100 700, match:title ^.*Volume Control$"
+      animation = [
+        {
+          leaf = "windows";
+          enabled = true;
+          speed = 3;
+          bezier = "easeout";
+          style = "gnomed";
+        }
+        {
+          leaf = "windowsOut";
+          enabled = true;
+          speed = 3;
+          bezier = "easeout";
+          style = "gnomed";
+        }
+        {
+          leaf = "fade";
+          enabled = true;
+          speed = 3;
+          bezier = "easeout";
+        }
+        {
+          leaf = "border";
+          enabled = true;
+          speed = 10;
+          bezier = "easeout";
+        }
+        {
+          leaf = "workspaces";
+          enabled = true;
+          speed = 2;
+          bezier = "easeout";
+          style = "slide";
+        }
       ];
 
-      layerrule = lib.optionals (shell == "noctalia") [
-        "match:namespace noctalia-shell:regionSelector, no_anim on"
+      window_rule = [
+        {
+          match.class = "^com\\.example\\.launcher$";
+          float = true;
+          size = [
+            500
+            430
+          ];
+        }
+        {
+          match.title = "^Plex.*$";
+          opaque = true;
+        }
+        {
+          match.class = "^nemo$";
+          float = true;
+          size = [
+            1100
+            700
+          ];
+        }
+        {
+          match.title = "^.*Bluetooth Devices$";
+          float = true;
+          size = [
+            1100
+            700
+          ];
+        }
+        {
+          match.title = "^.*Volume Control$";
+          float = true;
+          size = [
+            1100
+            700
+          ];
+        }
+      ];
+
+      layer_rule = lib.optionals (shell == "noctalia") [
+        {
+          match.namespace = "noctalia-shell:regionSelector";
+          no_anim = true;
+        }
       ];
 
       monitor = [
-        "DP-2,3840x2160@240,0x0,1.5,vrr,2"
-        "HDMI-A-1, 2560x1440@60, -3000x0, 1, transform, 3"
+        {
+          output = "DP-2";
+          mode = "3840x2160@240";
+          position = "0x0";
+          scale = 1.5;
+          vrr = 2;
+        }
+        {
+          output = "HDMI-A-1";
+          mode = "2560x1440@60";
+          position = "-3000x0";
+          scale = 1;
+          transform = 3;
+        }
       ];
 
-      workspace = [
-        "1, monitor:DP-2, default:true, ${primaryWorkspaceGaps}"
-        "2, monitor:DP-2, ${primaryWorkspaceGaps}"
-        "3, monitor:DP-2, ${primaryWorkspaceGaps}"
-        "4, monitor:DP-2, ${primaryWorkspaceGaps}"
-        "5, monitor:DP-2, ${primaryWorkspaceGaps}"
-        "6, monitor:DP-2, ${primaryWorkspaceGaps}"
-        "7, monitor:DP-2, ${primaryWorkspaceGaps}"
-        "8, monitor:DP-2, ${primaryWorkspaceGaps}"
-        "10, monitor:DP-2, ${primaryWorkspaceGaps}"
-        "9, monitor:HDMI-A-1, default:true"
-      ];
-
-      decoration = {
-        rounding = 10;
-        border_part_of_window = false;
-
-        blur = {
-          enabled = true;
-          size = 8;
-          passes = 1;
-          new_optimizations = true;
-        };
-
-        shadow = {
-          enabled = true;
-          range = 4;
-          render_power = 3;
-          color = hyprRgba.base;
-          color_inactive = hyprRgba.mantle;
-        };
-      };
-
-      general = {
-        border_size = 2;
-        gaps_in = 5;
-        gaps_out = 50;
-        resize_on_border = true;
-
-        "col.active_border" = "${hyprRgba.mauve} ${hyprRgba.lavender} 45deg";
-        "col.inactive_border" = hyprRgba.surface2;
-      };
+      workspace_rule =
+        map (ws: {
+          workspace = toString ws;
+          monitor = "DP-2";
+          gaps_out = primaryWorkspaceGaps;
+          default = ws == 1;
+        }) (lib.range 1 8 ++ [ 10 ])
+        ++ [
+          {
+            workspace = "9";
+            monitor = "HDMI-A-1";
+            default = true;
+          }
+        ];
 
       env = [
-        "STEAM_FORCE_DESKTOPUI_SCALING,1.25"
-        "GDK_SCALE,2"
-        "XCURSOR_SIZE,48"
+        { _args = [ "STEAM_FORCE_DESKTOPUI_SCALING" "1.25" ]; }
+        { _args = [ "GDK_SCALE" "2" ]; }
+        { _args = [ "XCURSOR_SIZE" "48" ]; }
       ];
 
-      xwayland = {
-        force_zero_scaling = true;
-      };
+      config = {
+        general = {
+          border_size = 2;
+          gaps_in = 5;
+          gaps_out = 50;
+          resize_on_border = true;
 
-      group = {
-        "col.border_active" = hyprRgba.green;
-        "col.border_inactive" = hyprRgba.surface2;
-        groupbar = {
-          font_size = 10;
-          gradients = false;
-          "col.active" = hyprRgba.mauve;
-          "col.inactive" = hyprRgba.surface0;
+          col = {
+            active_border = "${hyprRgba.mauve} ${hyprRgba.lavender} 45deg";
+            inactive_border = hyprRgba.surface2;
+          };
         };
+
+        decoration = {
+          rounding = 10;
+          border_part_of_window = false;
+
+          blur = {
+            enabled = true;
+            size = 8;
+            passes = 1;
+            new_optimizations = true;
+          };
+
+          shadow = {
+            enabled = true;
+            range = 4;
+            render_power = 3;
+            color = hyprRgba.base;
+            color_inactive = hyprRgba.mantle;
+          };
+        };
+
+        animations.enabled = true;
+
+        group = {
+          col = {
+            border_active = hyprRgba.green;
+            border_inactive = hyprRgba.surface2;
+          };
+          groupbar = {
+            font_size = 10;
+            gradients = false;
+            col = {
+              active = hyprRgba.mauve;
+              inactive = hyprRgba.surface0;
+            };
+          };
+        };
+
+        xwayland.force_zero_scaling = true;
       };
     };
   };

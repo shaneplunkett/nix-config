@@ -7,10 +7,13 @@
 
   xdg.mimeApps.defaultApplications."x-scheme-handler/granola" = "granola.desktop";
 
-  wayland.windowManager.hyprland.settings.windowrule = [
-    "workspace 1 silent, match:class ^granola$"
-    "tile 1, match:class ^granola$"
-    "fullscreen_state 0 0, match:class ^granola$"
-    "suppress_event maximize, match:class ^granola$"
+  wayland.windowManager.hyprland.settings.window_rule = [
+    {
+      match.class = "^granola$";
+      workspace = "1 silent";
+      tile = true;
+      fullscreen_state = "0 0";
+      suppress_event = "maximize";
+    }
   ];
 }

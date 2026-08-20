@@ -345,9 +345,15 @@ in
     };
   };
 
-  wayland.windowManager.hyprland.settings.windowrule = [
-    "float 1, match:title ^Android Phone - .*$"
-    "size 540 1200, match:title ^Android Phone - .*$"
-    "center 1, match:title ^Android Phone - .*$"
+  wayland.windowManager.hyprland.settings.window_rule = [
+    {
+      match.title = "^Android Phone - .*$";
+      float = true;
+      size = [
+        540
+        1200
+      ];
+      center = true;
+    }
   ];
 }
