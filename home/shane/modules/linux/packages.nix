@@ -184,7 +184,7 @@ in
     megacmd
     yt-dlp
     google-chrome
-    slack
+    slack-themed
     qalculate-qt
   ];
 }
