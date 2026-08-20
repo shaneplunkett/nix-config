@@ -16,6 +16,7 @@ in
   bluebubbles-themed = pkgs.callPackage ./bluebubbles-themed {
     palette = import ../lib/palette.nix;
   };
+  hyprland-preview-share-picker = pkgs.callPackage ./hyprland-preview-share-picker { };
 }
 // optionalAttrs isX86Linux {
   granola = pkgs.callPackage ./granola { };

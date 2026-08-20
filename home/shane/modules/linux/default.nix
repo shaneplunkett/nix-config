@@ -17,6 +17,7 @@
     ./waydroid.nix
     ./hyprland.nix
     ./taildrop.nix
+    ./screen-share.nix
   ]
 
   ++ lib.optionals (shell == "noctalia") [
