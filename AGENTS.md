@@ -63,6 +63,16 @@ module, such as small `writeShellApplication` wrappers. Keep runtime wrappers
 near the module when they mainly inject secrets or compose commands, but move
 the packaged tool they wrap into `pkgs/`.
 
+**New app icons need a noctalia restart.** Noctalia (quickshell) is Qt-based and
+snapshots the icon theme at process start, so an icon name that didn't exist
+when it launched renders as the magenta missing-texture checkerboard in the
+launcher and workspace selector — even though the file is correctly installed
+under `share/icons/hicolor/`. After a rebuild that adds a brand-new desktop app,
+restart the shell: `kill <quickshell pid>` then
+`hyprctl dispatch exec noctalia-shell` (exec via Hyprland so it gets the session
+environment; it is exec-once, not a systemd unit). Updates to existing apps
+don't need this — only icon names Qt has never seen.
+
 For pinned packages, add `passthru.updateScript = nix-update-script { };` when
 `nix-update --flake <attr>` can handle the bump cleanly. If a package needs a
 manual fetcher refresh, use `nurl <url> <rev>` and keep the package addressable
