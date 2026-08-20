@@ -10,7 +10,7 @@
   wayland.windowManager.hyprland.settings.window_rule = [
     {
       match.class = "^granola$";
-      workspace = "1 silent";
+      workspace = "10 silent"; # O — obsidian/notes workspace
       tile = true;
       fullscreen_state = "0 0";
       suppress_event = "maximize";

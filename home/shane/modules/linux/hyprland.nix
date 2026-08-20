@@ -23,18 +23,58 @@ let
   bindOpts = keys: dispatcher: opts: { _args = [ keys (mkLuaInline dispatcher) opts ]; };
   exec = cmd: ''hl.dsp.exec_cmd("${cmd}")'';
 
+  # Phonetic workspaces: key mnemonics for what lives there.
   workspaceKeys = [
-    { key = "1"; ws = 1; }
-    { key = "A"; ws = 2; }
-    { key = "B"; ws = 3; }
-    { key = "E"; ws = 4; }
-    { key = "T"; ws = 5; }
-    { key = "S"; ws = 6; }
-    { key = "M"; ws = 7; }
-    { key = "O"; ws = 8; }
-    { key = "9"; ws = 9; }
-    { key = "G"; ws = 10; }
+    { key = "1"; ws = 1; } # scratch
+    { key = "2"; ws = 2; } # other scratch
+    { key = "A"; ws = 3; } # AI
+    { key = "B"; ws = 4; } # browser
+    { key = "T"; ws = 5; } # terminal
+    { key = "I"; ws = 6; } # issues/ticketing
+    { key = "S"; ws = 7; } # socials
+    { key = "M"; ws = 8; } # media
+    { key = "9"; ws = 9; } # second monitor
+    { key = "O"; ws = 10; } # obsidian/notes
+    { key = "G"; ws = 11; } # gaming
   ];
+
+  # App home workspaces; "silent" keeps focus where it is when they open.
+  workspaceApps = {
+    "3" = [
+      "^t3code$"
+      "^claude$"
+      "^chatgpt$"
+    ];
+    "4" = [ "^google-chrome$" ];
+    "5" = [ "^com\\.mitchellh\\.ghostty$" ];
+    "6" = [ "^linear$" ];
+    "7" = [
+      "^slack$"
+      "^signal$"
+      "^ferdium$"
+      "^vesktop$"
+      "^bluebubbles$"
+    ];
+    "8" = [
+      "^com\\.edde746\\.plezy$"
+      "^YouTube Music Desktop App$"
+    ];
+    "10" = [ "^md\\.Obsidian$" ]; # granola's rule lives in granola.nix
+    "11" = [
+      "(?i)^steam$"
+      "^steam_app_.*$"
+    ];
+  };
+
+  appWorkspaceRules = lib.concatLists (
+    lib.mapAttrsToList (
+      ws: classes:
+      map (class: {
+        match.class = class;
+        workspace = "${ws} silent";
+      }) classes
+    ) workspaceApps
+  );
 
   workspaceBinds = lib.concatMap (
     { key, ws }:
@@ -193,7 +233,8 @@ in
             700
           ];
         }
-      ];
+      ]
+      ++ appWorkspaceRules;
 
       layer_rule = lib.optionals (shell == "noctalia") [
         {
@@ -225,7 +266,7 @@ in
           monitor = "DP-2";
           gaps_out = primaryWorkspaceGaps;
           default = ws == 1;
-        }) (lib.range 1 8 ++ [ 10 ])
+        }) (lib.range 1 8 ++ [ 10 11 ])
         ++ [
           {
             workspace = "9";
