@@ -36,6 +36,7 @@ let
     { key = "9"; ws = 9; } # second monitor
     { key = "O"; ws = 10; } # obsidian/notes
     { key = "G"; ws = 11; } # gaming
+    { key = "E"; ws = 12; } # email
   ];
 
   # App home workspaces; "silent" keeps focus where it is when they open.
@@ -64,6 +65,7 @@ let
       "(?i)^steam$"
       "^steam_app_.*$"
     ];
+    "12" = [ "^mail$" ];
   };
 
   appWorkspaceRules = lib.concatLists (
@@ -266,7 +268,7 @@ in
           monitor = "DP-2";
           gaps_out = primaryWorkspaceGaps;
           default = ws == 1;
-        }) (lib.range 1 8 ++ [ 10 11 ])
+        }) (lib.range 1 8 ++ [ 10 11 12 ])
         ++ [
           {
             workspace = "9";
