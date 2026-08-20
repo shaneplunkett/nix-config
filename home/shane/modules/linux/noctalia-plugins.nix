@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  inputs,
   ...
 }:
 let
@@ -11,7 +10,35 @@ let
   papirusIcons = "${pkgs.papirus-icon-theme}/share/icons/Papirus/48x48";
   freedesktopSounds = "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo";
 
+  chromeExecutable = "${pkgs.google-chrome}/share/google/chrome/google-chrome";
+  browserProfileRouter = pkgs.writeShellApplication {
+    name = "browser-profile-router";
+    text = ''
+      url="''${1:-}"
+
+      if [ -n "$url" ] && ${lib.getExe config.programs.noctalia-shell.package} ipc call \
+        plugin:vex-browser-profile open "$url" >/dev/null 2>&1; then
+        exit 0
+      fi
+
+      args=("--profile-directory=Default")
+      if [ -n "$url" ]; then
+        args+=("$url")
+      fi
+      exec ${chromeExecutable} "''${args[@]}"
+    '';
+  };
+
   plugins = {
+    vex-browser-profile = {
+      settings = {
+        inherit chromeExecutable;
+        personalProfileDirectory = "Default";
+        workProfileDirectory = "Profile 1";
+        screenName = "DP-2";
+      };
+    };
+
     vex-timer = {
       settings = {
         defaultMinutes = 30;
@@ -82,6 +109,28 @@ let
 in
 {
   home.file = pluginExtraFiles;
+
+  xdg = {
+    desktopEntries.browser-profile-router = {
+      name = "Browser Profile Chooser";
+      comment = "Choose which Chrome profile opens an external link";
+      exec = "${lib.getExe browserProfileRouter} %u";
+      icon = "google-chrome";
+      terminal = false;
+      noDisplay = true;
+      mimeType = [
+        "text/html"
+        "x-scheme-handler/http"
+        "x-scheme-handler/https"
+      ];
+    };
+
+    mimeApps.defaultApplications = {
+      "text/html" = "browser-profile-router.desktop";
+      "x-scheme-handler/http" = "browser-profile-router.desktop";
+      "x-scheme-handler/https" = "browser-profile-router.desktop";
+    };
+  };
 
   programs.noctalia-shell.pluginSettings = lib.mapAttrs (_: p: p.settings) plugins;
 
