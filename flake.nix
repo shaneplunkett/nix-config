@@ -67,6 +67,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Noctalia v5 rewrite, pinned to a beta tag and run side by side with v4
+    # as a separate greeter session while the migration happens piecemeal.
+    # Like Hyprland, it keeps its own nixpkgs pin: following ours would
+    # invalidate the noctalia.cachix.org binary cache and force local builds.
+    noctalia-v5.url = "github:noctalia-dev/noctalia-shell/v5.0.0-beta.8";
+
     vex-tooling = {
       url = "git+ssh://git@github.com/shaneplunkett/vex-tooling.git";
       inputs.nixpkgs.follows = "nixpkgs";

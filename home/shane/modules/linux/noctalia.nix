@@ -73,6 +73,15 @@ let
       fi
 
       user="''${USER:-$(id -un)}"
+
+      # In a Noctalia v5 test session (separate greeter entry), the v5 binary
+      # "noctalia" is running instead of quickshell. Don't dispatch the v4
+      # shell into it, or two bars end up fighting over the same outputs.
+      if pgrep -u "$user" -x noctalia >/dev/null 2>&1; then
+        echo "Noctalia v5 session detected; not restarting the v4 shell."
+        exit 0
+      fi
+
       pids_to_kill=()
 
       for pid in $(pgrep -u "$user" -f '[q]uickshell' || true); do
@@ -869,7 +878,13 @@ in
           "hyprland.start"
           (lib.generators.mkLuaInline ''
             function()
-              hl.exec_cmd("noctalia-shell")
+              -- NOCTALIA_GEN=5 comes from the "Hyprland (Noctalia v5)"
+              -- greeter session; the default session stays on v4.
+              if os.getenv("NOCTALIA_GEN") == "5" then
+                hl.exec_cmd("noctalia-v5")
+              else
+                hl.exec_cmd("noctalia-shell")
+              end
             end'')
         ];
       }

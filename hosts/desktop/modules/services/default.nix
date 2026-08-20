@@ -4,6 +4,7 @@
   imports = [
 
     ./greetd.nix
+    ./noctalia-v5-session.nix
 
   ];
 
