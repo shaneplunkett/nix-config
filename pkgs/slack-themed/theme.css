@@ -711,3 +711,15 @@
   background-color: #11111b !important;
   background-image: none !important;
 }
+
+/* Depth tuning: the generated mapping lands both the backdrop and the
+ * content pane in the darkest buckets, which reads as flat near-black.
+ * Classic Catppuccin layering instead: content on base, sidebar/rail on
+ * mantle (the translucent crust sidebar surface composites over it).
+ * Later rules win over the generated block at equal specificity. */
+:root, body {
+  --sk_primary_background: 30, 30, 46 !important; /* base */
+}
+.p-theme_background {
+  background-color: #181825 !important; /* mantle */
+}
