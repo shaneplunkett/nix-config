@@ -19,24 +19,71 @@ let
   };
 
   # hl.bind(keys, dispatcher [, opts]); the dispatcher is a raw Lua expression.
-  bind = keys: dispatcher: { _args = [ keys (mkLuaInline dispatcher) ]; };
-  bindOpts = keys: dispatcher: opts: { _args = [ keys (mkLuaInline dispatcher) opts ]; };
+  bind = keys: dispatcher: {
+    _args = [
+      keys
+      (mkLuaInline dispatcher)
+    ];
+  };
+  bindOpts = keys: dispatcher: opts: {
+    _args = [
+      keys
+      (mkLuaInline dispatcher)
+      opts
+    ];
+  };
   exec = cmd: ''hl.dsp.exec_cmd("${cmd}")'';
 
   # Phonetic workspaces: key mnemonics for what lives there.
   workspaceKeys = [
-    { key = "1"; ws = 1; } # scratch
-    { key = "2"; ws = 2; } # other scratch
-    { key = "A"; ws = 3; } # AI
-    { key = "B"; ws = 4; } # browser
-    { key = "T"; ws = 5; } # terminal
-    { key = "I"; ws = 6; } # issues/ticketing
-    { key = "S"; ws = 7; } # socials
-    { key = "M"; ws = 8; } # media
-    { key = "9"; ws = 9; } # second monitor
-    { key = "O"; ws = 10; } # obsidian/notes
-    { key = "G"; ws = 11; } # gaming
-    { key = "E"; ws = 12; } # email
+    {
+      key = "1";
+      ws = 1;
+    } # scratch
+    {
+      key = "2";
+      ws = 2;
+    } # other scratch
+    {
+      key = "A";
+      ws = 3;
+    } # AI
+    {
+      key = "B";
+      ws = 4;
+    } # browser
+    {
+      key = "T";
+      ws = 5;
+    } # terminal
+    {
+      key = "I";
+      ws = 6;
+    } # issues/ticketing
+    {
+      key = "S";
+      ws = 7;
+    } # socials
+    {
+      key = "M";
+      ws = 8;
+    } # media
+    {
+      key = "9";
+      ws = 9;
+    } # second monitor
+    {
+      key = "O";
+      ws = 10;
+    } # obsidian/notes
+    {
+      key = "G";
+      ws = 11;
+    } # gaming
+    {
+      key = "E";
+      ws = 12;
+    } # email
   ];
 
   # App home workspaces; focus follows the app when it opens.
@@ -86,15 +133,30 @@ let
     ]
   ) workspaceKeys;
 
-  directionBinds = lib.concatMap (dir: [
-    (bind "${mod} + ${dir.key}" ''hl.dsp.focus({ direction = "${dir.d}" })'')
-    (bind "${mod} + SHIFT + ${dir.key}" ''hl.dsp.window.move({ direction = "${dir.d}" })'')
-  ]) [
-    { key = "h"; d = "l"; }
-    { key = "l"; d = "r"; }
-    { key = "k"; d = "u"; }
-    { key = "j"; d = "d"; }
-  ];
+  directionBinds =
+    lib.concatMap
+      (dir: [
+        (bind "${mod} + ${dir.key}" ''hl.dsp.focus({ direction = "${dir.d}" })'')
+        (bind "${mod} + SHIFT + ${dir.key}" ''hl.dsp.window.move({ direction = "${dir.d}" })'')
+      ])
+      [
+        {
+          key = "h";
+          d = "l";
+        }
+        {
+          key = "l";
+          d = "r";
+        }
+        {
+          key = "k";
+          d = "u";
+        }
+        {
+          key = "j";
+          d = "d";
+        }
+      ];
 in
 {
   wayland.windowManager.hyprland = {
@@ -263,12 +325,21 @@ in
       ];
 
       workspace_rule =
-        map (ws: {
-          workspace = toString ws;
-          monitor = "DP-2";
-          gaps_out = primaryWorkspaceGaps;
-          default = ws == 1;
-        }) (lib.range 1 8 ++ [ 10 11 12 ])
+        map
+          (ws: {
+            workspace = toString ws;
+            monitor = "DP-2";
+            gaps_out = primaryWorkspaceGaps;
+            default = ws == 1;
+          })
+          (
+            lib.range 1 8
+            ++ [
+              10
+              11
+              12
+            ]
+          )
         ++ [
           {
             workspace = "9";
@@ -278,9 +349,24 @@ in
         ];
 
       env = [
-        { _args = [ "STEAM_FORCE_DESKTOPUI_SCALING" "1.25" ]; }
-        { _args = [ "GDK_SCALE" "2" ]; }
-        { _args = [ "XCURSOR_SIZE" "48" ]; }
+        {
+          _args = [
+            "STEAM_FORCE_DESKTOPUI_SCALING"
+            "1.25"
+          ];
+        }
+        {
+          _args = [
+            "GDK_SCALE"
+            "2"
+          ];
+        }
+        {
+          _args = [
+            "XCURSOR_SIZE"
+            "48"
+          ];
+        }
       ];
 
       config = {
