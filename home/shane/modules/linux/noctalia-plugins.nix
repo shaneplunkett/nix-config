@@ -14,6 +14,15 @@ let
   browserProfileRouter = pkgs.writeShellApplication {
     name = "browser-profile-router";
     text = ''
+      if [ "''${1:-}" = "--new-window" ]; then
+        if ${lib.getExe config.programs.noctalia-shell.package} ipc call \
+          plugin:vex-browser-profile newWindow >/dev/null 2>&1; then
+          exit 0
+        fi
+
+        exec ${chromeExecutable} --profile-directory=Default --new-window
+      fi
+
       url="''${1:-}"
 
       if [ -n "$url" ] && ${lib.getExe config.programs.noctalia-shell.package} ipc call \
@@ -111,18 +120,44 @@ in
   home.file = pluginExtraFiles;
 
   xdg = {
-    desktopEntries.browser-profile-router = {
-      name = "Browser Profile Chooser";
-      comment = "Choose which Chrome profile opens an external link";
-      exec = "${lib.getExe browserProfileRouter} %u";
-      icon = "google-chrome";
-      terminal = false;
-      noDisplay = true;
-      mimeType = [
-        "text/html"
-        "x-scheme-handler/http"
-        "x-scheme-handler/https"
-      ];
+    desktopEntries = {
+      browser-profile-router = {
+        name = "Browser Profile Chooser";
+        comment = "Choose which Chrome profile opens an external link";
+        exec = "${lib.getExe browserProfileRouter} %u";
+        icon = "google-chrome";
+        terminal = false;
+        noDisplay = true;
+        mimeType = [
+          "text/html"
+          "x-scheme-handler/http"
+          "x-scheme-handler/https"
+        ];
+      };
+
+      google-chrome = {
+        name = "Google Chrome";
+        genericName = "Web Browser";
+        comment = "Open a new Chrome window in a chosen profile";
+        exec = "${lib.getExe browserProfileRouter} --new-window";
+        icon = "google-chrome";
+        terminal = false;
+        categories = [
+          "Network"
+          "WebBrowser"
+        ];
+        settings.StartupWMClass = "google-chrome";
+        actions = {
+          Personal = {
+            name = "New Personal Window";
+            exec = "${chromeExecutable} --profile-directory=Default --new-window";
+          };
+          Work = {
+            name = "New Work Window";
+            exec = ''${chromeExecutable} --profile-directory="Profile 1" --new-window'';
+          };
+        };
+      };
     };
 
     mimeApps.defaultApplications = {
