@@ -248,7 +248,13 @@ in
           resize_on_border = true;
 
           col = {
-            active_border = "${hyprRgba.mauve} ${hyprRgba.lavender} 45deg";
+            active_border = {
+              colors = [
+                hyprRgba.mauve
+                hyprRgba.lavender
+              ];
+              angle = 45;
+            };
             inactive_border = hyprRgba.surface2;
           };
         };
