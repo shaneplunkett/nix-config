@@ -75,7 +75,6 @@ in
 
       bind = [
         (bind "${mod} + SHIFT + Q" "hl.dsp.window.close()")
-        (bind "${mod} + A" (exec "claude"))
         (bind "${mod} + RETURN" (exec terminal))
         (bind "${mod} + SHIFT + 4" (exec "hyprshot -m region --clipboard-only"))
         (bind "${mod} + SHIFT + 5" (
@@ -98,7 +97,6 @@ in
         (bind "${mod} + space" (exec "noctalia-shell ipc call launcher toggle"))
         (bind "${mod} + V" (exec "noctalia-shell ipc call launcher clipboard"))
         (bind "${mod} + N" (exec "noctalia-shell ipc call controlCenter toggle"))
-        (bind "${mod} + SHIFT + L" (exec "noctalia-shell ipc call lockScreen lock"))
       ];
 
       curve = [
