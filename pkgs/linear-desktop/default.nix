@@ -1,4 +1,5 @@
 {
+  asar,
   copyDesktopItems,
   curl,
   electron_41,
@@ -58,6 +59,7 @@ stdenv.mkDerivation {
   dontUnpack = true;
 
   nativeBuildInputs = [
+    asar
     copyDesktopItems
     makeWrapper
     p7zip
@@ -72,13 +74,22 @@ stdenv.mkDerivation {
     7z x -y "$src" -oinstaller >/dev/null
     7z x -y 'installer/$PLUGINSDIR/app-64.7z' -oapp-bundle >/dev/null
 
+    # Linear has no font (or similar appearance) settings, so inject our own
+    # CSS into every window from the main process. The bundle ends in plain
+    # code with no trailing newline, hence the printf guard.
+    asar extract app-bundle/resources/app.asar app
+    cp ${./custom.css} app/out/main/custom.css
+    printf '\n' >> app/out/main/index.js
+    cat ${./inject-css.js} >> app/out/main/index.js
+
     runHook postBuild
   '';
 
   installPhase = ''
     runHook preInstall
 
-    install -Dm644 app-bundle/resources/app.asar "$out/share/linear/app.asar"
+    mkdir -p "$out/share/linear"
+    cp -a app "$out/share/linear/app"
     install -Dm644 ${./icon.png} "$out/share/icons/hicolor/512x512/apps/linear.png"
 
     # electron-updater sees an unpackaged app and skips update checks, so the
@@ -86,7 +97,7 @@ stdenv.mkDerivation {
     makeWrapper ${electron_41}/bin/electron "$out/bin/linear-desktop" \
       --unset ELECTRON_RUN_AS_NODE \
       --set ELECTRON_OZONE_PLATFORM_HINT auto \
-      --add-flags "$out/share/linear/app.asar" \
+      --add-flags "$out/share/linear/app" \
       --add-flags "--ozone-platform-hint=auto" \
       --add-flags "--enable-features=WaylandWindowDecorations"
 
