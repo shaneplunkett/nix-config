@@ -128,10 +128,15 @@
           runtimeInputs = [
             pkgs.nixfmt
             pkgs.git
+            pkgs.gnugrep
           ];
           text = ''
             cd "$(git rev-parse --show-toplevel)"
+            # Skip files whose deliberate compact layout (one-liner attrset
+            # tables with trailing comments) nixfmt would explode.
             git ls-files --cached --others --exclude-standard -z '*.nix' \
+              | grep --null-data -vxF \
+                  -e home/shane/modules/linux/hyprland.nix \
               | xargs -0 -r nixfmt "$@"
           '';
         }
