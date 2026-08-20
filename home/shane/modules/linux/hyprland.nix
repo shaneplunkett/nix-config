@@ -39,7 +39,7 @@ let
     { key = "E"; ws = 12; } # email
   ];
 
-  # App home workspaces; "silent" keeps focus where it is when they open.
+  # App home workspaces; focus follows the app when it opens.
   workspaceApps = {
     "3" = [
       "^t3code$"
@@ -73,7 +73,7 @@ let
       ws: classes:
       map (class: {
         match.class = class;
-        workspace = "${ws} silent";
+        workspace = ws;
       }) classes
     ) workspaceApps
   );
