@@ -10,7 +10,10 @@ let
   papirusIcons = "${pkgs.papirus-icon-theme}/share/icons/Papirus/48x48";
   freedesktopSounds = "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo";
 
-  chromeExecutable = "${pkgs.google-chrome}/share/google/chrome/google-chrome";
+  # Must be the wrapped launcher from bin/, not the raw binary in share/ —
+  # the wrapper provides the GL driver paths; without it Chrome silently
+  # disables all hardware acceleration (no WebGL).
+  chromeExecutable = lib.getExe pkgs.google-chrome;
   browserProfileRouter = pkgs.writeShellApplication {
     name = "browser-profile-router";
     text = ''
