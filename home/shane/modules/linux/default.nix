@@ -12,7 +12,6 @@
     ./granola.nix
     ./linear.nix
     ./bloodborne.nix
-    ./webapps
     ./vesktop.nix
     ./waydroid.nix
     ./hyprland.nix
