@@ -6,15 +6,30 @@
 let
   bluebubblesThemed = pkgs.bluebubbles-themed;
 
-  orcaStudioX11 = pkgs.symlinkJoin {
-    name = "orca-studio-x11";
-    paths = [ pkgs.orca-studio ];
-    nativeBuildInputs = [ pkgs.makeWrapper ];
-    postBuild = ''
-      wrapProgram $out/bin/orca-studio \
-        --set GDK_BACKEND x11 \
-        --set GDK_SCALE 1
-    '';
+  wrapGtkAppForX11 =
+    {
+      executable,
+      package,
+    }:
+    pkgs.symlinkJoin {
+      name = "${executable}-x11";
+      paths = [ package ];
+      nativeBuildInputs = [ pkgs.makeWrapper ];
+      postBuild = ''
+        wrapProgram $out/bin/${executable} \
+          --set GDK_BACKEND x11 \
+          --set GDK_SCALE 1
+      '';
+    };
+
+  bambuStudioX11 = wrapGtkAppForX11 {
+    executable = "bambu-studio";
+    package = pkgs.bambu-studio;
+  };
+
+  orcaStudioX11 = wrapGtkAppForX11 {
+    executable = "orca-studio";
+    package = pkgs.orca-studio;
   };
 
   bugRecord = pkgs.writeShellApplication {
@@ -173,6 +188,7 @@ in
     cliphist
     bugRecord
     obsidian
+    bambuStudioX11
     orcaStudioX11
     mpv
     vlc
