@@ -22,7 +22,7 @@ in
   granola = pkgs.callPackage ./granola { };
   linear-desktop = pkgs.callPackage ./linear-desktop { };
   slack-themed = pkgs.callPackage ./slack-themed { };
-  orca-slicer-bambulab = pkgs.callPackage ./orca-slicer-bambulab { };
+  orca-studio = pkgs.callPackage ./orca-studio { };
   shadps4-cache-fixed = pkgs.callPackage ./shadps4-cache-fixed { };
   ytmdesktop-bin = pkgs.callPackage ./ytmdesktop-bin { };
 }

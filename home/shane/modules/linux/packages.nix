@@ -6,12 +6,12 @@
 let
   bluebubblesThemed = pkgs.bluebubbles-themed;
 
-  orcaSlicerFixed = pkgs.symlinkJoin {
-    name = "orca-slicer-fixed";
-    paths = [ pkgs.orca-slicer-bambulab ];
+  orcaStudioX11 = pkgs.symlinkJoin {
+    name = "orca-studio-x11";
+    paths = [ pkgs.orca-studio ];
     nativeBuildInputs = [ pkgs.makeWrapper ];
     postBuild = ''
-      wrapProgram $out/bin/orca-slicer \
+      wrapProgram $out/bin/orca-studio \
         --set GDK_BACKEND x11 \
         --set GDK_SCALE 1
     '';
@@ -173,7 +173,7 @@ in
     cliphist
     bugRecord
     obsidian
-    orcaSlicerFixed
+    orcaStudioX11
     mpv
     vlc
     samrewritten
