@@ -2,6 +2,8 @@
   lib,
   fetchurl,
   appimageTools,
+  glib-networking,
+  makeWrapper,
   nix-update-script,
 }:
 
@@ -18,10 +20,13 @@ appimageTools.wrapType2 (finalAttrs: {
   };
 
   extraPkgs = pkgs: [
+    pkgs.glib-networking
     pkgs.libsoup_3
     pkgs.libwebp
     pkgs.webkitgtk_4_1
   ];
+
+  nativeBuildInputs = [ makeWrapper ];
 
   extraInstallCommands = ''
     install -m 444 -D ${finalAttrs.contents}/com.orcaslicer.OrcaStudio.desktop \
@@ -31,6 +36,10 @@ appimageTools.wrapType2 (finalAttrs: {
 
     install -m 444 -D ${finalAttrs.contents}/OrcaStudio.png \
       $out/share/icons/hicolor/192x192/apps/OrcaStudio.png
+
+    wrapProgram $out/bin/orca-studio \
+      --prefix GIO_EXTRA_MODULES : ${glib-networking}/lib/gio/modules \
+      --set SSL_CERT_FILE /etc/ssl/certs/ca-bundle.crt
   '';
 
   passthru.updateScript = nix-update-script { };
