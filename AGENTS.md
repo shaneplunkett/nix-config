@@ -58,6 +58,10 @@ themed builds, and machine config. Where things live, and the update chain for
 each repo, is documented in `docs/environment-map.md` — check it before
 packaging something new or hunting for where a CLI version comes from.
 
+**Private utility carve-out:** deliberately private desktop utilities belong in
+`nix-config-private/pkgs/` and are installed through its Home Manager module.
+Keep their names and package details out of this public repo.
+
 Inline derivations are only for module-local glue that is genuinely tied to the
 module, such as small `writeShellApplication` wrappers. Keep runtime wrappers
 near the module when they mainly inject secrets or compose commands, but move

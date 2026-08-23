@@ -759,11 +759,11 @@
     },
     "nix-config-private": {
       "locked": {
-        "lastModified": 1787109706,
-        "narHash": "sha256-Hi8SOHXebDX/ndqQv8RSlREF7t2c4q9YpE2ofDNohLs=",
+        "lastModified": 1787465051,
+        "narHash": "sha256-pULXBfT11PTjdR7hkSwRMztKVPjnXYfK3+GXGaUsW0Q=",
         "ref": "refs/heads/main",
-        "rev": "40ad27b0aa8d8d948a5589851fd834144d296e53",
-        "revCount": 8,
+        "rev": "b59fabd86955b95a22915502c252114036920919",
+        "revCount": 9,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/nix-config-private.git"
       },
