@@ -73,8 +73,8 @@ when it launched renders as the magenta missing-texture checkerboard in the
 launcher and workspace selector — even though the file is correctly installed
 under `share/icons/hicolor/`. After a rebuild that adds a brand-new desktop app,
 restart the shell: `kill <quickshell pid>` then
-`hyprctl dispatch exec noctalia-shell` (exec via Hyprland so it gets the session
-environment; it is exec-once, not a systemd unit). Updates to existing apps
+`hyprctl eval 'hl.exec_cmd("noctalia-shell")'` (exec via Hyprland so it gets the
+session environment; it is exec-once, not a systemd unit). Updates to existing apps
 don't need this — only icon names Qt has never seen.
 
 For pinned packages, add `passthru.updateScript = nix-update-script { };` when

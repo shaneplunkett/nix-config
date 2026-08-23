@@ -112,7 +112,7 @@ let
         done
       fi
 
-      hyprctl dispatch exec ${lib.escapeShellArg (lib.getExe noctaliaPackage)}
+      hyprctl eval ${lib.escapeShellArg "hl.exec_cmd(${builtins.toJSON (lib.getExe noctaliaPackage)})"}
 
       for _ in $(seq 1 30); do
         for pid in $(pgrep -u "$user" -f '[q]uickshell' || true); do
