@@ -21,3 +21,24 @@
              }
              var key = root.getAppKey(modelData);
              if (key) {
+@@ -741,3 +744,20 @@
++      // Existing streams follow their live PipeWire state. Some stream types
++      // do not emit audio.volumeChanged for external changes, so the periodic
++      // pass must sync those values rather than re-applying stale overrides.
++      if (prevKnown[s.id]) {
++        if (key) {
++          root.setAppStreamVolume(key, s.audio.volume);
++          root.setAppStreamMuted(key, s.audio.muted);
++        }
++        if (root._skipPipewireVolumeSyncForNode(s)) {
++          root._writePanelStickyVolume(s, s.audio.volume);
++        }
++        if (root._skipPipewireMuteSyncForNode(s)) {
++          root._writePanelStickyMute(s, s.audio.muted);
++        }
++        continue;
++      }
++
+       var panelVol = _panelStickyVolume(key, base);
+       var panelMute = _panelStickyMute(key, base);
+       var targetVol = (panelVol !== undefined) ? panelVol : (ov && ov.volume !== undefined ? ov.volume : undefined);
