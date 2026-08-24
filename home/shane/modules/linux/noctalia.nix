@@ -321,6 +321,13 @@ in
               pinned = [ ];
             }
             {
+              id = "Volume";
+              displayMode = "onhover";
+              iconColor = "secondary";
+              middleClickCommand = "pwvucontrol || pavucontrol";
+              textColor = "secondary";
+            }
+            {
               id = "plugin:vex-tailscale-guard";
             }
             {
