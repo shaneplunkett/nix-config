@@ -29,7 +29,7 @@ let
   unwrapped = (t3code.unwrapped.override { pnpm_11 = pnpm; }).overrideAttrs (
     finalAttrs: previousAttrs: {
       pname = "vex-code-unwrapped";
-      version = "0.0.34-vex.2";
+      version = "0.0.34-vex.3";
       src = namedSrc;
 
       pnpmDeps = fetchPnpmDeps {
