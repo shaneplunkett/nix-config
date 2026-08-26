@@ -54,11 +54,11 @@
         "tavily-skills": "tavily-skills"
       },
       "locked": {
-        "lastModified": 1787104025,
-        "narHash": "sha256-0SvxcRQ8Qbf9OHh4HiRaA6UtXcBFlbCE+vATwl+sOAM=",
+        "lastModified": 1787638202,
+        "narHash": "sha256-IHLyKaQNMDU+ULKlMuBoFOdTppvwm90daGZY7i2lqMc=",
         "ref": "refs/heads/main",
-        "rev": "022c18cab2ab1ab3b38997560885fcd23ad2b8c5",
-        "revCount": 102,
+        "rev": "2b19ae1d0a53ae719c2e20d567ff72359741483b",
+        "revCount": 103,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/ai-skills.git"
       },
