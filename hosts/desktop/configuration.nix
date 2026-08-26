@@ -6,6 +6,7 @@
     ../../modules/common
     ../../modules/nixos
     inputs.home-manager.nixosModules.default
+    inputs.nix-config-private.nixosModules.default
   ];
 
   boot.loader = {
