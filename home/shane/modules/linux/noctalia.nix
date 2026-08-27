@@ -331,6 +331,9 @@ in
               id = "plugin:vex-tailscale-guard";
             }
             {
+              id = "plugin:vex-gcp-proxy";
+            }
+            {
               id = "plugin:vex-timer";
             }
             {

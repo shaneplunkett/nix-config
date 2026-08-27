@@ -92,6 +92,13 @@ let
       };
     };
 
+    vex-gcp-proxy = {
+      settings = {
+        refreshIntervalMs = 15000;
+        bastionEnv = "dev";
+      };
+    };
+
     vex-tailscale-guard = {
       settings = {
         refreshIntervalMs = 5000;
