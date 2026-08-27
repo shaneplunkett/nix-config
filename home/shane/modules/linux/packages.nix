@@ -170,7 +170,7 @@ in
     # plex-desktop
     ferdium
     mangohud
-    protonup-ng
+    protonup-qt
     shadps4-cache-fixed
     ytmdesktop-bin
     libnotify
