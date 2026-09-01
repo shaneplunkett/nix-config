@@ -5,7 +5,6 @@
 {
   environment.systemPackages = with pkgs; [
     vim
-    alt-tab-macos
     chatgpt
     colima
     docker
@@ -13,8 +12,6 @@
     docker-compose
     home-manager
     hidden-bar
-    postman
-    pear-desktop
     raycast
     signal-desktop
     google-chrome

@@ -5,11 +5,9 @@ _: {
 
     casks = [
       "ghostty"
-      "elgato-camera-hub"
       "tailscale-app"
       "plex"
       "ferdium"
-      "hammerspoon"
       "codex-app"
       "bluebubbles"
       "yt-music"
