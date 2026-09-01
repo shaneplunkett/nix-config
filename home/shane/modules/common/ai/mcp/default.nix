@@ -58,10 +58,6 @@ in
         url = "https://mcp.posthog.com/mcp";
       };
 
-      granola = {
-        url = "https://mcp.granola.ai/mcp";
-      };
-
       linear-personal = {
         url = "https://mcp.linear.app/mcp";
       };

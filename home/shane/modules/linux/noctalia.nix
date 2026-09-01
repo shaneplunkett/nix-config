@@ -325,13 +325,19 @@ in
               textColor = "secondary";
             }
             {
+              id = "plugin:vex-ai-usage";
+            }
+            {
+              id = "plugin:vex-tailscale-guard";
+            }
+            {
               id = "plugin:vex-timer";
             }
             {
-              id = "plugin:vex-agenda";
-            }
-            {
-              id = "plugin:vex-todoist";
+              id = "Clock";
+              clockColor = "tertiary";
+              formatHorizontal = "HH:mm ddd, MMM dd";
+              tooltipFormat = "HH:mm ddd, MMM dd";
             }
             {
               id = "plugin:screen-shot-and-record";

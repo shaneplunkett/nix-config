@@ -18,7 +18,6 @@ in
   hyprland-preview-share-picker = pkgs.callPackage ./hyprland-preview-share-picker { };
 }
 // optionalAttrs isX86Linux {
-  granola = pkgs.callPackage ./granola { };
   linear-desktop = pkgs.callPackage ./linear-desktop { };
   orca-studio = pkgs.callPackage ./orca-studio { };
   shadps4-cache-fixed = pkgs.callPackage ./shadps4-cache-fixed { };

@@ -7,7 +7,6 @@
 let
   homeDir = config.home.homeDirectory;
   pluginRoot = "${homeDir}/projects/personal/noctalia-plugins";
-  papirusIcons = "${pkgs.papirus-icon-theme}/share/icons/Papirus/48x48";
   freedesktopSounds = "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo";
 
   # Must be the wrapped launcher from bin/, not the raw binary in share/ —
@@ -45,21 +44,20 @@ let
       };
     };
 
-    vex-agenda = {
+    vex-ai-usage = {
       settings = {
-        clockColor = "tertiary";
-        clockFormat = "HH:mm ddd, MMM dd";
-      };
-      extraFiles = {
-        ".local/share/vex-icons/calendar.svg".source = "${papirusIcons}/apps/alarm-clock.svg";
-        ".local/share/vex-icons/heart.svg".source = "${papirusIcons}/emblems/emblem-favorite.svg";
-        ".local/share/vex-icons/todo.svg".source = "${papirusIcons}/apps/korg-todo.svg";
+        accentColor = "primary";
+        warningThreshold = 0.7;
+        criticalThreshold = 0.9;
+        refreshIntervalSec = 300;
       };
     };
 
-    vex-todoist = {
+    vex-tailscale-guard = {
       settings = {
-        accentColor = "primary";
+        refreshIntervalMs = 5000;
+        acceptRoutes = false;
+        loginNickname = "personal";
       };
     };
 

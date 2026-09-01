@@ -105,7 +105,7 @@ let
       "^com\\.edde746\\.plezy$"
       "^YouTube Music Desktop App$"
     ];
-    "10" = [ "^md\\.Obsidian$" ]; # granola's rule lives in granola.nix
+    "10" = [ "^md\\.Obsidian$" ];
     "11" = [
       "(?i)^steam$"
       "^steam_app_.*$"

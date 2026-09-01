@@ -80,8 +80,8 @@ let
         "bearer_token"
         "disabled"
         "headers"
-        # Shared MCP entries may carry Claude/RMCP OAuth metadata that Codex
-        # treats as an instruction to start an OAuth flow during initialisation.
+        # Shared MCP entries may carry OAuth metadata that Codex treats as an
+        # instruction to start an OAuth flow during initialisation.
         "oauth"
         "oauth_resource"
         "type"
