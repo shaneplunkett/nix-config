@@ -1,21 +1,5 @@
 {
   "nodes": {
-    "ag-ai-skills": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1783999542,
-        "narHash": "sha256-JNZKnuTifbIVo2jdsldB1GSTT1O0I13kb5Bw6XyHUBs=",
-        "ref": "refs/heads/main",
-        "rev": "f99fd95f1d874fcb083a02b9f85d957f515f9d71",
-        "revCount": 33,
-        "type": "git",
-        "url": "ssh://git@github.com/autograb/ag-ai-skills.git"
-      },
-      "original": {
-        "type": "git",
-        "url": "ssh://git@github.com/autograb/ag-ai-skills.git"
-      }
-    },
     "agenix": {
       "inputs": {
         "darwin": [
@@ -45,7 +29,6 @@
     },
     "ai-skills": {
       "inputs": {
-        "ag-ai-skills": "ag-ai-skills",
         "langsmith-skills": "langsmith-skills",
         "matt-skills": "matt-skills",
         "nixpkgs": [
@@ -54,11 +37,11 @@
         "tavily-skills": "tavily-skills"
       },
       "locked": {
-        "lastModified": 1788139636,
-        "narHash": "sha256-qoYFND3WnRQgVhs/izAQp6i9wRAZmUrAkU5/0vNfqWg=",
+        "lastModified": 1788233732,
+        "narHash": "sha256-jYQCPzVZg/wsLGgR4UF8CmFtaEUY/CjiJ4W/GGWXe4w=",
         "ref": "refs/heads/main",
-        "rev": "ad423db9017a812dcdcb6d756ca5d433a49f9658",
-        "revCount": 104,
+        "rev": "a9343a265880e3f05613768a18e59dd44f65aa70",
+        "revCount": 105,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/ai-skills.git"
       },
