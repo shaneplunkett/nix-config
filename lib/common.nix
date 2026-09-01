@@ -32,27 +32,10 @@ in
         let
           system = prev.stdenv.hostPlatform.system;
           aiPackages = inputs.llm-agents.packages.${system} or { };
-          hasCliPackages = builtins.hasAttr "claude-code" aiPackages && builtins.hasAttr "codex" aiPackages;
         in
-        (prev.lib.optionalAttrs hasCliPackages {
-          inherit (aiPackages) claude-code codex;
-        })
-        // (prev.lib.optionalAttrs
-          (prev.stdenv.hostPlatform.isLinux && builtins.hasAttr "claude-desktop" aiPackages)
-          {
-            # ANGLE dlopens the native libEGL.so.1 from inside a bundled shared
-            # library, where upstream's runtimeDependencies RUNPATH (executables
-            # only) doesn't reach, so GPU init fails and the UI falls back to
-            # software rendering. Put glvnd on LD_LIBRARY_PATH, which dlopen
-            # always searches.
-            claude-desktop = aiPackages.claude-desktop.overrideAttrs (old: {
-              postFixup = (old.postFixup or "") + ''
-                wrapProgram $out/bin/claude-desktop \
-                  --prefix LD_LIBRARY_PATH : ${prev.lib.makeLibraryPath [ prev.libglvnd ]}
-              '';
-            });
-          }
-        )
+        prev.lib.optionalAttrs (builtins.hasAttr "codex" aiPackages) {
+          inherit (aiPackages) codex;
+        }
       )
       (final: prev: mkProjectPackages prev.stdenv.hostPlatform.system final)
       (

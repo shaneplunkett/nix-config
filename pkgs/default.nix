@@ -8,7 +8,6 @@ let
   optionalAttrs = condition: attrs: if condition then attrs else { };
 in
 {
-  claude-plugins-official = pkgs.callPackage ./claude-plugins-official { };
   vex-code = pkgs.callPackage ./vex-code { src = vexCodeSrc; };
   xcodebuild-nvim = pkgs.callPackage ./xcodebuild-nvim { };
 }
@@ -21,7 +20,6 @@ in
 // optionalAttrs isX86Linux {
   granola = pkgs.callPackage ./granola { };
   linear-desktop = pkgs.callPackage ./linear-desktop { };
-  slack-themed = pkgs.callPackage ./slack-themed { };
   orca-studio = pkgs.callPackage ./orca-studio { };
   shadps4-cache-fixed = pkgs.callPackage ./shadps4-cache-fixed { };
   ytmdesktop-bin = pkgs.callPackage ./ytmdesktop-bin { };

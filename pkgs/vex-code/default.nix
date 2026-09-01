@@ -102,7 +102,7 @@ let
 in
 (t3code.override {
   inherit codex;
-  enableClaude = true;
+  enableClaude = false;
   t3code-unwrapped = unwrapped;
 }).overrideAttrs
   { pname = "vex-code"; }

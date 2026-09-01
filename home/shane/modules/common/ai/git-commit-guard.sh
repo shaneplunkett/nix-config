@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# PreToolUse guard shared by Codex and Claude Code.
+# PreToolUse guard for Codex.
 #
 # It does not replace repository hooks. It prevents agents from bypassing them
 # and blocks commits in repos that declare pre-commit config but have no active
@@ -86,15 +86,6 @@ fi
 [ -n "$reason" ] || exit 0
 
 case "$mode" in
-  claude)
-    jq -n --arg reason "$reason" '{
-      hookSpecificOutput: {
-        hookEventName: "PreToolUse",
-        permissionDecision: "deny"
-      },
-      systemMessage: $reason
-    }'
-    ;;
   codex)
     jq -n --arg reason "$reason" '{
       decision: "block",

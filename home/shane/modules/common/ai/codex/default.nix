@@ -9,6 +9,10 @@ let
   inherit (config.home) homeDirectory;
 
   inherit (aiHelpers) skillProfiles;
+  codexSkills = lib.removeAttrs skillProfiles.codex [
+    "langsmith-autograb"
+    "slack-autograb"
+  ];
   vexRoot = "${aiHelpers.aiSkillsRoot}/vex";
   tomlFormat = pkgs.formats.toml { };
 
@@ -370,7 +374,7 @@ in
     home = {
       file = aiHelpers.mkSkillTree {
         dir = "${codexConfigDir}/skills";
-        skills = skillProfiles.codex;
+        skills = codexSkills;
       };
 
       activation.codexMutableConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] (

@@ -13,7 +13,6 @@ _: {
       "codex-app"
       "bluebubbles"
       "yt-music"
-      "claude"
     ];
 
     brews = [

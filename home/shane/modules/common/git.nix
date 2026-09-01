@@ -38,23 +38,5 @@ _: {
       ".go/"
       ".gcloud/"
     ];
-    includes = [
-      {
-        condition = "gitdir:~/projects/work/";
-        contents = {
-          core.excludesfile = "~/.gitignore_work";
-        };
-      }
-    ];
   };
-
-  home.file.".gitignore_work".text = ''
-    .envrc
-    .direnv/
-    .claude/
-    .agents
-    .agents/
-    .codex/
-    CLAUDE.local.md
-  '';
 }

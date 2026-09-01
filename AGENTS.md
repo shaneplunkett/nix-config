@@ -6,7 +6,6 @@
 |---|---|---|
 | `desktop` | x86_64-linux | `nh os switch . -H desktop` |
 | `Shanes-MacBook-Pro` | aarch64-darwin | `nh darwin switch . -H Shanes-MacBook-Pro` |
-| `Shanes-Work-MacBook-Pro` | aarch64-darwin | `nh darwin switch . -H Shanes-Work-MacBook-Pro` |
 | `hetzvps` | aarch64-linux | deploy-rs (server, not local) |
 
 Build only (no activation): `nh {os,darwin} build . -H <host>`. Apply changes with `nrs`.
@@ -131,11 +130,8 @@ Base AI tooling lives in `home/shane/modules/common/ai/` and is imported by
 `home/shane/modules/common/default.nix`.
 
 `home/shane/modules/common/ai/`:
-- `mcp/` — canonical `programs.mcp.servers` registry shared by Claude Code and Codex. Prefer pinned Nix packages for server binaries; runtime wrappers are only for secrets.
-- `cc/` — Claude Code. Settings, hooks, theme, plugins via `programs.claude-code` module. Private values (work URLs, work email) come from `inputs.nix-config-private`.
+- `mcp/` — canonical `programs.mcp.servers` registry shared by the AI harness modules. Prefer pinned Nix packages for server binaries; runtime wrappers are only for secrets.
 - `codex/` — Codex CLI. Settings, hooks, skills, rules, and Vex AGENTS.md context via `programs.codex`.
-
-Claude Code uses tweakcc's `claudeMdAltNames` patch, with `AGENTS.md` as the first fallback when no project `CLAUDE.md` exists. Keep this root file as the shared project rules file unless there is a specific reason to split harness behaviour.
 
 ## Git
 

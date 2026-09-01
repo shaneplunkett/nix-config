@@ -273,9 +273,6 @@ in
               useFixedWidth = false;
               visualizerType = "mirrored";
             }
-            {
-              id = "plugin:vex-claude-usage";
-            }
           ];
           center = [
             {
@@ -326,12 +323,6 @@ in
               iconColor = "secondary";
               middleClickCommand = "pwvucontrol || pavucontrol";
               textColor = "secondary";
-            }
-            {
-              id = "plugin:vex-tailscale-guard";
-            }
-            {
-              id = "plugin:vex-gcp-proxy";
             }
             {
               id = "plugin:vex-timer";

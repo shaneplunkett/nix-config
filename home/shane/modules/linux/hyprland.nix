@@ -90,14 +90,12 @@ let
   workspaceApps = {
     "3" = [
       "^t3code$"
-      "^claude$"
       "^chatgpt$"
     ];
     "4" = [ "^google-chrome$" ];
     "5" = [ "^com\\.mitchellh\\.ghostty$" ];
     "6" = [ "^linear$" ];
     "7" = [
-      "^slack$"
       "^signal$"
       "^ferdium$"
       "^vesktop$"

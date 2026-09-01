@@ -46,7 +46,6 @@ let
   ];
 
   workspaceWildcards = [
-    "~/projects/work/*"
     "~/projects/personal/*"
   ];
 

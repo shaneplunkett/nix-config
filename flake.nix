@@ -159,13 +159,6 @@
           system = "aarch64-darwin";
           hostConfig = ./hosts/darwin/personal.nix;
         };
-
-        "Shanes-Work-MacBook-Pro" = lib.mkDarwinSystem {
-          hostname = "Shanes-Work-MacBook-Pro";
-          system = "aarch64-darwin";
-          hostConfig = ./hosts/darwin/work.nix;
-        };
-
       };
 
       nixosConfigurations = {

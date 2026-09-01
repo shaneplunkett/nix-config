@@ -18,20 +18,10 @@ let
     name = "browser-profile-router";
     text = ''
       if [ "''${1:-}" = "--new-window" ]; then
-        if ${lib.getExe config.programs.noctalia-shell.package} ipc call \
-          plugin:vex-browser-profile newWindow >/dev/null 2>&1; then
-          exit 0
-        fi
-
         exec ${chromeExecutable} --profile-directory=Default --new-window
       fi
 
       url="''${1:-}"
-
-      if [ -n "$url" ] && ${lib.getExe config.programs.noctalia-shell.package} ipc call \
-        plugin:vex-browser-profile open "$url" >/dev/null 2>&1; then
-        exit 0
-      fi
 
       args=("--profile-directory=Default")
       if [ -n "$url" ]; then
@@ -42,15 +32,6 @@ let
   };
 
   plugins = {
-    vex-browser-profile = {
-      settings = {
-        inherit chromeExecutable;
-        personalProfileDirectory = "Default";
-        workProfileDirectory = "Profile 1";
-        screenName = "DP-2";
-      };
-    };
-
     vex-timer = {
       settings = {
         defaultMinutes = 30;
@@ -79,33 +60,6 @@ let
     vex-todoist = {
       settings = {
         accentColor = "primary";
-      };
-    };
-
-    vex-claude-usage = {
-      settings = {
-        accentColor = "primary";
-        warningThreshold = 0.7;
-        criticalThreshold = 0.9;
-        refreshIntervalSec = 300;
-        headlineAccount = "personal";
-      };
-    };
-
-    vex-gcp-proxy = {
-      settings = {
-        refreshIntervalMs = 15000;
-        bastionEnv = "dev";
-      };
-    };
-
-    vex-tailscale-guard = {
-      settings = {
-        refreshIntervalMs = 5000;
-        workTailnet = "autograb.com.au";
-        workAccountPattern = "autograb.com.au";
-        workAcceptRoutes = true;
-        personalAcceptRoutes = false;
       };
     };
 
@@ -161,10 +115,6 @@ in
           Personal = {
             name = "New Personal Window";
             exec = "${chromeExecutable} --profile-directory=Default --new-window";
-          };
-          Work = {
-            name = "New Work Window";
-            exec = ''${chromeExecutable} --profile-directory="Profile 1" --new-window'';
           };
         };
       };

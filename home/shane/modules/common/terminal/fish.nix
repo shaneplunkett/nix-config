@@ -42,7 +42,7 @@ _: {
           set -a candidates (hostname -s 2>/dev/null) (hostname 2>/dev/null)
           for candidate in $candidates
             switch $candidate
-              case Shanes-MacBook-Pro Shanes-Work-MacBook-Pro
+              case Shanes-MacBook-Pro
                 echo $candidate
                 return 0
             end

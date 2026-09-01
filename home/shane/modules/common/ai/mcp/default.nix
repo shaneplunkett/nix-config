@@ -62,16 +62,8 @@ in
         url = "https://mcp.granola.ai/mcp";
       };
 
-      # Same endpoint twice on purpose: Claude Code and Codex both key OAuth
-      # tokens by server name, so each entry holds its own Linear account.
-      # The ?account=work param is ignored by Linear but keeps the URLs
-      # distinct, because Claude Code silently dedupes servers by URL.
       linear-personal = {
         url = "https://mcp.linear.app/mcp";
-      };
-
-      linear-work = {
-        url = "https://mcp.linear.app/mcp?account=work";
       };
     };
   };

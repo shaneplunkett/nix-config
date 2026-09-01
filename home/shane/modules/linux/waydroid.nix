@@ -155,7 +155,11 @@ let
         shift
       fi
 
-      package="''${1:-com.autograb.app}"
+      package="''${1:-}"
+      if [[ -z "$package" ]]; then
+        echo "usage: android-phone [--record] <android-package>" >&2
+        exit 2
+      fi
       native_address=""
       record_file=""
       record_args=()
@@ -252,44 +256,6 @@ in
     ];
 
     file = {
-      ".local/share/applications/autograb-android.desktop" = {
-        force = true;
-        text = ''
-          [Desktop Entry]
-          Type=Application
-          Name=AutoGrab (Android Phone)
-          Exec=${lib.getExe androidPhone} com.autograb.app
-          Icon=${config.home.homeDirectory}/.local/share/waydroid/data/icons/com.autograb.app.png
-          Categories=Development;Utility;
-          Actions=record;
-
-          [Desktop Action record]
-          Name=Record AutoGrab
-          Exec=${lib.getExe androidPhone} --record com.autograb.app
-          Icon=${config.home.homeDirectory}/.local/share/waydroid/data/icons/com.autograb.app.png
-        '';
-      };
-
-      ".local/share/applications/waydroid.com.autograb.app.desktop" = {
-        force = true;
-        text = ''
-          [Desktop Entry]
-          Type=Application
-          Name=AutoGrab
-          NoDisplay=true
-          Exec=${waydroidBin} app launch com.autograb.app
-          Icon=${config.home.homeDirectory}/.local/share/waydroid/data/icons/com.autograb.app.png
-          Categories=Development;Utility;X-WayDroid-App;
-          X-Purism-FormFactor=Workstation;Mobile;
-          Actions=app-settings;
-
-          [Desktop Action app-settings]
-          Name=App Settings
-          Exec=${waydroidBin} app intent android.settings.APPLICATION_DETAILS_SETTINGS package:com.autograb.app
-          Icon=${config.home.homeDirectory}/.local/share/waydroid/data/icons/com.android.settings.png
-        '';
-      };
-
       ".local/share/applications/arknights.desktop" = {
         force = true;
         text = ''

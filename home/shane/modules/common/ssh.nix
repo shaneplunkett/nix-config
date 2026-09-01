@@ -42,9 +42,6 @@ in
         HostName = "100.101.140.9";
         HostKeyAlias = "shanes-macbook-pro";
       };
-      "wmbp" = laptopHost // {
-        HostName = "shanes-work-macbook-pro";
-      };
     };
   };
 }

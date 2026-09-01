@@ -6,8 +6,6 @@ import `home/shane/modules/common/ai`.
 ## Why this shape
 
 - `programs.mcp.servers` is the shared Home Manager schema.
-- `programs.claude-code.enableMcpIntegration = true` converts it to Claude
-  Code's `mcpServers` shape.
 - The Codex module converts it to Codex's `mcp_servers` shape with
   transport-aware filtering. `command` servers stay stdio-only, `url` servers
   stay streamable-HTTP-only, `headers` maps to `http_headers` only for HTTP,
