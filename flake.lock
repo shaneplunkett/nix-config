@@ -959,11 +959,11 @@
         "treefmt-nix": "treefmt-nix_3"
       },
       "locked": {
-        "lastModified": 1787185052,
-        "narHash": "sha256-xmDIZl2v/EQh7iLt/L4rbvygXpMmTiJmd/qq0Kh4JdQ=",
+        "lastModified": 1787716021,
+        "narHash": "sha256-V/pSbNwYn+b9m+AsuHMMrabpnjI3DoEsw8H6MAnGZLI=",
         "ref": "refs/heads/main",
-        "rev": "7a8c35c6962b8993c95c54f1a8f114510e63c5c4",
-        "revCount": 26,
+        "rev": "4908191c62ac8daea06d0d1eceac07841e89c139",
+        "revCount": 27,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/noctalia-plugins.git"
       },
