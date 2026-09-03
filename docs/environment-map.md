@@ -1,7 +1,7 @@
 # Environment Map
 
 Where everything lives, how it reaches a machine, and the one rule that decides
-where new things go. Last verified 01/09/2026. When an input is added or
+where new things go. Last verified 03/09/2026. When an input is added or
 removed in `flake.nix`, update this file in the same change.
 
 A fuller session-generated version (with hygiene findings and host state) is
@@ -24,7 +24,7 @@ noctalia-plugins  ─ QML        ─┘
 
 | Input | Checkout | Provides | Consumed via |
 |---|---|---|---|
-| `vex-tooling` | `~/projects/personal/vex-tooling` | Agent-stack CLIs and MCP servers: `vex`, `langsmith`, `gws`, `tvly`, `bb`, `todoist`, `confluence`, `unifi`, `linear` (managed-auth wrapper), `aikido-mcp`, `xero-mcp-server` (on hold, unwired). Credentials injected from rbw at invocation. | `overlays.default` in `lib/common.nix` + `homeManagerModules.default` on the desktop and darwin hosts only (servers opt out via `agentClis = false` in `flake.nix`) |
+| `vex-tooling` | `~/projects/personal/vex-tooling` | Agent-stack CLIs: `vex`, `langsmith`, `gws`, `tvly`, `bb`, `todoist`, `unifi`, and `linear` (managed-auth wrapper). `xero-mcp-server` remains packaged but unwired while Xero is disconnected. Credentials are injected from rbw at invocation. | `overlays.default` in `lib/common.nix` + `homeManagerModules.default` on the desktop and darwin hosts only (servers opt out via `agentClis = false` in `flake.nix`) |
 | `ai-skills` | `~/ai-skills` | `lib.skillProfiles` used by the local AI modules, plus the prompt sources they install. Carries its own skill inputs. | `home/shane/modules/common/ai/lib.nix` |
 | `nix-config-private` | `~/projects/personal/nix-config-private` | Private home-manager modules and deliberately private desktop utilities. Zero inputs of its own. | `homeManagerModules.default` |
 | `vex-code` | `~/projects/personal/vex-code` | Source only (`flake = false`); this repo's `pkgs/vex-code` owns the build. | `pkgs/default.nix` (`vexCodeSrc`) |

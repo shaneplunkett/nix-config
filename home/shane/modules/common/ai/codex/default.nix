@@ -9,10 +9,7 @@ let
   inherit (config.home) homeDirectory;
 
   inherit (aiHelpers) skillProfiles;
-  codexSkills = lib.removeAttrs skillProfiles.codex [
-    "langsmith-autograb"
-    "slack-autograb"
-  ];
+  codexSkills = skillProfiles.codex;
   vexRoot = "${aiHelpers.aiSkillsRoot}/vex";
   tomlFormat = pkgs.formats.toml { };
 
@@ -71,7 +68,7 @@ let
   mutableCodexDirs = [ codexConfigDir ];
 
   codexMcpServer =
-    name: server:
+    _name: server:
     let
       isHttp = (server.url or null) != null;
       alwaysStripKeys = [
@@ -110,11 +107,7 @@ let
     })
     // {
       enabled = !(server.disabled or false);
-    }
-    // (lib.optionalAttrs (name == "aikido") {
-      startup_timeout_sec = 30;
-      tool_timeout_sec = 300;
-    });
+    };
 
   transformedMcpServers = lib.optionalAttrs config.programs.mcp.enable (
     lib.mapAttrs codexMcpServer config.programs.mcp.servers

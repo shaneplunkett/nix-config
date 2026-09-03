@@ -143,19 +143,6 @@ _: {
 
           return $switch_status
         '';
-        tfc = ''
-          set -l plan_file (mktemp -u --suffix=.tfplan)
-          set -l plan_json (mktemp -u --suffix=.json)
-
-          if terraform plan -out=$plan_file $argv
-            terraform show -json $plan_file > $plan_json
-            echo
-            echo "── Cost impact ──────────────────────────────────"
-            infracost diff --path $plan_json
-          end
-
-          rm -f $plan_file $plan_json
-        '';
       };
       generateCompletions = true;
       interactiveShellInit = ''

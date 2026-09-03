@@ -942,11 +942,11 @@
         "treefmt-nix": "treefmt-nix_3"
       },
       "locked": {
-        "lastModified": 1787716021,
-        "narHash": "sha256-V/pSbNwYn+b9m+AsuHMMrabpnjI3DoEsw8H6MAnGZLI=",
+        "lastModified": 1788399474,
+        "narHash": "sha256-8vTCHPSEMfDDujh0AThDDnbOvtTV51NwZWTK3tRCDQY=",
         "ref": "refs/heads/main",
-        "rev": "4908191c62ac8daea06d0d1eceac07841e89c139",
-        "revCount": 27,
+        "rev": "815228e7a61e895a9a1cc061d9ceefe41849c221",
+        "revCount": 29,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/noctalia-plugins.git"
       },
@@ -1314,11 +1314,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1786859807,
-        "narHash": "sha256-yIUwLG5/OTzecTI0TINuvXpvTYVH4igm5lKAmCkZtOU=",
+        "lastModified": 1788399454,
+        "narHash": "sha256-LUETYVHS1VYJ7HKGh92s/soCcT+oQ5ogfI7WAVMQUzI=",
         "ref": "refs/heads/main",
-        "rev": "98b991e53f89dcf8710ebab384a483aa4eabd4db",
-        "revCount": 18,
+        "rev": "cd9987fa50c0d2ce771c459f4519d1f3073a0ea6",
+        "revCount": 19,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/vex-tooling.git"
       },

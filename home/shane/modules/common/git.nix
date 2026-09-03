@@ -36,7 +36,6 @@ _: {
     ignores = [
       ".direnv/"
       ".go/"
-      ".gcloud/"
     ];
   };
 }

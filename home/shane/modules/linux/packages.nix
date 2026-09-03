@@ -193,9 +193,7 @@ in
     vlc
     samrewritten
     bun
-    bruno
     plezy
-    kubectl
     megacmd
     yt-dlp
     google-chrome
