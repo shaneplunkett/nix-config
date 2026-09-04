@@ -165,7 +165,7 @@ let
       record_args=()
 
       if [[ "$record" == true ]]; then
-        record_dir="$HOME/Videos/Android"
+        record_dir="${config.xdg.userDirs.videos}/Android"
         mkdir -p "$record_dir"
         record_file="$record_dir/$package-$(date +%Y-%m-%d_%H-%M-%S).mp4"
         record_args+=(--record "$record_file")

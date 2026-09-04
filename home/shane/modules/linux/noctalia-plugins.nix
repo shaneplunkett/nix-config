@@ -67,8 +67,8 @@ let
         enableWindowsSelection = true;
         screenshotEditor = "swappy";
         keepSourceScreenshot = false;
-        savePath = "~/Pictures/Screenshots";
-        recordingSavePath = "~/Videos/Screen Recordings";
+        savePath = "${config.xdg.userDirs.pictures}/Screenshots";
+        recordingSavePath = "${config.xdg.userDirs.videos}/Screen Recordings";
         recordingNotifications = true;
       };
     };

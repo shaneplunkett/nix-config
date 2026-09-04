@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   ...
@@ -45,7 +46,7 @@ let
       set -euo pipefail
 
       state_dir="''${XDG_STATE_HOME:-$HOME/.local/state}/bug-record"
-      out_dir="$HOME/Videos/Screen Recordings"
+      out_dir="${config.xdg.userDirs.videos}/Screen Recordings"
       pid_file="$state_dir/pid"
       recording_file="$state_dir/file"
 
