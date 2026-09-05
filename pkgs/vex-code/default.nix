@@ -2,7 +2,9 @@
   codex,
   fetchPnpmDeps,
   lib,
+  libsecret,
   lsof,
+  pkg-config,
   pnpm_11,
   src,
   stdenv,
@@ -29,8 +31,14 @@ let
   unwrapped = (t3code.unwrapped.override { pnpm_11 = pnpm; }).overrideAttrs (
     finalAttrs: previousAttrs: {
       pname = "vex-code-unwrapped";
-      version = "0.0.37-vex.4";
+      version = "0.0.39-vex.5";
       src = namedSrc;
+
+      nativeBuildInputs =
+        (previousAttrs.nativeBuildInputs or [ ])
+        ++ lib.optionals stdenv.hostPlatform.isLinux [ pkg-config ];
+      buildInputs =
+        (previousAttrs.buildInputs or [ ]) ++ lib.optionals stdenv.hostPlatform.isLinux [ libsecret ];
 
       pnpmDeps = fetchPnpmDeps {
         inherit pnpm;
@@ -41,7 +49,7 @@ let
           pnpmWorkspaces
           ;
         fetcherVersion = 4;
-        hash = "sha256-y/sJIluwbn65APmJ2p07FK1ScXpetCloTHtQzZMchDU=";
+        hash = "sha256-mgRMeBpJmiTat38APyE4guNJ+6RiQhenphP7tRcmc+k=";
       };
 
       postPatch = ''
