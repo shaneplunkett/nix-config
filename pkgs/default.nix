@@ -12,6 +12,7 @@ in
   xcodebuild-nvim = pkgs.callPackage ./xcodebuild-nvim { };
 }
 // optionalAttrs isLinux {
+  bluebubbles = pkgs.callPackage ./bluebubbles { };
   bluebubbles-themed = pkgs.callPackage ./bluebubbles-themed {
     palette = import ../lib/palette.nix;
   };

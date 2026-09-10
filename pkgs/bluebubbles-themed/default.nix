@@ -9,8 +9,8 @@ in
 bluebubbles.overrideAttrs (old: {
   postPatch = (old.postPatch or "") + ''
         substituteInPlace lib/services/ui/theme/themes_service.dart \
-          --replace-fail '  List<ThemeStruct> get defaultThemes => [' \
-            '  final shaneDesktopTheme = FlexColorScheme(
+          --replace-fail '  static List<ThemeStruct> get defaultThemes => [' \
+            '  static final shaneDesktopTheme = FlexColorScheme(
       textTheme: Typography.englishLike2021.merge(Typography.whiteMountainView),
       colorScheme: ColorScheme(
         brightness: Brightness.dark,
@@ -30,11 +30,13 @@ bluebubbles.overrideAttrs (old: {
         onError: HexColor("${colours.crust}"),
         errorContainer: HexColor("${colours.maroon}"),
         onErrorContainer: HexColor("${colours.crust}"),
-        background: HexColor("${colours.base}"),
-        onBackground: HexColor("${colours.text}"),
         surface: HexColor("${colours.mantle}"),
         onSurface: HexColor("${colours.text}"),
-        surfaceVariant: HexColor("${colours.surface0}"),
+        surfaceContainerLowest: HexColor("${colours.crust}"),
+        surfaceContainerLow: HexColor("${colours.base}"),
+        surfaceContainer: HexColor("${colours.surface0}"),
+        surfaceContainerHigh: HexColor("${colours.surface1}"),
+        surfaceContainerHighest: HexColor("${colours.surface2}"),
         onSurfaceVariant: HexColor("${colours.subtext0}"),
         outline: HexColor("${colours.overlay1}"),
         shadow: HexColor("${colours.crust}"),
@@ -61,7 +63,7 @@ bluebubbles.overrideAttrs (old: {
       ),
     ]);
 
-    List<ThemeStruct> get defaultThemes => ['
+    static List<ThemeStruct> get defaultThemes => ['
 
         substituteInPlace lib/services/ui/theme/themes_service.dart \
           --replace-fail '    ThemeStruct(name: "OLED Dark", themeData: oledDarkTheme),' \
@@ -69,17 +71,17 @@ bluebubbles.overrideAttrs (old: {
       ThemeStruct(name: "OLED Dark", themeData: oledDarkTheme),'
 
     substituteInPlace lib/database/io/theme.dart \
-      --replace-fail '    final name = ss.prefs.getString("selected-light");' \
-        '    final name = ss.prefs.getString("selected-light");
+      --replace-fail '    final name = PrefsSvc.theme.getSelectedLightTheme();' \
+        '    final name = PrefsSvc.theme.getSelectedLightTheme();
     if (name == "Shane Desktop") {
-      return ThemeStruct(name: "Shane Desktop", themeData: ts.shaneDesktopTheme);
+      return ThemeStruct(name: "Shane Desktop", themeData: ThemesService.shaneDesktopTheme);
     }'
 
     substituteInPlace lib/database/io/theme.dart \
-      --replace-fail '    final name = ss.prefs.getString("selected-dark");' \
-        '    final name = ss.prefs.getString("selected-dark");
+      --replace-fail '    final name = PrefsSvc.theme.getSelectedDarkTheme();' \
+        '    final name = PrefsSvc.theme.getSelectedDarkTheme();
     if (name == null || name == "OLED Dark" || name == "Shane Desktop") {
-      return ThemeStruct(name: "Shane Desktop", themeData: ts.shaneDesktopTheme);
+      return ThemeStruct(name: "Shane Desktop", themeData: ThemesService.shaneDesktopTheme);
     }'
 
   '';

@@ -129,12 +129,16 @@ in
     prefs="$HOME/.local/share/app.bluebubbles.BlueBubbles/shared_preferences.json"
     mkdir -p "$(dirname "$prefs")"
 
+    # v2 reads unprefixed keys; keep the legacy keys for its first-run migration
+    # and for adaptive_theme, which still uses the legacy preferences API.
     if [[ -f "$prefs" ]]; then
       tmp="$(${pkgs.coreutils}/bin/mktemp)"
       ${pkgs.jq}/bin/jq \
         --arg selected "Shane Desktop" \
         --arg adaptive '{"theme_mode":1,"default_theme_mode":1}' \
-        'del(."flutter.closeToTray", ."flutter.minimizeToTray") + {
+        'del(."flutter.closeToTray", ."flutter.minimizeToTray", .closeToTray, .minimizeToTray) + {
+          "selected-dark": $selected,
+          "selected-light": $selected,
           "flutter.selected-dark": $selected,
           "flutter.selected-light": $selected,
           "flutter.adaptive_theme_preferences": $adaptive
@@ -143,6 +147,8 @@ in
     else
       ${pkgs.coreutils}/bin/cat > "$prefs" <<'JSON'
     {
+      "selected-dark": "Shane Desktop",
+      "selected-light": "Shane Desktop",
       "flutter.selected-dark": "Shane Desktop",
       "flutter.selected-light": "Shane Desktop",
       "flutter.adaptive_theme_preferences": "{\"theme_mode\":1,\"default_theme_mode\":1}"
