@@ -44,14 +44,9 @@ in
           electron = inputs.electron-nixpkgs.legacyPackages.${final.stdenv.hostPlatform.system}.electron_43;
         in
         {
-          # wf-recorder 0.6.0 predates FFmpeg 9's removal of AVCodec.pix_fmts,
-          # ch_layouts and sample_fmts. Keep it on FFmpeg 8 until upstream
-          # supports 9.
-          wf-recorder = prev.wf-recorder.override { ffmpeg = final.ffmpeg_8; };
-
           bitwarden-desktop =
             (prev.bitwarden-desktop.override {
-              electron_41 = electron;
+              electron_43 = electron;
             }).overrideAttrs
               (old: {
                 # Apple's ld from cctools 1010.6 traps while processing stubs for
@@ -64,12 +59,12 @@ in
                   // final.lib.optionalAttrs final.stdenv.hostPlatform.isDarwin {
                     RUSTFLAGS = "-C link-arg=-fuse-ld=lld";
                   };
-                # Upstream still pins Electron 41. Update the manifest after npmDeps
+                # Upstream pins an older Electron 43. Update the manifest after npmDeps
                 # has been assembled so nixpkgs' runtime-major check accepts the
                 # maintained Electron used by electron-builder.
                 preBuild = ''
                   substituteInPlace package.json \
-                    --replace-fail '"electron": "41.7.2"' '"electron": "${electron.version}"'
+                    --replace-fail '"electron": "43.2.0"' '"electron": "${electron.version}"'
                 ''
                 + old.preBuild;
               });

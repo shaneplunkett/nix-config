@@ -2,7 +2,7 @@
   asar,
   copyDesktopItems,
   curl,
-  electron_41,
+  electron_43,
   fetchurl,
   gnugrep,
   lib,
@@ -14,7 +14,7 @@
   writeShellApplication,
 }:
 let
-  version = "1.32.1";
+  version = "1.32.4";
 
   desktopItem = makeDesktopItem {
     name = "linear";
@@ -49,11 +49,11 @@ stdenv.mkDerivation {
   # Linear only ships Windows and macOS desktop builds. The Windows NSIS
   # installer wraps a plain Electron app with no native modules (its only
   # bundled dependency is @electron/remote), so the app.asar runs unmodified
-  # on Linux under a matching-major nixpkgs Electron.
+  # on Linux under nixpkgs' maintained Electron.
   src = fetchurl {
     name = "Linear-Setup-${version}.exe";
     url = "https://releases.linear.app/Linear%20Setup%20${version}.exe";
-    hash = "sha256-jrNKwFNMOZSz1ijl+4pndVtwH4u+u/wXfn4C7T3GbNU=";
+    hash = "sha256-Y2LN/AU6xbGTIC/jXZLT7D7OxIpL57CIdItCJlehabQ=";
   };
 
   dontUnpack = true;
@@ -94,7 +94,7 @@ stdenv.mkDerivation {
 
     # electron-updater sees an unpackaged app and skips update checks, so the
     # Windows-only auto-update path never runs.
-    makeWrapper ${electron_41}/bin/electron "$out/bin/linear-desktop" \
+    makeWrapper ${electron_43}/bin/electron "$out/bin/linear-desktop" \
       --unset ELECTRON_RUN_AS_NODE \
       --set ELECTRON_OZONE_PLATFORM_HINT auto \
       --add-flags "$out/share/linear/app" \
