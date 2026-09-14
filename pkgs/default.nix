@@ -24,4 +24,5 @@ in
   orca-studio = pkgs.callPackage ./orca-studio { };
   shadps4-cache-fixed = pkgs.callPackage ./shadps4-cache-fixed { };
   ytmdesktop-bin = pkgs.callPackage ./ytmdesktop-bin { };
+  wispr-flow = pkgs.callPackage ./wispr-flow { };
 }
