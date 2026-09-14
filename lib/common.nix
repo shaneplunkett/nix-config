@@ -33,8 +33,12 @@ in
           system = prev.stdenv.hostPlatform.system;
           aiPackages = inputs.llm-agents.packages.${system} or { };
         in
-        prev.lib.optionalAttrs (builtins.hasAttr "codex" aiPackages) {
+        (prev.lib.optionalAttrs (builtins.hasAttr "codex" aiPackages) {
           inherit (aiPackages) codex;
+        })
+        // prev.lib.optionalAttrs prev.stdenv.hostPlatform.isLinux {
+          # Keep Numtide's runtime wrappers and cache-backed derivations intact.
+          inherit (aiPackages) chatgpt claude-desktop;
         }
       )
       (final: prev: mkProjectPackages prev.stdenv.hostPlatform.system final)

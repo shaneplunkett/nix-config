@@ -20,6 +20,7 @@ in
 }
 // optionalAttrs isX86Linux {
   linear-desktop = pkgs.callPackage ./linear-desktop { };
+  slack-themed = pkgs.callPackage ./slack-themed { };
   orca-studio = pkgs.callPackage ./orca-studio { };
   shadps4-cache-fixed = pkgs.callPackage ./shadps4-cache-fixed { };
   ytmdesktop-bin = pkgs.callPackage ./ytmdesktop-bin { };

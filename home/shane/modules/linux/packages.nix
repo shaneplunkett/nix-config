@@ -171,6 +171,8 @@ in
     unzip
     p7zip
     signal-desktop
+    chatgpt
+    claude-desktop
     bluebubblesThemed
     # Temporarily disabled: upstream Snapcraft fetch is timing out during rebuilds.
     # plex-desktop
@@ -204,6 +206,7 @@ in
     megacmd
     yt-dlp
     google-chrome
+    slack-themed
     qalculate-qt
   ];
 }

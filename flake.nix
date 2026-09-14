@@ -85,7 +85,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Fast-moving AI CLIs with daily updates and cache-backed builds. Consume
+    # Fast-moving AI CLIs and desktop apps with cache-backed builds. Consume
     # the direct package outputs so their derivations match Numtide's cache.
     llm-agents.url = "github:numtide/llm-agents.nix";
 

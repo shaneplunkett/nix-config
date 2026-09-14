@@ -91,12 +91,14 @@ let
     "3" = [
       "^t3code$"
       "^chatgpt$"
+      "^claude(-desktop)?$"
     ];
     "4" = [ "^google-chrome$" ];
     "5" = [ "^com\\.mitchellh\\.ghostty$" ];
     "6" = [ "^linear$" ];
     "7" = [
       "^signal$"
+      "(?i)^slack$"
       "^ferdium$"
       "^vesktop$"
       "^bluebubbles$"
