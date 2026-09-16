@@ -65,6 +65,9 @@ let
 
   codexPackage = pkgs.codex;
   codexConfigDir = ".codex";
+  # Standalone experimentation home: same account auth as the main dir, but
+  # none of the managed config, skills, or hooks land here.
+  codexLabConfigDir = ".codex-lab";
   mutableCodexDirs = [ codexConfigDir ];
 
   codexMcpServer =
@@ -355,14 +358,24 @@ let
 
 in
 {
-  # Published artifact other modules consume (e.g. vex-code).
-  options.vex.ai.codex.configDir = lib.mkOption {
-    type = lib.types.str;
-    description = "Home-relative Codex config directory.";
+  # Published artifacts other modules consume (e.g. vex-code).
+  options.vex.ai.codex = {
+    configDir = lib.mkOption {
+      type = lib.types.str;
+      description = "Home-relative Codex config directory.";
+    };
+
+    labConfigDir = lib.mkOption {
+      type = lib.types.str;
+      description = "Home-relative standalone Codex experimentation directory sharing the main dir's auth.";
+    };
   };
 
   config = {
-    vex.ai.codex.configDir = codexConfigDir;
+    vex.ai.codex = {
+      configDir = codexConfigDir;
+      labConfigDir = codexLabConfigDir;
+    };
 
     home = {
       file = aiHelpers.mkSkillTree {
@@ -370,9 +383,22 @@ in
         skills = codexSkills;
       };
 
-      activation.codexMutableConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] (
-        lib.concatMapStringsSep "\n" mutableConfigActivation mutableCodexDirs
-      );
+      activation = {
+        codexMutableConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] (
+          lib.concatMapStringsSep "\n" mutableConfigActivation mutableCodexDirs
+        );
+
+        # Codex rewrites auth.json in place on token refresh, so a symlink
+        # keeps the lab home on the same account with a single credential
+        # file rather than a copy that drifts.
+        codexLabSharedAuth = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          $DRY_RUN_CMD mkdir -p "${homeDirectory}/${codexLabConfigDir}"
+          labAuth="${homeDirectory}/${codexLabConfigDir}/auth.json"
+          if [ ! -e "$labAuth" ] && [ ! -L "$labAuth" ]; then
+            $DRY_RUN_CMD ln -s "${homeDirectory}/${codexConfigDir}/auth.json" "$labAuth"
+          fi
+        '';
+      };
     };
 
     programs = {
