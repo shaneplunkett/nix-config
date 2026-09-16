@@ -22,6 +22,16 @@ in
           homePath = "${homeDirectory}/${config.vex.ai.codex.configDir}";
         };
       };
+
+      claudeAgent = {
+        driver = "claudeAgent";
+        enabled = true;
+        config = {
+          enabled = true;
+          binaryPath = lib.getExe config.programs.claude-code.finalPackage;
+          homePath = config.programs.claude-code.configDir;
+        };
+      };
     };
   };
 }

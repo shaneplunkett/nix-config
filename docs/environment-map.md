@@ -71,7 +71,7 @@ tracks its HEAD, so stale versions mean nobody bumped the package there.
 
 - Private values, modules, or utilities: edit `nix-config-private` → push → `nix flake update nix-config-private` → rebuild.
 - Vex Code: push to the fork → `nix flake update vex-code` → rebuild.
-- Codex CLI and Linux Claude/ChatGPT desktop apps: `nix flake update llm-agents` → rebuild (cache-backed).
+- Claude Code, Codex CLI, and Linux Claude/ChatGPT desktop apps: `nix flake update llm-agents` → rebuild (cache-backed).
 - Desktop apps and machine config: edit `pkgs/` or modules here → rebuild. One repo, no chain.
 
 ## Adjacent territory (not flake inputs — never affects rebuilds)

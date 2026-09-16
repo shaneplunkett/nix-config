@@ -1,4 +1,5 @@
 {
+  claude-code,
   codex,
   fetchPnpmDeps,
   lib,
@@ -109,8 +110,8 @@ let
   );
 in
 (t3code.override {
-  inherit codex;
-  enableClaude = false;
+  inherit claude-code codex;
+  enableClaude = true;
   t3code-unwrapped = unwrapped;
 }).overrideAttrs
   { pname = "vex-code"; }

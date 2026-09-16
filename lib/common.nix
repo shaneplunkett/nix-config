@@ -36,6 +36,9 @@ in
         (prev.lib.optionalAttrs (builtins.hasAttr "codex" aiPackages) {
           inherit (aiPackages) codex;
         })
+        // (prev.lib.optionalAttrs (builtins.hasAttr "claude-code" aiPackages) {
+          inherit (aiPackages) claude-code;
+        })
         // prev.lib.optionalAttrs prev.stdenv.hostPlatform.isLinux {
           # Keep Numtide's runtime wrappers and cache-backed derivations intact.
           inherit (aiPackages) chatgpt claude-desktop;
