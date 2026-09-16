@@ -1316,11 +1316,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1789460191,
-        "narHash": "sha256-JFcSjskFq9vCFEXIU40pMEft7uBH57BH157n9rtIRno=",
+        "lastModified": 1789546757,
+        "narHash": "sha256-lkNB0hqRi4LhHNTu2LUguDkt7lQjT0vo4ZnqpsVmwIM=",
         "ref": "refs/heads/main",
-        "rev": "337bb682fcb125dc91976310d008040421ea9e2b",
-        "revCount": 21,
+        "rev": "1a17504508edbc25d0ef4f87e05b99ad802ee4ab",
+        "revCount": 24,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/vex-tooling.git"
       },
