@@ -2,6 +2,7 @@
   claude-code,
   codex,
   fetchPnpmDeps,
+  fetchurl,
   lib,
   libsecret,
   lsof,
@@ -25,6 +26,31 @@ let
     name = "source";
   };
 
+  # The web build's third-party-licenses plugin downloads SPDX licence texts
+  # unless they are already cached, and the build sandbox has no network.
+  # Keep the revision and version in step with scripts/lib/third-party-licenses.ts.
+  spdxLicenseListRevision = "c4a7237ec8f4654e867546f9f409749300f1bf4c";
+  spdxLicenseListVersion = "v3.28.0";
+  spdxLicenseHashes = {
+    "Apache-2.0" = "sha256-iyt7wmfXAL6UCFzSyDA+Atj4ODKLKnMQ3DqIQNPKErs=";
+    "BSD-2-Clause" = "sha256-h2hDpwacR4mNECQyo1vjMqRXz3r/gJTMsYqj315jQJI=";
+    "BSD-3-Clause" = "sha256-RXYFS3RBfUAh/9ovY7h/3lJ5Hj7ZTu7yznkwJRtDcwE=";
+    "CC0-1.0" = "sha256-gdRg6RFSHhS1Ky/Y4Gl5Wscx6JhspYpdKUFdzAHqoSU=";
+    "ISC" = "sha256-VJTDV7IdtsBt1r1r1J1ldZINPVNDQE5vVFkWPmjn5Yo=";
+    "MIT" = "sha256-fuCJ3MxiW/GLCrHoDgxLysVYeIT1viXZATuK1sYd1Dk=";
+    "Unlicense" = "sha256-itR5uQEH/xGJKbe09Fvk/axB/Aq0J6LEIbwwY52X4fs=";
+  };
+  spdxLicenseCache = lib.concatStrings (
+    lib.mapAttrsToList (licenseId: hash: ''
+      install -Dm644 ${
+        fetchurl {
+          url = "https://raw.githubusercontent.com/spdx/license-list-data/${spdxLicenseListRevision}/json/details/${licenseId}.json";
+          inherit hash;
+        }
+      } .generated/third-party-licenses/spdx/${spdxLicenseListVersion}/${licenseId}.json
+    '') spdxLicenseHashes
+  );
+
   # nixpkgs splits t3code into an unwrapped pnpm build plus a symlinkJoin
   # wrapper that puts the enabled agent CLIs on PATH. The fork source, pnpm
   # swap, and branding belong on the unwrapped build; the agent toggles on
@@ -32,7 +58,7 @@ let
   unwrapped = (t3code.unwrapped.override { pnpm_11 = pnpm; }).overrideAttrs (
     finalAttrs: previousAttrs: {
       pname = "vex-code-unwrapped";
-      version = "0.0.39-vex.5";
+      version = "0.0.41-vex.1";
       src = namedSrc;
 
       nativeBuildInputs =
@@ -50,7 +76,7 @@ let
           pnpmWorkspaces
           ;
         fetcherVersion = 4;
-        hash = "sha256-mgRMeBpJmiTat38APyE4guNJ+6RiQhenphP7tRcmc+k=";
+        hash = "sha256-gEY2em9pNTC1EuVX0V3L/Wu1apZ+BKBXxALEcPQ/pwA=";
       };
 
       postPatch = ''
@@ -64,6 +90,8 @@ let
         # workspace over the network when the build script starts.
         substituteInPlace pnpm-workspace.yaml \
           --replace-fail "packages:" $'verifyDepsBeforeRun: false\n\npackages:'
+
+        ${spdxLicenseCache}
       ''
       + lib.optionalString stdenv.hostPlatform.isDarwin ''
         # Node 24/libuv can abort in kqueue when pnpm rebuilds several native
