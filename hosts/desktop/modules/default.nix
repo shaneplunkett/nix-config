@@ -12,7 +12,6 @@
     ./sunshine.nix
     ./vr.nix
     ./waydroid.nix
-    ./wispr-flow.nix
 
   ];
 
