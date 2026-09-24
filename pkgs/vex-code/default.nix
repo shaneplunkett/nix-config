@@ -58,7 +58,7 @@ let
   unwrapped = (t3code.unwrapped.override { pnpm_11 = pnpm; }).overrideAttrs (
     finalAttrs: previousAttrs: {
       pname = "vex-code-unwrapped";
-      version = "0.0.41-vex.1";
+      version = "0.0.43-vex.1";
       src = namedSrc;
 
       nativeBuildInputs =
@@ -76,7 +76,7 @@ let
           pnpmWorkspaces
           ;
         fetcherVersion = 4;
-        hash = "sha256-gEY2em9pNTC1EuVX0V3L/Wu1apZ+BKBXxALEcPQ/pwA=";
+        hash = "sha256-RUJh4wO6bO37A+6IQ5axBCaZW7XSmzR7J4FgrasswRs=";
       };
 
       postPatch = ''
