@@ -23,17 +23,17 @@ in
         };
       };
 
-      # Standalone sandbox instance: own CODEX_HOME so experiments (skills,
-      # config, hooks) never touch the day-to-day ~/.codex, but auth.json is
-      # symlinked to it so both use the same account.
-      codexLab = {
+      # Vanilla instance: own CODEX_HOME with none of the personal context,
+      # skills, hooks, or MCP servers, but auth.json is symlinked to ~/.codex
+      # so both use the same account.
+      codexBare = {
         driver = "codex";
-        displayName = "Codex Lab";
+        displayName = "Codex Bare";
         enabled = true;
         config = {
           enabled = true;
           binaryPath = lib.getExe config.programs.codex.package;
-          homePath = "${homeDirectory}/${config.vex.ai.codex.labConfigDir}";
+          homePath = "${homeDirectory}/${config.vex.ai.codex.bareConfigDir}";
         };
       };
 

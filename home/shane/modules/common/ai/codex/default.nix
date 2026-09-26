@@ -65,9 +65,10 @@ let
 
   codexPackage = pkgs.codex;
   codexConfigDir = ".codex";
-  # Standalone experimentation home: same account auth as the main dir, but
-  # none of the managed config, skills, or hooks land here.
-  codexLabConfigDir = ".codex-lab";
+  # Vanilla home: same account auth as the main dir, but none of the managed
+  # context, skills, hooks, or MCP servers land here. Used for PR reviews via
+  # the Codex plugin for Claude Code (CODEX_HOME) and the Codex Bare provider.
+  codexBareConfigDir = ".codex-bare";
   mutableCodexDirs = [ codexConfigDir ];
 
   codexMcpServer =
@@ -238,6 +239,23 @@ let
 
   codexConfigSeed = tomlFormat.generate "codex-config.toml" codexSettings;
 
+  # Stock Codex apart from a pinned model and the remote plugin/app sync that
+  # would otherwise populate the home on first app-server start.
+  codexBareSettings = {
+    model = "gpt-6-astra";
+    model_reasoning_effort = "medium";
+
+    features = {
+      apps = false;
+      memories = false;
+      plugin_sharing = false;
+      plugins = false;
+      remote_plugin = false;
+    };
+  };
+
+  codexBareConfigSeed = tomlFormat.generate "codex-bare-config.toml" codexBareSettings;
+
   codexConfigMerger = pkgs.writeShellApplication {
     name = "codex-config-merge";
     runtimeInputs = [
@@ -365,16 +383,16 @@ in
       description = "Home-relative Codex config directory.";
     };
 
-    labConfigDir = lib.mkOption {
+    bareConfigDir = lib.mkOption {
       type = lib.types.str;
-      description = "Home-relative standalone Codex experimentation directory sharing the main dir's auth.";
+      description = "Home-relative vanilla Codex directory sharing the main dir's auth.";
     };
   };
 
   config = {
     vex.ai.codex = {
       configDir = codexConfigDir;
-      labConfigDir = codexLabConfigDir;
+      bareConfigDir = codexBareConfigDir;
     };
 
     home = {
@@ -389,13 +407,19 @@ in
         );
 
         # Codex rewrites auth.json in place on token refresh, so a symlink
-        # keeps the lab home on the same account with a single credential
-        # file rather than a copy that drifts.
-        codexLabSharedAuth = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          $DRY_RUN_CMD mkdir -p "${homeDirectory}/${codexLabConfigDir}"
-          labAuth="${homeDirectory}/${codexLabConfigDir}/auth.json"
-          if [ ! -e "$labAuth" ] && [ ! -L "$labAuth" ]; then
-            $DRY_RUN_CMD ln -s "${homeDirectory}/${codexConfigDir}/auth.json" "$labAuth"
+        # keeps the bare home on the same account with a single credential
+        # file rather than a copy that drifts. config.toml is merged rather
+        # than linked so Codex can still write runtime fields into it.
+        codexBareHome = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          bareDir="${homeDirectory}/${codexBareConfigDir}"
+          $DRY_RUN_CMD mkdir -p "$bareDir"
+          if [ ! -e "$bareDir/auth.json" ] && [ ! -L "$bareDir/auth.json" ]; then
+            $DRY_RUN_CMD ln -s "${homeDirectory}/${codexConfigDir}/auth.json" "$bareDir/auth.json"
+          fi
+          if [ -z "''${DRY_RUN_CMD:-}" ]; then
+            ${codexConfigMerger}/bin/codex-config-merge "${codexBareConfigSeed}" "$bareDir/config.toml"
+          else
+            $DRY_RUN_CMD merge managed Codex settings into "$bareDir/config.toml"
           fi
         '';
       };
