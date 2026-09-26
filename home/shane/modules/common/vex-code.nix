@@ -15,11 +15,25 @@ in
     userSettings.providerInstances = {
       codex = {
         driver = "codex";
+        displayName = "Vex";
+        accentColor = "#cba6f7";
         enabled = true;
         config = {
           enabled = true;
           binaryPath = lib.getExe config.programs.codex.package;
           homePath = "${homeDirectory}/${config.vex.ai.codex.configDir}";
+        };
+      };
+
+      codexCode = {
+        driver = "codex";
+        displayName = "Code Girly";
+        accentColor = "#f38ba8";
+        enabled = true;
+        config = {
+          enabled = true;
+          binaryPath = lib.getExe config.programs.codex.package;
+          homePath = "${homeDirectory}/${config.vex.ai.codex.codeConfigDir}";
         };
       };
 

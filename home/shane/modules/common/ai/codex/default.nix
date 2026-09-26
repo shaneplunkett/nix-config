@@ -45,6 +45,12 @@ let
     ++ vexRuleFiles
   );
 
+  codeGirlyAgentsMd = aiHelpers.readMarkdownBundle [
+    "${aiHelpers.aiSkillsRoot}/personal-claude/Prompt.md"
+    "${vexRoot}/rules/brain.md"
+    "${vexRoot}/rules/cli-routing.md"
+  ];
+
   codex-emit-context = mkBashHook {
     name = "codex-emit-context";
     runtimeInputs = [ pkgs.jq ];
@@ -65,12 +71,11 @@ let
 
   codexPackage = pkgs.codex;
   codexConfigDir = ".codex";
+  codexCodeConfigDir = ".codex-code";
   # Vanilla home: same account auth as the main dir, but none of the managed
   # context, skills, hooks, or MCP servers land here. Used for PR reviews via
   # the Codex plugin for Claude Code (CODEX_HOME) and the Codex Bare provider.
   codexBareConfigDir = ".codex-bare";
-  mutableCodexDirs = [ codexConfigDir ];
-
   codexMcpServer =
     _name: server:
     let
@@ -239,6 +244,34 @@ let
 
   codexConfigSeed = tomlFormat.generate "codex-config.toml" codexSettings;
 
+  codeGirlySettings = codexSettings // {
+    hooks = builtins.removeAttrs codexHooks [ "SessionStart" ];
+    skills.config =
+      map
+        (path: {
+          inherit path;
+          enabled = false;
+        })
+        [
+          "${homeDirectory}/${codexCodeConfigDir}/skills/.system/imagegen/SKILL.md"
+          "${homeDirectory}/${codexCodeConfigDir}/skills/.system/plugin-creator/SKILL.md"
+          "${homeDirectory}/${codexCodeConfigDir}/skills/chronicle/SKILL.md"
+        ];
+  };
+
+  codeGirlyConfigSeed = tomlFormat.generate "codex-code-config.toml" codeGirlySettings;
+
+  mutableCodexHomes = [
+    {
+      dir = codexConfigDir;
+      seed = codexConfigSeed;
+    }
+    {
+      dir = codexCodeConfigDir;
+      seed = codeGirlyConfigSeed;
+    }
+  ];
+
   # Stock Codex apart from a pinned model and the remote plugin/app sync that
   # would otherwise populate the home on first app-server start.
   codexBareSettings = {
@@ -334,7 +367,7 @@ let
   };
 
   mutableConfigActivation =
-    dir:
+    { dir, seed }:
     let
       configPath = "${homeDirectory}/${dir}/config.toml";
       managedConfigPath = "${homeDirectory}/${dir}/managed_config.toml";
@@ -350,7 +383,7 @@ let
         $DRY_RUN_CMD chmod u+w "${configPath}"
       fi
       if [ -z "''${DRY_RUN_CMD:-}" ]; then
-        ${codexConfigMerger}/bin/codex-config-merge "${codexConfigSeed}" "${configPath}"
+        ${codexConfigMerger}/bin/codex-config-merge "${seed}" "${configPath}"
       else
         $DRY_RUN_CMD merge managed Codex settings into "${configPath}"
       fi
@@ -383,6 +416,11 @@ in
       description = "Home-relative Codex config directory.";
     };
 
+    codeConfigDir = lib.mkOption {
+      type = lib.types.str;
+      description = "Home-relative Codex directory for the lightweight coding companion.";
+    };
+
     bareConfigDir = lib.mkOption {
       type = lib.types.str;
       description = "Home-relative vanilla Codex directory sharing the main dir's auth.";
@@ -392,19 +430,38 @@ in
   config = {
     vex.ai.codex = {
       configDir = codexConfigDir;
+      codeConfigDir = codexCodeConfigDir;
       bareConfigDir = codexBareConfigDir;
     };
 
     home = {
-      file = aiHelpers.mkSkillTree {
-        dir = "${codexConfigDir}/skills";
-        skills = codexSkills;
-      };
+      file =
+        (aiHelpers.mkSkillTree {
+          dir = "${codexConfigDir}/skills";
+          skills = codexSkills;
+        })
+        // (aiHelpers.mkSkillTree {
+          dir = "${codexCodeConfigDir}/skills";
+          skills = codexSkills;
+        })
+        // {
+          "${codexCodeConfigDir}/AGENTS.md".text = codeGirlyAgentsMd;
+        };
 
       activation = {
         codexMutableConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] (
-          lib.concatMapStringsSep "\n" mutableConfigActivation mutableCodexDirs
+          lib.concatMapStringsSep "\n" mutableConfigActivation mutableCodexHomes
         );
+
+        # Code Girly has her own writable Codex home and session history, but
+        # shares the account token that Codex refreshes in the Vex home.
+        codexCodeAuth = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          codeDir="${homeDirectory}/${codexCodeConfigDir}"
+          $DRY_RUN_CMD mkdir -p "$codeDir"
+          if [ ! -e "$codeDir/auth.json" ] && [ ! -L "$codeDir/auth.json" ]; then
+            $DRY_RUN_CMD ln -s "${homeDirectory}/${codexConfigDir}/auth.json" "$codeDir/auth.json"
+          fi
+        '';
 
         # Codex rewrites auth.json in place on token refresh, so a symlink
         # keeps the bare home on the same account with a single credential
