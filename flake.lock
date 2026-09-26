@@ -37,11 +37,11 @@
         "tavily-skills": "tavily-skills"
       },
       "locked": {
-        "lastModified": 1789553395,
-        "narHash": "sha256-4xeZWXGo0Lq18ey31JeUs4EASrIQRPDNMYBzkzLx6ro=",
+        "lastModified": 1790348160,
+        "narHash": "sha256-MtGshtc9YC0yB87Qzp+AHQupjDtQXFzrZ4pA0AvXhmo=",
         "ref": "refs/heads/main",
-        "rev": "8c6af90617fbde9d6db82d815076059e60f72c5a",
-        "revCount": 106,
+        "rev": "221371436269839519802197c2cd666043ffa25d",
+        "revCount": 107,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/ai-skills.git"
       },
@@ -690,11 +690,11 @@
     "langsmith-skills": {
       "flake": false,
       "locked": {
-        "lastModified": 1775696284,
-        "narHash": "sha256-XxTmxiKkTi7dM+ZbCYjwC7zclG5ZC2dS8Q1qDE5JJRM=",
+        "lastModified": 1790185483,
+        "narHash": "sha256-WtIIfS9OqZmYN2NuwMFa1O1lNqK+SRRdiRrMG3UrJXo=",
         "owner": "langchain-ai",
         "repo": "langsmith-skills",
-        "rev": "68c8bb6b4b7cb5b20870b7b6afb340f6c958b0e6",
+        "rev": "bc2f989d8546d6113bb7fb5e94ea9abd730e258c",
         "type": "github"
       },
       "original": {
@@ -728,11 +728,11 @@
     "matt-skills": {
       "flake": false,
       "locked": {
-        "lastModified": 1783949761,
-        "narHash": "sha256-snwD/txU2uwMGr1KBoVew9YL8kjZjMyt8STrCRIvjrk=",
+        "lastModified": 1789726349,
+        "narHash": "sha256-L3CpIT2DeI+fUFl9fcygojtQo2DzEen69rMD1XqR1vM=",
         "owner": "mattpocock",
         "repo": "skills",
-        "rev": "66898f60e8c744e269f8ce06c2b2b99ce7660d5f",
+        "rev": "c55ee46073ed923f86ce59a5eb3b6d895095d1b7",
         "type": "github"
       },
       "original": {
@@ -1194,11 +1194,11 @@
     "tavily-skills": {
       "flake": false,
       "locked": {
-        "lastModified": 1780600028,
-        "narHash": "sha256-Y0eLc5afmz8IrFzB6f8WuTsEn6pmCzo8SMQ+OljIFKo=",
+        "lastModified": 1788534966,
+        "narHash": "sha256-bsNT2xRbA3eXPgBibHPPnKqMnItHr0/eKI5p0HyijS8=",
         "owner": "tavily-ai",
         "repo": "skills",
-        "rev": "ea5e8201b0d3ed9c10b70b71187589bd761fe2d2",
+        "rev": "778122e5f9c680f541eeceda5a5b36405eb7980c",
         "type": "github"
       },
       "original": {
