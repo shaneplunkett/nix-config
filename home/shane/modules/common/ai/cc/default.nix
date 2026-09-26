@@ -27,6 +27,11 @@ in
         feedbackSurveyRate = 0;
         autoMemoryEnabled = false;
         model = "opus";
+        # Marketplace only; plugins from it are installed per project.
+        extraKnownMarketplaces.openai-codex.source = {
+          source = "github";
+          repo = "openai/codex-plugin-cc";
+        };
         hooks.PreToolUse = [
           {
             matcher = "Bash";
