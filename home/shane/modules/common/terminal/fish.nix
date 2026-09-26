@@ -5,6 +5,7 @@ _: {
       shellAliases = {
         cx = "codex";
         cxr = "codex resume --last";
+        cxb = "CODEX_HOME=$HOME/.codex-bare codex";
       };
       shellAbbrs = {
         cat = "bat";
