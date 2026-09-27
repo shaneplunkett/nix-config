@@ -9,6 +9,9 @@ _: {
       "plex"
       "ferdium"
       "codex-app"
+      "chatgpt"
+      "claude"
+      "linear"
       "bluebubbles"
       "yt-music"
     ];
