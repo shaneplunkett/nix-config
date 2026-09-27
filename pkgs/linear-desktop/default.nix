@@ -20,7 +20,6 @@ let
     name = "linear";
     desktopName = "Linear";
     comment = "Issue tracking and project planning";
-    # linear-cli already owns bin/linear in the home profile.
     exec = "linear-desktop %U";
     icon = "linear";
     categories = [ "Office" ];
