@@ -8,7 +8,7 @@
     ./gitblame.nix
     ./lint.nix
     ./lsp.nix
-    ./markview.nix
+    ./render-markdown.nix
     ./mini.nix
     ./neotree.nix
     ./noice.nix
