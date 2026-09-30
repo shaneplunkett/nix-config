@@ -197,9 +197,11 @@ in
       ]
       ++ workspaceBinds
       ++ directionBinds
+      ++ [
+        (bind "${mod} + space" (exec "vicinae toggle"))
+        (bind "${mod} + V" (exec "vicinae deeplink vicinae://launch/clipboard/history?toggle=true"))
+      ]
       ++ lib.optionals (shell == "noctalia") [
-        (bind "${mod} + space" (exec "noctalia-shell ipc call launcher toggle"))
-        (bind "${mod} + V" (exec "noctalia-shell ipc call launcher clipboard"))
         (bind "${mod} + N" (exec "noctalia-shell ipc call controlCenter toggle"))
       ];
 

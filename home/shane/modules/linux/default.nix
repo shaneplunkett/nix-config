@@ -14,6 +14,7 @@
     ./vesktop.nix
     ./waydroid.nix
     ./hyprland.nix
+    ./vicinae.nix
     ./taildrop.nix
     ./screen-share.nix
   ]

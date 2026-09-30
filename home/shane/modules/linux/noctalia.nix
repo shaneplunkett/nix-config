@@ -516,7 +516,8 @@ in
       };
 
       appLauncher = {
-        enableClipboardHistory = true;
+        # Vicinae owns clipboard history now; skip the duplicate cliphist watchers.
+        enableClipboardHistory = false;
         autoPasteClipboard = false;
         enableClipPreview = true;
         clipboardWrapText = true;
