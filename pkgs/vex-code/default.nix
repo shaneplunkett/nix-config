@@ -6,6 +6,7 @@
   lib,
   libsecret,
   lsof,
+  patchelf,
   pkg-config,
   pnpm_11,
   src,
@@ -14,6 +15,13 @@
 }:
 
 let
+  nodeArch =
+    {
+      x86_64 = "x64";
+      aarch64 = "arm64";
+    }
+    .${stdenv.hostPlatform.parsed.cpu.name};
+
   pnpm = pnpm_11.override {
     version = "11.10.0";
     hash = "sha256-YgtmBepPYvxWptCphzP0eQcdAyHgPkhrUix+mnRhdDE=";
@@ -58,14 +66,21 @@ let
   unwrapped = (t3code.unwrapped.override { pnpm_11 = pnpm; }).overrideAttrs (
     finalAttrs: previousAttrs: {
       pname = "vex-code-unwrapped";
-      version = "0.0.43-vex.1";
+      version = "0.0.44-vex.1";
       src = namedSrc;
 
       nativeBuildInputs =
         (previousAttrs.nativeBuildInputs or [ ])
-        ++ lib.optionals stdenv.hostPlatform.isLinux [ pkg-config ];
+        ++ lib.optionals stdenv.hostPlatform.isLinux [
+          patchelf
+          pkg-config
+        ];
       buildInputs =
-        (previousAttrs.buildInputs or [ ]) ++ lib.optionals stdenv.hostPlatform.isLinux [ libsecret ];
+        (previousAttrs.buildInputs or [ ])
+        ++ lib.optionals stdenv.hostPlatform.isLinux [
+          libsecret
+          stdenv.cc.cc.lib
+        ];
 
       pnpmDeps = fetchPnpmDeps {
         inherit pnpm;
@@ -76,7 +91,7 @@ let
           pnpmWorkspaces
           ;
         fetcherVersion = 4;
-        hash = "sha256-RUJh4wO6bO37A+6IQ5axBCaZW7XSmzR7J4FgrasswRs=";
+        hash = "sha256-xdS9+PqIDULKIu3+lQRMabA23D0dxCEME96NhFggWPY=";
       };
 
       postPatch = ''
@@ -103,6 +118,30 @@ let
 
       postFixup =
         (previousAttrs.postFixup or "")
+        + lib.optionalString stdenv.hostPlatform.isLinux ''
+          # node-pty 1.2 ships a generic Linux prebuild rather than compiling
+          # it in this derivation, so it has no Nix RUNPATH for libstdc++.
+          # Patch only the binary selected by this host; the pnpm tree also
+          # contains unused foreign-platform prebuilds.
+          mapfile -d "" -t pty_modules < <(
+            find "$out/libexec/t3code" \
+              -path "*/node-pty/prebuilds/linux-${nodeArch}/pty.node" \
+              -print0
+          )
+          if [ "''${#pty_modules[@]}" -eq 0 ]; then
+            echo "node-pty Linux ${nodeArch} prebuild not found" >&2
+            exit 1
+          fi
+          for pty_module in "''${pty_modules[@]}"; do
+            chmod u+w "$pty_module"
+            patchelf --set-rpath ${
+              lib.makeLibraryPath [
+                stdenv.cc.cc.lib
+                stdenv.cc.libc
+              ]
+            } "$pty_module"
+          done
+        ''
         + ''
           wrapProgram "$out/bin/t3" \
             --prefix PATH : ${lib.makeBinPath [ lsof ]}

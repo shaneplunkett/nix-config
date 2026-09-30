@@ -712,11 +712,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1790222773,
-        "narHash": "sha256-OiTy5CmylptT+VrSemH3ZpQyfXi144Byj1qKXKsvujk=",
+        "lastModified": 1790746077,
+        "narHash": "sha256-I4O5GSbZgmvzV7dj8fZN8furV2UdEpahh4rvsZOfs/Q=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "2dcb8105ad34c1072e24addb0a40ae5dd1124178",
+        "rev": "af40d966859ec4075ecc172dbb39e53f474dc5d9",
         "type": "github"
       },
       "original": {
@@ -833,11 +833,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1790178388,
-        "narHash": "sha256-kK3t7gwoz4Nx8RF46cs1Xz/skKNcK7y3KYP+gGqX6W8=",
+        "lastModified": 1790600678,
+        "narHash": "sha256-6k3n7X2UsZ6tAlWTz99RimiZab+17tMUrw9sRUcELiA=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "00455b0a3690d3f5dc61e9aef4277dc86235b73f",
+        "rev": "f45c6f04c2f013f004bf94e284e95d72898d9393",
         "type": "github"
       },
       "original": {
@@ -1295,11 +1295,11 @@
     "vex-code": {
       "flake": false,
       "locked": {
-        "lastModified": 1790227304,
-        "narHash": "sha256-45w/MRLY01BSbdMqaCGjnE0frarjrI8QX6S0gMGo+0I=",
+        "lastModified": 1790746175,
+        "narHash": "sha256-b5gLVAdGrX5S1nbokhkMPhjMMgrhVboC3cfAUbNwjmk=",
         "owner": "shaneplunkett",
         "repo": "vex-code",
-        "rev": "c9dffef35ff646e31985254bd8eaab52b7c1a61a",
+        "rev": "53c09920e6029e3bcd165600a7f755d86c22b3c3",
         "type": "github"
       },
       "original": {
