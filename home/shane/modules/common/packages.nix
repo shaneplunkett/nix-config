@@ -12,10 +12,8 @@
     tftui
     terraform-docs
     ripgrep
-    tealdeer
     fzf
     pre-commit
-    bitwarden-desktop
     nix-output-monitor
     nvd
     statix
