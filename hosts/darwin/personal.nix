@@ -2,8 +2,9 @@
 
 {
   imports = [
-    ../../modules/base
-    ../../modules/laptop
+    ../../modules/common
+    ../../modules/darwin/base
+    ../../modules/darwin/laptop
   ];
 
   system.stateVersion = 6;

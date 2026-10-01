@@ -15,7 +15,7 @@ _: {
     masApps = {
     };
     onActivation = {
-      cleanup = "uninstalled";
+      cleanup = "uninstall";
       autoUpdate = false;
       upgrade = false;
     };

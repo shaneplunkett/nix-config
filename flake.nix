@@ -158,12 +158,10 @@
           system = "aarch64-darwin";
           hostConfig = ./hosts/darwin/personal.nix;
         };
-        darwinConfigurations = {
-          "mini-server" = lib.mkDarwinSystem {
-            hostname = "mini-server";
-            system = "aarch64-darwin";
-            hostConfig = ./hosts/darwin/mini/mini-server.nix;
-          };
+        "mini-server" = lib.mkDarwinSystem {
+          hostname = "mini-server";
+          system = "aarch64-darwin";
+          hostConfig = ./hosts/darwin/mini/mini-server.nix;
         };
       };
 

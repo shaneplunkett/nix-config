@@ -2,8 +2,9 @@
 
 {
   imports = [
-    ../../modules/base
-    ../../modules/server
+    ../../modules/common
+    ../../modules/darwin/base
+    ../../modules/darwin/server
   ];
 
   power.sleep = {

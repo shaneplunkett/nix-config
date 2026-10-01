@@ -51,10 +51,6 @@ _:
         StandardHideDesktopIcons = true;
       };
 
-      SoftwareUpdate = {
-        AutomaticallyInstallMacOSUpdates = true;
-      };
-
       NSGlobalDomain = {
         AppleICUForce24HourTime = true;
         AppleKeyboardUIMode = 3;

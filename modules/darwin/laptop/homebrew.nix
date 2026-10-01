@@ -12,7 +12,6 @@ _: {
     ];
 
     brews = [
-      "mas"
     ];
 
     masApps = {
