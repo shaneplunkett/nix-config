@@ -6,26 +6,16 @@ _: {
     casks = [
       "ghostty"
       "tailscale-app"
-      "plex"
-      "ferdium"
-      "codex-app"
-      "chatgpt"
-      "claude"
-      "linear"
-      "bluebubbles"
-      "yt-music"
     ];
 
     brews = [
       "mas"
-      "xcode-build-server"
     ];
 
     masApps = {
-      "Xcode" = 497799835;
     };
     onActivation = {
-      cleanup = "none";
+      cleanup = "uninstalled";
       autoUpdate = false;
       upgrade = false;
     };

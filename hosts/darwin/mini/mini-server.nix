@@ -3,7 +3,7 @@
 {
   imports = [
     ../../modules/base
-    ../../modules/laptop
+    ../../modules/server
   ];
 
   system.stateVersion = 6;
