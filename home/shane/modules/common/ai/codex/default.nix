@@ -57,16 +57,6 @@ let
     script = ./codex-emit-context.sh;
   };
 
-  codex-nix-lint = mkBashHook {
-    name = "codex-nix-lint";
-    runtimeInputs = [
-      pkgs.jq
-      pkgs.statix
-      pkgs.deadnix
-    ];
-    script = ./codex-nix-lint.sh;
-  };
-
   codex-git-commit-guard = aiHelpers.mkCommitGuard "codex";
 
   codexPackage = pkgs.codex;
@@ -143,19 +133,6 @@ let
             type = "command";
             command = "${codex-git-commit-guard}/bin/codex-git-commit-guard";
             timeout = 10;
-          }
-        ];
-      }
-    ];
-
-    PostToolUse = [
-      {
-        matcher = "apply_patch";
-        hooks = [
-          {
-            type = "command";
-            command = "${codex-nix-lint}/bin/codex-nix-lint";
-            timeout = 30;
           }
         ];
       }
