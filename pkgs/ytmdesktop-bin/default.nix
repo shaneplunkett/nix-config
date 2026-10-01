@@ -5,6 +5,7 @@
   dpkg,
   autoPatchelfHook,
   makeWrapper,
+  nix-update-script,
   alsa-lib,
   at-spi2-atk,
   at-spi2-core,
@@ -43,11 +44,11 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "ytmdesktop-bin";
-  version = "2.0.11";
+  version = "2.0.12";
 
   src = fetchurl {
     url = "https://github.com/ytmdesktop/ytmdesktop/releases/download/v${finalAttrs.version}/youtube-music-desktop-app_${finalAttrs.version}_amd64.deb";
-    hash = "sha256-e2uywRJXvFO+eP1sGLzbFumup8kzhdesShCNaU8wj6Q=";
+    hash = "sha256-SJTNJ1AA949FKq25JzN6Bj69WwHxP8Pt9bxgPTu20Kg=";
   };
 
   nativeBuildInputs = [
@@ -114,6 +115,8 @@ stdenv.mkDerivation (finalAttrs: {
 
     runHook postInstall
   '';
+
+  passthru.updateScript = nix-update-script { };
 
   meta = {
     description = "Desktop App for YouTube Music";
