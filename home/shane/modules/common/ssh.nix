@@ -42,6 +42,10 @@ in
         HostName = "100.101.140.9";
         HostKeyAlias = "shanes-macbook-pro";
       };
+      "mini" = laptopHost // {
+        HostName = "100.111.108.58";
+        HostKeyAlias = "mini-server";
+      };
     };
   };
 }
