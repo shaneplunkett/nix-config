@@ -6,142 +6,86 @@
 |---|---|---|
 | `desktop` | x86_64-linux | `nh os switch . -H desktop` |
 | `Shanes-MacBook-Pro` | aarch64-darwin | `nh darwin switch . -H Shanes-MacBook-Pro` |
-| `hetzvps` | aarch64-linux | deploy-rs (server, not local) |
+| `mini-server` | aarch64-darwin | `nh darwin switch . -H mini-server` |
+| `hetzvps` | aarch64-linux | server, not built from here |
 
-Build only (no activation): `nh {os,darwin} build . -H <host>`. Apply changes with `nrs`.
+Build only: `nh {os,darwin} build . -H <host>`. `nrs` switches the current
+host. Home Manager is part of the host switch; standalone activations such
+as `home-manager switch` or `./result/activate` run side-effect hooks, so
+use them only when Shane asks for that exact operation. Switching is
+passwordless for agents (`modules/nixos/user.nix`); if `nh` prompts, inspect
+the sudo command it ran rather than assuming Shane has to do it.
 
-Home Manager is built into the host switch path. Do not run standalone Home
-Manager activations such as `./result/activate`,
-`home-manager switch`, or activation packages from
-`config.home-manager.users.<name>.home.activationPackage` unless Shane
-explicitly asks for that exact operation. These activations can run side-effect
-hooks such as shell restarts; use `nh os switch . -H desktop` / `nrs` when the
-live desktop should actually change.
+Darwin can't be built on the desktop. `mini-server` is always on, so
+`scripts/darwin-build.sh [eval|build] [host]` syncs the working tree there
+(no commit needed) and evaluates or test-builds any darwin host. Default is
+`build mini-server`; `eval Shanes-MacBook-Pro` checks the laptop in seconds.
 
-Codex can run `nh os switch . -H desktop` directly; do not assume a sudo prompt
-means Shane must do it manually. Passwordless switching is configured in
-`modules/nixos/user.nix`. If `nh` suddenly asks for a password, inspect the
-actual sudo command it is running: the allowed shapes include
-`switch-to-configuration {test,boot,switch}` and `sudo env ...`, including both
-`/run/current-system/sw/bin/env` and Nix store `coreutils` `env` paths.
+## Checks
 
-## Research — don't rely on training data alone
+`scripts/check.sh` (nixfmt, statix, deadnix) is the one gate. Hooks run it
+for you in Claude Code and Codex: each `.nix` edit is formatted and linted
+straight after, the Stop hook runs it before you finish, and pre-commit
+runs it on every commit. Fix what it reports. If a rule is wrong for the
+case, say so and propose a change to `statix.toml`.
 
-- **Library shapes, derivation patterns, home-manager / nixpkgs options** → the directly configured Context7 MCP. Resolve the library ID, then query its live docs.
-- **Current state of the world, unknown tools, comparisons** → tavily (`tvly search "..."`, or `tvly research "..."` for deeper synthesis with citations).
-- Default to checking. Nix QoL tools (`nh`, `nurl`, `nix-init`, `nix-locate`, `manix`, `comma-with-db`) are 2025+; training data is stale.
+What hooks can't do: `nh {os,darwin} build . -H <host>` must be green
+before a task is done. `git add` new files first; flakes ignore untracked
+files, and the resulting errors are confusing.
 
-## Nix idioms — DEFAULT
+## Research
 
-**Nix > bash.** Shell only when the shape is genuinely shell (mutating external state, runtime iter outside the store, JSON merges preserving runtime-only fields).
+Nix QoL tools (`nh`, `nurl`, `nix-init`, `nix-update`, `manix`, comma) are
+2025+, so training data is stale. Check Context7 (resolve the library,
+then query) for home-manager, nixpkgs, and nix-darwin option shapes before
+committing to one. Use tavily for the current state of the world.
 
-Prefer:
+## Nix idioms
+
+Nix over bash: shell only when the shape is genuinely shell (mutating
+external state, runtime iteration outside the store).
+
 - `home.file` + `mkOutOfStoreSymlink` over activation scripts
-- `writeShellApplication { name; runtimeInputs; text }` over `writeShellScriptBin`
+- `writeShellApplication` over `writeShellScriptBin`
 - `lib.mapAttrs'` + `nameValuePair` over copy-paste blocks
-- `stdenv.mkDerivation` over activation-time jq merges
-- Verify shape via Context7 (home-manager / nixpkgs source) before committing
-- Collapse repeated keys via nested attrset (statix W20)
+- `stdenv.mkDerivation` over activation-time merges
 
-## Project packages
+| Task | Use |
+|---|---|
+| Hash + fetcher block | `nurl <url> <rev>` |
+| Find pkg by binary | `nix-locate -w -t x --minimal bin/<cmd>` |
+| Remote pkg search | `nh search <q>` |
+| Option docs | `manix <opt>` |
+| New package draft | `nix-init <url>` |
+| Bump a package | `nix-update --flake <attr>` |
+| Run once, no install | `, <cmd>` |
 
-Fetched or built third-party packages belong in `pkgs/`, not inline inside
-Home Manager or host modules. Use one directory per package:
-`pkgs/<name>/default.nix`, expose it from `pkgs/default.nix` with
-`pkgs.callPackage`, then consume it as `pkgs.<name>` from modules.
+## Packages
 
-**Residency carve-out:** agent-stack CLIs and MCP servers (anything the agent
-stack invokes) are packaged in the `vex-tooling` flake input, NOT here — its
-overlay supplies them as `pkgs.<name>`. `pkgs/` here is for desktop apps,
-themed builds, and machine config. Where things live, and the update chain for
-each repo, is documented in `docs/environment-map.md` — check it before
-packaging something new or hunting for where a CLI version comes from.
+Where a new thing lives is decided by the residency rule in
+`docs/environment-map.md`; read it before packaging anything or hunting
+for where a CLI version comes from. In this repo, one directory per
+package under `pkgs/<name>/default.nix`, exposed from `pkgs/default.nix`,
+consumed as `pkgs.<name>`. Pinned packages get
+`passthru.updateScript = nix-update-script { };` when `nix-update` can
+handle the bump. Inline derivations are only for module-local glue such as
+a small `writeShellApplication` wrapper injecting secrets.
 
-**Private utility carve-out:** deliberately private desktop utilities belong in
-`nix-config-private/pkgs/` and are installed through its Home Manager module.
-Keep their names and package details out of this public repo.
-
-Inline derivations are only for module-local glue that is genuinely tied to the
-module, such as small `writeShellApplication` wrappers. Keep runtime wrappers
-near the module when they mainly inject secrets or compose commands, but move
-the packaged tool they wrap into `pkgs/`.
-
-**New app icons need a noctalia restart.** Noctalia (quickshell) is Qt-based and
-snapshots the icon theme at process start, so an icon name that didn't exist
-when it launched renders as the magenta missing-texture checkerboard in the
-launcher and workspace selector — even though the file is correctly installed
-under `share/icons/hicolor/`. After a rebuild that adds a brand-new desktop app,
-restart the shell: `kill <quickshell pid>` then
-`hyprctl eval 'hl.exec_cmd("noctalia-shell")'` (exec via Hyprland so it gets the
-session environment; it is exec-once, not a systemd unit). Updates to existing apps
-don't need this — only icon names Qt has never seen.
-
-For pinned packages, add `passthru.updateScript = nix-update-script { };` when
-`nix-update --flake <attr>` can handle the bump cleanly. If a package needs a
-manual fetcher refresh, use `nurl <url> <rev>` and keep the package addressable
-from `pkgs/` anyway.
-
-## Tooling — use THESE
-
-| Task | Use | NOT |
-|---|---|---|
-| Build / switch | `nh os switch . -H <host>` | `nixos-rebuild switch --flake ...` |
-| Hash + fetcher block | `nurl <url> <rev>` | `nix-prefetch-url --unpack` + `nix-hash --to-sri` |
-| Find pkg by binary | `nix-locate -w -t x --minimal bin/<cmd>` | `nh search` for known bins |
-| Remote pkg search | `nh search <q>` | `nix search nixpkgs` |
-| Local options / docs | `manix <opt>` | grep nixpkgs |
-| New package draft | `nix-init <url>` | hand-write `buildNpmPackage` / `buildGoModule` |
-| Existing package bump | `nix-update --flake <attr>` | manual rev/hash replacement loops |
-| Run-once no-install | `, <cmd>` | `nix shell nixpkgs#<pkg> -c` |
-| Lint | `statix check .` then `statix fix .` if needed | manual review or path lists |
-| Dead code | `deadnix <p>` | manual review |
-| Format | `nix fmt` (nixfmt-rfc-style, tracked + staged) | manual |
-
-For custom package pins, prefer making the package addressable from `pkgs/` with
-`passthru.updateScript` when the update needs project-specific flags. Then use
-`nix-update --flake <attr>` for ordinary source/hash bumps and `nurl <url> <rev>`
-when you need to refresh or draft a fetcher block manually.
-
-## Done criteria for a nix edit
-
-1. `git add` new files — flakes ignore untracked
-2. `statix check .` clean — Statix takes a single target, so run it at repo root
-3. `deadnix <changed>` empty
-4. `nh {os,darwin} build . -H <host>` green
-5. `nix flake check` green
-
-A PostToolUse hook auto-runs `statix` + `deadnix` after every `.nix` edit and surfaces findings as feedback. Don't ignore them.
+A brand-new desktop app's icon shows as a magenta checkerboard in noctalia
+until the shell restarts: `kill <quickshell pid>` then
+`hyprctl eval 'hl.exec_cmd("noctalia-shell")'`.
 
 ## Secrets
 
-**rbw (Bitwarden)** — default. CLI wrappers in `home/shane/modules/common/` shell out to `rbw get <entry>` at invocation. Rotate via Bitwarden UI → `rbw sync` → next call picks it up. No rebuild.
+rbw (Bitwarden) by default: wrappers shell out to `rbw get <entry>` at
+invocation, so rotation needs no rebuild. agenix only for `hetzvps`
+services that can't reach the rbw agent (`secrets/secrets.nix`, consumed
+via `config.age.secrets.<name>.path`).
 
-**agenix** — server-side only. `secrets/*.age` declared in `secrets/secrets.nix`, consumed via `config.age.secrets.<name>.path`. Currently only `hetzvps` (tailscale-authkey, restic-password, vex-* server secrets). New creds → rbw, unless a non-interactive system service can't talk to the rbw agent.
+## Layout
 
-## NixVim
-
-`home/shane/modules/common/nixvim/`. `default.nix` enables + imports. `plugins/default.nix` aggregates. Each plugin = own file `plugins/<name>.nix`.
-
-Darwin-only packages (`xcbeautify`, `swiftformat`, `swiftlint`, `sourcekit`) → guard with `lib.mkIf pkgs.stdenv.isDarwin` or `lib.optionals pkgs.stdenv.isDarwin`.
-
-## AI modules
-
-Base AI tooling lives in `home/shane/modules/common/ai/` and is imported by
-`home/shane/modules/common/default.nix`.
-
-`home/shane/modules/common/ai/`:
-- `mcp/` — canonical `programs.mcp.servers` registry shared by the AI harness modules. Prefer pinned Nix packages for server binaries; runtime wrappers are only for secrets.
-- `codex/` — Codex CLI. Settings, hooks, skills, rules, and Vex AGENTS.md context via `programs.codex`.
-
-## Git
-
-Flakes only see git-tracked files. `git add` new files BEFORE building. Untracked → invisible to the build → confusing errors.
-
-Keep this repo clean for Shane. When you notice pre-existing local changes,
-staged files, or local commits outside the current task, do not ignore them until
-the end of the session. Inspect them, separate them from your own work, and
-quietly carry coherent finished work through the normal hygiene path: format,
-lint/dead-code checks, host build when relevant, commit, and push. Never discard,
-reset, or overwrite Shane's changes unless she explicitly asks; if a change is
-ambiguous or unsafe to ship, leave it intact and call out exactly what needs her
-decision.
+- `home/shane/modules/common/nixvim/`: one file per plugin under
+  `plugins/`. Darwin-only tools get `lib.optionals pkgs.stdenv.isDarwin`.
+- `home/shane/modules/common/ai/`: the AI harnesses. `cc/` (Claude Code),
+  `codex/`, `mcp/` (shared `programs.mcp.servers` registry), `skills/`,
+  and `lib.nix` with the helpers they share.
