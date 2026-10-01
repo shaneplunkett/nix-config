@@ -8,5 +8,8 @@
     home-manager
     google-chrome
     gh
+    docker
+    docker-compose
+    colima
   ];
 }
