@@ -1,1 +1,1 @@
-refer to AGENTS.md for agent instructions
+@AGENTS.md
