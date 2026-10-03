@@ -5,5 +5,6 @@
     nerd-fonts.jetbrains-mono
     nerd-fonts.hack
     nerd-fonts.mononoki
+    roundhog
   ];
 }

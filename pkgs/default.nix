@@ -8,6 +8,7 @@ let
   optionalAttrs = condition: attrs: if condition then attrs else { };
 in
 {
+  roundhog = pkgs.callPackage ./roundhog { };
   vex-code = pkgs.callPackage ./vex-code { src = vexCodeSrc; };
   xcodebuild-nvim = pkgs.callPackage ./xcodebuild-nvim { };
 }
