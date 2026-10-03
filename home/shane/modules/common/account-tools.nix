@@ -2,7 +2,7 @@
 let
   provider = "in" + "g";
   credentialRef = "www.${provider}.com.au";
-  projectDir = "$HOME/projects/personal/${provider}-probe";
+  projectDir = "$HOME/Projects/personal/${provider}-probe";
 
   loadEnv = ''
     ING_CIF="$(rbw get --field username ${credentialRef} 2>/dev/null)"

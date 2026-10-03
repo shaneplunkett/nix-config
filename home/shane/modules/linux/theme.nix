@@ -41,14 +41,14 @@ in
     };
 
     gtk3.bookmarks = [
-      "file:///home/shane/documents Documents"
-      "file:///home/shane/projects Projects"
+      "file:///home/shane/Documents Documents"
+      "file:///home/shane/Projects Projects"
       "file:///home/shane/Downloads Downloads"
-      "file:///home/shane/music Music"
-      "file:///home/shane/pictures Pictures"
-      "file:///home/shane/templates Templates"
-      "file:///home/shane/videos Videos"
-      "file:///home/shane/screenshots Screenshots"
+      "file:///home/shane/Music Music"
+      "file:///home/shane/Pictures Pictures"
+      "file:///home/shane/Templates Templates"
+      "file:///home/shane/Videos Videos"
+      "file:///home/shane/Screenshots Screenshots"
       "file:///home/shane/unraid Unraid"
     ];
   };

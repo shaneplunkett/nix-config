@@ -24,11 +24,11 @@ noctalia-plugins  ─ QML        ─┘
 
 | Input | Checkout | Provides | Consumed via |
 |---|---|---|---|
-| `vex-tooling` | `~/projects/personal/vex-tooling` | Agent-stack CLIs: `vex`, `langsmith`, `gws`, `tvly`, `bb`, `todoist`, `unifi`, and `linear` (managed-auth wrapper). `xero-mcp-server` remains packaged but unwired while Xero is disconnected. Credentials are injected from rbw at invocation. | `overlays.default` in `lib/common.nix` + `homeManagerModules.default` on the desktop and darwin hosts only (servers opt out via `agentClis = false` in `flake.nix`) |
+| `vex-tooling` | `~/Projects/personal/vex-tooling` | Agent-stack CLIs: `vex`, `langsmith`, `gws`, `tvly`, `bb`, `todoist`, `unifi`, and `linear` (managed-auth wrapper). `xero-mcp-server` remains packaged but unwired while Xero is disconnected. Credentials are injected from rbw at invocation. | `overlays.default` in `lib/common.nix` + `homeManagerModules.default` on the desktop and darwin hosts only (servers opt out via `agentClis = false` in `flake.nix`) |
 | `ai-skills` | `~/ai-skills` | `lib.skillProfiles` used by the local AI modules, plus the prompt sources they install. Carries its own skill inputs. | `home/shane/modules/common/ai/lib.nix` |
-| `nix-config-private` | `~/projects/personal/nix-config-private` | Private home-manager modules and deliberately private desktop utilities. Zero inputs of its own. | `homeManagerModules.default` |
-| `vex-code` | `~/projects/personal/vex-code` | Source only (`flake = false`); this repo's `pkgs/vex-code` owns the build. | `pkgs/default.nix` (`vexCodeSrc`) |
-| `noctalia-plugins` | `~/projects/personal/noctalia-plugins` | Noctalia QML plugins, symlinked live from the local checkout (QML edits need no rebuild; deployment changes do). | `home/shane/modules/linux/noctalia-plugins.nix` |
+| `nix-config-private` | `~/Projects/personal/nix-config-private` | Private home-manager modules and deliberately private desktop utilities. Zero inputs of its own. | `homeManagerModules.default` |
+| `vex-code` | `~/Projects/personal/vex-code` | Source only (`flake = false`); this repo's `pkgs/vex-code` owns the build. | `pkgs/default.nix` (`vexCodeSrc`) |
+| `noctalia-plugins` | `~/Projects/personal/noctalia-plugins` | Noctalia QML plugins, symlinked live from the local checkout (QML edits need no rebuild; deployment changes do). | `home/shane/modules/linux/noctalia-plugins.nix` |
 
 In-repo `pkgs/` holds everything else: desktop apps, themed builds, the
 vex-code package, editor tooling. See the residency rule below.
@@ -78,5 +78,5 @@ tracks its HEAD, so stale versions mean nobody bumped the package there.
 
 - `~/flakes` — one repo of per-project dev shells, including
   `nix-config-tools` for hacking on this repo.
-- `~/projects/personal` — personal repo checkouts, including the five input
+- `~/Projects/personal` — personal repo checkouts, including the five input
   repos above (except ai-skills, which lives at `~/ai-skills`).

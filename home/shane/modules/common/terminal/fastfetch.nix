@@ -4,7 +4,7 @@
     enable = true;
     settings = {
       logo = {
-        source = "~/pictures/logos/nixowo.png";
+        source = "~/Pictures/logos/nixowo.png";
         type = "kitty-direct";
         height = 18;
         preserveAspectRatio = true;

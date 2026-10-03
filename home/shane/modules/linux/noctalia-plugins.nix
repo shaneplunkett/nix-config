@@ -6,7 +6,7 @@
 }:
 let
   homeDir = config.home.homeDirectory;
-  pluginRoot = "${homeDir}/projects/personal/noctalia-plugins";
+  pluginRoot = "${homeDir}/Projects/personal/noctalia-plugins";
   freedesktopSounds = "${pkgs.sound-theme-freedesktop}/share/sounds/freedesktop/stereo";
 
   # Must be the wrapped launcher from bin/, not the raw binary in share/ —
