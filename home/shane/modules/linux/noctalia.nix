@@ -109,6 +109,7 @@ in
         center = [ "workspaces" ];
         end = [
           "tray"
+          "tailscale-guard"
           "network"
           "bluetooth"
           "volume"
@@ -123,6 +124,7 @@ in
         clock.format = "{:%-I:%M %p  %d/%m/%Y}";
         network.show_label = false;
         ram.visualization = "none";
+        tailscale-guard.type = "vex/tailscale-guard:bar";
         tray.drawer = true;
         workspaces.style = "focus_hint";
       };
@@ -158,7 +160,10 @@ in
       };
 
       plugins = {
-        enabled = [ "noctalia/screen_recorder" ];
+        enabled = [
+          "noctalia/screen_recorder"
+          "vex/tailscale-guard"
+        ];
 
         # Declaring any source replaces noctalia's built-in list, so official
         # and community are restated. Later sources win on a shared id; a
