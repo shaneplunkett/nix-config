@@ -3,6 +3,7 @@
 # ~/.local/state/noctalia/settings.toml and override this file.
 {
   config,
+  inputs,
   lib,
   palette,
   ...
@@ -156,7 +157,31 @@ in
         };
       };
 
-      plugins.enabled = [ "noctalia/screen_recorder" ];
+      plugins = {
+        enabled = [ "noctalia/screen_recorder" ];
+
+        # Declaring any source replaces noctalia's built-in list, so official
+        # and community are restated. Later sources win on a shared id; a
+        # plugin symlinked into ~/.local/share/noctalia/plugins (`just dev` in
+        # the repo) outranks them all.
+        source = [
+          {
+            name = "official";
+            kind = "git";
+            location = "https://github.com/noctalia-dev/official-plugins";
+          }
+          {
+            name = "community";
+            kind = "git";
+            location = "https://github.com/noctalia-dev/community-plugins";
+          }
+          {
+            name = "vex";
+            kind = "path";
+            location = "${inputs.noctalia-plugins}/plugins";
+          }
+        ];
+      };
     };
   };
 }

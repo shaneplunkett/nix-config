@@ -86,11 +86,12 @@
       flake = false;
     };
 
-    # Vex Noctalia plugins. Written for v4's QML plugin API and not wired into
-    # the v5 shell yet; kept so the plugin port has an input to land on.
+    # Vex Noctalia plugins (Luau, v5). Only the source tree is used: its
+    # plugins/ dir is a noctalia path source, pinned here. Ship plugin changes
+    # with `nix flake update noctalia-plugins`.
     noctalia-plugins = {
       url = "git+ssh://git@github.com/shaneplunkett/noctalia-plugins.git";
-      inputs.nixpkgs.follows = "nixpkgs";
+      flake = false;
     };
   };
 
