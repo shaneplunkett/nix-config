@@ -56,22 +56,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Keep Noctalia on v4 for plugin support. v5 currently drops the QML plugin
-    # surface Shane's local plugins use.
-    noctalia = {
-      url = "github:noctalia-dev/noctalia-shell/fddc9cd584676a85d0a48225830e153178b1c000";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    noctalia-qs = {
-      url = "github:noctalia-dev/noctalia-qs/4116b41cdc89e186be7cb8b24a9b6022af95d742";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    # Noctalia v5 rewrite, pinned to a beta tag and run side by side with v4
-    # as a separate greeter session while the migration happens piecemeal.
-    # Like Hyprland, it keeps its own nixpkgs pin: following ours would
-    # invalidate the noctalia.cachix.org binary cache and force local builds.
-    noctalia-v5.url = "github:noctalia-dev/noctalia-shell/v5.0.0-beta.8";
+    # Noctalia v5 straight from upstream rather than waiting on nixpkgs. The
+    # cachix branch trails main to the newest commit CI has cached. Like
+    # Hyprland, it keeps its own nixpkgs pin: following ours would invalidate
+    # the noctalia.cachix.org binary cache and force local builds.
+    noctalia.url = "github:noctalia-dev/noctalia/cachix";
+    noctalia-greeter.url = "github:noctalia-dev/noctalia-greeter";
 
     vex-tooling = {
       url = "git+ssh://git@github.com/shaneplunkett/vex-tooling.git";
@@ -96,7 +86,8 @@
       flake = false;
     };
 
-    # Vex Noctalia plugins — QML plugins symlinked live from the local checkout.
+    # Vex Noctalia plugins. Written for v4's QML plugin API and not wired into
+    # the v5 shell yet; kept so the plugin port has an input to land on.
     noctalia-plugins = {
       url = "git+ssh://git@github.com/shaneplunkett/noctalia-plugins.git";
       inputs.nixpkgs.follows = "nixpkgs";

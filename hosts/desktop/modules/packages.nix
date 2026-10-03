@@ -14,9 +14,7 @@
     python3
     yq-go
     lsof
-    hyprpolkitagent
     wl-clipboard
-    tuigreet
     nemo-with-extensions
     file-roller
     openocd

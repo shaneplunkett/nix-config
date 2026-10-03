@@ -21,7 +21,6 @@
 
   ++ lib.optionals (shell == "noctalia") [
     ./noctalia.nix
-    ./noctalia-v5.nix
   ];
 
 }

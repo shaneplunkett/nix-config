@@ -13,6 +13,8 @@
     # Run prebuilt dynamically-linked binaries (PyPI wheels like ruff,
     # pre-commit hook envs, vendor CLIs) without per-binary patchelf.
     nix-ld.enable = true;
+    # Backend for Noctalia's noctalia/screen_recorder plugin.
+    gpu-screen-recorder.enable = true;
   };
 
   environment.sessionVariables = {

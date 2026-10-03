@@ -28,7 +28,7 @@ noctalia-plugins  ─ QML        ─┘
 | `ai-skills` | `~/ai-skills` | `lib.skillProfiles` used by the local AI modules, plus the prompt sources they install. Carries its own skill inputs. | `home/shane/modules/common/ai/lib.nix` |
 | `nix-config-private` | `~/Projects/personal/nix-config-private` | Private home-manager modules and deliberately private desktop utilities. Zero inputs of its own. | `homeManagerModules.default` |
 | `vex-code` | `~/Projects/personal/vex-code` | Source only (`flake = false`); this repo's `pkgs/vex-code` owns the build. | `pkgs/default.nix` (`vexCodeSrc`) |
-| `noctalia-plugins` | `~/Projects/personal/noctalia-plugins` | Noctalia QML plugins, symlinked live from the local checkout (QML edits need no rebuild; deployment changes do). | `home/shane/modules/linux/noctalia-plugins.nix` |
+| `noctalia-plugins` | `~/Projects/personal/noctalia-plugins` | Noctalia plugins written for v4's QML API. Not wired in since the v5 move; kept for the plugin port. | Nothing yet |
 
 In-repo `pkgs/` holds everything else: desktop apps, themed builds, the
 vex-code package, editor tooling. See the residency rule below.

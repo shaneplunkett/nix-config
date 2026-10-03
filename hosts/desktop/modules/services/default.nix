@@ -4,8 +4,7 @@
   imports = [
 
     ./amdgpu-dump-collector.nix
-    ./greetd.nix
-    ./noctalia-v5-session.nix
+    ./noctalia-greeter.nix
 
   ];
 

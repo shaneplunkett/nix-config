@@ -39,4 +39,25 @@ in
   inherit hex;
   withHash = builtins.mapAttrs (_: v: "#${v}") hex;
   hyprRgba = builtins.mapAttrs (_: v: "rgba(${v}ff)") hex;
+
+  # Noctalia's 16 colour roles, shared by the shell palette and the greeter.
+  # Noctalia's built-in Catppuccin uses mauve as primary; this keeps lavender.
+  noctaliaRoles = builtins.mapAttrs (_: name: "#${hex.${name}}") {
+    primary = "lavender";
+    on_primary = "crust";
+    secondary = "teal";
+    on_secondary = "crust";
+    tertiary = "peach";
+    on_tertiary = "crust";
+    error = "red";
+    on_error = "crust";
+    surface = "base";
+    on_surface = "text";
+    surface_variant = "surface0";
+    on_surface_variant = "subtext1";
+    outline = "overlay0";
+    shadow = "crust";
+    hover = "surface1";
+    on_hover = "text";
+  };
 }

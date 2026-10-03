@@ -162,33 +162,13 @@ in
   wayland.windowManager.hyprland = {
     enable = true;
     configType = "lua";
+    # Noctalia runs as a user service, outside the login session's scope; it
+    # finds its logind session (lock-session, sleep hooks) via this variable.
+    systemd.variables = lib.mkOptionDefault [ "XDG_SESSION_ID" ];
     settings = {
-      on = [
-        {
-          _args = [
-            "hyprland.start"
-            (mkLuaInline ''
-              function()
-                hl.exec_cmd("systemctl --user start hyprpolkitagent")
-                hl.exec_cmd("wl-paste --type text --watch cliphist store")
-                hl.exec_cmd("wl-paste --type image --watch cliphist store")
-              end'')
-          ];
-        }
-      ];
-
       bind = [
         (bind "${mod} + SHIFT + Q" "hl.dsp.window.close()")
         (bind "${mod} + RETURN" (exec terminal))
-        (bind "${mod} + SHIFT + 4" (exec "hyprshot -m region --clipboard-only"))
-        (bind "${mod} + SHIFT + 5" (
-          exec (
-            if shell == "noctalia" then
-              "noctalia-shell ipc call plugin:screen-shot-and-record record"
-            else
-              "bug-record"
-          )
-        ))
         (bind "${mod} + SHIFT + W" (exec "hyprctl dispatch togglehidden"))
         (bind "${mod} + SHIFT + F" "hl.dsp.window.float()")
 
@@ -202,7 +182,9 @@ in
         (bind "${mod} + V" (exec "vicinae deeplink vicinae://launch/clipboard/history?toggle=true"))
       ]
       ++ lib.optionals (shell == "noctalia") [
-        (bind "${mod} + N" (exec "noctalia-shell ipc call controlCenter toggle"))
+        (bind "${mod} + N" (exec "noctalia msg panel-toggle control-center"))
+        (bind "${mod} + SHIFT + 4" (exec "noctalia msg screenshot-region"))
+        (bind "${mod} + SHIFT + 5" (exec "noctalia msg plugin noctalia/screen_recorder:service all toggle"))
       ];
 
       curve = [
@@ -302,10 +284,15 @@ in
       ]
       ++ appWorkspaceRules;
 
+      # Upstream's recommended rule: Noctalia animates its own surfaces.
       layer_rule = lib.optionals (shell == "noctalia") [
         {
-          match.namespace = "noctalia-shell:regionSelector";
+          name = "noctalia";
+          match.namespace = "^noctalia-(bar-.+|notification|dock|panel|attached-panel|osd|window-switcher)$";
           no_anim = true;
+          ignore_alpha = 0.5;
+          blur = true;
+          blur_popups = true;
         }
       ];
 
