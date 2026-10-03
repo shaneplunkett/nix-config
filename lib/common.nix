@@ -32,75 +32,9 @@ in
         let
           system = prev.stdenv.hostPlatform.system;
           aiPackages = inputs.llm-agents.packages.${system} or { };
-          codexBase = aiPackages.codex;
-          # Codex 0.159 starts the app-server daemon by default. The source
-          # package from llm-agents still installs the CLI binaries without the
-          # canonical package manifest/layout, so daemon bootstrap cannot copy
-          # a complete local package and exits after the TUI opens.
-          #
-          # Keep the cache-backed build and finish its package layout locally.
-          # This can go away once llm-agents ships codex-package.json plus the
-          # required codex-path and codex-resources files itself.
-          codex =
-            prev.runCommand "${codexBase.name}-complete-package"
-              {
-                inherit (codexBase) version meta;
-                passthru = codexBase.passthru or { };
-              }
-              ''
-                mkdir -p "$out"
-                cp -a ${codexBase}/. "$out/"
-                chmod -R u+w "$out"
-
-                ${
-                  if prev.stdenv.hostPlatform.isLinux then
-                    ''
-                      package_root="$out/libexec/codex"
-                      substituteInPlace "$out/bin/codex" \
-                        --replace-fail ${codexBase} "$out"
-                    ''
-                  else
-                    ''
-                      package_root="$out/libexec/codex"
-                      install -d "$package_root/bin"
-                      for binary in codex codex-code-mode-host logs_client; do
-                        if [ -e "$out/bin/$binary" ]; then
-                          mv "$out/bin/$binary" "$package_root/bin/$binary"
-                          ln -s "../libexec/codex/bin/$binary" "$out/bin/$binary"
-                        fi
-                      done
-                    ''
-                }
-
-                install -d "$package_root/codex-path" "$package_root/codex-resources"
-                install -m755 ${prev.ripgrep}/bin/rg "$package_root/codex-path/rg"
-                ${prev.lib.optionalString prev.stdenv.hostPlatform.isLinux ''
-                  rm -f "$package_root/codex-resources/bwrap"
-                  install -m755 ${prev.bubblewrap}/bin/bwrap "$package_root/codex-resources/bwrap"
-                ''}
-
-                cat > "$package_root/codex-package.json" <<'EOF'
-                ${builtins.toJSON {
-                  layoutVersion = 1;
-                  inherit (codexBase) version;
-                  target = prev.stdenv.hostPlatform.config;
-                  variant = "codex";
-                  entrypoint = "bin/codex";
-                  resourcesDir = "codex-resources";
-                  pathDir = "codex-path";
-                }}
-                EOF
-
-                test -x "$package_root/bin/codex"
-                test -x "$package_root/bin/codex-code-mode-host"
-                test -x "$package_root/codex-path/rg"
-                ${prev.lib.optionalString prev.stdenv.hostPlatform.isLinux ''
-                  test -x "$package_root/codex-resources/bwrap"
-                ''}
-              '';
         in
         (prev.lib.optionalAttrs (builtins.hasAttr "codex" aiPackages) {
-          inherit codex;
+          inherit (aiPackages) codex;
         })
         // (prev.lib.optionalAttrs (builtins.hasAttr "claude-code" aiPackages) {
           inherit (aiPackages) claude-code;
