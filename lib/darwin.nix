@@ -36,6 +36,17 @@ in
                   builtins.removeAttrs old.optional-dependencies [ "secretstorage" ]
                 );
               });
+
+              # nixpkgs #542991 interpolates writeNu's script, so a path
+              # becomes a script that runs the path. omniwm.nix passes its
+              # deploy-settings.nu as a path. Drop once nixpkgs handles it.
+              writers = prev.writers // {
+                writeNu =
+                  name: argsOrScript:
+                  prev.writers.writeNu name (
+                    if prev.lib.isPath argsOrScript then builtins.readFile argsOrScript else argsOrScript
+                  );
+              };
             })
           ];
         }
