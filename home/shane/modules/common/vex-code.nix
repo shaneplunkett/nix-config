@@ -103,8 +103,6 @@ in
     };
 
     userSettings = {
-      # Fork-only setting; upstream T3 Code has no terminalShell.
-      terminalShell = "fish";
       addProjectBaseDirectory = "~/Projects";
       enableProviderUpdateChecks = false;
       continueThreadsAfterServerUpdate = true;

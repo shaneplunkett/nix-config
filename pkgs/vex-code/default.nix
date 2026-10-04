@@ -66,12 +66,16 @@ let
   unwrapped = (t3code.unwrapped.override { pnpm_11 = pnpm; }).overrideAttrs (
     finalAttrs: previousAttrs: {
       pname = "vex-code-unwrapped";
-      version = "0.0.44-vex.1";
+      version = "0.0.45-vex.1";
       src = namedSrc;
 
       patches = (previousAttrs.patches or [ ]) ++ [
         # Spellcheck in the OS locale (en-AU) instead of the bundled en-US.
         ./patches/spellcheck-system-locale.patch
+        # Catppuccin syntax highlighting for code blocks and diffs.
+        ./patches/catppuccin-code-theme.patch
+        # Chat italics in the theme's primary colour (mauve under Mocha).
+        ./patches/markdown-italics-primary.patch
       ];
 
       nativeBuildInputs =
@@ -96,7 +100,7 @@ let
           pnpmWorkspaces
           ;
         fetcherVersion = 4;
-        hash = "sha256-xdS9+PqIDULKIu3+lQRMabA23D0dxCEME96NhFggWPY=";
+        hash = "sha256-YNIHsTSvgdIbU0rLOreqN0mJ0HIT645+PrKRB3Wf6Rs=";
       };
 
       postPatch = ''
