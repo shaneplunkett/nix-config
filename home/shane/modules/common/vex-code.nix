@@ -2,12 +2,85 @@
   config,
   lib,
   pkgs,
+  palette,
   ...
 }:
 let
   inherit (config.home) homeDirectory;
+  inherit (palette) hex withHash;
+
+  # Published as an environment theme; pick it once in Settings → Appearance.
+  # The server opens theme files with O_NOFOLLOW, so the whole themes
+  # directory is linked to the store and the file inside it stays real.
+  catppuccinMocha = {
+    name = "Catppuccin Mocha";
+    appearance = "dark";
+    colors = {
+      canvas = withHash.base;
+      chrome = withHash.mantle;
+      toolbar = withHash.mantle;
+      toolbarForeground = withHash.text;
+      toolbarBorder = "#${hex.surface2}b8";
+      toolbarControl = withHash.surface0;
+      toolbarControlForeground = withHash.text;
+      toolbarControlHover = withHash.surface1;
+      surface = withHash.base;
+      surfaceRaised = withHash.surface0;
+      surfaceOverlay = withHash.mantle;
+      inherit (withHash) text;
+      textMuted = withHash.subtext0;
+      border = "#${hex.surface2}b8";
+      input = "#${hex.overlay0}b8";
+      focus = withHash.mauve;
+      accent = withHash.mauve;
+      accentForeground = withHash.crust;
+      secondary = withHash.surface0;
+      secondaryForeground = withHash.text;
+      muted = withHash.surface0;
+      mutedForeground = withHash.subtext0;
+      placeholder = withHash.overlay2;
+      secondaryLabel = withHash.subtext0;
+      iconMuted = withHash.overlay2;
+      error = withHash.red;
+      errorForeground = withHash.red;
+      errorSurface = "#${hex.red}29";
+      warning = withHash.yellow;
+      warningForeground = withHash.yellow;
+      warningSurface = "#${hex.yellow}29";
+      update = withHash.mauve;
+      updateForeground = withHash.mauve;
+      updateSurface = "#${hex.mauve}2e";
+      accentSurface = withHash.surface0;
+      accentSurfaceForeground = withHash.text;
+      messageSurface = withHash.surface0;
+      messageForeground = withHash.text;
+      messageAction = withHash.mauve;
+      messageActionForeground = withHash.crust;
+      messageActionHover = withHash.lavender;
+      codeBackground = withHash.mantle;
+      codeForeground = withHash.text;
+      sidebar = withHash.mantle;
+      sidebarForeground = withHash.text;
+      sidebarMutedForeground = withHash.subtext0;
+      sidebarControlSurface = withHash.surface0;
+      sidebarRowHover = withHash.surface0;
+      sidebarRowActive = withHash.surface1;
+      sidebarRowSelected = withHash.surface0;
+      sidebarBorder = "#${hex.surface2}b8";
+      terminalBackground = withHash.base;
+      terminalForeground = withHash.text;
+      terminalCursor = withHash.lavender;
+      terminalSelection = "#${hex.surface2}66";
+      terminalScrollbar = "#${hex.surface2}4d";
+      terminalScrollbarHover = "#${hex.overlay0}66";
+    };
+  };
 in
 {
+  home.file.".t3/userdata/themes".source = pkgs.writeTextDir "catppuccin-mocha.json" (
+    builtins.toJSON catppuccinMocha
+  );
+
   programs.t3code = {
     enable = true;
     package = pkgs.vex-code;
@@ -73,7 +146,7 @@ in
         codex = {
           driver = "codex";
           displayName = "Vex";
-          accentColor = "#cba6f7";
+          accentColor = withHash.mauve;
           enabled = true;
           config = {
             enabled = true;
@@ -85,7 +158,7 @@ in
         codexCode = {
           driver = "codex";
           displayName = "Code Girly";
-          accentColor = "#f38ba8";
+          accentColor = withHash.red;
           enabled = true;
           config = {
             enabled = true;
