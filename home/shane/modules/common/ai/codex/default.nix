@@ -57,8 +57,6 @@ let
     script = ./codex-emit-context.sh;
   };
 
-  codex-git-commit-guard = aiHelpers.mkCommitGuard "codex";
-
   codexPackage = pkgs.codex;
   codexConfigDir = ".codex";
   codexCodeConfigDir = ".codex-code";
@@ -112,26 +110,13 @@ let
     lib.mapAttrs codexMcpServer config.programs.mcp.servers
   );
 
-  codexHooks = {
+  codexHooks = aiHelpers.hooksFor "codex" // {
     SessionStart = [
       {
         hooks = [
           {
             type = "command";
             command = "${codex-emit-context}/bin/codex-emit-context SessionStart ${vexRoot}/hooks/session-start.md";
-            timeout = 10;
-          }
-        ];
-      }
-    ];
-
-    PreToolUse = [
-      {
-        matcher = "exec_command|functions.exec_command|Bash|shell";
-        hooks = [
-          {
-            type = "command";
-            command = "${codex-git-commit-guard}/bin/codex-git-commit-guard";
             timeout = 10;
           }
         ];

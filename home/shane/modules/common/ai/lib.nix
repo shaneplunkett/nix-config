@@ -21,20 +21,8 @@
     fi
   '';
 
-  # One guard script shared by every harness; the argument selects the
-  # harness-specific payload handling inside git-commit-guard.sh.
-  mkCommitGuard =
-    harness:
-    pkgs.writeShellApplication {
-      name = "${harness}-git-commit-guard";
-      runtimeInputs = [
-        pkgs.coreutils
-        pkgs.git
-        pkgs.gnugrep
-        pkgs.jq
-      ];
-      text = ''exec ${pkgs.bash}/bin/bash ${./git-commit-guard.sh} ${harness} "$@"'';
-    };
+  # Hooks declared once for every harness; see ./hooks.
+  inherit (import ./hooks { inherit pkgs lib; }) hooksFor;
 
   # Install a skill profile as store symlinks under a harness config dir.
   mkSkillTree =

@@ -11,8 +11,6 @@ let
     "${aiSkillsRoot}/vex/rules/brain.md"
     "${aiSkillsRoot}/vex/rules/cli-routing.md"
   ];
-
-  gitCommitGuard = aiHelpers.mkCommitGuard "claude";
 in
 {
   programs = {
@@ -32,18 +30,7 @@ in
           repo = "openai/codex-plugin-cc";
         };
         enabledPlugins."codex@openai-codex" = true;
-        hooks.PreToolUse = [
-          {
-            matcher = "Bash";
-            hooks = [
-              {
-                type = "command";
-                command = "${gitCommitGuard}/bin/claude-git-commit-guard";
-                timeout = 10;
-              }
-            ];
-          }
-        ];
+        hooks = aiHelpers.hooksFor "claude";
       };
     };
 
