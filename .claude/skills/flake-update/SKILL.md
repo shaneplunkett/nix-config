@@ -15,42 +15,46 @@ bump window and turns them into a short **impact list** for Shane.
 The old lock is `git show HEAD:flake.lock`; the new one is the working
 `flake.lock` (run the update first if Shane asked for one). Resolve each
 input through `.nodes.root.inputs.<name>` (`nixpkgs` maps to a node such
-as `nixpkgs_3`), then record `locked.rev` and `locked.lastModified` from
-both locks. The window is old `lastModified` (exclusive) to new
-(inclusive). Inputs whose rev did not move drop out.
+as `nixpkgs_3`) and record `locked.rev` from both locks. Inputs whose rev
+did not move drop out.
 
-Done when every moved input listed below has an old and new rev.
+Changelogs are read for nixpkgs, home-manager, nix-darwin and omniwm.
+Every other moved input is covered by the builds in step 2 alone; name
+them in the report so that limit is visible.
+
+Fetch both sides of each changelog input locally:
+`nix flake prefetch --json github:<owner>/<repo>/<rev> | jq -r .storePath`.
+Diff the local trees. GitHub's compare API stops at 300 files and drops
+the rest silently.
+
+Done when each changelog input that moved has an old and a new store
+path.
 
 ## 2. Read the sources
 
-- **home-manager**: `modules/misc/news/YYYY/MM/*.nix` in the new source.
-  Read entries whose `time` falls in the window, honouring each
-  `condition` (e.g. darwin-only).
-- **nix-darwin**: `CHANGELOG` at the repo root. Read dated entries in the
-  window.
-- **nixpkgs**: `doc/release-notes/rl-*.section.md` and
-  `nixos/doc/manual/release-notes/rl-*.section.md`. Read lines added
-  between the old and new rev.
-- **omniwm**: `gh api repos/mst-mkt/omniwm.nix/compare/<old>...<new>`.
-  Read changes under `nix/`, `scripts/`, and `settings-defaults.toml`.
+Diff old against new; added entries are the window. Entry dates are not:
+home-manager backdates news, so filtering by `time` misses most of it.
 
-New sources are in the store after the update:
-`nix eval --raw --impure --expr '(builtins.getFlake (toString ./.)).inputs.<name>.outPath'`.
-Fetch an old file with
-`gh api -H "Accept: application/vnd.github.raw" "repos/<owner>/<repo>/contents/<path>?ref=<old-rev>"`
-and diff it against the new one.
-
-omniwm is a one-person flake whose activation script runs on every
-switch and whose bumps land on main without review. Audit its diff, not
-just summarise it: new commands, network access, writes outside
-`~/.config/omniwm/`, or a package URL off `github.com/OmniNull/OmniWM`.
+- **home-manager**: `diff -r` the `modules/misc/news/` trees. Read every
+  added entry, honouring its `condition` (e.g. darwin-only).
+- **nix-darwin**: added lines in `CHANGELOG`.
+- **nixpkgs**: added lines in `doc/release-notes/rl-*.section.md` and
+  `nixos/doc/manual/release-notes/rl-*.section.md`.
+- **omniwm**: the diff of `nix/`, `scripts/` and `settings-defaults.toml`.
+  It is a one-person flake whose activation script runs on every switch
+  and whose bumps land on main without review, so audit the diff rather
+  than summarise it: new commands, network access, writes outside
+  `~/.config/omniwm/`, or a package URL off `github.com/OmniNull/OmniWM`.
 
 Then build every host (`nh os build . -H desktop`,
 `scripts/darwin-build.sh build <host>` for each darwin host) and keep the
-`evaluation warning:` lines. Deprecations surface there first.
+`evaluation warning:` lines. A warning belongs to the bump only if the
+old lock evaluates clean (`git stash` or a worktree at `HEAD`). Trace a
+new one to its source with
+`--option abort-on-warn true --show-trace`.
 
-Done when every source for every moved input has been read in full for
-the window.
+Done when every added entry has been read and every warning is marked
+new or pre-existing.
 
 ## 3. Triage
 

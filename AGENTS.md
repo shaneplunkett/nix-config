@@ -85,7 +85,8 @@ via `config.age.secrets.<name>.path`).
 ## Layout
 
 - `home/shane/modules/common/nixvim/`: one file per plugin under
-  `plugins/`. Darwin-only tools get `lib.optionals pkgs.stdenv.isDarwin`.
+  `plugins/`. Darwin-only tools get
+  `lib.optionals pkgs.stdenv.hostPlatform.isDarwin`.
 - `home/shane/modules/common/ai/`: the AI harnesses. `cc/` (Claude Code),
   `codex/`, `mcp/` (shared `programs.mcp.servers` registry), `skills/`,
   and `lib.nix` with the helpers they share.
