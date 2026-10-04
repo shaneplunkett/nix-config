@@ -102,11 +102,9 @@ in
     ytmdesktop-bin
     libnotify
     imagemagick
-    jq
     tesseract
     wl-clipboard
     xdg-utils
-    obsidian
     bambuStudioX11
     orcaStudioX11
     mpv
