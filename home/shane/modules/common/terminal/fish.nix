@@ -1,5 +1,49 @@
-_: {
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  fish = lib.getExe config.programs.fish.package;
+
+  # The login shell stays bash (Linux) or zsh (macOS), so agents and scripts
+  # get a POSIX-ish shell; interactive shells hand over to fish. `-c`
+  # commands, nix develop/nix-shell, and a shell typed from fish all stay
+  # put. nix develop applies its environment after the rc file, so it must
+  # stay; a direnv environment is already exported (DIRENV_DIR) and survives
+  # the exec.
+  handOverToFish =
+    { executionString, isLogin }:
+    lib.mkBefore ''
+      parent=$(ps -o comm= -p "$PPID" 2>/dev/null)
+      parent=''${parent##*/}
+      if [[ ''${parent#-} != fish && -z ''${${executionString}:-} ]] &&
+        [[ -z ''${IN_NIX_SHELL:-} || -n ''${DIRENV_DIR:-} ]]; then
+        ${isLogin} && exec ${fish} --login
+        exec ${fish}
+      fi
+      unset parent
+    '';
+in
+{
   programs = {
+    bash = {
+      enable = true;
+      initExtra = handOverToFish {
+        executionString = "BASH_EXECUTION_STRING";
+        isLogin = "shopt -q login_shell";
+      };
+    };
+
+    zsh = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+      enable = true;
+      initContent = handOverToFish {
+        executionString = "ZSH_EXECUTION_STRING";
+        isLogin = "[[ -o login ]]";
+      };
+    };
+
     fish = {
       enable = true;
       shellAliases = {
