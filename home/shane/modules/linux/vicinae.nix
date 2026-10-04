@@ -21,6 +21,10 @@ in
         dark = iconTheme;
         light = iconTheme;
       };
+
+      # Hyprland owns the toggle on SUPER+space; an empty string drops
+      # vicinae's own global shortcut, which defaults to alt+space.
+      global_shortcuts.toggle = "";
     };
   };
 }
