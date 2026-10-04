@@ -12,52 +12,110 @@ in
     enable = true;
     package = pkgs.vex-code;
 
-    userSettings.providerInstances = {
-      codex = {
-        driver = "codex";
-        displayName = "Vex";
-        accentColor = "#cba6f7";
-        enabled = true;
-        config = {
-          enabled = true;
-          binaryPath = lib.getExe config.programs.codex.package;
-          homePath = "${homeDirectory}/${config.vex.ai.codex.configDir}";
-        };
+    clientSettings = {
+      fontFamilySans = "RoundHog";
+      fontFamilyCode = "Mononoki Nerd Font Mono";
+      fontFamilyTerminal = "Mononoki Nerd Font Mono";
+      fontSizeCode = 13;
+      glassOpacity = 60;
+      panelAnimationDurationMs = 25;
+      timestampFormat = "12-hour";
+      notificationMode = "notifications";
+      followUpBehavior = "queue";
+      contextWindowMeterEnabled = true;
+      proactivePanelsEnabled = false;
+      diffFilesCollapsed = false;
+      browserAutoShowFloatingPreview = false;
+      sidebarProjectSortOrder = "manual";
+    };
+
+    userSettings = {
+      # Fork-only setting; upstream T3 Code has no terminalShell.
+      terminalShell = "fish";
+      addProjectBaseDirectory = "~/Projects";
+      enableProviderUpdateChecks = false;
+      continueThreadsAfterServerUpdate = true;
+      sidebarAutoSettleOnMerge = false;
+      automaticGitFetchInterval = 15000;
+      providerHealthRefreshInterval = 60000;
+
+      backgroundActivityProfile = "performance";
+      backgroundActivity = {
+        schemaVersion = 1;
+        profile = "performance";
+        overrides = { };
       };
 
-      codexCode = {
-        driver = "codex";
-        displayName = "Code Girly";
-        accentColor = "#f38ba8";
-        enabled = true;
-        config = {
-          enabled = true;
-          binaryPath = lib.getExe config.programs.codex.package;
-          homePath = "${homeDirectory}/${config.vex.ai.codex.codeConfigDir}";
-        };
+      storageCleanup = {
+        worktreeAfterDays = 8;
+        worktreeOnMerge = true;
+        worktreeOnDelete = true;
+        browserArtifactsAfterDays = 3;
+        logsAfterDays = 8;
       };
 
-      # Vanilla instance: own CODEX_HOME with none of the personal context,
-      # skills, hooks, or MCP servers, but auth.json is symlinked to ~/.codex
-      # so both use the same account.
-      codexBare = {
-        driver = "codex";
-        displayName = "Codex Bare";
-        enabled = true;
-        config = {
-          enabled = true;
-          binaryPath = lib.getExe config.programs.codex.package;
-          homePath = "${homeDirectory}/${config.vex.ai.codex.bareConfigDir}";
-        };
+      defaultModelSelection = {
+        instanceId = "claudeAgent";
+        model = "claude-opus-5-5";
+        options = [
+          {
+            id = "effort";
+            value = "high";
+          }
+          {
+            id = "contextWindow";
+            value = "1m";
+          }
+        ];
       };
 
-      claudeAgent = {
-        driver = "claudeAgent";
-        enabled = true;
-        config = {
+      providerInstances = {
+        codex = {
+          driver = "codex";
+          displayName = "Vex";
+          accentColor = "#cba6f7";
           enabled = true;
-          binaryPath = lib.getExe config.programs.claude-code.finalPackage;
-          homePath = config.programs.claude-code.configDir;
+          config = {
+            enabled = true;
+            binaryPath = lib.getExe config.programs.codex.package;
+            homePath = "${homeDirectory}/${config.vex.ai.codex.configDir}";
+          };
+        };
+
+        codexCode = {
+          driver = "codex";
+          displayName = "Code Girly";
+          accentColor = "#f38ba8";
+          enabled = true;
+          config = {
+            enabled = true;
+            binaryPath = lib.getExe config.programs.codex.package;
+            homePath = "${homeDirectory}/${config.vex.ai.codex.codeConfigDir}";
+          };
+        };
+
+        # Vanilla instance: own CODEX_HOME with none of the personal context,
+        # skills, hooks, or MCP servers, but auth.json is symlinked to ~/.codex
+        # so both use the same account.
+        codexBare = {
+          driver = "codex";
+          displayName = "Codex Bare";
+          enabled = true;
+          config = {
+            enabled = true;
+            binaryPath = lib.getExe config.programs.codex.package;
+            homePath = "${homeDirectory}/${config.vex.ai.codex.bareConfigDir}";
+          };
+        };
+
+        claudeAgent = {
+          driver = "claudeAgent";
+          enabled = true;
+          config = {
+            enabled = true;
+            binaryPath = lib.getExe config.programs.claude-code.finalPackage;
+            homePath = config.programs.claude-code.configDir;
+          };
         };
       };
     };
