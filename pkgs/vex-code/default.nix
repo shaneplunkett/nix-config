@@ -69,6 +69,11 @@ let
       version = "0.0.44-vex.1";
       src = namedSrc;
 
+      patches = (previousAttrs.patches or [ ]) ++ [
+        # Spellcheck in the OS locale (en-AU) instead of the bundled en-US.
+        ./patches/spellcheck-system-locale.patch
+      ];
+
       nativeBuildInputs =
         (previousAttrs.nativeBuildInputs or [ ])
         ++ lib.optionals stdenv.hostPlatform.isLinux [
