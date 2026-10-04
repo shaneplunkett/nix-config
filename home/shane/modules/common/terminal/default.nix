@@ -7,6 +7,7 @@
     ./fastfetch.nix
     ./fish.nix
     ./ghostty.nix
+    ./man.nix
     ./starship.nix
     ./tmux
   ];
