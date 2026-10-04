@@ -1,8 +1,9 @@
-# Raycast-style launcher, toggled with Option+Space (vicinae's macOS
-# default). home-manager's programs.vicinae is Linux-only, so this installs
-# the package and runs the server from launchd instead.
+# Raycast-style launcher on Command+Space, replacing Spotlight.
+# home-manager's programs.vicinae is Linux-only, so this installs the
+# package and runs the server from launchd instead.
 {
   config,
+  lib,
   pkgs,
   ...
 }:
@@ -13,7 +14,12 @@
   # vicinae reads ~/.config/vicinae on macOS regardless of XDG.
   xdg.configFile."vicinae/settings.json".source =
     (pkgs.formats.json { }).generate "vicinae-settings"
-      config.programs.vicinae.settings;
+      (
+        lib.recursiveUpdate config.programs.vicinae.settings {
+          # Spotlight's shortcut, which settings.nix frees up.
+          global_shortcuts.toggle = "cmd+space";
+        }
+      );
 
   launchd.agents.vicinae = {
     enable = true;
