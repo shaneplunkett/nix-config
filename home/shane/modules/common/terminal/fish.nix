@@ -1,11 +1,15 @@
 {
   config,
+  inputs,
   lib,
   pkgs,
   ...
 }:
 let
   fish = lib.getExe config.programs.fish.package;
+
+  # Every Mac the flake can switch, matched against this machine's names.
+  darwinHosts = lib.concatStringsSep " " (lib.attrNames inputs.self.darwinConfigurations);
 
   # The login shell stays bash (Linux) or zsh (macOS), so agents and scripts
   # get a POSIX-ish shell; interactive shells hand over to fish. `-c`
@@ -87,7 +91,7 @@ in
           set -a candidates (hostname -s 2>/dev/null) (hostname 2>/dev/null)
           for candidate in $candidates
             switch $candidate
-              case Shanes-MacBook-Pro
+              case ${darwinHosts}
                 echo $candidate
                 return 0
             end
