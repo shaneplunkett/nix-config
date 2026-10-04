@@ -166,9 +166,6 @@ let
               '<string>T3 Code (Alpha)</string>' \
               '<string>Vex Code (Alpha)</string>'
           mv "$old_executable" "$vex_executable"
-          png2icns \
-            "$old_app/Contents/Resources/t3code.icns" \
-            ${src}/assets/vex/vex-code-macos-1024.png
           mv "$old_app" "$vex_app"
         '';
 
