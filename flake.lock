@@ -947,11 +947,11 @@
     "noctalia-plugins": {
       "flake": false,
       "locked": {
-        "lastModified": 1791067007,
-        "narHash": "sha256-BzNIri72e9LbtqrpxEPNZPRl/FRd+LpSktK1WKPhsMM=",
+        "lastModified": 1791075323,
+        "narHash": "sha256-SMPvR+pD1XMjAiE292855UogQs+hFJVHVXD10EVWtMg=",
         "ref": "refs/heads/main",
-        "rev": "e082cd990452a0f84f2015f5ad56cddc5e050ea2",
-        "revCount": 42,
+        "rev": "d3e674f40bd3763d815f97fd16453c0d3bba2da5",
+        "revCount": 45,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/noctalia-plugins.git"
       },
