@@ -1,0 +1,8 @@
+{ ... }:
+{
+
+  imports = [
+    ./omniwm.nix
+  ];
+
+}

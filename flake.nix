@@ -52,6 +52,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # OmniWM rejects any settings.toml missing a key. This flake's
+    # home-manager module merges partial settings over the full defaults
+    # of the OmniWM version it packages.
+    omniwm = {
+      url = "github:mst-mkt/omniwm.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Noctalia v5 straight from upstream rather than waiting on nixpkgs. The
     # cachix branch trails main to the newest commit CI has cached. Like
     # Hyprland, it keeps its own nixpkgs pin: following ours would invalidate
@@ -150,6 +158,7 @@
           hostname = "mini-server";
           system = "aarch64-darwin";
           hostConfig = ./hosts/darwin/mini/mini-server.nix;
+          homeConfig = ./home/shane/homemacserver.nix;
         };
       };
 

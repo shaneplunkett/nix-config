@@ -982,6 +982,26 @@
         "url": "ssh://git@github.com/shaneplunkett/noctalia-plugins.git"
       }
     },
+    "omniwm": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1790959873,
+        "narHash": "sha256-WxSBcImCuECRSLSqyo3INdzpBtLXGFXR3xkPhX+xjTM=",
+        "owner": "mst-mkt",
+        "repo": "omniwm.nix",
+        "rev": "ad411c8bd52ea10b77f89e1b027c302766b5a3a2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mst-mkt",
+        "repo": "omniwm.nix",
+        "type": "github"
+      }
+    },
     "pre-commit-hooks": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -1025,6 +1045,7 @@
         "noctalia": "noctalia",
         "noctalia-greeter": "noctalia-greeter",
         "noctalia-plugins": "noctalia-plugins",
+        "omniwm": "omniwm",
         "vex-code": "vex-code",
         "vex-tooling": "vex-tooling"
       }
