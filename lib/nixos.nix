@@ -31,13 +31,7 @@ in
         {
           nixpkgs.hostPlatform = system;
           networking.hostName = hostname;
-          nixpkgs.overlays = common.mkOverlays [
-            (_final: prev: {
-              openldap = prev.openldap.overrideAttrs (_: {
-                doCheck = false;
-              });
-            })
-          ];
+          nixpkgs.overlays = common.mkOverlays [ ];
         }
 
         hostConfig
