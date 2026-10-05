@@ -21,7 +21,7 @@ in
     nixpkgs.lib.nixosSystem {
       specialArgs = {
         inherit inputs shell;
-        inherit (common) palette;
+        inherit (common) palette typography;
       };
       modules = [
         {

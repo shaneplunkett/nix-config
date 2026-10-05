@@ -22,7 +22,7 @@ in
     nix-darwin.lib.darwinSystem {
       specialArgs = {
         inherit inputs;
-        inherit (common) palette;
+        inherit (common) palette typography;
       };
       modules = [
         {

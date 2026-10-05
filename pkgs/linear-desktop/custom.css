@@ -10,7 +10,7 @@
  * alone on purpose — it is already computed from the Mocha theme string. */
 
 * {
-  font-family: "RoundHog", "Noto Color Emoji", sans-serif !important;
+  font-family: "@ui@", "Noto Color Emoji", sans-serif !important;
 }
 
 code,
@@ -19,7 +19,7 @@ kbd,
 samp,
 code *,
 pre * {
-  font-family: "Mononoki Nerd Font", "Noto Color Emoji", monospace !important;
+  font-family: "@code@", "Noto Color Emoji", monospace !important;
 }
 
 :root {

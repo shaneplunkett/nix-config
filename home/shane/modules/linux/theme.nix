@@ -1,8 +1,7 @@
-{ pkgs, ... }:
+{ pkgs, typography, ... }:
 let
-  # RoundHog for interfaces, Mononoki wherever text needs a fixed width.
-  uiFont = "RoundHog";
-  codeFont = "Mononoki Nerd Font";
+  uiFont = typography.ui;
+  codeFont = typography.code;
   fontSize = 12;
   cursorSize = 24;
 
@@ -38,10 +37,9 @@ in
     monospace-font-name = "${codeFont} ${toString fontSize}";
   };
 
+  # The cursor theme itself comes from catppuccin.cursors below.
   home.pointerCursor = {
     enable = true;
-    name = "catppuccin-mocha-mauve-cursors";
-    package = pkgs.catppuccin-cursors.mochaMauve;
     size = cursorSize;
     gtk.enable = true;
     x11.enable = true;
@@ -80,35 +78,29 @@ in
     ];
   };
 
-  # KDE's platform integration makes every Qt app read colours, icons, fonts
-  # and the widget style from kdeglobals below, which is also the only place
-  # KDE apps like Dolphin look. Kvantum draws the widgets in Catppuccin.
+  # qt6ct carries the icons and fonts; Kvantum draws the widgets in Catppuccin.
   qt = {
     enable = true;
-    platformTheme.name = "kde";
+    platformTheme.name = "qtct";
     style.name = "kvantum";
+    qt6ctSettings = {
+      Appearance = {
+        icon_theme = iconTheme.name;
+        style = "kvantum";
+        custom_palette = false;
+        standard_dialogs = "default";
+      };
+      Fonts = {
+        general = ''"${qtFont uiFont}"'';
+        fixed = ''"${qtFont codeFont}"'';
+      };
+    };
   };
-
-  # Plasma normally writes kdeglobals; outside it, nothing does. Built from the
-  # Catppuccin KDE scheme, with the style, icons and fonts added to it.
-  xdg.configFile."kdeglobals".source =
-    pkgs.runCommand "kdeglobals"
-      {
-        colors = "${
-          pkgs.catppuccin-kde.override {
-            flavour = [ "mocha" ];
-            accents = [ "mauve" ];
-          }
-        }/share/color-schemes/CatppuccinMochaMauve.colors";
-      }
-      ''
-        sed 's/^\[General\]$/[General]\nfont=${qtFont uiFont}\nfixed=${qtFont codeFont}/' "$colors" > $out
-        printf '\n[KDE]\nwidgetStyle=kvantum\n\n[Icons]\nTheme=%s\n' ${iconTheme.name} >> $out
-      '';
 
   catppuccin = {
     # Flavour and accent come from the shared catppuccin settings.
     kvantum.enable = true;
+    cursors.enable = true;
     # iconTheme above owns the icons, for GTK and Qt alike.
     gtk.icon.enable = false;
   };

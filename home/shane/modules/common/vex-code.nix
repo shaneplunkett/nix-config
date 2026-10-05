@@ -3,6 +3,7 @@
   lib,
   pkgs,
   palette,
+  typography,
   ...
 }:
 let
@@ -86,9 +87,9 @@ in
     package = pkgs.vex-code;
 
     clientSettings = {
-      fontFamilySans = "RoundHog";
-      fontFamilyCode = "Mononoki Nerd Font Mono";
-      fontFamilyTerminal = "Mononoki Nerd Font Mono";
+      fontFamilySans = typography.ui;
+      fontFamilyCode = typography.codeMono;
+      fontFamilyTerminal = typography.codeMono;
       fontSizeCode = 13;
       glassOpacity = 60;
       panelAnimationDurationMs = 25;

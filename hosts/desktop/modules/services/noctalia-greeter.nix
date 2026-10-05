@@ -3,6 +3,7 @@
 {
   inputs,
   palette,
+  typography,
   pkgs,
   ...
 }:
@@ -20,7 +21,7 @@
       appearance = {
         scheme = "Synced";
         theme_mode = "dark";
-        font_family = "RoundHog";
+        font_family = typography.ui;
         palette = palette.noctaliaRoles;
         wallpaper = {
           path = "${../../assets/greeter-bg.jpg}";

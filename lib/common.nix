@@ -19,9 +19,10 @@ let
       isX86Linux = system == "x86_64-linux";
     };
   palette = import ./palette.nix;
+  typography = import ./typography.nix;
 in
 {
-  inherit mkProjectPackages palette;
+  inherit mkProjectPackages palette typography;
 
   mkOverlays =
     extras:
@@ -90,7 +91,7 @@ in
         useGlobalPkgs = true;
         useUserPackages = true;
         extraSpecialArgs = {
-          inherit inputs palette;
+          inherit inputs palette typography;
         }
         // extraSpecialArgs;
         users.shane = import homeConfig;

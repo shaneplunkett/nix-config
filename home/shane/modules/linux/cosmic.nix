@@ -1,7 +1,8 @@
-# Catppuccin for COSMIC apps (the file picker comes from xdg-desktop-portal-cosmic).
+# Catppuccin for COSMIC apps (COSMIC Files and the file picker).
 # COSMIC apps read a fully built theme that cosmic-settings-daemon normally
 # generates from builder settings. Outside COSMIC nothing does, so build it
-# here with cosmic-ctl from Catppuccin's Mocha Mauve theme.
+# here with cosmic-ctl from Catppuccin's theme for the shared flavour and
+# accent. Known tech debt (the Python split and v1→v2 link): SHA-161.
 {
   config,
   lib,
@@ -9,11 +10,14 @@
   ...
 }:
 let
-  rev = "95e81098042dd2102f0b258f6990f886c5759692";
-  catppuccinTheme = pkgs.fetchurl {
-    url = "https://raw.githubusercontent.com/catppuccin/cosmic-desktop/${rev}/themes/cosmic-settings/catppuccin-mocha-mauve%2Bround.ron";
-    hash = "sha256-/XUIANPnrO/nRHXMfjIWb+sNmSjNGIaLU4EJ/HP7IMI=";
+  inherit (config.catppuccin) flavor accent;
+  catppuccinThemes = pkgs.fetchFromGitHub {
+    owner = "catppuccin";
+    repo = "cosmic-desktop";
+    rev = "95e81098042dd2102f0b258f6990f886c5759692";
+    hash = "sha256-NAQnHS+XrMJ/rPgSS5nEQOMBhQtF6mP1i/0QP5arQ64=";
   };
+  catppuccinTheme = "${catppuccinThemes}/themes/cosmic-settings/catppuccin-${flavor}-${accent}+round.ron";
 
   # The theme file is one RON struct; COSMIC's config keeps each top-level
   # field as its own file.
@@ -34,7 +38,7 @@ let
   '';
 
   theme =
-    pkgs.runCommand "cosmic-catppuccin-mocha-mauve"
+    pkgs.runCommand "cosmic-catppuccin-${flavor}-${accent}"
       {
         nativeBuildInputs = [
           pkgs.python3

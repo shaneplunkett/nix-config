@@ -1,4 +1,9 @@
-{ pkgs, lib, ... }:
+{
+  pkgs,
+  lib,
+  typography,
+  ...
+}:
 let
   inherit (pkgs.stdenv.hostPlatform) isDarwin;
 
@@ -13,7 +18,7 @@ in
     enableZshIntegration = false;
 
     settings = {
-      font-family = "Mononoki Nerd Font";
+      font-family = typography.code;
       font-size = if isDarwin then 21 else 14;
       command = fishCommand;
       shell-integration = "fish";

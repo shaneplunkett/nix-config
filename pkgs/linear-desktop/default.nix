@@ -10,6 +10,8 @@
   makeWrapper,
   nix-update,
   p7zip,
+  replaceVars,
+  typography,
   stdenv,
   writeShellApplication,
 }:
@@ -77,7 +79,7 @@ stdenv.mkDerivation {
     # CSS into every window from the main process. The bundle ends in plain
     # code with no trailing newline, hence the printf guard.
     asar extract app-bundle/resources/app.asar app
-    cp ${./custom.css} app/out/main/custom.css
+    cp ${replaceVars ./custom.css { inherit (typography) ui code; }} app/out/main/custom.css
     printf '\n' >> app/out/main/index.js
     cat ${./inject-css.js} >> app/out/main/index.js
 

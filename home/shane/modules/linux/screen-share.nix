@@ -1,5 +1,6 @@
 {
   palette,
+  typography,
   pkgs,
   ...
 }:
@@ -10,7 +11,7 @@ let
     * {
       all: unset;
       color: ${withHash.text};
-      font-family: "RoundHog";
+      font-family: "${typography.ui}";
       font-size: 14px;
     }
 

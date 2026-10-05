@@ -6,6 +6,7 @@
   inputs,
   lib,
   palette,
+  typography,
   ...
 }:
 let
@@ -67,7 +68,7 @@ in
       accessibility.ui_scale = 1.15;
 
       shell = {
-        font_family = "RoundHog";
+        font_family = typography.ui;
         avatar_path = "${config.home.homeDirectory}/.face";
         polkit_agent = true;
         # Apps launched from the shell survive the unit restarting on rebuild.

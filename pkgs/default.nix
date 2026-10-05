@@ -25,7 +25,9 @@ in
   hyprland-preview-share-picker = pkgs.callPackage ./hyprland-preview-share-picker { };
 }
 // optionalAttrs isX86Linux {
-  linear-desktop = pkgs.callPackage ./linear-desktop { };
+  linear-desktop = pkgs.callPackage ./linear-desktop {
+    typography = import ../lib/typography.nix;
+  };
   slack-themed = pkgs.callPackage ./slack-themed { };
   orca-studio = pkgs.callPackage ./orca-studio { };
   shadps4-cache-fixed = pkgs.callPackage ./shadps4-cache-fixed { };
