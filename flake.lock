@@ -201,46 +201,6 @@
         "type": "github"
       }
     },
-    "flake-utils": {
-      "inputs": {
-        "systems": "systems_4"
-      },
-      "locked": {
-        "lastModified": 1731533236,
-        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
-    "gws": {
-      "inputs": {
-        "flake-utils": "flake-utils",
-        "nixpkgs": [
-          "vex-tooling",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1774983075,
-        "narHash": "sha256-YyNIHbyZrLlXYtWxZY8Um19MsnLharmS+nWGWO89fsA=",
-        "owner": "googleworkspace",
-        "repo": "cli",
-        "rev": "a3768d0e82ad83cca2da97724e46bea4ff0e6dbd",
-        "type": "github"
-      },
-      "original": {
-        "owner": "googleworkspace",
-        "repo": "cli",
-        "type": "github"
-      }
-    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -1025,8 +985,8 @@
         "noctalia-greeter": "noctalia-greeter",
         "noctalia-plugins": "noctalia-plugins",
         "omniwm": "omniwm",
-        "vex-code": "vex-code",
-        "vex-tooling": "vex-tooling"
+        "vex-brain": "vex-brain",
+        "vex-code": "vex-code"
       }
     },
     "systems": {
@@ -1076,21 +1036,6 @@
         "type": "github"
       }
     },
-    "systems_4": {
-      "locked": {
-        "lastModified": 1681028828,
-        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
-        "owner": "nix-systems",
-        "repo": "default",
-        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-systems",
-        "repo": "default",
-        "type": "github"
-      }
-    },
     "tavily-skills": {
       "flake": false,
       "locked": {
@@ -1128,6 +1073,26 @@
         "type": "github"
       }
     },
+    "vex-brain": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1791186600,
+        "narHash": "sha256-iGEXbqUpC3DXOjICCk6jY0K726JgqnnelvmMqy6bXO0=",
+        "ref": "refs/heads/main",
+        "rev": "ef83bbef649ad93f72191d3ae7ae9d483349b329",
+        "revCount": 133,
+        "type": "git",
+        "url": "ssh://git@github.com/shaneplunkett/vex-brain.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/shaneplunkett/vex-brain.git"
+      }
+    },
     "vex-code": {
       "flake": false,
       "locked": {
@@ -1142,27 +1107,6 @@
         "owner": "shaneplunkett",
         "repo": "vex-code",
         "type": "github"
-      }
-    },
-    "vex-tooling": {
-      "inputs": {
-        "gws": "gws",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1791017286,
-        "narHash": "sha256-6OLPVH27fg07hKv+qQ8unISJ3AC9rjGI1saiG5FIhZ8=",
-        "ref": "refs/heads/main",
-        "rev": "7afa5f1270c8f7fd480c5a4f90602bd124c0f284",
-        "revCount": 27,
-        "type": "git",
-        "url": "ssh://git@github.com/shaneplunkett/vex-tooling.git"
-      },
-      "original": {
-        "type": "git",
-        "url": "ssh://git@github.com/shaneplunkett/vex-tooling.git"
       }
     },
     "xdph": {

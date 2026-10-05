@@ -62,8 +62,8 @@
     noctalia.url = "github:noctalia-dev/noctalia/cachix";
     noctalia-greeter.url = "github:noctalia-dev/noctalia-greeter";
 
-    vex-tooling = {
-      url = "git+ssh://git@github.com/shaneplunkett/vex-tooling.git";
+    vex-brain = {
+      url = "git+ssh://git@github.com/shaneplunkett/vex-brain.git";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -153,6 +153,18 @@
           system = "aarch64-darwin";
           hostConfig = ./hosts/darwin/mini/mini-server.nix;
           homeConfig = ./home/shane/homemacserver.nix;
+          # Runs the vex sync jobs as boot-time daemons instead of login-only
+          # agents, so they survive a reboot with nobody at the console.
+          extraModules = [
+            inputs.vex-brain.darwinModules.vex-sync
+            {
+              services.vex-sync = {
+                enable = true;
+                user = "shane";
+              };
+              home-manager.users.shane.programs.vex-cli.sync.enable = false;
+            }
+          ];
         };
       };
 

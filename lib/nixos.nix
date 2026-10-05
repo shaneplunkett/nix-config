@@ -47,7 +47,8 @@ in
           };
           extraSharedModules = [
             (rootPath + /home/shane/modules/agent-clis)
-            "${inputs.vex-tooling}/modules/vex-cli.nix"
+            inputs.vex-brain.homeManagerModules.vex-cli
+            { programs.vex-cli.enable = true; }
           ]
           ++ nixpkgs.lib.optionals (shell == "noctalia") [
             noctalia.homeModules.default

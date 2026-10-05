@@ -13,7 +13,7 @@ core.
 ```
 personal repos (flake inputs)          the hub                  deploys to
 ──────────────────────────────         ────────────             ──────────────────
-vex-tooling       ─ vex CLI    ─┐
+vex-brain         ─ vex CLI    ─┐
 ai-skills         ─ skills     ─┤
 nix-config-private ─ private HM ─┼──►  nix-config  ──►  desktop · MacBook ·
 vex-code          ─ source     ─┤     (this repo)      mini-server
@@ -24,7 +24,7 @@ noctalia-plugins  ─ QML        ─┘
 
 | Input | Checkout | Provides | Consumed via |
 |---|---|---|---|
-| `vex-tooling` | `~/Projects/personal/vex-tooling` | Being retired (SHA-151). Only `vex-cli` and its sync jobs are still used; they move to vex-brain next. | `pkgs/vex-cli` via an overlay in `lib/common.nix` + `modules/vex-cli.nix` on the desktop and darwin hosts |
+| `vex-brain` | `~/Projects/personal/vex-brain` | The `vex` CLI and its hourly session sync jobs, next to the server they talk to. On mini-server the sync runs as boot-time daemons (`darwinModules.vex-sync`), reading CF Access creds from `/etc/vex-sync/credentials`; see vex-brain's `docs/runbooks/vex-sync-mini-server.md`. | `homeManagerModules.vex-cli` in `lib/nixos.nix` and `lib/darwin.nix`; `darwinModules.vex-sync` on mini-server in `flake.nix` |
 | `ai-skills` | `~/ai-skills` | `lib.skillProfiles` used by the local AI modules, plus the prompt sources they install. Carries its own skill inputs. | `home/shane/modules/common/ai/lib.nix` |
 | `nix-config-private` | `~/Projects/personal/nix-config-private` | Private home-manager modules and deliberately private desktop utilities. Zero inputs of its own. | `homeManagerModules.default` |
 | `vex-code` | `~/Projects/personal/vex-code` | Source only (`flake = false`); this repo's `pkgs/vex-code` owns the build. | `pkgs/default.nix` (`vexCodeSrc`) |
@@ -71,6 +71,7 @@ One sentence decides where a new thing goes:
 
 - Private values, modules, or utilities: edit `nix-config-private` → push → `nix flake update nix-config-private` → rebuild.
 - Vex Code: push to the fork → `nix flake update vex-code` → rebuild.
+- vex CLI and sync jobs: merge in vex-brain → `nix flake update vex-brain` → rebuild.
 - Claude Code, Codex CLI, and Linux Claude/ChatGPT desktop apps: `nix flake update llm-agents` → rebuild (cache-backed).
 - Desktop apps and machine config: edit `pkgs/` or modules here → rebuild. One repo, no chain.
 

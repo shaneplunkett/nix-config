@@ -3,7 +3,6 @@ let
   inherit (inputs)
     nixvim
     catppuccin
-    vex-tooling
     nix-index-database
     ;
 
@@ -77,10 +76,6 @@ in
               });
         }
       )
-      # Only vex-cli still comes from vex-tooling; it moves to vex-brain next.
-      (final: _prev: {
-        vex-cli = final.callPackage "${vex-tooling}/pkgs/vex-cli/vex-cli.nix" { };
-      })
     ]
     ++ extras;
 
