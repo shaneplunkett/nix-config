@@ -5,6 +5,15 @@ let
   codeFont = "Mononoki Nerd Font";
   fontSize = 12;
   cursorSize = 24;
+
+  # One icon theme for GTK, Qt and noctalia's app icons alike.
+  iconTheme = {
+    name = "Reversal-purple-dark";
+    package = pkgs.reversal-icon-theme.override { colorVariants = [ "purple" ]; };
+  };
+
+  # Qt's font string: family,points,-1,5,weight,then style flags.
+  qtFont = family: "${family},${toString fontSize},-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
 in
 {
   # Most apps (Chrome, Electron, Flutter, Hyprland) take their fonts from these
@@ -47,6 +56,8 @@ in
       size = fontSize;
     };
 
+    inherit iconTheme;
+
     gtk3.extraConfig = {
       gtk-application-prefer-dark-theme = 1;
     };
@@ -69,9 +80,37 @@ in
     ];
   };
 
+  # KDE's platform integration makes every Qt app read colours, icons, fonts
+  # and the widget style from kdeglobals below, which is also the only place
+  # KDE apps like Dolphin look. Kvantum draws the widgets in Catppuccin.
   qt = {
     enable = true;
-    platformTheme.name = "gtk3";
+    platformTheme.name = "kde";
+    style.name = "kvantum";
+  };
+
+  # Plasma normally writes kdeglobals; outside it, nothing does. Built from the
+  # Catppuccin KDE scheme, with the style, icons and fonts added to it.
+  xdg.configFile."kdeglobals".source =
+    pkgs.runCommand "kdeglobals"
+      {
+        colors = "${
+          pkgs.catppuccin-kde.override {
+            flavour = [ "mocha" ];
+            accents = [ "mauve" ];
+          }
+        }/share/color-schemes/CatppuccinMochaMauve.colors";
+      }
+      ''
+        sed 's/^\[General\]$/[General]\nfont=${qtFont uiFont}\nfixed=${qtFont codeFont}/' "$colors" > $out
+        printf '\n[KDE]\nwidgetStyle=kvantum\n\n[Icons]\nTheme=%s\n' ${iconTheme.name} >> $out
+      '';
+
+  catppuccin = {
+    # Flavour and accent come from the shared catppuccin settings.
+    kvantum.enable = true;
+    # iconTheme above owns the icons, for GTK and Qt alike.
+    gtk.icon.enable = false;
   };
 
   xdg = {

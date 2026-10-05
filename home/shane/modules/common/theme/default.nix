@@ -1,4 +1,5 @@
-_: {
+{ lib, ... }:
+{
   catppuccin = {
     enable = true;
     autoEnable = true;
@@ -11,7 +12,8 @@ _: {
 
     rofi.enable = false;
 
-    kvantum.enable = false;
+    # Only the Linux desktop styles Qt with Kvantum (linux/theme.nix).
+    kvantum.enable = lib.mkDefault false;
 
     # The upstream module imports a generated TOML derivation during module
     # evaluation, which makes cross-platform `nix flake check` try to build the
