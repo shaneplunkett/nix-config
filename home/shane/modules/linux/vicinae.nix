@@ -3,9 +3,8 @@
 { config, ... }:
 let
   # Catppuccin's module asks for a "Catppuccin Mocha Mauve" icon theme under a
-  # camelCase key vicinae doesn't read. Point it at the Catppuccin-tinted
-  # Papirus set GTK already uses instead.
-  iconTheme.icon_theme = "Papirus-Dark";
+  # camelCase key vicinae doesn't read. Use the desktop's icon theme instead.
+  iconTheme.icon_theme = config.gtk.iconTheme.name;
 in
 {
   programs.vicinae = {

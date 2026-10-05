@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 {
 
   imports = [
@@ -12,7 +12,13 @@
     xserver.videoDrivers = [ "amdgpu" ];
     flatpak.enable = true;
     tailscale.enable = true;
-    # Dolphin mounts drives through udisks; gvfs used to enable it implicitly.
+    # COSMIC Files mounts drives and network shares through GIO. The module
+    # defaults to GNOME's gvfs (online accounts and friends); the plain build
+    # is enough.
+    gvfs = {
+      enable = true;
+      package = pkgs.gvfs;
+    };
     udisks2.enable = true;
 
     openssh = {

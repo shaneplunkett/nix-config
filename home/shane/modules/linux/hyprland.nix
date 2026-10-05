@@ -258,7 +258,7 @@ in
           opaque = true;
         }
         {
-          match.class = "^org\\.kde\\.dolphin$";
+          match.class = "^com\\.system76\\.CosmicFiles$";
           float = true;
           size = [
             1100
