@@ -7,7 +7,7 @@ let
   version = "0.2.47";
 
   # Only the platforms that get the agent CLI stack: the desktop and the
-  # ARM Macs. Servers opt out via the agentClis flag in lib/nixos.nix.
+  # ARM Macs.
   assetBySystem = {
     aarch64-darwin = "langsmith_darwin_arm64.tar.gz";
     x86_64-linux = "langsmith_linux_amd64.tar.gz";

@@ -3,13 +3,17 @@
   vexCodeSrc,
   isLinux ? false,
   isX86Linux ? false,
-  hasAgentClis ? false,
 }:
 let
   optionalAttrs = condition: attrs: if condition then attrs else { };
 in
 {
+  browserbase-cli = pkgs.callPackage ./browserbase-cli { };
+  langsmith-cli = pkgs.callPackage ./langsmith-cli { };
   roundhog = pkgs.callPackage ./roundhog { };
+  tavily-cli = pkgs.callPackage ./tavily-cli { };
+  todoist-cli = pkgs.callPackage ./todoist-cli { };
+  unifi-cli = pkgs.callPackage ./unifi-cli { };
   vex-code = pkgs.callPackage ./vex-code { src = vexCodeSrc; };
   xcodebuild-nvim = pkgs.callPackage ./xcodebuild-nvim { };
 }
@@ -19,13 +23,6 @@ in
     palette = import ../lib/palette.nix;
   };
   hyprland-preview-share-picker = pkgs.callPackage ./hyprland-preview-share-picker { };
-}
-// optionalAttrs hasAgentClis {
-  browserbase-cli = pkgs.callPackage ./browserbase-cli { };
-  langsmith-cli = pkgs.callPackage ./langsmith-cli { };
-  tavily-cli = pkgs.callPackage ./tavily-cli { };
-  todoist-cli = pkgs.callPackage ./todoist-cli { };
-  unifi-cli = pkgs.callPackage ./unifi-cli { };
 }
 // optionalAttrs isX86Linux {
   linear-desktop = pkgs.callPackage ./linear-desktop { };

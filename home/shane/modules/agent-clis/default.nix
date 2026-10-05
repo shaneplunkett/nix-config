@@ -1,5 +1,5 @@
 # CLIs the agent stack invokes, each wrapped to pull its API key from rbw at
-# invocation. Servers opt out via the agentClis flag in lib/nixos.nix.
+# invocation.
 { pkgs, lib, ... }:
 let
   mkRbwWrapper = import ./mk-rbw-wrapper.nix { inherit lib pkgs; };

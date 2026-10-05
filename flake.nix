@@ -108,7 +108,6 @@
       };
       forAllSystems = nixpkgs.lib.genAttrs [
         "x86_64-linux"
-        "aarch64-linux"
         "aarch64-darwin"
       ];
     in
@@ -168,14 +167,6 @@
           system = "x86_64-linux";
           hostConfig = ./hosts/desktop/configuration.nix;
           shell = "noctalia";
-        };
-
-        hetzvps = lib.mkNixosSystem {
-          hostname = "hetzvps";
-          system = "aarch64-linux";
-          hostConfig = ./hosts/hetzvps/configuration.nix;
-          homeConfig = ./home/shane/homelinuxserver.nix;
-          agentClis = false;
         };
       };
     };

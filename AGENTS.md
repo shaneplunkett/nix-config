@@ -7,7 +7,6 @@
 | `desktop` | x86_64-linux | `nh os switch . -H desktop` |
 | `Shanes-MacBook-Pro` | aarch64-darwin | `nh darwin switch . -H Shanes-MacBook-Pro` |
 | `mini-server` | aarch64-darwin | `nh darwin switch . -H mini-server` |
-| `hetzvps` | aarch64-linux | server, not built from here |
 
 Build only: `nh {os,darwin} build . -H <host>`. `nrs` switches the current
 host. Home Manager is part of the host switch; standalone activations such
@@ -77,10 +76,9 @@ until the shell restarts: `kill <quickshell pid>` then
 
 ## Secrets
 
-rbw (Bitwarden) by default: wrappers shell out to `rbw get <entry>` at
-invocation, so rotation needs no rebuild. agenix only for `hetzvps`
-services that can't reach the rbw agent (`secrets/secrets.nix`, consumed
-via `config.age.secrets.<name>.path`).
+rbw (Bitwarden): wrappers shell out to `rbw get <entry>` at invocation,
+so rotation needs no rebuild. Values that are private but not secret go in
+`nix-config-private`.
 
 ## Layout
 

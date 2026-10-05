@@ -18,9 +18,6 @@ let
       vexCodeSrc = inputs.vex-code;
       isLinux = inputs.nixpkgs.lib.hasSuffix "-linux" system;
       isX86Linux = system == "x86_64-linux";
-      # The platforms that run the agent CLI stack: the desktop and the ARM
-      # Macs. langsmith-cli only ships binaries for these.
-      hasAgentClis = system == "x86_64-linux" || system == "aarch64-darwin";
     };
   palette = import ./palette.nix;
 in

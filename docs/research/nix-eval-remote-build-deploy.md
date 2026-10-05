@@ -2,7 +2,8 @@
 
 _Researched 1 October 2026. Tool versions and project status are a
 point-in-time snapshot. Timings were measured on `desktop` with local Nix
-2.34.8 and nh 4.3.2._
+2.34.8 and nh 4.3.2. hetzvps was decommissioned on 5 October 2026, so its
+sections no longer apply._
 
 ## Verdict
 

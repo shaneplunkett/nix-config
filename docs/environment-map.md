@@ -15,8 +15,8 @@ personal repos (flake inputs)          the hub                  deploys to
 ──────────────────────────────         ────────────             ──────────────────
 vex-tooling       ─ vex CLI    ─┐
 ai-skills         ─ skills     ─┤
-nix-config-private ─ private HM ─┼──►  nix-config  ──►  desktop · hetzvps ·
-vex-code          ─ source     ─┤     (this repo)      MacBook (darwin)
+nix-config-private ─ private HM ─┼──►  nix-config  ──►  desktop · MacBook ·
+vex-code          ─ source     ─┤     (this repo)      mini-server
 noctalia-plugins  ─ QML        ─┘
 ```
 
@@ -34,8 +34,7 @@ In-repo `pkgs/` holds everything else: desktop apps, themed builds, the
 vex-code package, editor tooling, and the agent-stack CLIs (`tvly`, `bb`,
 `langsmith`, `todoist`, `unifi`). Those CLIs are wrapped by
 `home/shane/modules/agent-clis`, which injects credentials from rbw at
-invocation, on the desktop and darwin hosts only (servers opt out via
-`agentClis = false` in `flake.nix`). See the residency rule below.
+invocation. See the residency rule below.
 
 ## Residency rule
 
