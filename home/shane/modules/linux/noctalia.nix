@@ -67,7 +67,7 @@ in
       accessibility.ui_scale = 1.15;
 
       shell = {
-        font_family = "Mononoki Nerd Font";
+        font_family = "RoundHog";
         avatar_path = "${config.home.homeDirectory}/.face";
         polkit_agent = true;
         # Apps launched from the shell survive the unit restarting on rebuild.

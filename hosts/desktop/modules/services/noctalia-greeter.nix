@@ -20,7 +20,7 @@
       appearance = {
         scheme = "Synced";
         theme_mode = "dark";
-        font_family = "Mononoki Nerd Font";
+        font_family = "RoundHog";
         palette = palette.noctaliaRoles;
         wallpaper = {
           path = "${../../assets/greeter-bg.jpg}";

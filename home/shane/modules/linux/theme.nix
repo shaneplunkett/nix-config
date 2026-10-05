@@ -1,17 +1,32 @@
 { pkgs, ... }:
 let
-  fontPackage = pkgs.nerd-fonts.mononoki;
-  fontName = "Mononoki Nerd Font";
+  # RoundHog for interfaces, Mononoki wherever text needs a fixed width.
+  uiFont = "RoundHog";
+  codeFont = "Mononoki Nerd Font";
   fontSize = 12;
   cursorSize = 24;
 in
 {
-  fonts.fontconfig.enable = true;
+  # Most apps (Chrome, Electron, Flutter, Hyprland) take their fonts from these
+  # fontconfig defaults rather than GTK.
+  fonts.fontconfig = {
+    enable = true;
+    defaultFonts = {
+      sansSerif = [ uiFont ];
+      monospace = [ codeFont ];
+    };
+  };
 
   # Apps read light/dark via the xdg-desktop-portal Settings interface, which is
   # backed by this dconf key. Nothing else asserts it (noctalia only syncs it when
-  # user theming/templates are enabled), so own it declaratively.
-  dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
+  # user theming/templates are enabled), so own it declaratively. The font keys
+  # are what GTK4/libadwaita apps read.
+  dconf.settings."org/gnome/desktop/interface" = {
+    color-scheme = "prefer-dark";
+    font-name = "${uiFont} ${toString fontSize}";
+    document-font-name = "${uiFont} ${toString fontSize}";
+    monospace-font-name = "${codeFont} ${toString fontSize}";
+  };
 
   home.pointerCursor = {
     enable = true;
@@ -26,8 +41,8 @@ in
     enable = true;
 
     font = {
-      package = fontPackage;
-      name = fontName;
+      package = pkgs.roundhog;
+      name = uiFont;
       size = fontSize;
     };
 

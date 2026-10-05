@@ -10,7 +10,7 @@ let
     * {
       all: unset;
       color: ${withHash.text};
-      font-family: "Mononoki Nerd Font";
+      font-family: "RoundHog";
       font-size: 14px;
     }
 
