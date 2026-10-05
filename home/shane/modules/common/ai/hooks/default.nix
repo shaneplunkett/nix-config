@@ -37,6 +37,12 @@ let
       ];
     }
     {
+      name = "rbw-locked";
+      event = "SessionStart";
+      script = ./rbw-locked.sh;
+      runtimeInputs = [ pkgs.rbw ];
+    }
+    {
       name = "markdown-table-width";
       event = "PostToolUse";
       tool = "edit";

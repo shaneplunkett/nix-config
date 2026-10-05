@@ -42,10 +42,16 @@ let
       inherit (secret) var entry;
       field = secret.field or null;
     in
+    # Fail loudly: an empty key only resurfaces later as a confusing auth
+    # error from the CLI. From a terminal, a locked rbw prompts inline first.
     ''
       if [ -z "''${${var}:-}" ]; then
-        ${var}="$(${rbwFetch entry field} 2>/dev/null)"
-        [ -n "''${${var}:-}" ] && export ${var}
+        ${var}="$(${rbwFetch entry field} 2>/dev/null)" || true
+        if [ -z "''${${var}:-}" ]; then
+          echo "${lib.head binsToWrap}: could not read ${entry} from rbw. If rbw is locked, run rbw unlock in a terminal." >&2
+          exit 1
+        fi
+        export ${var}
       fi'';
 
   exportExtra = lib.mapAttrsToList (n: v: ''export ${n}="''${${n}:-${v}}"'') extraEnv;

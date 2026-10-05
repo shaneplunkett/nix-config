@@ -12,7 +12,11 @@ in
     settings = {
       email = "shanemplunkett@icloud.com";
       lock_timeout = 604800;
-      pinentry = if pkgs.stdenv.hostPlatform.isDarwin then pkgs.pinentry_mac else pkgs.pinentry-gnome3;
+      # Prompts inline in whatever terminal ran rbw, including T3 Code's, on
+      # every machine. Anything without a terminal (MCP servers, hooks) can't
+      # prompt and fails loudly instead; the rbw-locked session hook tells
+      # agents when that will happen.
+      pinentry = pkgs.pinentry-tty;
     };
   };
 

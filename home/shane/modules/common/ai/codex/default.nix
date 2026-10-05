@@ -110,8 +110,11 @@ let
     lib.mapAttrs codexMcpServer config.programs.mcp.servers
   );
 
-  codexHooks = aiHelpers.hooksFor "codex" // {
-    SessionStart = [
+  sharedCodexHooks = aiHelpers.hooksFor "codex";
+
+  # The main profile adds Vex's session context on top of the shared hooks.
+  codexHooks = sharedCodexHooks // {
+    SessionStart = (sharedCodexHooks.SessionStart or [ ]) ++ [
       {
         hooks = [
           {
@@ -207,7 +210,7 @@ let
   codexConfigSeed = tomlFormat.generate "codex-config.toml" codexSettings;
 
   codeGirlySettings = codexSettings // {
-    hooks = builtins.removeAttrs codexHooks [ "SessionStart" ];
+    hooks = sharedCodexHooks;
     skills.config =
       map
         (path: {
