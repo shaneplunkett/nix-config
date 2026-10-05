@@ -1,5 +1,14 @@
 _:
 let
+  tailnet = "tail1d49f8.ts.net";
+
+  # Reach a machine by its MagicDNS name. HostKeyAlias keeps known_hosts keyed
+  # by the short name, so the saved keys survive however HostName is spelt.
+  onTailnet = name: {
+    HostName = "${name}.${tailnet}";
+    HostKeyAlias = name;
+  };
+
   shaneHost = {
     User = "shane";
     IdentityFile = [ "~/.ssh/id_ed25519" ];
@@ -29,23 +38,11 @@ in
         IdentitiesOnly = true;
       };
 
-      "pve" = shaneHost // {
-        HostName = "pve";
-      };
-      "cube" = shaneHost // {
-        HostName = "cube";
-      };
-      "desktop" = shaneHost // {
-        HostName = "desktop";
-      };
-      "mbp" = laptopHost // {
-        HostName = "100.101.140.9";
-        HostKeyAlias = "shanes-macbook-pro";
-      };
-      "mini" = laptopHost // {
-        HostName = "100.111.108.58";
-        HostKeyAlias = "mini-server";
-      };
+      pve = shaneHost // onTailnet "pve";
+      cube = shaneHost // onTailnet "cube";
+      desktop = shaneHost // onTailnet "desktop";
+      mbp = laptopHost // onTailnet "shanes-macbook-pro";
+      mini = laptopHost // onTailnet "mini-server";
     };
   };
 }
