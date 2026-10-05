@@ -3,7 +3,6 @@ let
   inherit (inputs)
     nixpkgs
     home-manager
-    agenix
     catppuccin
     noctalia
     ;
@@ -32,7 +31,6 @@ in
         }
 
         hostConfig
-        agenix.nixosModules.default
         catppuccin.nixosModules.catppuccin
         (
           { lib, ... }:

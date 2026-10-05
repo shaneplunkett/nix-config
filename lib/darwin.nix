@@ -6,7 +6,6 @@ let
     nix-homebrew
     homebrew-core
     homebrew-cask
-    agenix
     ;
   common = import ./common.nix { inherit inputs rootPath; };
 in
@@ -55,7 +54,6 @@ in
         hostConfig
 
         home-manager.darwinModules.home-manager
-        agenix.darwinModules.default
 
         (common.mkHomeManagerModule {
           inherit homeConfig;

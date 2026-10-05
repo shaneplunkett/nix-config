@@ -1,25 +1,5 @@
 {
   "nodes": {
-    "agenix": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1790734419,
-        "narHash": "sha256-n7wew722m1OTBT9DOIMxNX/NF4zfsSUABAO5eW3wikE=",
-        "owner": "ryantm",
-        "repo": "agenix",
-        "rev": "3daa710894355fa2fad8243380af373a2b4046ef",
-        "type": "github"
-      },
-      "original": {
-        "owner": "ryantm",
-        "repo": "agenix",
-        "type": "github"
-      }
-    },
     "ai-skills": {
       "inputs": {
         "langsmith-skills": "langsmith-skills",
@@ -1026,7 +1006,6 @@
     },
     "root": {
       "inputs": {
-        "agenix": "agenix",
         "ai-skills": "ai-skills",
         "catppuccin": "catppuccin",
         "electron-nixpkgs": "electron-nixpkgs",
