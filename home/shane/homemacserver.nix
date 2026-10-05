@@ -3,6 +3,7 @@
 
   imports = [
     ./modules/common
+    ./modules/mini-server/vex-code.nix
   ];
 
   home = {
