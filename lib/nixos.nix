@@ -55,7 +55,8 @@ in
               noctalia.homeModules.default
             ]
             ++ nixpkgs.lib.optionals agentClis [
-              inputs.vex-tooling.homeManagerModules.default
+              (rootPath + /home/shane/modules/agent-clis)
+              "${inputs.vex-tooling}/modules/vex-cli.nix"
             ];
         })
       ]

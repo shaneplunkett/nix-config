@@ -1,7 +1,7 @@
 # Environment Map
 
 Where everything lives, how it reaches a machine, and the one rule that decides
-where new things go. Last verified 03/09/2026. When an input is added or
+where new things go. Last verified 05/10/2026. When an input is added or
 removed in `flake.nix`, update this file in the same change.
 
 A fuller session-generated version (with hygiene findings and host state) is
@@ -13,7 +13,7 @@ core.
 ```
 personal repos (flake inputs)          the hub                  deploys to
 ──────────────────────────────         ────────────             ──────────────────
-vex-tooling       ─ CLIs/MCP   ─┐
+vex-tooling       ─ vex CLI    ─┐
 ai-skills         ─ skills     ─┤
 nix-config-private ─ private HM ─┼──►  nix-config  ──►  desktop · hetzvps ·
 vex-code          ─ source     ─┤     (this repo)      MacBook (darwin)
@@ -24,20 +24,24 @@ noctalia-plugins  ─ QML        ─┘
 
 | Input | Checkout | Provides | Consumed via |
 |---|---|---|---|
-| `vex-tooling` | `~/Projects/personal/vex-tooling` | Agent-stack CLIs: `vex`, `langsmith`, `gws`, `tvly`, `bb`, `todoist`, `unifi`, and `linear` (managed-auth wrapper). `xero-mcp-server` remains packaged but unwired while Xero is disconnected. Credentials are injected from rbw at invocation. | `overlays.default` in `lib/common.nix` + `homeManagerModules.default` on the desktop and darwin hosts only (servers opt out via `agentClis = false` in `flake.nix`) |
+| `vex-tooling` | `~/Projects/personal/vex-tooling` | Being retired (SHA-151). Only `vex-cli` and its sync jobs are still used; they move to vex-brain next. | `pkgs/vex-cli` via an overlay in `lib/common.nix` + `modules/vex-cli.nix` on the desktop and darwin hosts |
 | `ai-skills` | `~/ai-skills` | `lib.skillProfiles` used by the local AI modules, plus the prompt sources they install. Carries its own skill inputs. | `home/shane/modules/common/ai/lib.nix` |
 | `nix-config-private` | `~/Projects/personal/nix-config-private` | Private home-manager modules and deliberately private desktop utilities. Zero inputs of its own. | `homeManagerModules.default` |
 | `vex-code` | `~/Projects/personal/vex-code` | Source only (`flake = false`); this repo's `pkgs/vex-code` owns the build. | `pkgs/default.nix` (`vexCodeSrc`) |
 | `noctalia-plugins` | `~/Projects/personal/noctalia-plugins` | Noctalia plugins written for v4's QML API. Not wired in since the v5 move; kept for the plugin port. | Nothing yet |
 
 In-repo `pkgs/` holds everything else: desktop apps, themed builds, the
-vex-code package, editor tooling. See the residency rule below.
+vex-code package, editor tooling, and the agent-stack CLIs (`tvly`, `bb`,
+`langsmith`, `todoist`, `unifi`). Those CLIs are wrapped by
+`home/shane/modules/agent-clis`, which injects credentials from rbw at
+invocation, on the desktop and darwin hosts only (servers opt out via
+`agentClis = false` in `flake.nix`). See the residency rule below.
 
 ## Residency rule
 
 One sentence decides where a new thing goes:
 
-- **Agent runtime** (any CLI or MCP server the agent stack invokes) → `vex-tooling`
+- **Agent runtime** (any CLI or MCP server the agent stack invokes) → this repo's `pkgs/`, wrapped in `home/shane/modules/agent-clis`
 - **Skills, prompts, agent personas** → `ai-skills`
 - **Private modules and deliberately private desktop utilities** → `nix-config-private`
 - **Other desktop apps, themes, and machine config** → this repo's `pkgs/`
@@ -46,13 +50,10 @@ One sentence decides where a new thing goes:
 
 **Chain A — bump a CLI or MCP server version (e.g. langsmith):**
 
-1. In `vex-tooling`: bump version + hashes in `pkgs/<name>/<name>.nix`
-   (`nix-update` handles most). Commit, push.
-2. Here: `nix flake update vex-tooling`, commit the lock.
-3. Rebuild: `nh os switch . -H <host>`.
-
-If a CLI looks stale, check vex-tooling first — this repo's lock usually
-tracks its HEAD, so stale versions mean nobody bumped the package there.
+1. Here: bump version + hashes in `pkgs/<name>/default.nix`
+   (`nix-update --flake <name>` handles most; langsmith carries one hash per
+   platform). Commit.
+2. Rebuild: `nh os switch . -H <host>`.
 
 **Chain B — change a skill or prompt source:**
 

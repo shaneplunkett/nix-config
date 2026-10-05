@@ -60,7 +60,8 @@ in
         (common.mkHomeManagerModule {
           inherit homeConfig;
           extraSharedModules = [
-            inputs.vex-tooling.homeManagerModules.default
+            (rootPath + /home/shane/modules/agent-clis)
+            "${inputs.vex-tooling}/modules/vex-cli.nix"
           ];
         })
       ]
