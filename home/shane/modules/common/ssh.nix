@@ -40,6 +40,10 @@ in
 
       pve = shaneHost // onTailnet "pve";
       cube = shaneHost // onTailnet "cube";
+      mcphub = shaneHost // onTailnet "mcphub";
+      proxy = shaneHost // onTailnet "proxy";
+      technitium = shaneHost // onTailnet "technitium";
+      technitium2 = shaneHost // onTailnet "technitium2";
       desktop = shaneHost // onTailnet "desktop";
       mbp = laptopHost // onTailnet "shanes-macbook-pro";
       mini = laptopHost // onTailnet "mini-server";
