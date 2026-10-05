@@ -53,6 +53,11 @@ in
 
       borders.color = omniwmLib.colors.fromHex palette.hex.mauve;
 
+      # On the laptop's notched display the default moves the bar below the
+      # menu bar, over the top of the tiled windows. Wrap it around the notch
+      # in the menu-bar row instead. Displays without a notch are unaffected.
+      workspaceBar.notchMode = "splitActiveLeft";
+
       workspaces = omniwmLib.workspaces (
         map (key: {
           displayName = key;
