@@ -187,6 +187,9 @@ in
           }
         ];
       };
+
+      # The personal tailnet runs MagicDNS on purpose; the guard leaves it be.
+      plugin_settings."vex/tailscale-guard".trusted_profiles = [ "shaneplunkett.github" ];
     };
   };
 }
