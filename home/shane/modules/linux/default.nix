@@ -8,6 +8,7 @@
   imports = [
 
     ./theme.nix
+    ./files.nix
     ./packages.nix
     ./linear.nix
     ./bloodborne.nix

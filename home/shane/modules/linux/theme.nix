@@ -85,29 +85,11 @@ in
         categories = [ "AudioVideo" ];
         settings.StartupWMClass = "tv.plex.Plex";
       };
-
-      nemo = {
-        name = "Files";
-        comment = "Access and organise files";
-        exec = "nemo %U";
-        icon = "nemo";
-        terminal = false;
-        type = "Application";
-        categories = [
-          "GNOME"
-          "GTK"
-          "Utility"
-          "Core"
-          "FileManager"
-        ];
-        mimeType = [ "inode/directory" ];
-      };
     };
 
     mimeApps = {
       enable = true;
       defaultApplications = {
-        "inode/directory" = "nemo.desktop";
         "text/html" = "google-chrome.desktop";
         "x-scheme-handler/http" = "google-chrome.desktop";
         "x-scheme-handler/https" = "google-chrome.desktop";

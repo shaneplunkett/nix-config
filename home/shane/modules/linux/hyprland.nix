@@ -258,7 +258,7 @@ in
           opaque = true;
         }
         {
-          match.class = "^nemo$";
+          match.class = "^org\\.kde\\.dolphin$";
           float = true;
           size = [
             1100

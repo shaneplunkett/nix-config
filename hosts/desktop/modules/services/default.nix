@@ -11,9 +11,9 @@
   services = {
     xserver.videoDrivers = [ "amdgpu" ];
     flatpak.enable = true;
-    gvfs.enable = true;
-    tumbler.enable = true;
     tailscale.enable = true;
+    # Dolphin mounts drives through udisks; gvfs used to enable it implicitly.
+    udisks2.enable = true;
 
     openssh = {
       enable = true;

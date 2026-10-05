@@ -15,8 +15,6 @@
     yq-go
     lsof
     wl-clipboard
-    nemo-with-extensions
-    file-roller
     openocd
 
     ffmpeg
