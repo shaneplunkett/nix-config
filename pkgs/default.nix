@@ -22,6 +22,7 @@ in
   bluebubbles-themed = pkgs.callPackage ./bluebubbles-themed {
     palette = import ../lib/palette.nix;
   };
+  cosmic-ext-ctl-v2 = pkgs.callPackage ./cosmic-ext-ctl-v2 { };
   hyprland-preview-share-picker = pkgs.callPackage ./hyprland-preview-share-picker { };
 }
 // optionalAttrs isX86Linux {
