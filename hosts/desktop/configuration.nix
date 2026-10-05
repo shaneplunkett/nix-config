@@ -13,6 +13,7 @@
       enable = true;
       configurationLimit = 10;
       editor = false;
+      bootCounting.enable = true;
     };
     efi.canTouchEfiVariables = true;
   };

@@ -1,10 +1,13 @@
 _: {
-  networking.networkmanager.enable = true;
+  networking = {
+    networkmanager.enable = true;
+    modemmanager.enable = false;
 
-  networking.firewall = {
-    enable = true;
-    trustedInterfaces = [ "tailscale0" ];
-    allowedTCPPorts = [ ];
-    allowedUDPPorts = [ ];
+    firewall = {
+      enable = true;
+      trustedInterfaces = [ "tailscale0" ];
+      allowedTCPPorts = [ ];
+      allowedUDPPorts = [ ];
+    };
   };
 }

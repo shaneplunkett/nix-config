@@ -1,5 +1,7 @@
 { config, pkgs, ... }:
 {
+  # Not programs.obs-studio.enableVirtualCamera: it hardcodes video_nr=1,
+  # which the Facecam already takes alongside video0.
   boot = {
     extraModulePackages = [
       config.boot.kernelPackages.v4l2loopback
@@ -10,15 +12,12 @@
     '';
   };
 
-  environment.systemPackages = [
-    (pkgs.wrapOBS {
-      plugins = with pkgs.obs-studio-plugins; [
-        obs-backgroundremoval
-      ];
-    })
+  programs.obs-studio = {
+    enable = true;
+    plugins = [ pkgs.obs-studio-plugins.obs-backgroundremoval ];
+  };
 
-    pkgs.cameractrls-gtk4
-  ];
+  environment.systemPackages = [ pkgs.cameractrls-gtk4 ];
 
   services.pipewire.extraConfig.pipewire."20-obs-virtual-mic" = {
     "context.modules" = [
