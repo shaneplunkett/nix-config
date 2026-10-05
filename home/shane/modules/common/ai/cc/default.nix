@@ -3,23 +3,14 @@
   aiHelpers,
   ...
 }:
-let
-  inherit (aiHelpers) aiSkillsRoot skillProfiles;
-
-  claudePrompt = aiHelpers.readMarkdownBundle [
-    "${aiSkillsRoot}/personal-claude/Prompt.md"
-    "${aiSkillsRoot}/vex/rules/brain.md"
-    "${aiSkillsRoot}/vex/rules/cli-routing.md"
-  ];
-in
 {
   programs = {
     claude-code = {
       enable = true;
       package = pkgs.claude-code;
-      context = claudePrompt;
+      context = aiHelpers.prompts.personal;
       enableMcpIntegration = true;
-      skills = skillProfiles.claude;
+      inherit (aiHelpers) skills;
 
       settings = {
         feedbackSurveyRate = 0;

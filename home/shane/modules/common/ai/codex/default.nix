@@ -8,9 +8,6 @@
 let
   inherit (config.home) homeDirectory;
 
-  inherit (aiHelpers) skillProfiles;
-  codexSkills = skillProfiles.codex;
-  vexRoot = "${aiHelpers.aiSkillsRoot}/vex";
   tomlFormat = pkgs.formats.toml { };
 
   mkBashHook =
@@ -28,28 +25,6 @@ let
       ++ runtimeInputs;
       text = ''exec bash ${script} "$@"'';
     };
-
-  vexRuleFiles = lib.pipe "${vexRoot}/rules" [
-    builtins.readDir
-    (lib.filterAttrs (n: t: t == "regular" && lib.hasSuffix ".md" n))
-    lib.attrNames
-    (map (n: "${vexRoot}/rules/${n}"))
-  ];
-
-  vexAgentsMd = aiHelpers.readMarkdownBundle (
-    [
-      "${vexRoot}/core.md"
-      "${vexRoot}/output-style.md"
-      "${vexRoot}/adapters/openai-codex.md"
-    ]
-    ++ vexRuleFiles
-  );
-
-  codeGirlyAgentsMd = aiHelpers.readMarkdownBundle [
-    "${aiHelpers.aiSkillsRoot}/personal-claude/Prompt.md"
-    "${vexRoot}/rules/brain.md"
-    "${vexRoot}/rules/cli-routing.md"
-  ];
 
   codex-emit-context = mkBashHook {
     name = "codex-emit-context";
@@ -119,7 +94,7 @@ let
         hooks = [
           {
             type = "command";
-            command = "${codex-emit-context}/bin/codex-emit-context SessionStart ${vexRoot}/hooks/session-start.md";
+            command = "${codex-emit-context}/bin/codex-emit-context SessionStart ${aiHelpers.prompts.vexSessionStartFile}";
             timeout = 10;
           }
         ];
@@ -403,14 +378,14 @@ in
       file =
         (aiHelpers.mkSkillTree {
           dir = "${codexConfigDir}/skills";
-          skills = codexSkills;
+          inherit (aiHelpers) skills;
         })
         // (aiHelpers.mkSkillTree {
           dir = "${codexCodeConfigDir}/skills";
-          skills = codexSkills;
+          inherit (aiHelpers) skills;
         })
         // {
-          "${codexCodeConfigDir}/AGENTS.md".text = codeGirlyAgentsMd;
+          "${codexCodeConfigDir}/AGENTS.md".text = aiHelpers.prompts.personal;
         };
 
       activation = {
@@ -452,7 +427,7 @@ in
         enable = true;
         package = codexPackage;
 
-        context = vexAgentsMd;
+        context = aiHelpers.prompts.vexCodex;
         skills = { };
         settings = { };
         rules = { };
