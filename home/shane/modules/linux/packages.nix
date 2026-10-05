@@ -116,6 +116,6 @@ in
     yt-dlp
     google-chrome
     slack-themed
-    qalculate-qt
+    cosmic-ext-calculator
   ];
 }
