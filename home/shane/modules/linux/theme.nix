@@ -13,6 +13,7 @@ in
     enable = true;
     defaultFonts = {
       sansSerif = [ uiFont ];
+      serif = [ uiFont ];
       monospace = [ codeFont ];
     };
   };
