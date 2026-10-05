@@ -25,7 +25,18 @@
 
   xdg.portal = {
     enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-    configPackages = [ pkgs.hyprland ];
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
+      pkgs.xdg-desktop-portal-cosmic
+    ];
+    # Hyprland's own routing, except open/save dialogs go to COSMIC's portal:
+    # a standalone picker, themed Catppuccin in home/shane/modules/linux/cosmic.nix.
+    config.hyprland = {
+      default = [
+        "hyprland"
+        "gtk"
+      ];
+      "org.freedesktop.impl.portal.FileChooser" = [ "cosmic" ];
+    };
   };
 }

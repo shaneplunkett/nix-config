@@ -9,6 +9,7 @@
 
     ./theme.nix
     ./files.nix
+    ./cosmic.nix
     ./packages.nix
     ./linear.nix
     ./bloodborne.nix
