@@ -10,11 +10,11 @@
         "tavily-skills": "tavily-skills"
       },
       "locked": {
-        "lastModified": 1791198884,
-        "narHash": "sha256-WQZj6jOywtXMvP7vJkJFBrBlanPSIDo2lnNjB1f3CeE=",
+        "lastModified": 1791203177,
+        "narHash": "sha256-2o/bBDhdQSmS+TwK+DQ+TcTJ1I1rGBMHER7AyskPFyM=",
         "ref": "refs/heads/main",
-        "rev": "7082f266133418f6dbf3bfb9c3de60a8977a1526",
-        "revCount": 113,
+        "rev": "20f23b770f20f30ed32191a6be190b1724eca37b",
+        "revCount": 115,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/ai-skills.git"
       },
@@ -672,11 +672,11 @@
     "matt-skills": {
       "flake": false,
       "locked": {
-        "lastModified": 1789726349,
-        "narHash": "sha256-L3CpIT2DeI+fUFl9fcygojtQo2DzEen69rMD1XqR1vM=",
+        "lastModified": 1791199038,
+        "narHash": "sha256-oN3OQPouK6wrrGzmgNdvdOVLsOJVGaK7cy3BZoE10AA=",
         "owner": "mattpocock",
         "repo": "skills",
-        "rev": "c55ee46073ed923f86ce59a5eb3b6d895095d1b7",
+        "rev": "4588b32ecab9ecc9fc8cc6b6c5e7d675b6004b0d",
         "type": "github"
       },
       "original": {
