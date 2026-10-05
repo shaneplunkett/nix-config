@@ -185,7 +185,12 @@ in
           config = {
             enabled = true;
             binaryPath = lib.getExe config.programs.claude-code.finalPackage;
-            homePath = config.programs.claude-code.configDir;
+            # Empty so T3 leaves CLAUDE_CONFIG_DIR unset, matching the
+            # terminal. Setting it, even to ~/.claude, moves the macOS
+            # keychain entry to "Claude Code-credentials-<hash>" and the
+            # spawned CLI reports "Not logged in". Kept as "" rather than
+            # dropped because activation merges into the existing settings.
+            homePath = "";
           };
         };
       };
