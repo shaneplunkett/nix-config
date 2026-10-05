@@ -39,7 +39,8 @@ in
 
               # nixpkgs #542991 interpolates writeNu's script, so a path
               # becomes a script that runs the path. omniwm.nix passes its
-              # deploy-settings.nu as a path. Drop once nixpkgs handles it.
+              # deploy-settings.nu as a path. Fixed upstream by nixpkgs
+              # b1b6be49; drop once nixos-unstable includes it.
               writers = prev.writers // {
                 writeNu =
                   name: argsOrScript:
