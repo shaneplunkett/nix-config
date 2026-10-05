@@ -76,6 +76,8 @@ let
         ./patches/catppuccin-code-theme.patch
         # Chat italics in the theme's primary colour (mauve under Mocha).
         ./patches/markdown-italics-primary.patch
+        # Body text follows the theme; the boot style hard-codes neutral white.
+        ./patches/body-text-follows-theme.patch
       ];
 
       nativeBuildInputs =
