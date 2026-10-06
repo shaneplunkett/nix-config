@@ -62,10 +62,17 @@ else
   nom_opts=(--no-nom)
 fi
 
+# nh diffs against the runner's own system, so a build of another host
+# (mbp on mini-server) would print a meaningless diff. Drop it there.
+diff_opts=()
+if [ "$mode" = build ] && [ "$runner" != "$host" ]; then
+  diff_opts=(--diff never)
+fi
+
 case "$mode" in
   # A real eval: no builds, just "does this host's config evaluate".
   eval) run="nix eval --raw .#$attr && echo && echo 'evaluates OK'" ;;
-  build | switch) run="nh $platform $mode $(printf '%q ' . -H "$host" "${nom_opts[@]}")" ;;
+  build | switch) run="nh $platform $mode $(printf '%q ' . -H "$host" "${nom_opts[@]}" "${diff_opts[@]}")" ;;
 esac
 
 if [ "$(hostname -s)" = "$runner" ]; then
