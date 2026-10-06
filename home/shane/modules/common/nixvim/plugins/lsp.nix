@@ -32,8 +32,29 @@
           ];
           settings = {
             formatting.command = [ "nixfmt" ];
-            nixpkgs.expr = "import <nixpkgs> {}";
           };
+          # nixd only takes config from the editor, so point it at the flake
+          # each client is rooted in. Outside a flake it keeps its <nixpkgs>
+          # defaults.
+          extraOptions.before_init.__raw = ''
+            function(_, config)
+              local root = config.root_dir
+              if not root or not vim.uv.fs_stat(root .. "/flake.nix") then
+                return
+              end
+              local probe = string.format(
+                "(import ${./nixd-options.nix} { root = %s; hostname = %s; })",
+                vim.json.encode(root),
+                vim.json.encode((vim.uv.os_gethostname():gsub("%..*", "")))
+              )
+              config.settings.nixd.nixpkgs = { expr = probe .. ".pkgs" }
+              config.settings.nixd.options = {
+                system = { expr = probe .. ".system" },
+                ["home-manager"] = { expr = probe .. ".home-manager" },
+                nixvim = { expr = probe .. ".nixvim" },
+              }
+            end
+          '';
         };
 
         gopls = {
