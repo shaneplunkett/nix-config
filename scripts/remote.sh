@@ -16,13 +16,19 @@ host="${2:-mini-server}"
 scratch=".cache/nix-config-build" # under $HOME on the remote
 
 usage() {
-  echo "usage: $0 [eval|build|switch] [desktop|mini-server|Shanes-MacBook-Pro]" >&2
+  echo "usage: $0 [eval|build|switch] [desktop|mini-server|mini|Shanes-MacBook-Pro|mbp]" >&2
   exit 64
 }
 
 case "$mode" in
   eval | build | switch) ;;
   *) usage ;;
+esac
+
+# The SSH aliases work as host names too.
+case "$host" in
+  mini) host=mini-server ;;
+  mbp) host=Shanes-MacBook-Pro ;;
 esac
 
 case "$host" in

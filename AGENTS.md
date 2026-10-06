@@ -23,6 +23,10 @@ eval and build go to `mini-server`, which is always on; switch runs on the
 host itself. Default is `build mini-server`; `eval Shanes-MacBook-Pro`
 checks the laptop in seconds.
 
+The dev shell (`lib/devshell.nix`, loaded by direnv) wraps these as
+`switch`, `build` and `evaluate` (host optional, defaults to this machine;
+`mini` and `mbp` work as names) plus `check` for `scripts/check.sh`.
+
 ## Checks
 
 `scripts/check.sh` (nixfmt, statix, deadnix) is the one gate. Hooks run it

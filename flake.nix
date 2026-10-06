@@ -129,6 +129,10 @@
         }
       );
 
+      devShells = forAllSystems (system: {
+        default = import ./lib/devshell.nix nixpkgs.legacyPackages.${system};
+      });
+
       packages = forAllSystems (
         system:
         let

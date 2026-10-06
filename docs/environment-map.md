@@ -77,7 +77,5 @@ One sentence decides where a new thing goes:
 
 ## Adjacent territory (not flake inputs — never affects rebuilds)
 
-- `~/flakes` — one repo of per-project dev shells, including
-  `nix-config-tools` for hacking on this repo.
 - `~/Projects/personal` — personal repo checkouts, including the five input
   repos above (except ai-skills, which lives at `~/ai-skills`).
