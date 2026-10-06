@@ -37,6 +37,18 @@ let
       ];
     }
     {
+      name = "pr-merge-guard";
+      event = "PreToolUse";
+      tool = "shell";
+      script = ./pr-merge-guard.sh;
+      runtimeInputs = [
+        pkgs.gh
+        pkgs.gnugrep
+        pkgs.gnused
+      ];
+      timeout = 20;
+    }
+    {
       name = "rbw-locked";
       event = "SessionStart";
       script = ./rbw-locked.sh;
