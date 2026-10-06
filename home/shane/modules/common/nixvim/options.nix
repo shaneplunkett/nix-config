@@ -30,4 +30,6 @@ _: {
     swapfile = false;
 
   };
+
+  filetype.extension.alloy = "hcl";
 }
