@@ -2,30 +2,35 @@
 
 ## Build
 
-| Host | System | Command |
+`scripts/remote.sh [eval|build|switch] [host]` evaluates, builds or
+switches any host from any machine. It syncs the working tree (no commit
+needed) to the machine doing the work and runs nh there, streaming nh's
+output and exit code back. eval and build go to an always-on builder
+(darwin can't build on the desktop, so darwin goes to `mini-server`);
+switch runs on the host itself, in place when that's this machine.
+
+| Host | System | Short name |
 |---|---|---|
-| `desktop` | x86_64-linux | `nh os switch . -H desktop` |
-| `Shanes-MacBook-Pro` | aarch64-darwin | `nh darwin switch . -H Shanes-MacBook-Pro` |
-| `mini-server` | aarch64-darwin | `nh darwin switch . -H mini-server` |
+| `desktop` | x86_64-linux | `desktop` |
+| `Shanes-MacBook-Pro` | aarch64-darwin | `mbp` |
+| `mini-server` | aarch64-darwin | `mini` |
 
-Build only: `nh {os,darwin} build . -H <host>`. `nrs` switches the current
-host. Home Manager is part of the host switch; standalone activations such
-as `home-manager switch` or `./result/activate` run side-effect hooks, so
-use them only when Shane asks for that exact operation. Switching is
-passwordless for agents on every host (`modules/nixos/user.nix`,
-`modules/darwin/base/user.nix`); if `nh` prompts, inspect the sudo command
-it ran rather than assuming Shane has to do it.
+Switching is passwordless on every host: `modules/nixos/user.nix` and
+`modules/darwin/base/user.nix` allow exactly the commands nh elevates. If
+`nh` prompts, inspect the sudo command it ran rather than assuming Shane
+has to do it. Home Manager is part of the host switch; standalone
+activations such as `home-manager switch` or `./result/activate` run
+side-effect hooks, so use them only when Shane asks for that exact
+operation.
 
-`scripts/remote.sh [eval|build|switch] [host]` works on any host from any
-machine. It syncs the working tree (no commit needed) to the machine doing
-the work and runs nh there. Darwin can't be built on the desktop, so darwin
-eval and build go to `mini-server`, which is always on; switch runs on the
-host itself. Default is `build mini-server`; `eval Shanes-MacBook-Pro`
-checks the laptop in seconds.
+The dev shell (`lib/devshell.nix`, loaded by direnv) carries the repo's
+tools and wraps remote.sh as `switch`, `build` and `evaluate` (host
+defaults to this machine) plus `check`. `nrs` switches the current host.
 
-The dev shell (`lib/devshell.nix`, loaded by direnv) wraps these as
-`switch`, `build` and `evaluate` (host optional, defaults to this machine;
-`mini` and `mbp` work as names) plus `check` for `scripts/check.sh`.
+A new host needs a row in remote.sh's host table and its
+`/etc/ssh/ssh_host_ed25519_key.pub` in `modules/common/ssh-known-hosts.nix`.
+remote.sh's SSH has no terminal to accept an unknown host key, so a
+missing key fails the connection.
 
 ## Checks
 
@@ -35,8 +40,8 @@ straight after, the Stop hook runs it before you finish, and pre-commit
 runs it on every commit. Fix what it reports. If a rule is wrong for the
 case, say so and propose a change to `statix.toml`.
 
-What hooks can't do: `nh {os,darwin} build . -H <host>` must be green
-before a task is done. `git add` new files first; flakes ignore untracked
+What hooks can't do: `scripts/remote.sh build <host>` must be green for
+every host the change touches before a task is done. `git add` new files first; flakes ignore untracked
 files, and the resulting errors are confusing.
 
 ## Research
