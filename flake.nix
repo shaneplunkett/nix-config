@@ -69,9 +69,12 @@
 
     nix-config-private.url = "git+ssh://git@github.com/shaneplunkett/nix-config-private.git";
 
+    # memory-save ships with the vex CLI in vex-brain, so ai-skills reads it
+    # from the same vex-brain commit that builds the installed `vex`.
     ai-skills = {
       url = "git+ssh://git@github.com/shaneplunkett/ai-skills.git";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.vex-brain.follows = "vex-brain";
     };
 
     # Fast-moving AI CLIs and desktop apps with cache-backed builds. Consume
