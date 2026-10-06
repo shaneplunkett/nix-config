@@ -12,13 +12,16 @@ Build only: `nh {os,darwin} build . -H <host>`. `nrs` switches the current
 host. Home Manager is part of the host switch; standalone activations such
 as `home-manager switch` or `./result/activate` run side-effect hooks, so
 use them only when Shane asks for that exact operation. Switching is
-passwordless for agents (`modules/nixos/user.nix`); if `nh` prompts, inspect
-the sudo command it ran rather than assuming Shane has to do it.
+passwordless for agents on every host (`modules/nixos/user.nix`,
+`modules/darwin/base/user.nix`); if `nh` prompts, inspect the sudo command
+it ran rather than assuming Shane has to do it.
 
-Darwin can't be built on the desktop. `mini-server` is always on, so
-`scripts/darwin-build.sh [eval|build] [host]` syncs the working tree there
-(no commit needed) and evaluates or test-builds any darwin host. Default is
-`build mini-server`; `eval Shanes-MacBook-Pro` checks the laptop in seconds.
+`scripts/remote.sh [eval|build|switch] [host]` works on any host from any
+machine. It syncs the working tree (no commit needed) to the machine doing
+the work and runs nh there. Darwin can't be built on the desktop, so darwin
+eval and build go to `mini-server`, which is always on; switch runs on the
+host itself. Default is `build mini-server`; `eval Shanes-MacBook-Pro`
+checks the laptop in seconds.
 
 ## Checks
 

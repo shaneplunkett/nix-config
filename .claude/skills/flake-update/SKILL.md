@@ -47,7 +47,7 @@ home-manager backdates news, so filtering by `time` misses most of it.
   `~/.config/omniwm/`, or a package URL off `github.com/OmniNull/OmniWM`.
 
 Then build every host (`nh os build . -H desktop`,
-`scripts/darwin-build.sh build <host>` for each darwin host) and keep the
+`scripts/remote.sh build <host>` for each darwin host) and keep the
 `evaluation warning:` lines. A warning belongs to the bump only if the
 old lock evaluates clean (`git stash` or a worktree at `HEAD`). Trace a
 new one to its source with
