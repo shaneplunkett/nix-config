@@ -10,11 +10,11 @@
         "tavily-skills": "tavily-skills"
       },
       "locked": {
-        "lastModified": 1791203177,
-        "narHash": "sha256-2o/bBDhdQSmS+TwK+DQ+TcTJ1I1rGBMHER7AyskPFyM=",
+        "lastModified": 1791247217,
+        "narHash": "sha256-lTa2kJa6q667J3pnkum526qq7BxtEUhheZu6y2DGk8g=",
         "ref": "refs/heads/main",
-        "rev": "20f23b770f20f30ed32191a6be190b1724eca37b",
-        "revCount": 115,
+        "rev": "7b9acf6027f2ce0b37837df92ba63989b50eddaf",
+        "revCount": 116,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/ai-skills.git"
       },
@@ -1080,11 +1080,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791186600,
-        "narHash": "sha256-iGEXbqUpC3DXOjICCk6jY0K726JgqnnelvmMqy6bXO0=",
+        "lastModified": 1791247308,
+        "narHash": "sha256-eRoTWgmoG6ayerFVHXV8ukJ2U5rSX2jduTFFezN5Y3I=",
         "ref": "refs/heads/main",
-        "rev": "ef83bbef649ad93f72191d3ae7ae9d483349b329",
-        "revCount": 133,
+        "rev": "771d84f7f086290edd6f93a5595140f86702dbe9",
+        "revCount": 135,
         "type": "git",
         "url": "ssh://git@github.com/shaneplunkett/vex-brain.git"
       },
