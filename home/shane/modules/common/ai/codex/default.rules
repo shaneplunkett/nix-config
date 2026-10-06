@@ -26,15 +26,7 @@ prefix_rule(pattern = ["which"])
 prefix_rule(pattern = ["file"])
 prefix_rule(pattern = ["wc"])
 
-# ─── nix toolchain ─────────────────────────────────────────────────────────
-prefix_rule(pattern = ["nix", "eval"])
-prefix_rule(pattern = ["nix", "build"])
-prefix_rule(pattern = ["nix-shell"])
-prefix_rule(pattern = ["nix", "flake"])
-prefix_rule(pattern = ["nixos-rebuild", "build"])
-prefix_rule(pattern = ["nh", "home"])
-prefix_rule(pattern = ["nh", "os"])
-prefix_rule(pattern = ["nh", "darwin"])
+# ─── nix lint ──────────────────────────────────────────────────────────────
 prefix_rule(pattern = ["statix", "check"])
 prefix_rule(pattern = ["deadnix"])
 
