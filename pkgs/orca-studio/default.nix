@@ -8,7 +8,7 @@
 }:
 
 let
-  version = "02.08.01.55-p3";
+  version = "02.08.01.55-p6";
 in
 appimageTools.wrapType2 (finalAttrs: {
   pname = "orca-studio";
@@ -16,7 +16,7 @@ appimageTools.wrapType2 (finalAttrs: {
 
   src = fetchurl {
     url = "https://github.com/jarczakpawel/OrcaStudio/releases/download/v${version}/OrcaStudio_Linux_AppImage_ubuntu24.04_amd64_${version}.AppImage";
-    hash = "sha256-UIxfwV7Lqcp8r4iWO1PfleV8Pjxv/Mxl6o8L9tRXz5U=";
+    hash = "sha256-fxcjyrFPpDGxcdHoJV8/NkmOkpdHJhEKqTqS8PK5z3U=";
   };
 
   extraPkgs = pkgs: [
