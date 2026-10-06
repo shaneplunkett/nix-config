@@ -22,11 +22,6 @@ let
       '';
     };
 
-  bambuStudioX11 = wrapGtkAppForX11 {
-    executable = "bambu-studio";
-    package = pkgs.bambu-studio;
-  };
-
   orcaStudioX11 = wrapGtkAppForX11 {
     executable = "orca-studio";
     package = pkgs.orca-studio;
@@ -105,7 +100,6 @@ in
     tesseract
     wl-clipboard
     xdg-utils
-    bambuStudioX11
     orcaStudioX11
     mpv
     vlc
