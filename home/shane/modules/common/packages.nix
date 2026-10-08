@@ -4,6 +4,7 @@
     jq
     fd
     lazygit
+    forgejo-cli
     obsidian
     go
     lazydocker
