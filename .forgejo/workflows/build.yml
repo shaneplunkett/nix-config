@@ -15,17 +15,24 @@ jobs:
     runs-on: nix
     strategy:
       matrix:
-        host: [desktop]
+        include:
+          - host: desktop
+            attr: nixosConfigurations.desktop.config.system.build.toplevel
+          # Darwin builds go to mini-server, the builder's remote builder.
+          - host: mini-server
+            attr: darwinConfigurations.mini-server.system
+          - host: Shanes-MacBook-Pro
+            attr: darwinConfigurations.Shanes-MacBook-Pro.system
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
 
       - name: Build
-        run: nix build --no-link ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel"
+        run: nix build --no-link ".#${{ matrix.attr }}"
 
       - name: Keep it in the cache
         if: github.event_name == 'push'
         run: |
           mkdir -p "$ROOTS"
-          nix build --out-link "$ROOTS/${{ matrix.host }}" ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel"
+          nix build --out-link "$ROOTS/${{ matrix.host }}" ".#${{ matrix.attr }}"
