@@ -13,11 +13,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791410228,
-        "narHash": "sha256-u71Ga5Oz3vsme/elGQIBDe0VNo9ef5bvO5+jm2B+rTc=",
-        "ref": "refs/heads/chore/memory-save-from-vex-brain",
-        "rev": "24604aebfd15c7714b68fd082dea67b23ac20992",
-        "revCount": 118,
+        "lastModified": 1791431015,
+        "narHash": "sha256-Zy5yQbQ2Es+gNqw6IIPSf73ABJeWvkGteTKKn2RVn9w=",
+        "ref": "refs/heads/main",
+        "rev": "d7acdbb41fbb1e839d4b5ee780fa3f64dee14d7f",
+        "revCount": 119,
         "type": "git",
         "url": "ssh://forgejo@forge/shane/ai-skills"
       },
