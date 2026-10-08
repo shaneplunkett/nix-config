@@ -40,9 +40,26 @@ straight after, the Stop hook runs it before you finish, and pre-commit
 runs it on every commit. Fix what it reports. If a rule is wrong for the
 case, say so and propose a change to `statix.toml`.
 
-What hooks can't do: `scripts/remote.sh build <host>` must be green for
-every host the change touches before a task is done. `git add` new files first; flakes ignore untracked
-files, and the resulting errors are confusing.
+`scripts/remote.sh eval <host>` is the quick check while you work.
+`git add` new files first; flakes ignore untracked files, and the
+resulting errors are confusing.
+
+## Changes
+
+Land every change through a pull request on the forge (`origin`; GitHub
+is a mirror of it), filed with the `file-pr` skill. The forge builds every
+host on the homelab builder (`.forgejo/workflows/build.yml`), and the
+builder's store is the binary cache at `cache.shaneplunkett.com` that
+every host substitutes from. Building there is what fills the cache.
+
+1. Push the branch and file the pull request.
+2. Wait for its build check. The task is done when it's green for every
+   host. A red run's logs are on the forge; fix and push again.
+3. Switch a host only after the check is green, so the switch downloads
+   what the builder made instead of compiling it locally.
+
+Shane merges. The run on `main` pins each host's build so the cache keeps
+it.
 
 ## Research
 
