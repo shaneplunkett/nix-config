@@ -5,6 +5,7 @@
     fd
     lazygit
     forgejo-cli
+    tea
     obsidian
     go
     lazydocker
