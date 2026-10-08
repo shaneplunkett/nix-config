@@ -12,7 +12,6 @@
 
   services.displayManager.noctalia-greeter = {
     enable = true;
-    cursorTheme.package = pkgs.catppuccin-cursors.mochaMauve;
 
     settings = {
       session.default = "Hyprland";
@@ -31,7 +30,10 @@
 
       output.name = "DP-2";
 
-      cursor.theme = "catppuccin-mocha-mauve-cursors";
+      cursor = {
+        theme = "catppuccin-mocha-mauve-cursors";
+        path = pkgs.catppuccin-cursors.mochaMauve;
+      };
     };
   };
 }
