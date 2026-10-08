@@ -75,6 +75,17 @@ in
                 ''
                 + old.preBuild;
               });
+          # fj prints its first-run keys-file notice to stdout, and nixpkgs
+          # captures that into every generated completion script, so fish runs
+          # `Could` as a command. Drop the line until upstream sends it to stderr.
+          forgejo-cli = prev.forgejo-cli.overrideAttrs (old: {
+            postInstall = old.postInstall + ''
+              sed -i '/^Could not find keys file/d' \
+                $out/share/bash-completion/completions/fj.bash \
+                $out/share/fish/vendor_completions.d/fj.fish \
+                $out/share/zsh/site-functions/_fj
+            '';
+          });
         }
       )
     ]
