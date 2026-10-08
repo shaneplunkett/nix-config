@@ -273,6 +273,17 @@ in
             700
           ];
         }
+        # The Bitwarden extension's Chrome popout (login, passkeys). Tiled, it
+        # fights the layout over its size and drops keystrokes.
+        {
+          match.class = "^chrome-nngceckbapebfimnlniiiahkandclblb-.*$";
+          float = true;
+          center = true;
+          size = [
+            480
+            700
+          ];
+        }
         {
           match.title = "^.*Volume Control$";
           float = true;
