@@ -1,0 +1,31 @@
+# Builds every host on the homelab builder, whose store is the binary cache
+# at cache.shaneplunkett.com. A pull request just checks the build. A push
+# to main also roots the result in the runner's state directory, so the
+# builder's weekly GC keeps the latest build of each host in the cache.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  ROOTS: /var/lib/forgejo-runner/builder/roots
+
+jobs:
+  build:
+    runs-on: nix
+    strategy:
+      matrix:
+        host: [desktop]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Build
+        run: nix build --no-link ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel"
+
+      - name: Keep it in the cache
+        if: github.event_name == 'push'
+        run: |
+          mkdir -p "$ROOTS"
+          nix build --out-link "$ROOTS/${{ matrix.host }}" ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel"
