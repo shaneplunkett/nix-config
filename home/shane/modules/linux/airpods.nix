@@ -1,7 +1,31 @@
 # The librepods daemon behind Noctalia's AirPods widget (noctalia.nix enables
 # the plugin). The fork's own unit runs %h/.local/bin/librepods, so this
 # restates it against the store path, hardening included.
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
+let
+  # The daemon notifies through Omarchy's
+  # `omarchy notification send --app-name A -g GLYPH TITLE BODY`, and drops
+  # the toast when omarchy isn't on PATH. This hands it to notify-send.
+  omarchyNotify = pkgs.writeShellApplication {
+    name = "omarchy";
+    runtimeInputs = [ pkgs.libnotify ];
+    text = ''
+      [[ "''${1-}" == notification && "''${2-}" == send ]] || exit 1
+      shift 2
+      app=AirPods
+      while (($#)); do
+        case "$1" in
+          --app-name) app=$2; shift 2 ;;
+          -g) shift 2 ;;
+          *) break ;;
+        esac
+      done
+      exec notify-send --app-name="$app" \
+        --icon=${pkgs.librepods-noctalia}/share/icons/hicolor/scalable/apps/librepods.svg \
+        "$@"
+    '';
+  };
+in
 {
   home.packages = [ pkgs.librepods-noctalia ];
 
@@ -17,7 +41,18 @@
     Service = {
       Type = "simple";
       # The BLE advertisement debug line fires several times a second.
-      Environment = [ "QT_LOGGING_RULES=openpods.debug=false" ];
+      Environment = [
+        "QT_LOGGING_RULES=openpods.debug=false"
+        # Everything the daemon runs by name: notifications, bluetoothctl for
+        # connect/disconnect, and `systemctl --user restart wireplumber`.
+        "PATH=${
+          lib.makeBinPath [
+            omarchyNotify
+            pkgs.bluez
+            pkgs.systemd
+          ]
+        }"
+      ];
       ExecStart = "${pkgs.librepods-noctalia}/bin/librepods --headless";
       Restart = "on-failure";
       RestartSec = 5;
