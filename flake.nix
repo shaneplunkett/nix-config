@@ -63,16 +63,16 @@
     noctalia-greeter.url = "github:noctalia-dev/noctalia-greeter";
 
     vex-brain = {
-      url = "git+ssh://git@github.com/shaneplunkett/vex-brain.git";
+      url = "git+ssh://forgejo@forge/shane/vex-brain";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-config-private.url = "git+ssh://git@github.com/shaneplunkett/nix-config-private.git";
+    nix-config-private.url = "git+ssh://forgejo@forge/shane/nix-config-private";
 
     # memory-save ships with the vex CLI in vex-brain, so ai-skills reads it
     # from the same vex-brain commit that builds the installed `vex`.
     ai-skills = {
-      url = "git+ssh://git@github.com/shaneplunkett/ai-skills.git";
+      url = "git+ssh://forgejo@forge/shane/ai-skills";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.vex-brain.follows = "vex-brain";
     };
@@ -84,7 +84,7 @@
     # Shane's personal T3 Code fork. Treat it as source so this flake owns the
     # Nix package while updates remain a single targeted lock-file bump.
     vex-code = {
-      url = "github:shaneplunkett/vex-code";
+      url = "git+ssh://forgejo@forge/shane/vex-code?shallow=1";
       flake = false;
     };
 
@@ -92,7 +92,7 @@
     # plugins/ dir is a noctalia path source, pinned here. Ship plugin changes
     # with `nix flake update noctalia-plugins`.
     noctalia-plugins = {
-      url = "git+ssh://git@github.com/shaneplunkett/noctalia-plugins.git";
+      url = "git+ssh://forgejo@forge/shane/noctalia-plugins";
       flake = false;
     };
   };

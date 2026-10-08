@@ -15,15 +15,15 @@
       "locked": {
         "lastModified": 1791410228,
         "narHash": "sha256-u71Ga5Oz3vsme/elGQIBDe0VNo9ef5bvO5+jm2B+rTc=",
-        "ref": "refs/heads/main",
+        "ref": "refs/heads/chore/memory-save-from-vex-brain",
         "rev": "24604aebfd15c7714b68fd082dea67b23ac20992",
         "revCount": 118,
         "type": "git",
-        "url": "ssh://git@github.com/shaneplunkett/ai-skills.git"
+        "url": "ssh://forgejo@forge/shane/ai-skills"
       },
       "original": {
         "type": "git",
-        "url": "ssh://git@github.com/shaneplunkett/ai-skills.git"
+        "url": "ssh://forgejo@forge/shane/ai-skills"
       }
     },
     "aquamarine": {
@@ -696,11 +696,11 @@
         "rev": "a0fdfd04c9bffab4a906ccec3c0be1f0fdf56bd1",
         "revCount": 18,
         "type": "git",
-        "url": "ssh://git@github.com/shaneplunkett/nix-config-private.git"
+        "url": "ssh://forgejo@forge/shane/nix-config-private"
       },
       "original": {
         "type": "git",
-        "url": "ssh://git@github.com/shaneplunkett/nix-config-private.git"
+        "url": "ssh://forgejo@forge/shane/nix-config-private"
       }
     },
     "nix-darwin": {
@@ -918,11 +918,11 @@
         "rev": "f5d0a68013b9173ab163d4898ea7aa2ffbc9b348",
         "revCount": 46,
         "type": "git",
-        "url": "ssh://git@github.com/shaneplunkett/noctalia-plugins.git"
+        "url": "ssh://forgejo@forge/shane/noctalia-plugins"
       },
       "original": {
         "type": "git",
-        "url": "ssh://git@github.com/shaneplunkett/noctalia-plugins.git"
+        "url": "ssh://forgejo@forge/shane/noctalia-plugins"
       }
     },
     "omniwm": {
@@ -1089,11 +1089,11 @@
         "rev": "c7bc598cf3f715cdbfd094042783cb62fab5c029",
         "revCount": 136,
         "type": "git",
-        "url": "ssh://git@github.com/shaneplunkett/vex-brain.git"
+        "url": "ssh://forgejo@forge/shane/vex-brain"
       },
       "original": {
         "type": "git",
-        "url": "ssh://git@github.com/shaneplunkett/vex-brain.git"
+        "url": "ssh://forgejo@forge/shane/vex-brain"
       }
     },
     "vex-code": {
@@ -1101,15 +1101,16 @@
       "locked": {
         "lastModified": 1791089978,
         "narHash": "sha256-ShMo3EVdaog+vRU+x0Npddg450j22rBWoTrxWWTXWVs=",
-        "owner": "shaneplunkett",
-        "repo": "vex-code",
+        "ref": "refs/heads/main",
         "rev": "c653cc085184144ac563efca69065be266ab2e15",
-        "type": "github"
+        "shallow": true,
+        "type": "git",
+        "url": "ssh://forgejo@forge/shane/vex-code"
       },
       "original": {
-        "owner": "shaneplunkett",
-        "repo": "vex-code",
-        "type": "github"
+        "shallow": true,
+        "type": "git",
+        "url": "ssh://forgejo@forge/shane/vex-code"
       }
     },
     "xdph": {
