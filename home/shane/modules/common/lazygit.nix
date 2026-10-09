@@ -25,8 +25,8 @@ in
           - '${withHash.text}'
         searchingActiveBorderColor:
           - '${withHash.yellow}'
-      authorColors:
-        '*': '${withHash.lavender}'
+        authorColors:
+          '*': '${withHash.lavender}'
     git:
       overrideGpg: true
   '';
