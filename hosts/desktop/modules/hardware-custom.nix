@@ -10,10 +10,6 @@
     bluetooth = {
       enable = true;
       powerOnBoot = true;
-      # Report Apple's vendor ID so the AirPods Max allow multi-device
-      # handover (librepods' "VendorID spoofing"). Drop it if they start
-      # disconnecting on their own.
-      settings.General.DeviceID = "bluetooth:004C:0000:0000";
     };
     graphics = {
       enable = true;
