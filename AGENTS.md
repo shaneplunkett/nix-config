@@ -90,9 +90,20 @@ external state, runtime iteration outside the store).
 
 ## Packages
 
-Where a new thing lives is decided by the residency rule in
-`docs/environment-map.md`; read it before packaging anything or hunting
-for where a CLI version comes from. In this repo, one directory per
+A new thing lives where its role puts it:
+
+- **Agent runtime** (a CLI or MCP server the agent stack invokes): this
+  repo's `pkgs/`, wrapped in `home/shane/modules/agent-clis`, which
+  injects credentials from rbw.
+- **Skills, prompts, agent personas**: `ai-skills`.
+- **Private modules and deliberately private desktop utilities**:
+  `nix-config-private`.
+- **Everything else** (desktop apps, themes, machine config): this repo's
+  `pkgs/`.
+
+A CLI version comes from `pkgs/` or a flake input. Each personal input in
+`flake.nix` carries a comment saying what it provides; give a new input
+one too. In this repo, one directory per
 package under `pkgs/<name>/default.nix`, exposed from `pkgs/default.nix`,
 consumed as `pkgs.<name>`. Pinned packages get
 `passthru.updateScript = nix-update-script { };` when `nix-update` can

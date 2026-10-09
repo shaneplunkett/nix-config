@@ -62,15 +62,21 @@
     noctalia.url = "github:noctalia-dev/noctalia/cachix";
     noctalia-greeter.url = "github:noctalia-dev/noctalia-greeter";
 
+    # The `vex` CLI (homeManagerModules.vex-cli, every host) and its session
+    # sync daemons (darwinModules.vex-sync, mini-server).
     vex-brain = {
       url = "git+ssh://forgejo@forge/shane/vex-brain";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Private home-manager modules, private desktop utilities, and values
+    # that are private but not secret.
     nix-config-private.url = "git+ssh://forgejo@forge/shane/nix-config-private";
 
-    # memory-save ships with the vex CLI in vex-brain, so ai-skills reads it
-    # from the same vex-brain commit that builds the installed `vex`.
+    # Skills and prompts for the AI harnesses. ai-skills pins the upstream
+    # skill repos as its own inputs, so a skill bump lands there first, then
+    # `nix flake update ai-skills` here. memory-save ships with the vex CLI,
+    # so ai-skills reads it from the same vex-brain commit that builds `vex`.
     ai-skills = {
       url = "git+ssh://forgejo@forge/shane/ai-skills";
       inputs.nixpkgs.follows = "nixpkgs";
