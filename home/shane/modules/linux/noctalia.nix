@@ -111,6 +111,7 @@ in
         end = [
           "tray"
           "tailscale-guard"
+          "hassio"
           "network"
           "bluetooth"
           "airpods"
@@ -128,6 +129,7 @@ in
         ram.visualization = "none";
         airpods.type = "harveywuk/airpods:airpods";
         tailscale-guard.type = "vex/tailscale-guard:bar";
+        hassio.type = "pozzoo/hassio:status";
         tray.drawer = true;
         workspaces.style = "focus_hint";
       };
@@ -167,6 +169,7 @@ in
           "noctalia/screen_recorder"
           "vex/tailscale-guard"
           "harveywuk/airpods"
+          "pozzoo/hassio"
         ];
 
         # Declaring any source replaces noctalia's built-in list, so official
@@ -194,6 +197,9 @@ in
 
       # The personal tailnet runs MagicDNS on purpose; the guard leaves it be.
       plugin_settings."vex/tailscale-guard".trusted_profiles = [ "shaneplunkett.github" ];
+
+      # The Home Assistant URL and token are entered in Settings → Plugins, so
+      # they land in Noctalia's state file rather than this repo.
     };
   };
 }
