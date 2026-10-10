@@ -43,6 +43,28 @@ let
     '';
   };
 
+  # Home Assistant's built-in MCP server speaks Streamable HTTP behind a
+  # long-lived access token. mcp-proxy bridges it to stdio so every harness
+  # gets the same server, and reads the token from API_ACCESS_TOKEN rather
+  # than argv.
+  homeAssistantWrapper = pkgs.writeShellApplication {
+    name = "home-assistant-mcp-wrapper";
+    runtimeInputs = [
+      pkgs.rbw
+      pkgs.mcp-proxy
+    ];
+    text = ''
+      ${rbwRuntimeEnv}
+      API_ACCESS_TOKEN="$(rbw get home-assistant-vex-token 2>/dev/null)" || true
+      if [ -z "$API_ACCESS_TOKEN" ]; then
+        echo "home-assistant-mcp: could not read home-assistant-vex-token from rbw. If rbw is locked, run rbw unlock in a terminal." >&2
+        exit 1
+      fi
+      export API_ACCESS_TOKEN
+      exec mcp-proxy --transport streamablehttp --log-level WARNING https://home.shaneplunkett.com/api/mcp
+    '';
+  };
+
 in
 {
   programs.mcp = {
@@ -56,6 +78,11 @@ in
 
       grafana = {
         command = "${grafanaWrapper}/bin/grafana-mcp-wrapper";
+        args = [ ];
+      };
+
+      home-assistant = {
+        command = "${homeAssistantWrapper}/bin/home-assistant-mcp-wrapper";
         args = [ ];
       };
 
