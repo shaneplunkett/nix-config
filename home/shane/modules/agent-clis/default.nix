@@ -6,6 +6,8 @@ let
 in
 {
   home.packages = [
+    (import ./fj.nix { inherit lib pkgs; })
+
     (mkRbwWrapper {
       package = pkgs.browserbase-cli;
       secrets = [
