@@ -86,6 +86,10 @@ in
                 $out/share/zsh/site-functions/_fj
             '';
           });
+          # sesh runs mockery during its build, and mockery 3.8.0's x/tools
+          # can't read Go 1.27.2's export data. sesh's go.mod only needs Go
+          # 1.26, so build it and its mockery there until mockery catches up.
+          sesh = prev.sesh.override { buildGo127Module = final.buildGo126Module; };
         }
       )
     ]
