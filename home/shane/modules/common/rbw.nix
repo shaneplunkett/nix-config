@@ -10,7 +10,7 @@ in
   programs.rbw = {
     enable = true;
     settings = {
-      email = "shanemplunkett@icloud.com";
+      email = "shane@shaneplunkett.com";
       lock_timeout = 604800;
       # Prompts inline in whatever terminal ran rbw, including T3 Code's, on
       # every machine. Anything without a terminal (MCP servers, hooks) can't
