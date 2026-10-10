@@ -24,5 +24,6 @@
     nurl
     nix-init
     nix-update
+    gam
   ];
 }
