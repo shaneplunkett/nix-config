@@ -4,7 +4,6 @@
     jq
     fd
     lazygit
-    tea
     obsidian
     go
     lazydocker
