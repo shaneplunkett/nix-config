@@ -23,7 +23,6 @@
 
   ++ lib.optionals (shell == "noctalia") [
     ./noctalia.nix
-    ./airpods.nix
   ];
 
 }

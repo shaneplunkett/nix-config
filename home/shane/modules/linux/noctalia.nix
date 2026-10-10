@@ -114,7 +114,6 @@ in
           "hassio"
           "network"
           "bluetooth"
-          "airpods"
           "volume"
           "clock"
           "weather"
@@ -127,7 +126,6 @@ in
         clock.format = "{:%-I:%M %p  %d/%m/%Y}";
         network.show_label = false;
         ram.visualization = "none";
-        airpods.type = "harveywuk/airpods:airpods";
         tailscale-guard.type = "vex/tailscale-guard:bar";
         hassio.type = "pozzoo/hassio:status";
         tray.drawer = true;
@@ -168,7 +166,6 @@ in
         enabled = [
           "noctalia/screen_recorder"
           "vex/tailscale-guard"
-          "harveywuk/airpods"
           "pozzoo/hassio"
         ];
 

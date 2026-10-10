@@ -24,7 +24,6 @@ in
   };
   cosmic-ext-ctl-v2 = pkgs.callPackage ./cosmic-ext-ctl-v2 { };
   hyprland-preview-share-picker = pkgs.callPackage ./hyprland-preview-share-picker { };
-  librepods-noctalia = pkgs.callPackage ./librepods-noctalia { };
 }
 // optionalAttrs isX86Linux {
   linear-desktop = pkgs.callPackage ./linear-desktop {
