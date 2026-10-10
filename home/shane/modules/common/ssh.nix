@@ -38,6 +38,12 @@ in
         IdentitiesOnly = true;
       };
 
+      forge = {
+        ControlMaster = "auto";
+        ControlPath = "~/.ssh/control-%C";
+        ControlPersist = "10m";
+      };
+
       pve = shaneHost // onTailnet "pve";
       cube = shaneHost // onTailnet "cube";
       mcphub = shaneHost // onTailnet "mcphub";
