@@ -1,0 +1,14 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "local>shane/workflows"
+  ],
+  "enabledManagers": [
+    "custom.regex"
+  ],
+  "reviewers": [
+    "metrokitten"
+  ],
+  "dependencyDashboard": false,
+  "prHourlyLimit": 0
+}
