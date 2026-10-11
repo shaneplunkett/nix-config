@@ -35,6 +35,9 @@ in
     font-name = "${uiFont} ${toString fontSize}";
     document-font-name = "${uiFont} ${toString fontSize}";
     monospace-font-name = "${codeFont} ${toString fontSize}";
+    # Chromium builds its AT-SPI tree only when this is set at startup; T3
+    # SnapShots' "Include app text" reads that tree.
+    toolkit-accessibility = true;
   };
 
   # The cursor theme itself comes from catppuccin.cursors below.

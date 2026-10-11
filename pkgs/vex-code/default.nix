@@ -9,6 +9,7 @@
   patchelf,
   pkg-config,
   pnpm_11,
+  rustPlatform,
   src,
   stdenv,
   t3code,
@@ -58,6 +59,17 @@ let
       } .generated/third-party-licenses/spdx/${spdxLicenseListVersion}/${licenseId}.json
     '') spdxLicenseHashes
   );
+
+  # SnapShots' Hyprland capture helper. Upstream only builds it in the
+  # electron-builder pipeline, not in `build:desktop`.
+  hyprlandSnapShot = rustPlatform.buildRustPackage {
+    pname = "t3-hyprland-snap-shot";
+    version = "0.1.0";
+    src = namedSrc;
+    sourceRoot = "${namedSrc.name}/native/hyprland-snap-shot";
+    cargoHash = "sha256-oki1DAzUJ/8YIFhaJlw2wOukiQMcAaexdJqxDcFXFW4=";
+    meta.mainProgram = "t3-hyprland-snap-shot";
+  };
 
   # nixpkgs splits t3code into an unwrapped pnpm build plus a symlinkJoin
   # wrapper that puts the enabled agent CLIs on PATH. The fork source, pnpm
@@ -127,6 +139,15 @@ let
                          $'verifyDepsBeforeRun: false\nchildConcurrency: 1\nworkspaceConcurrency: 1'
       '';
 
+      # The nixpkgs build runs Electron unpackaged, so the setup wizard copies
+      # the helper from the source tree's cargo output path, not resources.
+      postInstall =
+        (previousAttrs.postInstall or "")
+        + lib.optionalString stdenv.hostPlatform.isLinux ''
+          install -Dm755 ${lib.getExe hyprlandSnapShot} \
+            "$out"/libexec/t3code/native/hyprland-snap-shot/target/release/t3-hyprland-snap-shot
+        '';
+
       postFixup =
         (previousAttrs.postFixup or "")
         + lib.optionalString stdenv.hostPlatform.isLinux ''
@@ -174,6 +195,10 @@ let
           mv "$old_executable" "$vex_executable"
           mv "$old_app" "$vex_app"
         '';
+
+      passthru = previousAttrs.passthru // {
+        inherit hyprlandSnapShot;
+      };
 
       meta = previousAttrs.meta // {
         description = "Shane's personal fork of T3 Code";

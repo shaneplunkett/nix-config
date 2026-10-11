@@ -24,6 +24,9 @@
     # stack includes login, which this unlocks with the login password, so
     # gcr's GTK prompt only shows if that unlock fails.
     gnome.gnome-keyring.enable = true;
+    # Accessibility bus for T3 SnapShots' "Include app text". Off, NixOS sets
+    # NO_AT_BRIDGE=1 and apps publish no text.
+    gnome.at-spi2-core.enable = true;
 
     openssh = {
       enable = true;
