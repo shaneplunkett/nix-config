@@ -13,6 +13,6 @@ concurrency:
 
 jobs:
   update:
-    uses: shane/workflows/.forgejo/workflows/flake-update.yml@v1.2.0
+    uses: shane/workflows/.forgejo/workflows/flake-update.yml@v1.3.1
     with:
       notes: scripts/flake-update-notes.sh
