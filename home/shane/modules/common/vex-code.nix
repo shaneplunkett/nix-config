@@ -108,6 +108,7 @@ in
       enableProviderUpdateChecks = false;
       continueThreadsAfterServerUpdate = true;
       sidebarAutoSettleOnMerge = false;
+      autoResumeLimitedThreads = true;
       automaticGitFetchInterval = 15000;
       providerHealthRefreshInterval = 60000;
 
