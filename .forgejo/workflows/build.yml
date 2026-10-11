@@ -1,38 +1,11 @@
-# Builds every host on the homelab builder, whose store is the binary cache
-# at cache.shaneplunkett.com. A pull request just checks the build. A push
-# to main also roots the result in the runner's state directory, so the
-# builder's weekly GC keeps the latest build of each host in the cache.
+# Builds every host in `hydraJobs` on the homelab builder, whose store is the
+# binary cache. A push to main also roots each build so the cache keeps it.
+# The workflow lives in shane/workflows, shared with homelab.
 on:
   push:
     branches: [main]
   pull_request:
 
-env:
-  ROOTS: /var/lib/forgejo-runner/builder/roots
-
 jobs:
   build:
-    runs-on: nix
-    strategy:
-      matrix:
-        include:
-          - host: desktop
-            attr: nixosConfigurations.desktop.config.system.build.toplevel
-          # Darwin builds go to mini-server, the builder's remote builder.
-          - host: mini-server
-            attr: darwinConfigurations.mini-server.system
-          - host: Shanes-MacBook-Pro
-            attr: darwinConfigurations.Shanes-MacBook-Pro.system
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-
-      - name: Build
-        run: nix build --no-link ".#${{ matrix.attr }}"
-
-      - name: Keep it in the cache
-        if: github.event_name == 'push'
-        run: |
-          mkdir -p "$ROOTS"
-          nix build --out-link "$ROOTS/${{ matrix.host }}" ".#${{ matrix.attr }}"
+    uses: shane/workflows/.forgejo/workflows/build.yml@build
