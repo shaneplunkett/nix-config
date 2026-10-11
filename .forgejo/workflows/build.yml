@@ -1,6 +1,7 @@
 # Builds every host in `hydraJobs` on the homelab builder, whose store is the
 # binary cache. A push to main also roots each build so the cache keeps it.
-# The workflow lives in shane/workflows, shared with homelab.
+# It also runs scripts/check.sh, the gate the agents' hooks and pre-commit
+# run. Both workflows live in shane/workflows, shared with homelab.
 on:
   push:
     branches: [main]
@@ -8,4 +9,6 @@ on:
 
 jobs:
   build:
-    uses: shane/workflows/.forgejo/workflows/build.yml@v1.3.2
+    uses: shane/workflows/.forgejo/workflows/build.yml@v1.4.0
+  check:
+    uses: shane/workflows/.forgejo/workflows/check.yml@v1.4.0
