@@ -180,6 +180,8 @@ in
       ++ [
         (bind "${mod} + space" (exec "vicinae toggle"))
         (bind "${mod} + V" (exec "vicinae deeplink vicinae://launch/clipboard/history?toggle=true"))
+        # T3 SnapShots: fires the GlobalShortcuts action T3 registers through xdph.
+        (bind "${mod} + SHIFT + 3" ''hl.dsp.global("com.t3tools.T3Code:capture-window")'')
       ]
       ++ lib.optionals (shell == "noctalia") [
         (bind "${mod} + N" (exec "noctalia msg panel-toggle control-center"))
