@@ -1,0 +1,8 @@
+on:
+  workflow_dispatch:
+
+jobs:
+  hello:
+    uses: shane/workflows/.forgejo/workflows/hello.yml@test/hello
+    with:
+      greeting: hiya
