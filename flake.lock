@@ -227,11 +227,11 @@
     "homebrew-cask": {
       "flake": false,
       "locked": {
-        "lastModified": 1791674063,
-        "narHash": "sha256-xZESZVk1M4ll20HvlPPG51yOWbit2CcYrrFQcb2Lzc8=",
+        "lastModified": 1791680120,
+        "narHash": "sha256-auYEHm+bBbJyJ2OMT8hiAOooTK6pYYAQn83jO50UYeQ=",
         "owner": "homebrew",
         "repo": "homebrew-cask",
-        "rev": "086dfbab8a72cd87eab20a8ff7e974db70051883",
+        "rev": "4c7376af5697fb7a88d4133b9e22b826cb4eb333",
         "type": "github"
       },
       "original": {
@@ -243,11 +243,11 @@
     "homebrew-core": {
       "flake": false,
       "locked": {
-        "lastModified": 1791675701,
-        "narHash": "sha256-seebF/585ImLKp71GP9ybYv2HpNpXaztMVeFqUia5SM=",
+        "lastModified": 1791680361,
+        "narHash": "sha256-jD3Mfn+cN0flJVHIp3fjmR5Ehtr/4yb/IsLly4XFU6g=",
         "owner": "homebrew",
         "repo": "homebrew-core",
-        "rev": "3c09418e50ad51f7f241f4062ffcd7bffe36e3ce",
+        "rev": "e18584b37263672fd54aa70187114a8622043dc9",
         "type": "github"
       },
       "original": {
@@ -828,11 +828,11 @@
     },
     "nixpkgs_5": {
       "locked": {
-        "lastModified": 1790822859,
-        "narHash": "sha256-VBA0QerzzmL+4wxgtwiCdiLwLpJg2/9xOxhgO3BRJQA=",
-        "rev": "c59305bab2065cfecc4944690d9eedbb56f3a9fa",
+        "lastModified": 1791594108,
+        "narHash": "sha256-V0WmebqwEeAVZMqxfv7Dq7hpKkPPM19W50xQf3D1Kf4=",
+        "rev": "6510408d147d8c5e6d76043e899e9251756f6a75",
         "type": "tarball",
-        "url": "https://releases.nixos.org/nixos/unstable/nixos-26.11pre1083223.c59305bab206/nixexprs.tar.zst"
+        "url": "https://releases.nixos.org/nixos/unstable/nixos-26.11pre1089111.6510408d147d/nixexprs.tar.zst"
       },
       "original": {
         "type": "tarball",
@@ -877,11 +877,11 @@
         "nixpkgs": "nixpkgs_5"
       },
       "locked": {
-        "lastModified": 1791672315,
-        "narHash": "sha256-lhwieDm+hVinZ0uEgsy2G2H2NHNDyTBppeHkwmivuLI=",
+        "lastModified": 1791679840,
+        "narHash": "sha256-ztAiri+EDrwi1z1xFjen3Aa9ZOw9x/HYS2078GS3Hzg=",
         "owner": "noctalia-dev",
         "repo": "noctalia",
-        "rev": "7c1de346b3edae13f75a1c3fed1467acfb464906",
+        "rev": "0fed99608593a7764c621083ad8c885957b6c214",
         "type": "github"
       },
       "original": {
