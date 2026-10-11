@@ -189,5 +189,9 @@
           shell = "noctalia";
         };
       };
+
+      hydraJobs =
+        nixpkgs.lib.mapAttrs (_: c: c.config.system.build.toplevel) inputs.self.nixosConfigurations
+        // nixpkgs.lib.mapAttrs (_: c: c.system) inputs.self.darwinConfigurations;
     };
 }
