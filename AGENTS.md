@@ -48,9 +48,15 @@ resulting errors are confusing.
 
 Land every change through a pull request on the forge (`origin`; GitHub
 is a mirror of it), filed with the `file-pr` skill. The forge builds every
-host on the homelab builder (`.forgejo/workflows/build.yml`), and the
-builder's store is the binary cache at `cache.shaneplunkett.com` that
-every host substitutes from. Building there is what fills the cache.
+host in `hydraJobs` on the homelab builder, and the builder's store is the
+binary cache at `cache.shaneplunkett.com` that every host substitutes from.
+Building there is what fills the cache.
+
+The files in `.forgejo/workflows/` are callers of `shane/workflows` (build
+check, flake update), pinned to a tag. Change CI behaviour there, following
+its `AGENTS.md`, and Renovate moves the pins here. `hydraJobs` covers every
+NixOS and darwin configuration, so a new host is built and updated without
+touching CI.
 
 1. Push the branch and file the pull request.
 2. Wait for its build check. The task is done when it's green for every
