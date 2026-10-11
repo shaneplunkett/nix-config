@@ -227,11 +227,11 @@
     "homebrew-cask": {
       "flake": false,
       "locked": {
-        "lastModified": 1791696006,
-        "narHash": "sha256-4gkwHfnPMUD1/wkOGpHKlP0YjuZx0eR18Rk19nf3tKY=",
+        "lastModified": 1791719234,
+        "narHash": "sha256-Iv9Jm6wprYLShS9wrpVGWQ8Eix26Y524gF+j/Ie+fDs=",
         "owner": "homebrew",
         "repo": "homebrew-cask",
-        "rev": "f5fe62ac621d621bcfbd3dad0a7eb2b596273e6f",
+        "rev": "57981f211533b6a0c96697a7c4d629904b49bbd7",
         "type": "github"
       },
       "original": {
@@ -243,11 +243,11 @@
     "homebrew-core": {
       "flake": false,
       "locked": {
-        "lastModified": 1791697563,
-        "narHash": "sha256-ZMC6gBDAPeMYpmsTwWcG9wLO/UyulMDlZLJfHV8lOVg=",
+        "lastModified": 1791719884,
+        "narHash": "sha256-/jXZOmXt9eTZCbOo82nxLZpEU+Z/9RuHvz8NMTn1BRY=",
         "owner": "homebrew",
         "repo": "homebrew-core",
-        "rev": "76bed08f66bd6486f0ce207fb652dbf830f13c44",
+        "rev": "75a51426942b4d1ffa1f21ee8989b6621dfc498c",
         "type": "github"
       },
       "original": {
@@ -659,11 +659,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1791694029,
-        "narHash": "sha256-b+mFzz9j9T3PntDAT4Jw3PzgzGVY/XJXJ2/k6c9s9To=",
+        "lastModified": 1791710361,
+        "narHash": "sha256-1TxMulxgMf8k2m5WRtaO9NLRXclEk8i7O7bEvblZKPg=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "45773c4749ca4cc1ca87d2afe15ef6adfc463b97",
+        "rev": "fdd62d577cdb5fcef6ba9505833d2a3600a68afd",
         "type": "github"
       },
       "original": {
@@ -690,11 +690,11 @@
     },
     "nix-config-private": {
       "locked": {
-        "lastModified": 1791194589,
-        "narHash": "sha256-pGB/spW44WQ3168gtisui3lfNfXnJGniUGEgOFwxaZM=",
+        "lastModified": 1791705893,
+        "narHash": "sha256-5VyriNBNsTb1iBqnhPV1BQla2zuEYnl3Wa+YR8ynk1s=",
         "ref": "refs/heads/main",
-        "rev": "a0fdfd04c9bffab4a906ccec3c0be1f0fdf56bd1",
-        "revCount": 18,
+        "rev": "b93e8df85a0882106eb9bb023b3e9e1027842f22",
+        "revCount": 19,
         "type": "git",
         "url": "ssh://forgejo@forge/shane/nix-config-private"
       },
@@ -749,11 +749,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791105314,
-        "narHash": "sha256-oTM7QFgRQ+vxBpMBMc7hEYpqBtpXAzXu2xuB/tru84U=",
+        "lastModified": 1791711434,
+        "narHash": "sha256-LpIhxnuO0tYeZ4k7BbNMxsPs2zJpB4hWXO1jdhUuE7Q=",
         "owner": "nix-community",
         "repo": "nix-index-database",
-        "rev": "e740bc4e9d8918d7819a51486d5099930c65c72e",
+        "rev": "9a2dd40780eeab8543aa97c59c26f11267025616",
         "type": "github"
       },
       "original": {
@@ -877,11 +877,11 @@
         "nixpkgs": "nixpkgs_5"
       },
       "locked": {
-        "lastModified": 1791691567,
-        "narHash": "sha256-gyIWW3/IEayQ4QnVCkYcGVzd8RyvgYywGoFDbA78XYk=",
+        "lastModified": 1791701131,
+        "narHash": "sha256-mBCtcZPGgBLfEYxFvBRsc0KeDz0JtN2BMhcIWGoMk94=",
         "owner": "noctalia-dev",
         "repo": "noctalia",
-        "rev": "4a79d1b2b67b3373bb66dc3dd6854120680d18e3",
+        "rev": "45084cf764f08c1f00e0c7e7432732f225105b7e",
         "type": "github"
       },
       "original": {
@@ -1083,11 +1083,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791673999,
-        "narHash": "sha256-FI1p6Wq1D15f5ZMgu8zNDSdEgsyNfvEOGaKbeURDvw4=",
+        "lastModified": 1791715347,
+        "narHash": "sha256-FSZnY4XMt1gEz00LdphmnKvsl95wBTvrOaBygxN9UnQ=",
         "ref": "refs/heads/main",
-        "rev": "ba4b09d2933e8f33470957682425653506077384",
-        "revCount": 145,
+        "rev": "4ed654989b1c65a94de0d68bb8a0c4ebcd0badaf",
+        "revCount": 153,
         "type": "git",
         "url": "ssh://forgejo@forge/shane/vex-brain"
       },
@@ -1099,10 +1099,10 @@
     "vex-code": {
       "flake": false,
       "locked": {
-        "lastModified": 1791694881,
-        "narHash": "sha256-1zR2yStqvL/r//yzYwe2hKdBDaHbu/0qwRXyhGJ9ZwY=",
+        "lastModified": 1791701472,
+        "narHash": "sha256-7y9IWnnMFvrkcEqhzZ7pmLJebXXdjQzPpEbmh0f99s8=",
         "ref": "refs/heads/main",
-        "rev": "1697cba96d79a09ad845537659b593beea7de0a8",
+        "rev": "211095148d997dbfeda6f59ae5d0eba983a4eeb4",
         "shallow": true,
         "type": "git",
         "url": "ssh://forgejo@forge/shane/vex-code"
