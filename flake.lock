@@ -1099,10 +1099,10 @@
     "vex-code": {
       "flake": false,
       "locked": {
-        "lastModified": 1791701472,
-        "narHash": "sha256-7y9IWnnMFvrkcEqhzZ7pmLJebXXdjQzPpEbmh0f99s8=",
+        "lastModified": 1791773258,
+        "narHash": "sha256-bPxu1jUi1PiJuWsJxGwdHIgi1ZP7mm5K15W1hL9hdiE=",
         "ref": "refs/heads/main",
-        "rev": "211095148d997dbfeda6f59ae5d0eba983a4eeb4",
+        "rev": "bc0c95f141df24d05fce491c3c8dffcbd724cb79",
         "shallow": true,
         "type": "git",
         "url": "ssh://forgejo@forge/shane/vex-code"
