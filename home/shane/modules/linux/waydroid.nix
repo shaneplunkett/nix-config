@@ -281,12 +281,102 @@ let
       exec waydroid app launch com.YoStarEN.Arknights
     '';
   };
+
+  waydroidFullUi = pkgs.writeShellApplication {
+    name = "waydroid-full-ui";
+    runtimeInputs = [
+      pkgs.coreutils
+      pkgs.libnotify
+      waydroid
+      waydroidSessionStart
+    ];
+    text = ''
+      set -euo pipefail
+
+      # show-full-ui starts its own session when none is running, which
+      # fights the systemd unit, so start that first.
+      log="$(mktemp)"
+      status=0
+      waydroid-session-start 2>"$log" || status=$?
+      cat "$log" >&2
+      reason="$(tail -n 1 "$log")"
+      rm -f "$log"
+      if [[ "$status" -ne 0 ]]; then
+        notify-send -a Waydroid "Waydroid didn't start" "$reason"
+        exit "$status"
+      fi
+
+      exec waydroid show-full-ui
+    '';
+  };
+
+  # The image's ClipboardService reads the host clipboard only in
+  # getPrimaryClip and hasPrimaryClip. getPrimaryClipDescription and the
+  # clip-changed listeners still see Android's own clipboard, and WebViews
+  # (Google sign-in among them) go by those, so pasting there does nothing.
+  # This types the host clipboard into whichever Android field has focus.
+  waydroidPaste = pkgs.writeShellApplication {
+    name = "waydroid-paste";
+    runtimeInputs = [
+      pkgs.android-tools
+      pkgs.gnused
+      pkgs.libnotify
+      pkgs.wl-clipboard
+      waydroid
+    ];
+    text = ''
+      set -euo pipefail
+
+      fail() {
+        echo "$1" >&2
+        notify-send -a Waydroid "Couldn't paste into Waydroid" "$1"
+        exit 1
+      }
+
+      ip="$(waydroid status 2>/dev/null | sed -n 's/^IP address:[[:space:]]*//p')"
+      if [[ -z "$ip" || "$ip" == UNKNOWN ]]; then
+        fail "Waydroid isn't running."
+      fi
+      serial="$ip:5555"
+      adb connect "$serial" >/dev/null
+
+      text="$(wl-paste --no-newline --type text/plain 2>/dev/null)" \
+        || fail "The clipboard has no text."
+      if [[ -z "$text" ]]; then
+        fail "The clipboard is empty."
+      fi
+      if [[ "$text" == *$'\n'* ]]; then
+        fail "The clipboard has more than one line; this only types one."
+      fi
+
+      # input text turns "%s" into a space and has no escape for it, so
+      # send each piece ending in % on its own.
+      sq="'"
+      script="set -e"$'\n'
+      while [[ -n "$text" ]]; do
+        if [[ "$text" == *%* ]]; then
+          chunk="''${text%%\%*}%"
+          text="''${text#*\%}"
+        else
+          chunk="$text"
+          text=""
+        fi
+        script+="input text $sq''${chunk//$sq/$sq\\$sq$sq}$sq"$'\n'
+      done
+
+      # Over stdin, so the text never shows in the host's process list.
+      adb -s "$serial" shell -T <<<"$script" >/dev/null 2>&1 \
+        || fail "Android couldn't type that text (it only takes plain ASCII)."
+    '';
+  };
 in
 {
   home = {
     packages = [
       androidPhone
       arknights
+      waydroidFullUi
+      waydroidPaste
       pkgs.android-tools
       pkgs.scrcpy
     ];
@@ -308,6 +398,32 @@ in
           Name=App Settings
           Exec=${waydroidBin} app intent android.settings.APPLICATION_DETAILS_SETTINGS package:com.YoStarEN.Arknights
           Icon=${config.home.homeDirectory}/.local/share/waydroid/data/icons/com.android.settings.png
+        '';
+      };
+
+      ".local/share/applications/waydroid-full-ui.desktop" = {
+        force = true;
+        text = ''
+          [Desktop Entry]
+          Type=Application
+          Name=Waydroid (full UI)
+          Comment=Show the whole Android home screen
+          Exec=${lib.getExe waydroidFullUi}
+          Icon=waydroid
+          Categories=X-WayDroid-App;Utility;
+        '';
+      };
+
+      ".local/share/applications/waydroid-paste.desktop" = {
+        force = true;
+        text = ''
+          [Desktop Entry]
+          Type=Application
+          Name=Paste into Waydroid
+          Comment=Type the clipboard into the focused Android field
+          Exec=${lib.getExe waydroidPaste}
+          Icon=waydroid
+          Categories=X-WayDroid-App;Utility;
         '';
       };
 
