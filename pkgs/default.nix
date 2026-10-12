@@ -32,5 +32,6 @@ in
   slack-themed = pkgs.callPackage ./slack-themed { };
   orca-studio = pkgs.callPackage ./orca-studio { };
   shadps4-cache-fixed = pkgs.callPackage ./shadps4-cache-fixed { };
+  waydroid-houdini = pkgs.callPackage ./waydroid-houdini { };
   ytmdesktop-bin = pkgs.callPackage ./ytmdesktop-bin { };
 }
