@@ -43,6 +43,7 @@ let
     runtimeInputs = [
       pkgs.android-tools
       pkgs.coreutils
+      pkgs.gawk
       pkgs.gnugrep
       pkgs.gnused
       pkgs.systemd
@@ -102,7 +103,30 @@ let
 
       waydroid adb connect
       serial="$ip:5555"
-      adb -s "$serial" wait-for-device
+
+      # adb wait-for-device never returns for an unauthorized device, and
+      # Waydroid has no window to show Android's "Allow USB debugging?"
+      # prompt in, so poll with a limit and name the state instead.
+      state=""
+      for _ in $(seq 1 30); do
+        state="$(adb devices | awk -v serial="$serial" '$1 == serial { print $2 }')"
+        if [[ "$state" == device ]]; then
+          break
+        fi
+        sleep 1
+      done
+
+      case "$state" in
+        device) ;;
+        unauthorized)
+          echo "Android rejected this machine's adb key. Copy ~/.android/adbkey.pub to ~/.local/share/waydroid/data/misc/adb/adb_keys (mode 640)." >&2
+          exit 1
+          ;;
+        *)
+          echo "adb could not reach Waydroid at $serial (state: ''${state:-not connected})." >&2
+          exit 1
+          ;;
+      esac
 
       android_ready=false
       for _ in $(seq 1 120); do
@@ -229,13 +253,25 @@ let
     runtimeInputs = [
       pkgs.coreutils
       pkgs.gnugrep
+      pkgs.libnotify
       waydroid
       waydroidProfile
     ];
     text = ''
       set -euo pipefail
 
-      waydroid-profile landscape
+      # Launched from the app menu, stderr goes nowhere, so a failure has
+      # to show up as a notification.
+      log="$(mktemp)"
+      status=0
+      waydroid-profile landscape 2>"$log" || status=$?
+      cat "$log" >&2
+      reason="$(tail -n 1 "$log")"
+      rm -f "$log"
+      if [[ "$status" -ne 0 ]]; then
+        notify-send -a Arknights "Arknights didn't start" "$reason"
+        exit "$status"
+      fi
 
       if [ ! -e /var/lib/waydroid/overlay/system/lib64/libhoudini.so ] \
         && [ ! -e /var/lib/waydroid/overlay/system/lib64/libndk_translation.so ]; then
