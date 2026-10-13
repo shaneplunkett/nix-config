@@ -46,13 +46,19 @@ let
       root="$HOME/.local/share/fj-agent"
       keys_dir="${keysDir}"
       mkdir -p "$keys_dir"
+      # default_ssh makes fj clone over SSH; over HTTPS git has no
+      # credentials for private repos.
       tmp="$(mktemp "$keys_dir/keys.json.XXXXXX")"
       jq -n --arg token "$token" '{
         hosts: { "${forge}": { type: "Application", token: $token } },
         aliases: { forge: "${forge}" },
-        default_ssh: []
+        default_ssh: ["${forge}"]
       }' >"$tmp"
       mv -f "$tmp" "$keys_dir/keys.json"
+
+      # Outside a repo fj has no host to talk to, so commands like
+      # `fj repo clone owner/name` fall back to the forge.
+      export FJ_FALLBACK_HOST="''${FJ_FALLBACK_HOST:-https://${forge}}"
 
       ${redirect}
       exec ${lib.getExe pkgs.forgejo-cli} "$@"
